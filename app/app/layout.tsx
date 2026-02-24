@@ -1,13 +1,11 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/link";
 import clsx from "clsx";
 
 import { Providers } from "../components/layout/providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/layout/navbar";
 
 export const metadata: Metadata = {
   title: {
@@ -33,10 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={clsx("min-h-screen text-foreground bg-background font-sans antialiased", fontSans.variable)}>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container flex-grow">{children}</main>
-          </div>
+          <div className="relative flex flex-col min-h-screen">{children}</div>
         </Providers>
       </body>
     </html>

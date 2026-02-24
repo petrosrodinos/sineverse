@@ -3,16 +3,14 @@ description: "This is the main rules for the project."
 alwaysApply: true
 ---
 
-## Role
-
 You are a senior React + TypeScript engineer.
 
-## General Engineering Rules
+Follow these rules strictly:
 
 - Use functional components only
 - Use TypeScript everywhere, no `any`
 - Prefer composition over inheritance
-- Keep components small and focused
+- Keep components small and focused (single responsibility)
 - No business logic inside JSX
 - No inline functions inside JSX unless memoized
 - Extract logic into hooks
@@ -24,117 +22,53 @@ You are a senior React + TypeScript engineer.
 - Optimize for readability first, performance second
 - Follow React 18 best practices
 - Assume production-grade code
-- Never add comments
 
-## Component Rules
+Component rules:
 
-- Component must be a named export
-- No default exports
-- Use arrow functions for components
-- Props interface must be defined at the top of the file
-- Props interface naming pattern: `ComponentNameProps`
 - Props must be explicitly typed
+- No default exports
 - JSX must be minimal and readable
 - No calculations inside JSX
 - Use early returns
 - Use memoization only when needed
 - Styling must be separated
 - Component must be testable in isolation
-- No helper functions inside components
 
-## Naming Conventions
+State rules:
 
-- Component names: PascalCase
-- File names: kebab-case
-- Function names: camelCase
-- Function parameters: snake_case
-- Variables: camelCase
-- Hooks: camelCase
-- Object keys: snake_case
-- Interfaces: snake_case
+- Global game state must live in a store (Zustand or equivalent)
+- UI state stays local
+- No derived state stored
+- No mutation
+- All game state changes go through actions
+- No direct state writes inside components
 
-## File & Folder Rules
-
-- Always separate components into separate files
-- Follow the defined folder structure strictly
-- Never create `readme.md` files
-
-## Folder Structure
-
-```
-- features/
-  - user/
-    - hooks/use-user.ts
-    - services/user.service.ts
-    - interfaces/user.interface.ts
-    - utils/user.utils.ts
-
-- pages/
-  - user/
-    - hooks/use-user.ts
-    - components/
-      - user-card.tsx
-      - user-list.tsx
-      - user-form.tsx
-      - user-loading.tsx
-    - pages/
-      - user-page
-        - components/
-        - index.tsx
-
-- interfaces/
-- hooks/
-- stores/
-- routes/
-- lib/
-- config/
-- constants/
-```
-
-## Hooks Rules
+Hooks rules:
 
 - One responsibility per hook
 - Hooks must not render JSX
 - Hooks return stable APIs
 - Hooks must be pure except for effects
-- Side effects only inside `useEffect`
+- Side effects only inside useEffect
 - All hooks typed explicitly
-- Helper functions for pages and components must live in a `hooks` folder at the top level of the component or page folder
 
-## State Management Rules
+TypeScript rules:
 
-- App state must live in Zustand stores
-- UI state stays local
-- No derived state stored
-- No mutation
-
-## Validation Rules
-
-- Always use `react-hook-form`
-- Always use `zod` for validation
-- Validation schemas must live in a separate `validation-schemas` folder
-- No inline validation schemas inside components or hooks
-
-## Loading & Skeleton Rules
-
-- Always use heroui skeletons when loading data
-- Skeleton components must live in the parent component folder
-- Skeletons must be defined in a separate file
-
-## Date & Time Rules
-
-- Always use `luxon` for date and time manipulation
-
-## TypeScript Rules
-
-- Strict mode assumed
+- strict mode assumed
 - No `any`, `unknown` only when justified
 - Use union types instead of enums where possible
 - Prefer readonly types for state
 - Prefer explicit return types for public functions
 - Discriminated unions for game logic
 
-## Constants & Config Rules
+Game logic rules:
+
+- No game rules inside components
+- Movement logic goes in /utils
+- Validation must be deterministic
+- Board is the single source of truth
+- Client never decides legality
+- All rules must be unit-testable
 
 All constant values used in:
 
@@ -146,49 +80,175 @@ All constant values used in:
 - feature flags
 - size / mode / type selectors
 
-Must be defined in a dedicated config file.
+MUST be defined in a dedicated config file.
 
-### Constant Pattern
+All dropdown constants must follow this pattern:
 
 - Uppercase keys
 - Literal string values
 - `as const`
 - Exported union type derived from values
 
-### Forbidden
+DO NOT:
 
-- Enums for UI-facing options
-- Magic strings in JSX
-- Defining options inside components
-- Defining values without `as const`
-- Manually written union types
+- Use enums for UI-facing options
+- Use magic strings in JSX
+- Define options inside components
+- Define values without `as const`
+- Manually write union types
 
-## Helpers & Utils Rules
+Helper methods MUST NEVER be defined:
 
-- Helper methods must never be defined inside:
+- Inside components
+- Inside services
+- Inside controllers
+- Inside hooks
+- Inside gateways
 
-  - components
-  - services
-  - controllers
-  - hooks
-  - gateways
+Helpers must always live in a dedicated helper or utils folder.
+If a helper is used across multiple features:
 
-- Helpers must live in a dedicated helper or utils folder
+Place it in the root utils folder.
 
-- Cross-feature helpers go in the root `utils` folder
+Helper files must:
 
-- Helper files must:
+- End with .helper.ts or .utils.ts
+- Be named after their responsibility
+- Export named functions only
 
-  - End with `.helper.ts` or `.utils.ts`
-  - Be named after their responsibility
-  - Export named functions only
+Never:
 
-## Absolute Prohibitions
-
-- Comments in code
-- `useEffect` for derived state
-- Using index as React key
-- Mutating arrays or objects
+- use comments to explain the code
+- Use useEffect for derived state
+- Use index as React key
+- Mutate arrays or objects
 - Inline complex logic in JSX
-- God components
-- Mixing UI and business logic
+- Create god components
+- Mix UI and rules
+
+Product Identity
+This is a premium AI-native film creation and streaming platform.
+The interface must feel cinematic, minimal, immersive, and modern.
+It should feel closer to Netflix and Apple than a typical SaaS dashboard.
+
+Core Design Principles
+
+Dark-first design (no pure black, no harsh white backgrounds)
+
+Cinematic, high-contrast typography
+
+Generous spacing and clear hierarchy
+
+Minimal surfaces and soft elevation
+
+No visual clutter
+
+No playful or gimmicky design
+
+Color System
+
+Use semantic tokens via Tailwind (background, surface, primary, muted, border).
+
+Background should be near-black, not #000000.
+
+Surfaces slightly elevated from background.
+
+Primary accent should be bold but elegant (violet, electric blue, or cinematic red).
+
+Never use default Tailwind blue.
+
+Never mix random colors.
+
+Typography
+
+Modern sans-serif (Inter/Geist style).
+
+Strong hierarchy:
+
+h1: large and bold (3xl–5xl)
+
+h2: 2xl–3xl
+
+body: base or lg
+
+Avoid small unreadable text.
+
+Avoid inconsistent font sizing.
+
+Layout
+
+Use max width containers (max-w-7xl mx-auto px-6).
+
+Maintain consistent vertical rhythm.
+
+Prefer grid-based layouts.
+
+Avoid cramped components.
+
+Rounded corners: rounded-xl or rounded-2xl only.
+
+HeroUI Usage
+
+Use HeroUI for buttons, inputs, modals, tabs, cards.
+
+Extend using Tailwind utilities only.
+
+Do not override core styles destructively.
+
+Primary buttons use accent color.
+
+Secondary buttons use subtle surface style.
+
+Components
+
+Keep components clean and reusable.
+
+No inline styles.
+
+No custom CSS files unless absolutely necessary.
+
+No hardcoded spacing inconsistencies.
+
+Maximum clarity over visual complexity.
+
+Streaming UI
+
+Large cinematic thumbnails.
+
+Subtle hover scale (1.02–1.05 max).
+
+Smooth transitions (duration-200 to 300).
+
+No aggressive animations.
+
+Motion
+
+Only subtle fade, slide, or scale.
+
+No bounce, spin, or flashy effects.
+
+Animations must feel premium and restrained.
+
+Tone
+
+Clean, confident, and professional.
+
+No emojis in UI.
+
+No meme or playful copy.
+
+Use concise action labels (Generate Scene, Refine Prompt, Publish Film).
+
+Accessibility
+
+Maintain proper contrast ratios.
+
+Visible focus states.
+
+Keyboard accessible interactions.
+
+General Rule
+If a screen looks like a typical admin dashboard, redesign it.
+If it feels cinematic, minimal, and immersive, it is correct.
+
+If a style is used twice, it must be tokenized or componentized

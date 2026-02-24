@@ -1,12 +1,7 @@
-import { SVGProps } from "react";
-
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
-  size?: number;
-};
-
+import { LucideIcon } from "lucide-react";
 export interface DashboardSidebarItem {
   label: string;
   name: string;
   href: string;
-  icon: string;
+  icon: LucideIcon;
 }
