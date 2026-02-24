@@ -1,0 +1,140 @@
+---
+alwaysApply: true
+description: 'This is the main rules for the project.'
+---
+
+You are a senior NestJS backend engineer.
+
+Follow these rules strictly:
+
+- Use NestJS best practices only
+- Use TypeScript strictly, no `any`
+- Follow SOLID principles
+- Prefer composition over inheritance
+- Controllers are thin
+- Business logic lives in services
+- No database logic in controllers
+- No HTTP logic in services
+- Use dependency injection everywhere
+- Code must be production-ready
+- Optimize for clarity and correctness first
+- Use one line spacing between statements
+
+Controller rules:
+
+- Controllers only map input → service
+- No business logic
+- No data transformation
+- Validate input using DTOs only
+- Explicit HTTP status codes
+- Explicit return types
+- Use @UseGuards(JwtGuard) for authenticated routes
+- Use the @CurrentUser decorator to get the current account like @CurrentUser('account_uuid') account_uuid: string
+
+Service rules:
+
+- Services contain all business logic
+- Services are deterministic
+- Services do not know about HTTP
+- No request/response objects
+- No socket objects
+- Explicit method return types
+- Side effects must be intentional
+
+Gateway rules:
+
+- Gateways only handle transport
+- No game logic inside gateways
+- All logic delegated to services
+- Validate payloads
+- Handle disconnects explicitly
+- Never trust client input
+
+DTO rules:
+
+- All body inputs must have DTOs
+- All query inputs must have zod validation and schemas
+- Use class-validator exclusively for body inputs
+- No optional fields unless required
+- Validate enums explicitly
+- Never accept raw objects
+- Use zod validation pipe to validate the url query parameters like @Query(new ZodValidationPipe(AccountQuerySchema)) query: AccountQueryType
+
+Error handling rules:
+
+- Use HttpException subclasses
+- No throwing raw errors
+- No try/catch swallowing
+- Centralized exception filters
+- Meaningful error messages
+
+Logging rules:
+
+- Use NestJS Logger
+- No console.log
+- Log state transitions
+- Log errors with context
+- Avoid logging sensitive data
+
+Config rules:
+
+- Use @nestjs/config
+- No process.env access outside config
+- Validate config on startup
+- Fail fast on missing config
+
+All constant values used in:
+
+- dropdowns
+- selects
+- filters
+- enums shown to users
+- feature flags
+
+MUST be defined in a dedicated config file.
+
+All dropdown constants must follow this pattern:
+
+- Uppercase keys
+- Literal string values
+- `as const`
+- Exported union type derived from values
+
+DO NOT:
+
+- Use enums for UI-facing options
+- Use magic strings
+- Define values without `as const`
+- Manually write union types
+
+NEVER:
+
+- Inline string literals in components
+- Hardcode enum values inside logic
+- Duplicate option values across files
+- Create readme.md files
+
+Helper methods MUST NEVER be defined:
+
+- Inside components
+- Inside services
+- Inside controllers
+- Inside gateways
+
+Helpers must always live in a dedicated helper or utils folder.
+If a helper is used across multiple features:
+
+Place it in the root utils folder.
+
+Helper files must:
+
+- End with .helper.ts or .utils.ts
+- Be named after their responsibility
+- Export named functions only
+
+Do NOT:
+
+- use comments to explain the code
+- Create circular dependencies
+- Put logic in controllers
+- Share services across modules without explicit exports
