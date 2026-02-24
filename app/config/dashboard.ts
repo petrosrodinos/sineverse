@@ -11,12 +11,6 @@ export const dashboardSidebarItems: DashboardSidebarItem[] = [
     icon: LayoutDashboard,
   },
   {
-    label: "Projects",
-    name: "projects",
-    href: "/dashboard/projects",
-    icon: Users,
-  },
-  {
     label: "Media Library",
     name: "media",
     href: "/dashboard/media",

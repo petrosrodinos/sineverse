@@ -1,5 +1,25 @@
 ---
-description: "This is the main rules for the project."
+description: "This application is an AI-native film creation and streaming platform. It allows users to turn a simple movie idea into a fully generated cinematic film using AI. The system enriches the user’s idea, breaks it into structured scenes, generates optimized prompts for AI video models, produces multiple scene variations, and allows users to assemble, edit, and publish the final movie.
+
+The product is not a traditional video editor. It is an AI-powered film studio focused on structured storytelling, scene generation, prompt iteration, and cinematic assembly. Editing is lightweight and timeline-based, designed for arranging AI-generated scenes rather than manual frame-by-frame production.
+
+The platform will later support publishing and streaming generated films in a Netflix-style viewing experience, including discovery, recommendations, and analytics.
+
+Core principles:
+
+AI-first workflow
+
+Structured scene-based architecture
+
+Premium cinematic user experience
+
+Dark, minimal, immersive interface
+
+Scalable system design for large media storage and streaming
+
+Clean, modular, production-grade code
+
+The application should feel like a professional AI film studio, not a generic SaaS dashboard or a casual content generator."
 alwaysApply: true
 ---
 
