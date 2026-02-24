@@ -40,7 +40,7 @@ export function IdeaSection({ idea, onIdeaChange, onEnrich, onRegenerateEnriched
         </Button>
       </div>
       {idea.enriched && (
-        <Card className="rounded-2xl border border-default-200/80 bg-default-100/30 dark:border-default-100/20 dark:bg-default-100/10 p-4">
+        <Card className="rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/10 p-4">
           {isEnriching ? (
             <Skeleton className="rounded-xl h-24 w-full" />
           ) : (

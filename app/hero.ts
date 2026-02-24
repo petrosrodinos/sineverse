@@ -1,2 +1,3 @@
 import { heroui } from "@heroui/theme";
-export default heroui();
+import { herouiThemeConfig } from "./config/heroui-theme";
+export default heroui(herouiThemeConfig);

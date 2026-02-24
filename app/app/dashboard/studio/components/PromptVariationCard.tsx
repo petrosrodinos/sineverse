@@ -33,11 +33,11 @@ export function PromptVariationCard({ variation, onPromptChange, onNegativePromp
   const [negativeOpen, setNegativeOpen] = useState(false);
 
   return (
-    <Card className="rounded-2xl border border-default-200/80 bg-default-50/50 overflow-hidden dark:border-default-100/20 dark:bg-default-100/5 transition-all duration-200 hover:shadow-lg">
+    <Card className="rounded-2xl border border-default-200 bg-default-100 overflow-hidden dark:border-default-100/20 dark:bg-default-100/5 transition-all duration-200 hover:shadow-lg">
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground bg-default-200 dark:bg-default-100/30 px-2.5 py-1 rounded-lg">{variation.versionLabel}</span>
+            <span className="text-sm font-semibold text-foreground bg-default-200 px-2.5 py-1 rounded-lg dark:bg-default-100/30">{variation.versionLabel}</span>
             <span className="text-sm text-default-500">{variation.styleLabel}</span>
           </div>
           <div className="flex gap-2">
@@ -55,7 +55,7 @@ export function PromptVariationCard({ variation, onPromptChange, onNegativePromp
             <Textarea value={variation.negativePrompt} onValueChange={onNegativePromptChange} variant="bordered" classNames={{ inputWrapper: "rounded-xl" }} minRows={2} />
           </AccordionItem>
         </Accordion>
-        <div className="pt-2 border-t border-default-200/80 dark:border-default-100/20">
+        <div className="pt-2 border-t border-default-200 dark:border-default-100/20">
           <VideoGenerationPanel variation={variation} onModelChange={onModelChange} onAspectRatioChange={onAspectRatioChange} onDurationChange={onDurationChange} onReferenceImagesChange={onReferenceImagesChange} onGenerateVideos={onGenerateVideos} onSelectFinal={onSelectFinalVideo} onRegenerateVideo={onRegenerateVideo} isGenerating={isGeneratingVideos} progressText={progressText} />
         </div>
       </div>

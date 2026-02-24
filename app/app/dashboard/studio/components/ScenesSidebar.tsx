@@ -20,7 +20,7 @@ interface ScenesSidebarProps {
 
 export function ScenesSidebar({ scenes, selectedSceneId, onSelectScene, onGenerateScenes, onRegenerateDescription, isGeneratingScenes, canGenerateScenes }: ScenesSidebarProps) {
   return (
-    <aside className="w-72 shrink-0 flex flex-col gap-4 rounded-2xl border border-default-200/80 bg-default-50/50 dark:border-default-100/20 dark:bg-default-100/5 p-4">
+    <aside className="w-72 shrink-0 flex flex-col gap-4 rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/5 p-4">
       <Button color="primary" onPress={onGenerateScenes} isDisabled={!canGenerateScenes || isGeneratingScenes} isLoading={isGeneratingScenes} startContent={!isGeneratingScenes ? <Film className="size-4" /> : undefined} className="w-full rounded-xl font-medium">
         Generate Scenes
       </Button>
@@ -35,7 +35,7 @@ export function ScenesSidebar({ scenes, selectedSceneId, onSelectScene, onGenera
               onPress={() => onSelectScene(scene.id)}
               className={`
                 rounded-2xl border transition-all duration-200 hover:scale-[1.02]
-                ${isSelected ? "ring-2 ring-primary border-primary/50 bg-primary/5" : "border-default-200/80 bg-default-50/50 dark:border-default-100/20 dark:bg-default-100/5"}
+                ${isSelected ? "ring-2 ring-primary border-primary/50 bg-primary/5" : "border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/5"}
               `}
             >
               <div className="p-3 space-y-2">

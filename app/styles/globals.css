@@ -1,12 +1,128 @@
 @import "tailwindcss";
 
 @plugin '../hero.ts';
+@config '../tailwind.config.ts';
 
 @source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
     --font-sans: "font", sans-serif;
     --font-mono: "monospace", monospace;
+}
+
+:root {
+    color-scheme: light;
+    --heroui-background: 0 0% 100%;
+    --heroui-background-50: 0 0% 99%;
+    --heroui-background-100: 0 0% 98%;
+    --heroui-background-200: 0 0% 96%;
+    --heroui-background-300: 0 0% 94%;
+    --heroui-background-400: 0 0% 91%;
+    --heroui-background-500: 0 0% 88%;
+    --heroui-background-600: 0 0% 83%;
+    --heroui-background-700: 0 0% 76%;
+    --heroui-background-800: 0 0% 65%;
+    --heroui-background-900: 0 0% 49%;
+    --heroui-background-foreground: 240 10% 4%;
+    --heroui-foreground: 240 10% 10%;
+    --heroui-foreground-50: 240 10% 4%;
+    --heroui-foreground-100: 240 6% 10%;
+    --heroui-foreground-200: 240 4% 16%;
+    --heroui-foreground-300: 240 4% 26%;
+    --heroui-foreground-400: 240 4% 38%;
+    --heroui-foreground-500: 240 4% 46%;
+    --heroui-foreground-600: 240 4% 36%;
+    --heroui-foreground-700: 240 4% 26%;
+    --heroui-foreground-800: 240 5% 16%;
+    --heroui-foreground-900: 240 5% 10%;
+    --heroui-foreground-foreground: 0 0% 100%;
+    --heroui-content1: 0 0% 98%;
+    --heroui-content1-foreground: 240 10% 10%;
+    --heroui-divider: 240 6% 90%;
+    --heroui-divider-foreground: 240 10% 4%;
+    --heroui-primary: 256 100% 68%;
+    --heroui-primary-50: 262 100% 97%;
+    --heroui-primary-100: 262 100% 93%;
+    --heroui-primary-200: 262 100% 88%;
+    --heroui-primary-300: 262 100% 81%;
+    --heroui-primary-400: 262 100% 73%;
+    --heroui-primary-500: 256 100% 68%;
+    --heroui-primary-600: 256 72% 62%;
+    --heroui-primary-700: 256 58% 52%;
+    --heroui-primary-800: 256 51% 42%;
+    --heroui-primary-900: 256 48% 32%;
+    --heroui-primary-foreground: 0 0% 100%;
+    --heroui-secondary: 240 5% 96%;
+    --heroui-secondary-foreground: 240 10% 10%;
+    --heroui-success: 142 71% 45%;
+    --heroui-success-foreground: 0 0% 100%;
+    --heroui-warning: 38 92% 50%;
+    --heroui-warning-foreground: 0 0% 0%;
+    --heroui-danger: 0 84% 60%;
+    --heroui-danger-foreground: 0 0% 100%;
+    --heroui-focus: 256 100% 68%;
+    --heroui-focus-foreground: 0 0% 100%;
+    --heroui-radius-small: 8px;
+    --heroui-radius-medium: 14px;
+    --heroui-radius-large: 20px;
+    --heroui-border-width-small: 1px;
+    --heroui-border-width-medium: 1px;
+    --heroui-border-width-large: 1px;
+    --heroui-disabled-opacity: 0.45;
+}
+
+.dark {
+    color-scheme: dark;
+    --heroui-background: 240 14% 5%;
+    --heroui-background-50: 240 13% 7%;
+    --heroui-background-100: 240 14% 9%;
+    --heroui-background-200: 240 13% 11%;
+    --heroui-background-300: 240 13% 13%;
+    --heroui-background-400: 240 12% 16%;
+    --heroui-background-500: 240 12% 19%;
+    --heroui-background-600: 240 11% 22%;
+    --heroui-background-700: 240 11% 26%;
+    --heroui-background-800: 240 10% 30%;
+    --heroui-background-900: 240 10% 34%;
+    --heroui-background-foreground: 0 0% 100%;
+    --heroui-foreground: 240 7% 96%;
+    --heroui-foreground-50: 0 0% 100%;
+    --heroui-foreground-100: 240 7% 96%;
+    --heroui-foreground-200: 240 6% 91%;
+    --heroui-foreground-300: 240 5% 80%;
+    --heroui-foreground-400: 240 4% 64%;
+    --heroui-foreground-500: 240 4% 45%;
+    --heroui-foreground-600: 240 4% 36%;
+    --heroui-foreground-700: 240 4% 28%;
+    --heroui-foreground-800: 240 4% 17%;
+    --heroui-foreground-900: 240 4% 10%;
+    --heroui-foreground-foreground: 0 0% 0%;
+    --heroui-content1: 240 16% 10%;
+    --heroui-content1-foreground: 240 7% 96%;
+    --heroui-divider: 240 15% 15%;
+    --heroui-divider-foreground: 0 0% 100%;
+    --heroui-primary: 256 100% 68%;
+    --heroui-primary-50: 262 100% 97%;
+    --heroui-primary-100: 262 100% 93%;
+    --heroui-primary-200: 262 100% 88%;
+    --heroui-primary-300: 262 100% 81%;
+    --heroui-primary-400: 262 100% 73%;
+    --heroui-primary-500: 256 100% 68%;
+    --heroui-primary-600: 256 72% 62%;
+    --heroui-primary-700: 256 58% 52%;
+    --heroui-primary-800: 256 51% 42%;
+    --heroui-primary-900: 256 48% 32%;
+    --heroui-primary-foreground: 0 0% 100%;
+    --heroui-secondary: 240 14% 14%;
+    --heroui-secondary-foreground: 240 7% 96%;
+    --heroui-success: 142 71% 45%;
+    --heroui-success-foreground: 0 0% 100%;
+    --heroui-warning: 38 92% 50%;
+    --heroui-warning-foreground: 0 0% 0%;
+    --heroui-danger: 0 84% 60%;
+    --heroui-danger-foreground: 0 0% 100%;
+    --heroui-focus: 256 100% 68%;
+    --heroui-focus-foreground: 0 0% 100%;
 }

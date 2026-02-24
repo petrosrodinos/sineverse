@@ -1,4 +1,4 @@
-import { StudioLayout } from "@/app/dashboard/studio/components";
+import { StudioLayout } from "@/app/dashboard/studio/components/StudioLayout";
 
 export default function DashboardPage() {
   return (

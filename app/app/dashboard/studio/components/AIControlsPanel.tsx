@@ -14,7 +14,7 @@ interface AIControlsPanelProps {
 
 export function AIControlsPanel({ settings, onChange, onSave, hasScene }: AIControlsPanelProps) {
   return (
-    <div className="rounded-2xl border border-default-200/80 bg-default-50/50 p-4 dark:border-default-100/20 dark:bg-default-100/5 space-y-5">
+    <div className="rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/5 p-4 space-y-5">
       <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">AI Controls</h3>
       <Select
         label="Global style"
@@ -81,7 +81,7 @@ export function AIControlsPanel({ settings, onChange, onSave, hasScene }: AICont
           step={0.1}
           value={settings.temperature}
           onChange={(e) => onChange({ temperature: Number(e.target.value) })}
-          className="w-full h-2 rounded-full appearance-none bg-default-200 dark:bg-default-100/30 accent-primary"
+          className="w-full h-2 rounded-full appearance-none bg-default-200 accent-primary dark:bg-default-100/30"
         />
       </div>
       {hasScene && (

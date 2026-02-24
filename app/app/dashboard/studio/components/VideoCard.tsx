@@ -22,13 +22,13 @@ export function VideoCard({ video, onSelectFinal, onRegenerate, isDisabled }: Vi
   return (
     <Card
       className={`
-        overflow-hidden rounded-2xl border border-default-200/80 bg-default-50/50
+        overflow-hidden rounded-2xl border border-default-200 bg-default-100
         transition-all duration-200 hover:scale-[1.02] hover:shadow-lg
         dark:border-default-100/20 dark:bg-default-100/5
         ${video.isFinal ? "ring-2 ring-primary shadow-lg shadow-primary/20" : ""}
       `}
     >
-      <div className="aspect-video w-full bg-default-200/50 dark:bg-default-100/10 flex items-center justify-center">
+      <div className="aspect-video w-full bg-default-200 flex items-center justify-center dark:bg-default-100/10">
         {video.thumbnailUrl ? (
           <img src={video.thumbnailUrl} alt="" className="h-full w-full object-cover" />
         ) : (
