@@ -3,7 +3,7 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/navigation/site";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { LogsIcon } from "lucide-react";
 

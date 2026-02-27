@@ -1,6 +1,6 @@
 import { DashboardNavbar } from "@/components/layout/dashboard-navbar";
 import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
-import { dashboardSidebarItems } from "@/config/dashboard";
+import { dashboardSidebarItems } from "@/config/navigation/dashboard";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

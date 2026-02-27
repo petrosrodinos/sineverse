@@ -9,7 +9,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection 
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/config/navigation/site";
 import type { DashboardSidebarItem } from "@/types";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";

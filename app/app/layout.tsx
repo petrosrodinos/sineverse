@@ -4,8 +4,8 @@ import clsx from "clsx";
 
 import { Providers } from "../components/layout/providers";
 
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
+import { siteConfig } from "@/config/navigation/site";
+import { fontSans } from "@/config/style/fonts";
 
 export const metadata: Metadata = {
   title: {
