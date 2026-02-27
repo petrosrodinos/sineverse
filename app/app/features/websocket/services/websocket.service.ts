@@ -1,6 +1,5 @@
 import { io, Socket } from 'socket.io-client';
 import { environments } from '@/config/environments';
-import { getAuthStoreState } from '@/stores/auth';
 import type {
     WebsocketConnectionState,
     WebsocketConnectOptions,
@@ -8,6 +7,7 @@ import type {
     WebsocketSubscription,
 } from '../interfaces/websocket-client.interface';
 import { WEBSOCKET_EVENTS } from '../interfaces/websocket-events.constants';
+import { getAuthStoreState } from '@/app/stores/auth';
 
 const DEFAULT_OPTIONS: WebsocketConnectOptions = {
     auto_reconnect: true,

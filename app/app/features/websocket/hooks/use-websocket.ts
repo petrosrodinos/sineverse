@@ -1,6 +1,4 @@
 import { useEffect, useCallback, useRef } from 'react';
-import { useAuthStore } from '@/stores/auth';
-import { useWebsocketStore } from '@/stores/websocket.store';
 import {
     websocketConnect,
     websocketDisconnect,
@@ -17,6 +15,8 @@ import type {
     WebsocketEventCallback,
     WebsocketSubscription,
 } from '../interfaces/websocket-client.interface';
+import { useAuthStore } from '@/app/stores/auth';
+import { useWebsocketStore } from '@/app/stores/websocket.store';
 
 export const useWebsocket = (options?: WebsocketConnectOptions) => {
     const { access_token, isLoggedIn } = useAuthStore();
