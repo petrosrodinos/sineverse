@@ -276,6 +276,7 @@ declare type CompilerWasmLoadingConfig = {
      * @remarks only used by ClientEngine
      */
     getQueryCompilerWasmModule: () => Promise<unknown>;
+    importName: string;
 };
 
 export declare type Compute<T> = T extends Function ? T : {
@@ -389,13 +390,6 @@ declare type DatamodelEnum = ReadonlyDeep_2<{
 
 declare function datamodelEnumToSchemaEnum(datamodelEnum: DatamodelEnum): SchemaEnum;
 
-declare type DatamodelSchemaEnum = ReadonlyDeep_2<{
-    name: string;
-    values: string[];
-}>;
-
-declare function datamodelSchemaEnumToSchemaEnum(datamodelSchemaEnum: DatamodelSchemaEnum): SchemaEnum;
-
 declare type DataRule = {
     type: 'rowCountEq';
     args: number;
@@ -477,7 +471,7 @@ declare type Deprecation = ReadonlyDeep_2<{
 
 declare type DeserializedResponse = Array<Record<string, unknown>>;
 
-export declare function deserializeJsonResponse(result: unknown): unknown;
+export declare function deserializeJsonObject(result: unknown): unknown;
 
 export declare function deserializeRawResult(response: RawResponse): DeserializedResponse;
 
@@ -504,12 +498,10 @@ export declare type DevTypeMapFnDef = {
 export declare namespace DMMF {
     export {
         datamodelEnumToSchemaEnum,
-        datamodelSchemaEnumToSchemaEnum,
         Document_2 as Document,
         Mappings,
         OtherOperationMappings,
         DatamodelEnum,
-        DatamodelSchemaEnum,
         SchemaEnum,
         EnumValue,
         Datamodel,
@@ -548,12 +540,10 @@ export declare namespace DMMF {
 declare namespace DMMF_2 {
     export {
         datamodelEnumToSchemaEnum,
-        datamodelSchemaEnumToSchemaEnum,
         Document_2 as Document,
         Mappings,
         OtherOperationMappings,
         DatamodelEnum,
-        DatamodelSchemaEnum,
         SchemaEnum,
         EnumValue,
         Datamodel,
@@ -807,6 +797,15 @@ declare interface EngineConfig {
      * Each plugin receives query context and returns key-value pairs.
      */
     sqlCommenters?: SqlCommenterPlugin[];
+    /**
+     * Parameterization schema (ParamGraph) for schema-aware query parameterization.
+     * Enables precise parameterization based on DMMF metadata.
+     */
+    parameterizationSchema: SerializedParamGraph;
+    /**
+     * Runtime data model for enum lookups during parameterization.
+     */
+    runtimeDataModel: RuntimeDataModel;
 }
 
 declare type EngineEvent<E extends EngineEventType> = E extends QueryEventType ? QueryEvent : LogEvent;
@@ -1306,6 +1305,11 @@ export declare type GetPrismaClientConfig = {
      * Optional wasm loading configuration
      */
     compilerWasm?: CompilerWasmLoadingConfig;
+    /**
+     * Parameterization schema for schema-aware query parameterization.
+     * Enables precise parameterization based on DMMF metadata.
+     */
+    parameterizationSchema: SerializedParamGraph;
 };
 
 export declare type GetResult<Payload extends OperationPayload, Args, OperationName extends Operation = 'findUniqueOrThrow', GlobalOmitOptions = {}> = {
@@ -1932,7 +1936,7 @@ declare type OutputType = ReadonlyDeep_2<{
 declare type OutputTypeRef = TypeRef<'scalar' | 'outputObjectTypes' | 'enumTypes'>;
 
 declare type Pagination = {
-    cursor: Record<string, PrismaValue> | null;
+    cursor: Record<string, unknown> | null;
     take: number | null;
     skip: number | null;
 };
@@ -2572,8 +2576,8 @@ declare type Schema = ReadonlyDeep_2<{
         prisma: OutputType[];
     };
     enumTypes: {
-        model?: DatamodelSchemaEnum[];
-        prisma: DatamodelSchemaEnum[];
+        model?: SchemaEnum[];
+        prisma: SchemaEnum[];
     };
     fieldRefTypes: {
         prisma?: FieldRefType[];
@@ -2586,16 +2590,14 @@ declare type SchemaArg = ReadonlyDeep_2<{
     isNullable: boolean;
     isRequired: boolean;
     inputTypes: InputTypeRef[];
+    isParameterizable: boolean;
     requiresOtherFields?: string[];
     deprecation?: Deprecation;
 }>;
 
 declare type SchemaEnum = ReadonlyDeep_2<{
     name: string;
-    data: {
-        key: string;
-        value: string;
-    }[];
+    values: string[];
 }>;
 
 declare type SchemaField = ReadonlyDeep_2<{
@@ -2628,7 +2630,17 @@ export declare type SelectField<P extends SelectablePayloadFields<any, any>, K e
 declare type Selection_2 = Record<string, boolean | Skip | JsArgs>;
 export { Selection_2 as Selection }
 
-export declare function serializeJsonQuery({ modelName, action, args, runtimeDataModel, extensions, callsite, clientMethod, errorFormat, clientVersion, previewFeatures, globalOmit, }: SerializeParams): JsonQuery;
+/**
+ * Serialized format stored in the generated client.
+ */
+declare interface SerializedParamGraph {
+    /** String table (field names, enum names, root keys) */
+    strings: string[];
+    /** Base64url-encoded binary blob for structural data */
+    graph: string;
+}
+
+export declare function serializeJsonQuery({ modelName, action, args, runtimeDataModel, extensions, callsite, clientMethod, errorFormat, clientVersion, previewFeatures, globalOmit, wrapRawValues, }: SerializeParams): JsonQuery;
 
 declare type SerializeParams = {
     runtimeDataModel: RuntimeDataModel;
@@ -2642,6 +2654,7 @@ declare type SerializeParams = {
     errorFormat: ErrorFormat;
     previewFeatures: string[];
     globalOmit?: GlobalOmitOptions;
+    wrapRawValues?: boolean;
 };
 
 declare class Skip {

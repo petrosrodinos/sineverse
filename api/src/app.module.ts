@@ -8,6 +8,11 @@ import { RedisModule } from './core/databases/redis/redis.module';
 import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { ScenesModule } from './modules/scenes/scenes.module';
+import { SceneVariationsModule } from './modules/scene-variations/scene-variations.module';
+import { SceneVideosModule } from './modules/scene-videos/scene-videos.module';
+import { FinalProjectsModule } from './modules/final-projects/final-projects.module';
 
 @Module({
   imports: [
@@ -19,6 +24,11 @@ import { ConfigModule } from './shared/config/env/env.module';
     RedisCacheModule,
     // GraphQLModule,
     AuthModule,
+    ProjectsModule,
+    ScenesModule,
+    SceneVariationsModule,
+    SceneVideosModule,
+    FinalProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

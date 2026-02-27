@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { RedisCacheService } from './redis-cache.service';
 import { RedisCacheController } from './redis-cache.controller';
-import { CacheService } from '@/shared/services/cache/cache.service';
+import { AppCacheModule } from '@/shared/services/cache/cache.module';
 
 @Module({
-  imports: [],
+  imports: [AppCacheModule],
   controllers: [RedisCacheController],
-  providers: [RedisCacheService, CacheService],
+  providers: [RedisCacheService],
 })
 export class RedisCacheModule { }

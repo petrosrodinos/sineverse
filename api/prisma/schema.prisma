@@ -105,7 +105,7 @@ model Scene {
   updated_at    DateTime @updatedAt
 
   project       Project @relation(fields: [project_uuid],references: [uuid],onDelete: Cascade)
-  prompt_variations ScenePromptVariation[]
+  prompt_variations SceneVariation[]
 
   @@index([uuid])
   @@index([project_uuid])
@@ -113,12 +113,11 @@ model Scene {
   @@map("scenes")
 }
 
-model ScenePromptVariation {
+model SceneVariation {
   id              Int      @id @default(autoincrement())
   uuid            String   @unique @default(uuid())
-
   scene_uuid      String
-  version         Int
+  prompt_image_uuid String?
 
   // Creative direction
   style           String?  // cinematic, anime, noir, hyperrealistic
@@ -162,12 +161,12 @@ model ScenePromptVariation {
   updated_at      DateTime @updatedAt
 
   scene           Scene @relation(fields: [scene_uuid],references: [uuid],onDelete: Cascade)
+  prompt_image      Document? @relation("SceneVariationImage", fields: [prompt_image_uuid],references: [uuid],onDelete: Cascade)
   videos          SceneVideo[]
 
   @@index([uuid])
   @@index([scene_uuid])
-  @@unique([scene_uuid, version])
-  @@map("scene_prompt_variations")
+  @@map("scene_variations")
 }
 
 model SceneVideo {
@@ -185,7 +184,7 @@ model SceneVideo {
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
 
-  prompt_variation        ScenePromptVariation @relation(fields: [prompt_variation_uuid],references: [uuid],onDelete: Cascade)
+  prompt_variation        SceneVariation @relation(fields: [prompt_variation_uuid],references: [uuid],onDelete: Cascade)
   video                   Document? @relation("SceneVideo", fields: [video_uuid],references: [uuid],onDelete: Cascade)
 
   @@index([uuid])
@@ -230,6 +229,7 @@ model Document {
   updated_at         DateTime      @updatedAt
 
   scene_videos SceneVideo[] @relation("SceneVideo")
+  prompt_images SceneVariation[] @relation("SceneVariationImage")
   final_project_videos FinalProject[] @relation("FinalProjectVideo")
   final_project_thumbnails FinalProject[] @relation("FinalProjectThumbnail")
 

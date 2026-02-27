@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.4.1
+ * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.4.1",
+  engine: "55ae170b1ced7fc6ed07a15f110549408c501bb3"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -131,6 +131,109 @@ exports.Prisma.UserScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.ProjectScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  title: 'title',
+  original_concept: 'original_concept',
+  enriched_concept: 'enriched_concept',
+  genre: 'genre',
+  tone: 'tone',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SceneScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  project_uuid: 'project_uuid',
+  title: 'title',
+  description: 'description',
+  order: 'order',
+  duration_sec: 'duration_sec',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SceneVariationScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  scene_uuid: 'scene_uuid',
+  prompt_image_uuid: 'prompt_image_uuid',
+  style: 'style',
+  mood: 'mood',
+  genre_style: 'genre_style',
+  camera_style: 'camera_style',
+  shot_type: 'shot_type',
+  camera_movement: 'camera_movement',
+  lens_type: 'lens_type',
+  depth_of_field: 'depth_of_field',
+  lighting: 'lighting',
+  color_grade: 'color_grade',
+  time_of_day: 'time_of_day',
+  aspect_ratio: 'aspect_ratio',
+  resolution: 'resolution',
+  fps: 'fps',
+  duration_sec: 'duration_sec',
+  ai_model: 'ai_model',
+  seed: 'seed',
+  creativity: 'creativity',
+  motion_strength: 'motion_strength',
+  guidance_scale: 'guidance_scale',
+  audio_style: 'audio_style',
+  include_sound: 'include_sound',
+  prompt_text: 'prompt_text',
+  negative_prompt: 'negative_prompt',
+  selected: 'selected',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.SceneVideoScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  prompt_variation_uuid: 'prompt_variation_uuid',
+  provider: 'provider',
+  selected: 'selected',
+  provider_job_id: 'provider_job_id',
+  video_uuid: 'video_uuid',
+  duration_sec: 'duration_sec',
+  resolution: 'resolution',
+  status: 'status',
+  error_message: 'error_message',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.FinalProjectScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  project_uuid: 'project_uuid',
+  title: 'title',
+  duration_sec: 'duration_sec',
+  video_uuid: 'video_uuid',
+  thumbnail_uuid: 'thumbnail_uuid',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  filename: 'filename',
+  mimetype: 'mimetype',
+  size: 'size',
+  url: 'url',
+  path: 'path',
+  type: 'type',
+  order: 'order',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -152,8 +255,45 @@ exports.AuthRole = exports.$Enums.AuthRole = {
   SUPPORT: 'SUPPORT'
 };
 
+exports.ProjectStatus = exports.$Enums.ProjectStatus = {
+  DRAFT: 'DRAFT',
+  ENRICHED: 'ENRICHED',
+  SCENES_GENERATED: 'SCENES_GENERATED',
+  PROMPTS_GENERATED: 'PROMPTS_GENERATED',
+  VIDEOS_GENERATING: 'VIDEOS_GENERATING',
+  COMPLETED: 'COMPLETED'
+};
+
+exports.VideoProvider = exports.$Enums.VideoProvider = {
+  VEO3: 'VEO3',
+  RUNWAY: 'RUNWAY',
+  PIKA: 'PIKA',
+  STABILITY: 'STABILITY'
+};
+
+exports.VideoStatus = exports.$Enums.VideoStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.DocumentType = exports.$Enums.DocumentType = {
+  VIDEO: 'VIDEO',
+  IMAGE: 'IMAGE',
+  AUDIO: 'AUDIO',
+  DOCUMENT: 'DOCUMENT',
+  THUMBNAIL: 'THUMBNAIL'
+};
+
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Project: 'Project',
+  Scene: 'Scene',
+  SceneVariation: 'SceneVariation',
+  SceneVideo: 'SceneVideo',
+  FinalProject: 'FinalProject',
+  Document: 'Document'
 };
 
 /**
