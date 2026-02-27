@@ -43,15 +43,4 @@ export class EmailAuthController {
         return this.authService.loginWithEmail(dto);
     }
 
-    @Post('/waitlist')
-    @ApiOperation({ summary: 'Waitlist a user with ref code' })
-    @ApiBody({ type: WaitlistDto })
-    @ApiResponse({
-        status: 200,
-        description: 'User referred successfully',
-        type: AuthResponse
-    })
-    async waitlist(@Body() dto: WaitlistDto) {
-        return this.authService.waitlist(dto);
-    }
 }

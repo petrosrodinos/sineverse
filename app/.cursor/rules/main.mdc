@@ -54,6 +54,53 @@ Component rules:
 - Styling must be separated
 - Component must be testable in isolation
 
+Always follow this folder structure: 
+
+features/ (used for api connectivity)
+
+user/
+hooks/use-user.ts
+services/user.services.ts
+interfaces/user.interfaces.ts
+utils/user.utils.ts
+
+pages/
+
+user/
+utils/user.utils.ts  (component specific utils)
+contants/user.constants.ts (component specific constants)
+interfaces/user.interfaces.ts (component specific interfaces)
+hooks/use-user.ts (component specific hooks)
+components/
+user-card.tsx
+user-list.tsx
+user-form.tsx
+user-loading.tsx
+pages/
+user-page.tsx
+user-list-page.tsx
+/validation-schemas
+ user.validation-schemas.ts (component specific validation schemas using zod for react-hook-form)
+
+
+services/  (public services used by multiple components)
+
+interfaces/ (public interfaces used by multiple components)
+
+utils/ (public utils used by multiple components)
+
+hooks/ (public hooks used by multiple components)
+
+stores/ (public stores used by multiple components)
+
+routes/ (public routes used by multiple components)
+
+lib/ (public lib used by multiple components)
+
+config/ (public config used by multiple components)
+
+constants/ (public constants used by multiple components)
+
 State rules:
 
 - Global game state must live in a store (Zustand or equivalent)
@@ -81,22 +128,12 @@ TypeScript rules:
 - Prefer explicit return types for public functions
 - Discriminated unions for game logic
 
-Game logic rules:
-
-- No game rules inside components
-- Movement logic goes in /utils
-- Validation must be deterministic
-- Board is the single source of truth
-- Client never decides legality
-- All rules must be unit-testable
-
 All constant values used in:
 
 - dropdowns
 - selects
 - filters
 - enums shown to users
-- game options
 - feature flags
 - size / mode / type selectors
 
@@ -123,7 +160,6 @@ Helper methods MUST NEVER be defined:
 - Inside services
 - Inside controllers
 - Inside hooks
-- Inside gateways
 
 Helpers must always live in a dedicated helper or utils folder.
 If a helper is used across multiple features:

@@ -57,6 +57,7 @@ model User {
   uuid       String   @unique @default(uuid())
   email      String   @unique
   phone      String?  @unique
+  full_name  String
   password   String
   role       AuthRole
   created_at DateTime @default(now())
