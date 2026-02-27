@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button, Input, Link } from "@heroui/react";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useSignup } from "@/app/features/auth/hooks/use-auth";
 
 const signUpSchema = z.object({
+  full_name: z.string().min(1, "Full name is required"),
   email: z.string().min(1, "Email is required").email("Invalid email format"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string().min(1, "Please confirm your password"),
@@ -31,6 +32,7 @@ export const SignUpForm = () => {
   } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
+      full_name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -42,6 +44,7 @@ export const SignUpForm = () => {
 
   const onSubmit = (data: SignUpValues) => {
     signUp({
+      full_name: data.full_name,
       email: data.email,
       password: data.password,
     });
@@ -57,6 +60,21 @@ export const SignUpForm = () => {
       </div>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          {...register("full_name")}
+          isInvalid={!!errors.full_name}
+          errorMessage={errors.full_name?.message as string}
+          isRequired
+          label="Full Name"
+          placeholder="Enter your full name"
+          type="text"
+          variant="bordered"
+          startContent={<User className="text-default-400" size={20} />}
+          classNames={{
+            inputWrapper: "border-default-200 hover:border-secondary transition-colors",
+          }}
+        />
+
         <Input
           {...register("email")}
           isInvalid={!!errors.email}
