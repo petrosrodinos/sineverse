@@ -1,1 +1,27 @@
-export class CreateSceneDto {}
+import { IsString, IsOptional, IsInt } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class CreateSceneDto {
+  @ApiProperty({ description: 'UUID of the associated project' })
+  @IsString()
+  project_uuid: string;
+
+  @ApiPropertyOptional({ description: 'Title of the scene' })
+  @IsString()
+  @IsOptional()
+  title?: string;
+
+  @ApiPropertyOptional({ description: 'Description of the scene' })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({ description: 'Order sequence of the scene' })
+  @IsInt()
+  order: number;
+
+  @ApiPropertyOptional({ description: 'Duration in seconds' })
+  @IsInt()
+  @IsOptional()
+  duration_sec?: number;
+}

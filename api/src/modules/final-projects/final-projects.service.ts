@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateFinalProjectDto } from './dto/create-final-project.dto';
 import { UpdateFinalProjectDto } from './dto/update-final-project.dto';
+import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class FinalProjectsService {
-  create(createFinalProjectDto: CreateFinalProjectDto) {
-    return 'This action adds a new finalProject';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createFinalProjectDto: CreateFinalProjectDto) {
+    try {
+      return await this.prisma.finalProject.create({ data: createFinalProjectDto });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create final project', { cause: error });
+    }
   }
 
-  findAll() {
-    return `This action returns all finalProjects`;
+  async findAll() {
+    try {
+      return await this.prisma.finalProject.findMany();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve final projects', { cause: error });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} finalProject`;
+  async findOne(uuid: string) {
+    try {
+      const finalProject = await this.prisma.finalProject.findUnique({ where: { uuid } });
+      if (!finalProject) throw new NotFoundException('Final project not found');
+      return finalProject;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to retrieve final project', { cause: error });
+    }
   }
 
-  update(id: number, updateFinalProjectDto: UpdateFinalProjectDto) {
-    return `This action updates a #${id} finalProject`;
+  async update(uuid: string, updateFinalProjectDto: UpdateFinalProjectDto) {
+    try {
+      return await this.prisma.finalProject.update({ where: { uuid }, data: updateFinalProjectDto });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update final project', { cause: error });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} finalProject`;
+  async remove(uuid: string) {
+    try {
+      return await this.prisma.finalProject.delete({ where: { uuid } });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete final project', { cause: error });
+    }
   }
 }

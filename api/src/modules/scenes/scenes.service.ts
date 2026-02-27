@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
+import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class ScenesService {
-  create(createSceneDto: CreateSceneDto) {
-    return 'This action adds a new scene';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createSceneDto: CreateSceneDto) {
+    try {
+      return await this.prisma.scene.create({ data: createSceneDto });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create scene', { cause: error });
+    }
   }
 
-  findAll() {
-    return `This action returns all scenes`;
+  async findAll() {
+    try {
+      return await this.prisma.scene.findMany();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve scenes', { cause: error });
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} scene`;
+  async findOne(uuid: string) {
+    try {
+      const scene = await this.prisma.scene.findUnique({ where: { uuid } });
+      if (!scene) throw new NotFoundException('Scene not found');
+      return scene;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to retrieve scene', { cause: error });
+    }
   }
 
-  update(id: number, updateSceneDto: UpdateSceneDto) {
-    return `This action updates a #${id} scene`;
+  async update(uuid: string, updateSceneDto: UpdateSceneDto) {
+    try {
+      return await this.prisma.scene.update({ where: { uuid }, data: updateSceneDto });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update scene', { cause: error });
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} scene`;
+  async remove(uuid: string) {
+    try {
+      return await this.prisma.scene.delete({ where: { uuid } });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete scene', { cause: error });
+    }
   }
 }
