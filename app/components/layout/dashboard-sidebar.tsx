@@ -11,6 +11,7 @@ import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
 import { siteConfig } from "@/config/navigation/site";
 import type { DashboardSidebarItem } from "@/types";
+import { signOut } from "next-auth/react";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
 
@@ -118,7 +119,12 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
                 Billing
               </DropdownItem>
               <DropdownSection>
-                <DropdownItem key="logout" color="danger" startContent={<LogOut className="size-4" />}>
+                <DropdownItem 
+                  key="logout" 
+                  color="danger" 
+                  startContent={<LogOut className="size-4" />}
+                  onPress={() => signOut({ callbackUrl: "/auth/sign-in" })}
+                >
                   Log out
                 </DropdownItem>
               </DropdownSection>

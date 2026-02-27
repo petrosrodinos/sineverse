@@ -1,9 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { LoggedInUser } from "@/app/features/auth/interfaces/auth.interface";
-import { signIn } from "@/app/features/auth/services/auth";
+import { signIn, signUp } from "@/app/features/auth/services/auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
     },
@@ -13,6 +13,8 @@ export const authOptions: NextAuthOptions = {
             credentials: {
                 email: {},
                 password: {},
+                full_name: {},
+                action: {},
             },
             async authorize(credentials) {
 
@@ -21,7 +23,20 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 try {
-                    const result: LoggedInUser = await signIn(credentials);
+                    let result: LoggedInUser;
+
+                    if (credentials.action === 'register') {
+                        result = await signUp({
+                            email: credentials.email,
+                            password: credentials.password,
+                            full_name: credentials.full_name || '',
+                        });
+                    } else {
+                        result = await signIn({
+                            email: credentials.email,
+                            password: credentials.password,
+                        });
+                    }
 
                     if (!result || !result.access_token || !result.user_uuid || !result.email) {
                         return null;
@@ -47,6 +62,11 @@ export const authOptions: NextAuthOptions = {
     ],
 
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            if (url.startsWith("/")) return `${baseUrl}${url}`;
+            else if (new URL(url).origin === baseUrl) return url;
+            return baseUrl + "/dashboard";
+        },
         async jwt({ token, user }) {
             if (user) {
                 token.user_uuid = user.user_uuid;
