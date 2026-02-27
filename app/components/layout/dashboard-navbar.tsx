@@ -5,9 +5,12 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection 
 import { Avatar } from "@heroui/avatar";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { User, CreditCard, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function DashboardNavbar() {
+  const { data: session } = useSession();
+  const {full_name,email} = session || {}
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="end">
@@ -15,12 +18,12 @@ export function DashboardNavbar() {
           <ThemeSwitch />
           <Dropdown placement="bottom-end" classNames={{ content: "rounded-xl shadow-lg border border-default-200/80 p-0 min-w-[220px]" }}>
             <DropdownTrigger>
-              <Avatar as="button" name="John Doe" className="h-8 w-8 cursor-pointer transition-transform" />
+              <Avatar as="button" name={full_name} className="h-8 w-8 cursor-pointer transition-transform" />
             </DropdownTrigger>
             <DropdownMenu aria-label="User menu" className="p-0" itemClasses={{ base: "gap-3" }}>
               <DropdownSection showDivider>
-                <DropdownItem key="profile" isReadOnly className="h-auto cursor-default gap-3 py-3" startContent={<Avatar name="John Doe" className="h-10 w-10 shrink-0" />} description="john.doe@example.com">
-                  John Doe
+                <DropdownItem key="profile" isReadOnly className="h-auto cursor-default gap-3 py-3" startContent={<Avatar name={full_name} className="h-10 w-10 shrink-0" />} description={email}>
+                  {full_name}
                 </DropdownItem>
               </DropdownSection>
               <DropdownSection className="py-1">

@@ -11,13 +11,14 @@ import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
 import { siteConfig } from "@/config/navigation/site";
 import type { DashboardSidebarItem } from "@/types";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
 
 function useSidebarCollapsed() {
   const [userCollapsed, setUserCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+    
 
   useEffect(() => {
     const mql = window.matchMedia(SIDEBAR_MEDIA_QUERY);
@@ -41,6 +42,8 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ items }: DashboardSidebarProps) {
   const pathname = usePathname();
   const { collapsed, toggle } = useSidebarCollapsed();
+  const { data: session } = useSession();
+  const {full_name,email} = session || {}
 
   return (
     <aside
@@ -99,12 +102,12 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
                   collapsed ? "justify-center min-w-0 px-0" : "justify-start gap-3 px-3"
                 )}
               >
-                <Avatar name="John Doe" className="h-9 w-9 shrink-0" />
+                <Avatar name={full_name} className="h-9 w-9 shrink-0" />
                 {!collapsed && (
                   <>
                     <div className="min-w-0 flex-1 text-left">
-                      <p className="truncate text-sm font-semibold text-foreground">John Doe</p>
-                      <p className="truncate text-xs font-normal text-default-500">john.doe@example.com</p>
+                      <p className="truncate text-sm font-semibold text-foreground">{full_name}</p>
+                      <p className="truncate text-xs font-normal text-default-500">{email}</p>
                     </div>
                     <ChevronsUpDown className="size-4 shrink-0 text-default-400" />
                   </>
