@@ -7,7 +7,7 @@ import type {
     WebsocketSubscription,
 } from '../interfaces/websocket-client.interface';
 import { WEBSOCKET_EVENTS } from '../interfaces/websocket-events.constants';
-import { getAuthStoreState } from '@/app/stores/auth';
+import { getAuthStoreState } from '@/stores/auth';
 
 const DEFAULT_OPTIONS: WebsocketConnectOptions = {
     auto_reconnect: true,

@@ -15,6 +15,26 @@ export const ApiRoutes = {
         prefix: "/users",
         me: "/users/me",
     },
+    projects: {
+        prefix: "/projects",
+        project: (project_uuid: string) => `/projects/${project_uuid}`,
+    },
+    scenes: {
+        prefix: "/scenes",
+        scene: (scene_uuid: string) => `/scenes/${scene_uuid}`,
+    },
+    scene_variations: {
+        prefix: "/scene-variations",
+        scene_variation: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}`,
+    },
+    scene_videos: {
+        prefix: "/scene-videos",
+        scene_video: (scene_video_uuid: string) => `/scene-videos/${scene_video_uuid}`,
+    },
+    final_projects: {
+        prefix: "/final-projects",
+        final_project: (final_project_uuid: string) => `/final-projects/${final_project_uuid}`,
+    },
     google_maps: {
         timezone: "/google-maps/timezone",
     },

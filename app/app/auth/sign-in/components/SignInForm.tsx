@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button, Input, Link } from "@heroui/react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { useSignin } from "@/app/features/auth/hooks/use-auth";
+import { useSignin } from "@/features/auth/hooks/use-auth";
 
 const signInSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),

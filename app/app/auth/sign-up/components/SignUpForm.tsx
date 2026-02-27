@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button, Input, Link } from "@heroui/react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { useSignup } from "@/app/features/auth/hooks/use-auth";
+import { useSignup } from "@/features/auth/hooks/use-auth";
 
 const signUpSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),

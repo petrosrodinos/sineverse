@@ -1,7 +1,7 @@
+import { LoggedInUser } from "@/features/auth/interfaces/auth.interface";
+import { signIn, signUp } from "@/features/auth/services/auth";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { LoggedInUser } from "@/app/features/auth/interfaces/auth.interface";
-import { signIn, signUp } from "@/app/features/auth/services/auth";
 
 const authOptions: NextAuthOptions = {
     session: {

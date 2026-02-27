@@ -2,9 +2,9 @@ import { adminLoginToAccount, refreshAccountToken } from "../services/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { LoggedInUser, SignInUser, SignUpUser } from "../interfaces/auth.interface";
 import { addToast } from "@heroui/toast";
-import { useAuthStore } from "@/app/stores/auth";
 import { Routes } from "@/config/routes";
 import { signIn, getSession } from "next-auth/react"
+import { useAuthStore } from "@/stores/auth";
 
 
 export function useSignin() {
