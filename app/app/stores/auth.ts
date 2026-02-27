@@ -9,6 +9,7 @@ interface UserStore extends LoggedInUser {
 }
 
 const initialValues: UserStore = {
+    id: "",
     isLoggedIn: false,
     user_uuid: null,
     role: null,

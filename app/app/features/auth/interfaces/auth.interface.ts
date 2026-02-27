@@ -11,7 +11,20 @@ export interface SignUpUser {
     password: string;
 }
 
+export interface AuthResponse {
+    access_token: string;
+    expires_in: string;
+    user: {
+        uuid: string;
+        email: string;
+        role: RoleType;
+        avatar?: string;
+        full_name?: string;
+    }
+}
+
 export interface LoggedInUser {
+    id: string;
     user_uuid: string | null;
     email: string | null;
     role: RoleType | null;
