@@ -1,128 +1,142 @@
-export const styleOptions = [
-    { label: "Cinematic", value: "cinematic" },
-    { label: "Hyper Realistic", value: "hyper_realistic" },
-    { label: "Anime", value: "anime" },
-    { label: "Noir", value: "noir" },
-    { label: "Cyberpunk", value: "cyberpunk" },
-    { label: "Fantasy", value: "fantasy" },
-    { label: "Documentary", value: "documentary" },
-    { label: "Western", value: "western" },
-    { label: "Horror", value: "horror" },
-    { label: "Sci-Fi", value: "sci_fi" },
+import { Styles, CameraMovements, LensTypes, DepthOfFields, TimeOfDays, CameraStyles, ShotTypes, AspectRatios, Resolutions, Lightings, ColorGrades, AiModels, AudioStyles } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+
+export const StylesOptions = [
+    { label: "Cinematic", value: Styles.cinematic },
+    { label: "Hyper Realistic", value: Styles.hyper_realistic },
+    { label: "Anime", value: Styles.anime },
+    { label: "Noir", value: Styles.noir },
+    { label: "Cyberpunk", value: Styles.cyberpunk },
+    { label: "Fantasy", value: Styles.fantasy },
+    { label: "Documentary", value: Styles.documentary },
+    { label: "Western", value: Styles.western },
+    { label: "Horror", value: Styles.horror },
+    { label: "Sci-Fi", value: Styles.sci_fi },
 ];
 
-// Mood
-export const moodOptions = [
-    { label: "Dark", value: "dark" },
-    { label: "Uplifting", value: "uplifting" },
-    { label: "Tense", value: "tense" },
-    { label: "Dreamy", value: "dreamy" },
-    { label: "Epic", value: "epic" },
-    { label: "Romantic", value: "romantic" },
-    { label: "Mysterious", value: "mysterious" },
-    { label: "Melancholic", value: "melancholic" },
+
+export const CameraMovementOptions = [
+    { label: "Static", value: CameraMovements.static },
+    { label: "Pan", value: CameraMovements.pan },
+    { label: "Tilt", value: CameraMovements.tilt },
+    { label: "Zoom", value: CameraMovements.zoom },
+    { label: "Dolly", value: CameraMovements.dolly },
+    { label: "Tracking", value: CameraMovements.tracking },
+    { label: "Crane", value: CameraMovements.crane },
 ];
 
-// Camera Style
-export const cameraStyleOptions = [
-    { label: "Handheld", value: "handheld" },
-    { label: "Drone", value: "drone" },
-    { label: "Steadicam", value: "steadicam" },
-    { label: "Tripod", value: "tripod" },
-    { label: "POV", value: "pov" },
+export const LensTypeOptions = [
+    { label: "Wide Angle", value: LensTypes.wide_angle },
+    { label: "Standard", value: LensTypes.standard },
+    { label: "Telephoto", value: LensTypes.telephoto },
+    { label: "Macro", value: LensTypes.macro },
+    { label: "Anamorphic", value: LensTypes.anamorphic },
 ];
 
-// Shot Type
-export const shotTypeOptions = [
-    { label: "Wide Shot", value: "wide_shot" },
-    { label: "Medium Shot", value: "medium_shot" },
-    { label: "Close-Up", value: "close_up" },
-    { label: "Extreme Close-Up", value: "extreme_close_up" },
-    { label: "Over The Shoulder", value: "over_the_shoulder" },
-    { label: "Establishing Shot", value: "establishing_shot" },
+export const DepthOfFieldOptions = [
+    { label: "Shallow", value: DepthOfFields.shallow },
+    { label: "Deep", value: DepthOfFields.deep },
 ];
 
-// Aspect Ratio
-export const aspectRatioOptions = [
-    { label: "16:9 (YouTube / Film)", value: "16:9" },
-    { label: "9:16 (TikTok / Reels)", value: "9:16" },
-    { label: "1:1 (Instagram)", value: "1:1" },
-    { label: "2.35:1 (Cinematic Wide)", value: "2.35:1" },
-    { label: "4:3 (Classic Film)", value: "4:3" },
+export const TimeOfDayOptions = [
+    { label: "Morning", value: TimeOfDays.morning },
+    { label: "Noon", value: TimeOfDays.noon },
+    { label: "Afternoon", value: TimeOfDays.afternoon },
+    { label: "Evening", value: TimeOfDays.evening },
+    { label: "Night", value: TimeOfDays.night },
+    { label: "Midnight", value: TimeOfDays.midnight },
 ];
 
-// Resolution
-export const resolutionOptions = [
-    { label: "720p HD", value: "720p" },
-    { label: "1080p Full HD", value: "1080p" },
-    { label: "1440p QHD", value: "1440p" },
-    { label: "4K Ultra HD", value: "4k" },
+export const CameraStyleOptions = [
+    { label: "Handheld", value: CameraStyles.handheld },
+    { label: "Drone", value: CameraStyles.drone },
+    { label: "Steadicam", value: CameraStyles.steadicam },
+    { label: "Tripod", value: CameraStyles.tripod },
+    { label: "POV", value: CameraStyles.pov },
 ];
 
-// Lighting
-export const lightingOptions = [
-    { label: "Golden Hour", value: "golden_hour" },
-    { label: "Blue Hour", value: "blue_hour" },
-    { label: "Neon", value: "neon" },
-    { label: "Low Key", value: "low_key" },
-    { label: "High Key", value: "high_key" },
-    { label: "Natural Light", value: "natural_light" },
-    { label: "Studio Light", value: "studio_light" },
+export const ShotTypeOptions = [
+    { label: "Wide Shot", value: ShotTypes.wide_shot },
+    { label: "Medium Shot", value: ShotTypes.medium_shot },
+    { label: "Close-Up", value: ShotTypes.close_up },
+    { label: "Extreme Close-Up", value: ShotTypes.extreme_close_up },
+    { label: "Over The Shoulder", value: ShotTypes.over_the_shoulder },
+    { label: "Establishing Shot", value: ShotTypes.establishing_shot },
 ];
 
-// Color Grade
-export const colorGradeOptions = [
-    { label: "Teal & Orange", value: "teal_orange" },
-    { label: "Desaturated", value: "desaturated" },
-    { label: "Vibrant", value: "vibrant" },
-    { label: "Black & White", value: "black_white" },
-    { label: "Vintage Film", value: "vintage_film" },
+export const AspectRatioOptions = [
+    { label: "16:9 (YouTube / Film)", value: AspectRatios["16:9"] },
+    { label: "9:16 (TikTok / Reels)", value: AspectRatios["9:16"] },
+    { label: "1:1 (Instagram)", value: AspectRatios["1:1"] },
+    { label: "2.35:1 (Cinematic Wide)", value: AspectRatios["2.35:1"] },
+    { label: "4:3 (Classic Film)", value: AspectRatios["4:3"] },
 ];
 
-// AI Model
-export const aiModelOptions = [
-    { label: "Veo 3", value: "VEO3" },
-    { label: "Runway", value: "RUNWAY" },
-    { label: "Pika", value: "PIKA" },
-    { label: "Stability", value: "STABILITY" },
+export const ResolutionOptions = [
+    { label: "720p HD", value: Resolutions["720p"] },
+    { label: "1080p Full HD", value: Resolutions["1080p"] },
+    { label: "1440p QHD", value: Resolutions["1440p"] },
+    { label: "4K Ultra HD", value: Resolutions["4k"] },
 ];
 
-// Audio Style
-export const audioStyleOptions = [
-    { label: "Orchestral", value: "orchestral" },
-    { label: "Ambient", value: "ambient" },
-    { label: "Cinematic Trailer", value: "cinematic_trailer" },
-    { label: "Synthwave", value: "synthwave" },
-    { label: "Minimal", value: "minimal" },
+export const LightingOptions = [
+    { label: "Golden Hour", value: Lightings.golden_hour },
+    { label: "Blue Hour", value: Lightings.blue_hour },
+    { label: "Neon", value: Lightings.neon },
+    { label: "Low Key", value: Lightings.low_key },
+    { label: "High Key", value: Lightings.high_key },
+    { label: "Natural Light", value: Lightings.natural_light },
+    { label: "Studio Light", value: Lightings.studio_light },
 ];
 
-// Style labels
-export const StyleOptionsLabels = {
-    cinematic: "Cinematic",
-    hyper_realistic: "Hyper Realistic",
-    anime: "Anime",
-    noir: "Noir",
-    cyberpunk: "Cyberpunk",
-    fantasy: "Fantasy",
-    documentary: "Documentary",
-    western: "Western",
-    horror: "Horror",
-    sci_fi: "Sci-Fi",
+export const ColorGradeOptions = [
+    { label: "Teal & Orange", value: ColorGrades.teal_orange },
+    { label: "Desaturated", value: ColorGrades.desaturated },
+    { label: "Vibrant", value: ColorGrades.vibrant },
+    { label: "Black & White", value: ColorGrades.black_white },
+    { label: "Vintage Film", value: ColorGrades.vintage_film },
+];
+
+export const AiModelOptions = [
+    { label: "Veo 3", value: AiModels.VEO3 },
+    { label: "Runway", value: AiModels.RUNWAY },
+    { label: "Pika", value: AiModels.PIKA },
+    { label: "Stability", value: AiModels.STABILITY },
+];
+
+
+
+export const CameraMovementOptionsLabels = {
+    static: "Static",
+    pan: "Pan",
+    tilt: "Tilt",
+    zoom: "Zoom",
+    dolly: "Dolly",
+    tracking: "Tracking",
+    crane: "Crane",
 } as const;
 
-// Mood labels
-export const MoodOptionsLabels = {
-    dark: "Dark",
-    uplifting: "Uplifting",
-    tense: "Tense",
-    dreamy: "Dreamy",
-    epic: "Epic",
-    romantic: "Romantic",
-    mysterious: "Mysterious",
-    melancholic: "Melancholic",
+export const LensTypeOptionsLabels = {
+    wide_angle: "Wide Angle",
+    standard: "Standard",
+    telephoto: "Telephoto",
+    macro: "Macro",
+    anamorphic: "Anamorphic",
 } as const;
 
-// Camera Style labels
+export const DepthOfFieldOptionsLabels = {
+    shallow: "Shallow",
+    deep: "Deep",
+} as const;
+
+export const TimeOfDayOptionsLabels = {
+    morning: "Morning",
+    noon: "Noon",
+    afternoon: "Afternoon",
+    evening: "Evening",
+    night: "Night",
+    midnight: "Midnight",
+} as const;
+
 export const CameraStyleOptionsLabels = {
     handheld: "Handheld",
     drone: "Drone",
@@ -131,7 +145,6 @@ export const CameraStyleOptionsLabels = {
     pov: "POV",
 } as const;
 
-// Shot Type labels
 export const ShotTypeOptionsLabels = {
     wide_shot: "Wide Shot",
     medium_shot: "Medium Shot",
@@ -141,7 +154,6 @@ export const ShotTypeOptionsLabels = {
     establishing_shot: "Establishing Shot",
 } as const;
 
-// Aspect Ratio labels
 export const AspectRatioOptionsLabels = {
     "16:9": "16:9 (YouTube / Film)",
     "9:16": "9:16 (TikTok / Reels)",
@@ -150,7 +162,6 @@ export const AspectRatioOptionsLabels = {
     "4:3": "4:3 (Classic Film)",
 } as const;
 
-// Resolution labels
 export const ResolutionOptionsLabels = {
     "720p": "720p HD",
     "1080p": "1080p Full HD",
@@ -158,7 +169,6 @@ export const ResolutionOptionsLabels = {
     "4k": "4K Ultra HD",
 } as const;
 
-// Lighting labels
 export const LightingOptionsLabels = {
     golden_hour: "Golden Hour",
     blue_hour: "Blue Hour",
@@ -169,7 +179,6 @@ export const LightingOptionsLabels = {
     studio_light: "Studio Light",
 } as const;
 
-// Color Grade labels
 export const ColorGradeOptionsLabels = {
     teal_orange: "Teal & Orange",
     desaturated: "Desaturated",
@@ -178,7 +187,6 @@ export const ColorGradeOptionsLabels = {
     vintage_film: "Vintage Film",
 } as const;
 
-// AI Model labels
 export const AiModelOptionsLabels = {
     VEO3: "Veo 3",
     RUNWAY: "Runway",
@@ -186,7 +194,6 @@ export const AiModelOptionsLabels = {
     STABILITY: "Stability",
 } as const;
 
-// Audio Style labels
 export const AudioStyleOptionsLabels = {
     orchestral: "Orchestral",
     ambient: "Ambient",

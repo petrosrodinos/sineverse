@@ -120,9 +120,9 @@ model SceneVariation {
   prompt_image_uuid String?
 
   // Creative direction
-  style       String? // cinematic, anime, noir, hyperrealistic
-  mood        String? // dark, uplifting, tense, dreamy
-  genre_style String? // sci-fi, western, horror, fantasy
+  style String? // cinematic, anime, noir, hyperrealistic
+  tone  String? // dark, uplifting, tense, dreamy
+  genre String? // sci-fi, western, horror, fantasy
 
   // Camera & composition
   camera_style    String? // handheld, drone, steadicam

@@ -11,15 +11,15 @@ export class CreateSceneVariationDto {
   @IsOptional()
   style?: string;
 
-  @ApiPropertyOptional({ description: 'Mood of the scene' })
+  @ApiPropertyOptional({ description: 'Tone of the scene' })
   @IsString()
   @IsOptional()
-  mood?: string;
+  tone?: string;
 
   @ApiPropertyOptional({ description: 'Genre style specific' })
   @IsString()
   @IsOptional()
-  genre_style?: string;
+  genre?: string;
 
   @ApiPropertyOptional({ description: 'Camera style' })
   @IsString()

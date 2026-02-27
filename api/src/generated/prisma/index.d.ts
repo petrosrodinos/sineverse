@@ -5317,8 +5317,8 @@ export namespace Prisma {
     scene_uuid: string | null
     prompt_image_uuid: string | null
     style: string | null
-    mood: string | null
-    genre_style: string | null
+    tone: string | null
+    genre: string | null
     camera_style: string | null
     shot_type: string | null
     camera_movement: string | null
@@ -5351,8 +5351,8 @@ export namespace Prisma {
     scene_uuid: string | null
     prompt_image_uuid: string | null
     style: string | null
-    mood: string | null
-    genre_style: string | null
+    tone: string | null
+    genre: string | null
     camera_style: string | null
     shot_type: string | null
     camera_movement: string | null
@@ -5385,8 +5385,8 @@ export namespace Prisma {
     scene_uuid: number
     prompt_image_uuid: number
     style: number
-    mood: number
-    genre_style: number
+    tone: number
+    genre: number
     camera_style: number
     shot_type: number
     camera_movement: number
@@ -5441,8 +5441,8 @@ export namespace Prisma {
     scene_uuid?: true
     prompt_image_uuid?: true
     style?: true
-    mood?: true
-    genre_style?: true
+    tone?: true
+    genre?: true
     camera_style?: true
     shot_type?: true
     camera_movement?: true
@@ -5475,8 +5475,8 @@ export namespace Prisma {
     scene_uuid?: true
     prompt_image_uuid?: true
     style?: true
-    mood?: true
-    genre_style?: true
+    tone?: true
+    genre?: true
     camera_style?: true
     shot_type?: true
     camera_movement?: true
@@ -5509,8 +5509,8 @@ export namespace Prisma {
     scene_uuid?: true
     prompt_image_uuid?: true
     style?: true
-    mood?: true
-    genre_style?: true
+    tone?: true
+    genre?: true
     camera_style?: true
     shot_type?: true
     camera_movement?: true
@@ -5630,8 +5630,8 @@ export namespace Prisma {
     scene_uuid: string
     prompt_image_uuid: string | null
     style: string | null
-    mood: string | null
-    genre_style: string | null
+    tone: string | null
+    genre: string | null
     camera_style: string | null
     shot_type: string | null
     camera_movement: string | null
@@ -5683,8 +5683,8 @@ export namespace Prisma {
     scene_uuid?: boolean
     prompt_image_uuid?: boolean
     style?: boolean
-    mood?: boolean
-    genre_style?: boolean
+    tone?: boolean
+    genre?: boolean
     camera_style?: boolean
     shot_type?: boolean
     camera_movement?: boolean
@@ -5721,8 +5721,8 @@ export namespace Prisma {
     scene_uuid?: boolean
     prompt_image_uuid?: boolean
     style?: boolean
-    mood?: boolean
-    genre_style?: boolean
+    tone?: boolean
+    genre?: boolean
     camera_style?: boolean
     shot_type?: boolean
     camera_movement?: boolean
@@ -5757,8 +5757,8 @@ export namespace Prisma {
     scene_uuid?: boolean
     prompt_image_uuid?: boolean
     style?: boolean
-    mood?: boolean
-    genre_style?: boolean
+    tone?: boolean
+    genre?: boolean
     camera_style?: boolean
     shot_type?: boolean
     camera_movement?: boolean
@@ -5793,8 +5793,8 @@ export namespace Prisma {
     scene_uuid?: boolean
     prompt_image_uuid?: boolean
     style?: boolean
-    mood?: boolean
-    genre_style?: boolean
+    tone?: boolean
+    genre?: boolean
     camera_style?: boolean
     shot_type?: boolean
     camera_movement?: boolean
@@ -5821,7 +5821,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "scene_uuid" | "prompt_image_uuid" | "style" | "mood" | "genre_style" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "prompt_text" | "negative_prompt" | "selected" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
+  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "scene_uuid" | "prompt_image_uuid" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "prompt_text" | "negative_prompt" | "selected" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
   export type SceneVariationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     scene?: boolean | SceneDefaultArgs<ExtArgs>
     prompt_image?: boolean | SceneVariation$prompt_imageArgs<ExtArgs>
@@ -5850,8 +5850,8 @@ export namespace Prisma {
       scene_uuid: string
       prompt_image_uuid: string | null
       style: string | null
-      mood: string | null
-      genre_style: string | null
+      tone: string | null
+      genre: string | null
       camera_style: string | null
       shot_type: string | null
       camera_movement: string | null
@@ -6307,8 +6307,8 @@ export namespace Prisma {
     readonly scene_uuid: FieldRef<"SceneVariation", 'String'>
     readonly prompt_image_uuid: FieldRef<"SceneVariation", 'String'>
     readonly style: FieldRef<"SceneVariation", 'String'>
-    readonly mood: FieldRef<"SceneVariation", 'String'>
-    readonly genre_style: FieldRef<"SceneVariation", 'String'>
+    readonly tone: FieldRef<"SceneVariation", 'String'>
+    readonly genre: FieldRef<"SceneVariation", 'String'>
     readonly camera_style: FieldRef<"SceneVariation", 'String'>
     readonly shot_type: FieldRef<"SceneVariation", 'String'>
     readonly camera_movement: FieldRef<"SceneVariation", 'String'>
@@ -10581,8 +10581,8 @@ export namespace Prisma {
     scene_uuid: 'scene_uuid',
     prompt_image_uuid: 'prompt_image_uuid',
     style: 'style',
-    mood: 'mood',
-    genre_style: 'genre_style',
+    tone: 'tone',
+    genre: 'genre',
     camera_style: 'camera_style',
     shot_type: 'shot_type',
     camera_movement: 'camera_movement',
@@ -11092,8 +11092,8 @@ export namespace Prisma {
     scene_uuid?: StringFilter<"SceneVariation"> | string
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
-    mood?: StringNullableFilter<"SceneVariation"> | string | null
-    genre_style?: StringNullableFilter<"SceneVariation"> | string | null
+    tone?: StringNullableFilter<"SceneVariation"> | string | null
+    genre?: StringNullableFilter<"SceneVariation"> | string | null
     camera_style?: StringNullableFilter<"SceneVariation"> | string | null
     shot_type?: StringNullableFilter<"SceneVariation"> | string | null
     camera_movement?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11129,8 +11129,8 @@ export namespace Prisma {
     scene_uuid?: SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
     style?: SortOrderInput | SortOrder
-    mood?: SortOrderInput | SortOrder
-    genre_style?: SortOrderInput | SortOrder
+    tone?: SortOrderInput | SortOrder
+    genre?: SortOrderInput | SortOrder
     camera_style?: SortOrderInput | SortOrder
     shot_type?: SortOrderInput | SortOrder
     camera_movement?: SortOrderInput | SortOrder
@@ -11169,8 +11169,8 @@ export namespace Prisma {
     scene_uuid?: StringFilter<"SceneVariation"> | string
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
-    mood?: StringNullableFilter<"SceneVariation"> | string | null
-    genre_style?: StringNullableFilter<"SceneVariation"> | string | null
+    tone?: StringNullableFilter<"SceneVariation"> | string | null
+    genre?: StringNullableFilter<"SceneVariation"> | string | null
     camera_style?: StringNullableFilter<"SceneVariation"> | string | null
     shot_type?: StringNullableFilter<"SceneVariation"> | string | null
     camera_movement?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11206,8 +11206,8 @@ export namespace Prisma {
     scene_uuid?: SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
     style?: SortOrderInput | SortOrder
-    mood?: SortOrderInput | SortOrder
-    genre_style?: SortOrderInput | SortOrder
+    tone?: SortOrderInput | SortOrder
+    genre?: SortOrderInput | SortOrder
     camera_style?: SortOrderInput | SortOrder
     shot_type?: SortOrderInput | SortOrder
     camera_movement?: SortOrderInput | SortOrder
@@ -11248,8 +11248,8 @@ export namespace Prisma {
     scene_uuid?: StringWithAggregatesFilter<"SceneVariation"> | string
     prompt_image_uuid?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
-    mood?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
-    genre_style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
+    tone?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
+    genre?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     camera_style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     shot_type?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     camera_movement?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
@@ -11842,8 +11842,8 @@ export namespace Prisma {
   export type SceneVariationCreateInput = {
     uuid?: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -11879,8 +11879,8 @@ export namespace Prisma {
     scene_uuid: string
     prompt_image_uuid?: string | null
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -11911,8 +11911,8 @@ export namespace Prisma {
   export type SceneVariationUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11948,8 +11948,8 @@ export namespace Prisma {
     scene_uuid?: StringFieldUpdateOperationsInput | string
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11983,8 +11983,8 @@ export namespace Prisma {
     scene_uuid: string
     prompt_image_uuid?: string | null
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -12014,8 +12014,8 @@ export namespace Prisma {
   export type SceneVariationUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12048,8 +12048,8 @@ export namespace Prisma {
     scene_uuid?: StringFieldUpdateOperationsInput | string
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12808,8 +12808,8 @@ export namespace Prisma {
     scene_uuid?: SortOrder
     prompt_image_uuid?: SortOrder
     style?: SortOrder
-    mood?: SortOrder
-    genre_style?: SortOrder
+    tone?: SortOrder
+    genre?: SortOrder
     camera_style?: SortOrder
     shot_type?: SortOrder
     camera_movement?: SortOrder
@@ -12852,8 +12852,8 @@ export namespace Prisma {
     scene_uuid?: SortOrder
     prompt_image_uuid?: SortOrder
     style?: SortOrder
-    mood?: SortOrder
-    genre_style?: SortOrder
+    tone?: SortOrder
+    genre?: SortOrder
     camera_style?: SortOrder
     shot_type?: SortOrder
     camera_movement?: SortOrder
@@ -12886,8 +12886,8 @@ export namespace Prisma {
     scene_uuid?: SortOrder
     prompt_image_uuid?: SortOrder
     style?: SortOrder
-    mood?: SortOrder
-    genre_style?: SortOrder
+    tone?: SortOrder
+    genre?: SortOrder
     camera_style?: SortOrder
     shot_type?: SortOrder
     camera_movement?: SortOrder
@@ -14459,8 +14459,8 @@ export namespace Prisma {
   export type SceneVariationCreateWithoutSceneInput = {
     uuid?: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -14494,8 +14494,8 @@ export namespace Prisma {
     uuid?: string
     prompt_image_uuid?: string | null
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -14598,8 +14598,8 @@ export namespace Prisma {
     scene_uuid?: StringFilter<"SceneVariation"> | string
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
-    mood?: StringNullableFilter<"SceneVariation"> | string | null
-    genre_style?: StringNullableFilter<"SceneVariation"> | string | null
+    tone?: StringNullableFilter<"SceneVariation"> | string | null
+    genre?: StringNullableFilter<"SceneVariation"> | string | null
     camera_style?: StringNullableFilter<"SceneVariation"> | string | null
     shot_type?: StringNullableFilter<"SceneVariation"> | string | null
     camera_movement?: StringNullableFilter<"SceneVariation"> | string | null
@@ -14847,8 +14847,8 @@ export namespace Prisma {
   export type SceneVariationCreateWithoutVideosInput = {
     uuid?: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -14883,8 +14883,8 @@ export namespace Prisma {
     scene_uuid: string
     prompt_image_uuid?: string | null
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -14968,8 +14968,8 @@ export namespace Prisma {
   export type SceneVariationUpdateWithoutVideosInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15004,8 +15004,8 @@ export namespace Prisma {
     scene_uuid?: StringFieldUpdateOperationsInput | string
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15422,8 +15422,8 @@ export namespace Prisma {
   export type SceneVariationCreateWithoutPrompt_imageInput = {
     uuid?: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -15457,8 +15457,8 @@ export namespace Prisma {
     uuid?: string
     scene_uuid: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -15825,8 +15825,8 @@ export namespace Prisma {
     uuid?: string
     prompt_image_uuid?: string | null
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -15856,8 +15856,8 @@ export namespace Prisma {
   export type SceneVariationUpdateWithoutSceneInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15891,8 +15891,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15925,8 +15925,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16032,8 +16032,8 @@ export namespace Prisma {
     uuid?: string
     scene_uuid: string
     style?: string | null
-    mood?: string | null
-    genre_style?: string | null
+    tone?: string | null
+    genre?: string | null
     camera_style?: string | null
     shot_type?: string | null
     camera_movement?: string | null
@@ -16131,8 +16131,8 @@ export namespace Prisma {
   export type SceneVariationUpdateWithoutPrompt_imageInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16166,8 +16166,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16200,8 +16200,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     style?: NullableStringFieldUpdateOperationsInput | string | null
-    mood?: NullableStringFieldUpdateOperationsInput | string | null
-    genre_style?: NullableStringFieldUpdateOperationsInput | string | null
+    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genre?: NullableStringFieldUpdateOperationsInput | string | null
     camera_style?: NullableStringFieldUpdateOperationsInput | string | null
     shot_type?: NullableStringFieldUpdateOperationsInput | string | null
     camera_movement?: NullableStringFieldUpdateOperationsInput | string | null
