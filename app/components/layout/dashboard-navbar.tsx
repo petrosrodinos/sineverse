@@ -6,6 +6,7 @@ import { Avatar } from "@heroui/avatar";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { User, CreditCard, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { Routes } from "@/config/routes";
 
 export function DashboardNavbar() {
   const { data: session } = useSession();
@@ -38,7 +39,7 @@ export function DashboardNavbar() {
                   color="danger" 
                   startContent={<LogOut className="size-4" />} 
                   className="rounded-lg"
-                  onPress={() => signOut({ callbackUrl: "/auth/sign-in" })}
+                  onPress={() => signOut({ callbackUrl: Routes.auth.sign_in })}
                 >
                   Log out
                 </DropdownItem>

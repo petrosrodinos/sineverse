@@ -9,7 +9,7 @@ const QueryKeys = {
 }
 
 export const useProjects = () => {
-    return useQuery<Project[]>({ queryKey: [QueryKeys.projects], queryFn: getProjects });
+    return useQuery<Project[]>({ queryKey: [QueryKeys.projects], queryFn: getProjects, retry: false });
 }
 
 export const useProject = (uuid: string) => {

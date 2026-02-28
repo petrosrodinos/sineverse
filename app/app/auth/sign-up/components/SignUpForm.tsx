@@ -7,6 +7,7 @@ import * as z from "zod";
 import { Button, Input, Link } from "@heroui/react";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useSignup } from "@/features/auth/hooks/use-auth";
+import { Routes } from "@/config/routes";
 
 const signUpSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -158,7 +159,7 @@ export const SignUpForm = () => {
 
       <p className="text-center text-small text-default-500 mt-4">
         Already have an account?&nbsp;
-        <Link color="primary" href="/auth/sign-in" size="sm">
+        <Link color="primary" href={Routes.auth.sign_in} size="sm">
           Sign In
         </Link>
       </p>

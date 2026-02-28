@@ -2,10 +2,12 @@ import { LoggedInUser } from "@/features/auth/interfaces/auth.interface";
 import { signIn, signUp } from "@/features/auth/services/auth";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { environments } from "@/config/environments";
 
 const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt",
+        maxAge: environments.SESSION_EXPIRATION,
     },
     providers: [
         CredentialsProvider({
@@ -31,6 +33,7 @@ const authOptions: NextAuthOptions = {
                             password: credentials.password,
                             full_name: credentials.full_name || '',
                         });
+
                     } else {
                         result = await signIn({
                             email: credentials.email,

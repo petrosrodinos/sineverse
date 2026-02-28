@@ -1,13 +1,16 @@
 import { formatAuthUser } from "../utils/auth.utils";
-import axiosInstance from "@/config/api/axios";
 import type { LoggedInUser, SignInUser, SignUpUser } from "../interfaces/auth.interface";
 import { ApiRoutes } from "@/config/api/routes";
+import axios from "axios";
+import axiosInstance from "@/config/api/axios";
+import { environments } from "@/config/environments";
 
 export const signIn = async (
     { email, password }: SignInUser,
 ): Promise<LoggedInUser> => {
     try {
-        const response = await axiosInstance.post(ApiRoutes.auth.email.login, {
+        console.log('asd', `${environments.API_URL}${ApiRoutes.auth.email.login}`);
+        const response = await axios.post(`${environments.API_URL}${ApiRoutes.auth.email.login}`, {
             email,
             password,
         });
@@ -16,13 +19,14 @@ export const signIn = async (
         return formatAuthUser(auth_response);
 
     } catch (error) {
+        console.error(error);
         throw new Error("Failed to sign in. Please try again.");
     }
 };
 
 export const signUp = async ({ full_name, email, password }: SignUpUser): Promise<LoggedInUser> => {
     try {
-        const response = await axiosInstance.post(ApiRoutes.auth.email.register, {
+        const response = await axios.post(`${environments.API_URL}${ApiRoutes.auth.email.register}`, {
             full_name,
             email,
             password,

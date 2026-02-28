@@ -7,8 +7,8 @@ export const getProjects = async (): Promise<Project[]> => {
         const response = await axiosInstance.get<Project[]>(ApiRoutes.projects.prefix);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to fetch projects");
-        throw error;
+        console.error(error);
+        throw new Error(error?.response?.data?.message || "Failed to fetch projects");
     }
 }
 
@@ -17,8 +17,7 @@ export const getProject = async (uuid: string): Promise<Project> => {
         const response = await axiosInstance.get<Project>(ApiRoutes.projects.project(uuid));
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to fetch project");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to fetch project");
     }
 }
 
@@ -27,8 +26,7 @@ export const createProject = async (project: CreateProjectDto): Promise<Project>
         const response = await axiosInstance.post<Project>(ApiRoutes.projects.prefix, project);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to create project");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to create project");
     }
 }
 
@@ -37,8 +35,7 @@ export const updateProject = async (uuid: string, project: UpdateProjectDto): Pr
         const response = await axiosInstance.put<Project>(ApiRoutes.projects.project(uuid), project);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to update project");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to update project");
     }
 }
 
@@ -47,7 +44,6 @@ export const deleteProject = async (uuid: string) => {
         const response = await axiosInstance.delete(ApiRoutes.projects.project(uuid));
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to delete project");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to delete project");
     }
 }

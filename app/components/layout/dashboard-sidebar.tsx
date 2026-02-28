@@ -12,6 +12,7 @@ import { Tooltip } from "@heroui/tooltip";
 import { siteConfig } from "@/config/navigation/site";
 import type { DashboardSidebarItem } from "@/types";
 import { signOut, useSession } from "next-auth/react";
+import { Routes } from "@/config/routes";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
 
@@ -126,7 +127,7 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
                   key="logout" 
                   color="danger" 
                   startContent={<LogOut className="size-4" />}
-                  onPress={() => signOut({ callbackUrl: "/auth/sign-in" })}
+                  onPress={() => signOut({ callbackUrl: Routes.auth.sign_in })}
                 >
                   Log out
                 </DropdownItem>
