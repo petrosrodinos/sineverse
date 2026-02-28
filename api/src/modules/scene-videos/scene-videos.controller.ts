@@ -1,26 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { SceneVideosService } from './scene-videos.service';
 import { CreateSceneVideoDto } from './dto/create-scene-video.dto';
 import { UpdateSceneVideoDto } from './dto/update-scene-video.dto';
+import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 
 @ApiTags('Scene Videos')
 @Controller('scene-videos')
+@UseGuards(JwtGuard)
 export class SceneVideosController {
-  constructor(private readonly sceneVideosService: SceneVideosService) {}
+  constructor(private readonly sceneVideosService: SceneVideosService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new scene video reference' })
   @ApiResponse({ status: 201, description: 'The scene video has been successfully created.' })
-  create(@Body() createSceneVideoDto: CreateSceneVideoDto) {
-    return this.sceneVideosService.create(createSceneVideoDto);
+  create(@CurrentUser('user_uuid') user_uuid: string, @Body() createSceneVideoDto: CreateSceneVideoDto) {
+    return this.sceneVideosService.create(user_uuid, createSceneVideoDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve all scene videos' })
   @ApiResponse({ status: 200, description: 'Returned all scene videos successfully.' })
-  findAll() {
-    return this.sceneVideosService.findAll();
+  findAll(@CurrentUser('user_uuid') user_uuid: string) {
+    return this.sceneVideosService.findAll(user_uuid);
   }
 
   @Get(':uuid')
@@ -28,8 +31,8 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'Returned the scene video successfully.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  findOne(@Param('uuid') uuid: string) {
-    return this.sceneVideosService.findOne(uuid);
+  findOne(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.sceneVideosService.findOne(user_uuid, uuid);
   }
 
   @Patch(':uuid')
@@ -37,8 +40,8 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'The scene video has been successfully updated.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  update(@Param('uuid') uuid: string, @Body() updateSceneVideoDto: UpdateSceneVideoDto) {
-    return this.sceneVideosService.update(uuid, updateSceneVideoDto);
+  update(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateSceneVideoDto: UpdateSceneVideoDto) {
+    return this.sceneVideosService.update(user_uuid, uuid, updateSceneVideoDto);
   }
 
   @Delete(':uuid')
@@ -46,7 +49,7 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'The scene video has been successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  remove(@Param('uuid') uuid: string) {
-    return this.sceneVideosService.remove(uuid);
+  remove(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.sceneVideosService.remove(user_uuid, uuid);
   }
 }

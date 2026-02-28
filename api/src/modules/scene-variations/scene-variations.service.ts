@@ -5,32 +5,36 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class SceneVariationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createSceneVariationDto: CreateSceneVariationDto) {
+  async create(user_uuid: string, createSceneVariationDto: CreateSceneVariationDto) {
     try {
-      return await this.prisma.sceneVariation.create({ 
+      const scene = await this.prisma.scene.findFirst({ where: { uuid: createSceneVariationDto.scene_uuid, project: { user_uuid } } });
+      if (!scene) throw new NotFoundException('Scene not found');
+
+      return await this.prisma.sceneVariation.create({
         data: {
           ...createSceneVariationDto,
           ai_model: createSceneVariationDto.ai_model as any,
-        } 
+        }
       });
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to create scene variation', { cause: error });
     }
   }
 
-  async findAll() {
+  async findAll(user_uuid: string) {
     try {
-      return await this.prisma.sceneVariation.findMany();
+      return await this.prisma.sceneVariation.findMany({ where: { scene: { project: { user_uuid } } } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
     }
   }
 
-  async findOne(uuid: string) {
+  async findOne(user_uuid: string, uuid: string) {
     try {
-      const variation = await this.prisma.sceneVariation.findUnique({ where: { uuid } });
+      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid, scene: { project: { user_uuid } } } });
       if (!variation) throw new NotFoundException('Scene variation not found');
       return variation;
     } catch (error) {
@@ -39,22 +43,25 @@ export class SceneVariationsService {
     }
   }
 
-  async update(uuid: string, updateSceneVariationDto: UpdateSceneVariationDto) {
+  async update(user_uuid: string, uuid: string, updateSceneVariationDto: UpdateSceneVariationDto) {
     try {
-      return await this.prisma.sceneVariation.update({ 
-        where: { uuid }, 
+      await this.findOne(user_uuid, uuid);
+      return await this.prisma.sceneVariation.update({
+        where: { uuid },
         data: {
           ...updateSceneVariationDto,
           ai_model: updateSceneVariationDto.ai_model as any,
-        } 
+        }
       });
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to update scene variation', { cause: error });
     }
   }
 
-  async remove(uuid: string) {
+  async remove(user_uuid: string, uuid: string) {
     try {
+      await this.findOne(user_uuid, uuid);
       return await this.prisma.sceneVariation.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene variation', { cause: error });

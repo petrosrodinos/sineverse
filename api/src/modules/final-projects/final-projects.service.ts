@@ -5,27 +5,36 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class FinalProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createFinalProjectDto: CreateFinalProjectDto) {
+  async create(user_uuid: string, createFinalProjectDto: CreateFinalProjectDto) {
     try {
-      return await this.prisma.finalProject.create({ data: createFinalProjectDto });
+      const project = await this.prisma.project.findFirst({ where: { uuid: createFinalProjectDto.project_uuid, user_uuid } });
+      if (!project) throw new NotFoundException('Project not found');
+
+      return await this.prisma.finalProject.create({
+        data: {
+          ...createFinalProjectDto,
+          user_uuid,
+        }
+      });
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to create final project', { cause: error });
     }
   }
 
-  async findAll() {
+  async findAll(user_uuid: string) {
     try {
-      return await this.prisma.finalProject.findMany();
+      return await this.prisma.finalProject.findMany({ where: { user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve final projects', { cause: error });
     }
   }
 
-  async findOne(uuid: string) {
+  async findOne(user_uuid: string, uuid: string) {
     try {
-      const finalProject = await this.prisma.finalProject.findUnique({ where: { uuid } });
+      const finalProject = await this.prisma.finalProject.findFirst({ where: { uuid, user_uuid } });
       if (!finalProject) throw new NotFoundException('Final project not found');
       return finalProject;
     } catch (error) {
@@ -34,16 +43,18 @@ export class FinalProjectsService {
     }
   }
 
-  async update(uuid: string, updateFinalProjectDto: UpdateFinalProjectDto) {
+  async update(user_uuid: string, uuid: string, updateFinalProjectDto: UpdateFinalProjectDto) {
     try {
+      await this.findOne(user_uuid, uuid);
       return await this.prisma.finalProject.update({ where: { uuid }, data: updateFinalProjectDto });
     } catch (error) {
       throw new InternalServerErrorException('Failed to update final project', { cause: error });
     }
   }
 
-  async remove(uuid: string) {
+  async remove(user_uuid: string, uuid: string) {
     try {
+      await this.findOne(user_uuid, uuid);
       return await this.prisma.finalProject.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete final project', { cause: error });

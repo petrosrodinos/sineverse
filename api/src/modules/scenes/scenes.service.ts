@@ -5,7 +5,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class ScenesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createSceneDto: CreateSceneDto) {
     try {

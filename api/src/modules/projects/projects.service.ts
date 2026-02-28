@@ -5,32 +5,33 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createProjectDto: CreateProjectDto) {
+  async create(user_uuid: string, createProjectDto: CreateProjectDto) {
     try {
-      return await this.prisma.project.create({ 
+      return await this.prisma.project.create({
         data: {
           ...createProjectDto,
+          user_uuid,
           status: createProjectDto.status as any,
-        } 
+        }
       });
     } catch (error) {
       throw new InternalServerErrorException('Failed to create project', { cause: error });
     }
   }
 
-  async findAll() {
+  async findAll(user_uuid: string) {
     try {
-      return await this.prisma.project.findMany();
+      return await this.prisma.project.findMany({ where: { user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve projects', { cause: error });
     }
   }
 
-  async findOne(uuid: string) {
+  async findOne(user_uuid: string, uuid: string) {
     try {
-      const project = await this.prisma.project.findUnique({ where: { uuid } });
+      const project = await this.prisma.project.findFirst({ where: { uuid, user_uuid } });
       if (!project) throw new NotFoundException('Project not found');
       return project;
     } catch (error) {
@@ -39,22 +40,24 @@ export class ProjectsService {
     }
   }
 
-  async update(uuid: string, updateProjectDto: UpdateProjectDto) {
+  async update(user_uuid: string, uuid: string, updateProjectDto: UpdateProjectDto) {
     try {
-      return await this.prisma.project.update({ 
-        where: { uuid }, 
+      await this.findOne(user_uuid, uuid);
+      return await this.prisma.project.update({
+        where: { uuid },
         data: {
           ...updateProjectDto,
           status: updateProjectDto.status as any,
-        } 
+        }
       });
     } catch (error) {
       throw new InternalServerErrorException('Failed to update project', { cause: error });
     }
   }
 
-  async remove(uuid: string) {
+  async remove(user_uuid: string, uuid: string) {
     try {
+      await this.findOne(user_uuid, uuid);
       return await this.prisma.project.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete project', { cause: error });

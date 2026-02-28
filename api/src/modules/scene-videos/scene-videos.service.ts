@@ -5,33 +5,37 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
 export class SceneVideosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async create(createSceneVideoDto: CreateSceneVideoDto) {
+  async create(user_uuid: string, createSceneVideoDto: CreateSceneVideoDto) {
     try {
-      return await this.prisma.sceneVideo.create({ 
+      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid: createSceneVideoDto.prompt_variation_uuid, scene: { project: { user_uuid } } } });
+      if (!variation) throw new NotFoundException('Scene variation not found');
+
+      return await this.prisma.sceneVideo.create({
         data: {
           ...createSceneVideoDto,
           status: createSceneVideoDto.status as any,
           provider: createSceneVideoDto.provider as any,
-        } 
+        }
       });
     } catch (error) {
+      if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to create scene video', { cause: error });
     }
   }
 
-  async findAll() {
+  async findAll(user_uuid: string) {
     try {
-      return await this.prisma.sceneVideo.findMany();
+      return await this.prisma.sceneVideo.findMany({ where: { prompt_variation: { scene: { project: { user_uuid } } } } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene videos', { cause: error });
     }
   }
 
-  async findOne(uuid: string) {
+  async findOne(user_uuid: string, uuid: string) {
     try {
-      const video = await this.prisma.sceneVideo.findUnique({ where: { uuid } });
+      const video = await this.prisma.sceneVideo.findFirst({ where: { uuid, prompt_variation: { scene: { project: { user_uuid } } } } });
       if (!video) throw new NotFoundException('Scene video not found');
       return video;
     } catch (error) {
@@ -40,23 +44,25 @@ export class SceneVideosService {
     }
   }
 
-  async update(uuid: string, updateSceneVideoDto: UpdateSceneVideoDto) {
+  async update(user_uuid: string, uuid: string, updateSceneVideoDto: UpdateSceneVideoDto) {
     try {
-      return await this.prisma.sceneVideo.update({ 
-        where: { uuid }, 
+      await this.findOne(user_uuid, uuid);
+      return await this.prisma.sceneVideo.update({
+        where: { uuid },
         data: {
           ...updateSceneVideoDto,
           status: updateSceneVideoDto.status as any,
           provider: updateSceneVideoDto.provider as any,
-        } 
+        }
       });
     } catch (error) {
       throw new InternalServerErrorException('Failed to update scene video', { cause: error });
     }
   }
 
-  async remove(uuid: string) {
+  async remove(user_uuid: string, uuid: string) {
     try {
+      await this.findOne(user_uuid, uuid);
       return await this.prisma.sceneVideo.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene video', { cause: error });

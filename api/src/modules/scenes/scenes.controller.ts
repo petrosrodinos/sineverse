@@ -7,7 +7,7 @@ import { UpdateSceneDto } from './dto/update-scene.dto';
 @ApiTags('Scenes')
 @Controller('scenes')
 export class ScenesController {
-  constructor(private readonly scenesService: ScenesService) {}
+  constructor(private readonly scenesService: ScenesService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new scene' })
