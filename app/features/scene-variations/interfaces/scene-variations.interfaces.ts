@@ -1,7 +1,11 @@
+import { Document } from "@/features/documents/interfaces/document.interfaces";
 import { ProjectTone, ProjectGenre } from "@/features/projects/interfaces/projects.interfaces";
+import { Scene, SceneVideo } from "@/types/studio";
 
 export interface SceneVariation {
     id: string;
+    uuid: string;
+    prompt_image_uuid?: string;
     scene_uuid: string;
     style?: Style;
     tone?: ProjectTone;
@@ -30,6 +34,9 @@ export interface SceneVariation {
     selected?: boolean;
     created_at: string;
     updated_at: string;
+    prompt_image?: Document;
+    videos?: SceneVideo[];
+    scene?: Scene;
 }
 
 export interface CreateSceneVariationDto {
@@ -199,6 +206,16 @@ export const AudioStyles = {
     cinematic_trailer: "cinematic_trailer",
     synthwave: "synthwave",
     minimal: "minimal",
+    rock: "rock",
+    jazz: "jazz",
+    blues: "blues",
+    hip_hop: "hip_hop",
+    pop: "pop",
+    country: "country",
+    folk: "folk",
+    classical: "classical",
+    cinematic: "cinematic",
+    electronic: "electronic",
 } as const;
 
 export const Fps = {

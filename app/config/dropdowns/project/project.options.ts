@@ -1,6 +1,7 @@
-import { ProjectGenres, ProjectTones, ProjectGenre, ProjectTone } from "@/features/projects/interfaces/projects.interfaces";
+import { ProjectGenres, ProjectTones, ProjectTone, ProjectGenre } from "@/features/projects/interfaces/projects.interfaces";
+import { DropdownOption } from "@/interfaces/scene-variations-options.interfaces";
 
-export const GenreOptions: { label: string; value: ProjectGenre }[] = [
+export const GenreOptions: DropdownOption<ProjectGenre>[] = [
     { label: "Action", value: ProjectGenres.ACTION },
     { label: "Adventure", value: ProjectGenres.ADVENTURE },
     { label: "Animation", value: ProjectGenres.ANIMATION },
@@ -19,7 +20,7 @@ export const GenreOptions: { label: string; value: ProjectGenre }[] = [
     { label: "Experimental", value: ProjectGenres.EXPERIMENTAL },
 ];
 
-export const ToneOptions: { label: string; value: ProjectTone }[] = [
+export const ToneOptions: DropdownOption<ProjectTone>[] = [
     { label: "Dark", value: ProjectTones.DARK },
     { label: "Lighthearted", value: ProjectTones.LIGHTHEARTED },
     { label: "Gritty", value: ProjectTones.GRITTY },
@@ -37,7 +38,7 @@ export const ToneOptions: { label: string; value: ProjectTone }[] = [
     { label: "Whimsical", value: ProjectTones.WHIMSICAL },
 ];
 
-export const GenreOptionsLabels = {
+export const GenreOptionsLabels: Record<ProjectGenre, string> = {
     [ProjectGenres.ACTION]: "Action",
     [ProjectGenres.ADVENTURE]: "Adventure",
     [ProjectGenres.ANIMATION]: "Animation",
@@ -56,7 +57,7 @@ export const GenreOptionsLabels = {
     [ProjectGenres.EXPERIMENTAL]: "Experimental",
 }
 
-export const ToneOptionsLabels = {
+export const ToneOptionsLabels: Record<ProjectTone, string> = {
     [ProjectTones.DARK]: "Dark",
     [ProjectTones.LIGHTHEARTED]: "Lighthearted",
     [ProjectTones.GRITTY]: "Gritty",

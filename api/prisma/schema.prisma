@@ -106,7 +106,7 @@ model Scene {
   updated_at    DateTime @updatedAt
 
   project       Project @relation(fields: [project_uuid],references: [uuid],onDelete: Cascade)
-  prompt_variations SceneVariation[]
+  scene_variations SceneVariation[]
 
   @@index([uuid])
   @@index([project_uuid])
@@ -119,6 +119,8 @@ model SceneVariation {
   uuid            String   @unique @default(uuid())
   scene_uuid      String
   prompt_image_uuid String?
+  prompt_text     String   @db.Text
+  negative_prompt String?  @db.Text
 
   // Creative direction
   style           String?  // cinematic, anime, noir, hyperrealistic
@@ -154,9 +156,6 @@ model SceneVariation {
   audio_style     String?  // orchestral, ambient, cinematic trailer
   include_sound   Boolean  @default(false)
 
-  prompt_text     String   @db.Text
-  negative_prompt String?  @db.Text
-
   selected        Boolean  @default(false)
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt
@@ -185,7 +184,7 @@ model SceneVideo {
   created_at             DateTime @default(now())
   updated_at             DateTime @updatedAt
 
-  prompt_variation        SceneVariation @relation(fields: [prompt_variation_uuid],references: [uuid],onDelete: Cascade)
+  scene_variation        SceneVariation @relation(fields: [prompt_variation_uuid],references: [uuid],onDelete: Cascade)
   video                   Document? @relation("SceneVideo", fields: [video_uuid],references: [uuid],onDelete: Cascade)
 
   @@index([uuid])

@@ -1,3 +1,6 @@
+import { Document } from "@/features/documents/interfaces/document.interfaces";
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+
 export interface SceneVideo {
     id: string;
     uuid: string;
@@ -5,12 +8,15 @@ export interface SceneVideo {
     provider: string;
     selected: boolean;
     provider_job_id?: string;
+    video_uuid?: string;
     duration_sec?: number;
     resolution?: string;
     status: VideoStatus;
     error_message?: string;
     createdAt: string;
     updatedAt: string;
+    video?: Document;
+    prompt_variation?: SceneVariation;
 }
 
 export interface CreateSceneVideoDto {

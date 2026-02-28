@@ -1,6 +1,7 @@
-import { Styles, CameraMovements, LensTypes, DepthOfFields, TimeOfDays, CameraStyles, ShotTypes, AspectRatios, Resolutions, Lightings, ColorGrades, AiModels, AudioStyles } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { Styles, CameraMovements, LensTypes, DepthOfFields, TimeOfDays, CameraStyles, ShotTypes, AspectRatios, Resolutions, Lightings, ColorGrades, AiModels, AudioStyles, Style, CameraMovement, LensType, DepthOfField, TimeOfDay, CameraStyle, ShotType, AspectRatio, Resolution, Lighting, ColorGrade, AiModel, AudioStyle } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { SliderConfig, DropdownOption } from "@/interfaces/scene-variations-options.interfaces";
 
-export const StylesOptions = [
+export const StylesOptions: DropdownOption<Style>[] = [
     { label: "Cinematic", value: Styles.cinematic },
     { label: "Hyper Realistic", value: Styles.hyper_realistic },
     { label: "Anime", value: Styles.anime },
@@ -14,7 +15,7 @@ export const StylesOptions = [
 ];
 
 
-export const CameraMovementOptions = [
+export const CameraMovementOptions: DropdownOption<CameraMovement>[] = [
     { label: "Static", value: CameraMovements.static },
     { label: "Pan", value: CameraMovements.pan },
     { label: "Tilt", value: CameraMovements.tilt },
@@ -24,7 +25,7 @@ export const CameraMovementOptions = [
     { label: "Crane", value: CameraMovements.crane },
 ];
 
-export const LensTypeOptions = [
+export const LensTypeOptions: DropdownOption<LensType>[] = [
     { label: "Wide Angle", value: LensTypes.wide_angle },
     { label: "Standard", value: LensTypes.standard },
     { label: "Telephoto", value: LensTypes.telephoto },
@@ -32,12 +33,12 @@ export const LensTypeOptions = [
     { label: "Anamorphic", value: LensTypes.anamorphic },
 ];
 
-export const DepthOfFieldOptions = [
+export const DepthOfFieldOptions: DropdownOption<DepthOfField>[] = [
     { label: "Shallow", value: DepthOfFields.shallow },
     { label: "Deep", value: DepthOfFields.deep },
 ];
 
-export const TimeOfDayOptions = [
+export const TimeOfDayOptions: DropdownOption<TimeOfDay>[] = [
     { label: "Morning", value: TimeOfDays.morning },
     { label: "Noon", value: TimeOfDays.noon },
     { label: "Afternoon", value: TimeOfDays.afternoon },
@@ -46,7 +47,7 @@ export const TimeOfDayOptions = [
     { label: "Midnight", value: TimeOfDays.midnight },
 ];
 
-export const CameraStyleOptions = [
+export const CameraStyleOptions: DropdownOption<CameraStyle>[] = [
     { label: "Handheld", value: CameraStyles.handheld },
     { label: "Drone", value: CameraStyles.drone },
     { label: "Steadicam", value: CameraStyles.steadicam },
@@ -54,7 +55,7 @@ export const CameraStyleOptions = [
     { label: "POV", value: CameraStyles.pov },
 ];
 
-export const ShotTypeOptions = [
+export const ShotTypeOptions: DropdownOption<ShotType>[] = [
     { label: "Wide Shot", value: ShotTypes.wide_shot },
     { label: "Medium Shot", value: ShotTypes.medium_shot },
     { label: "Close-Up", value: ShotTypes.close_up },
@@ -63,7 +64,7 @@ export const ShotTypeOptions = [
     { label: "Establishing Shot", value: ShotTypes.establishing_shot },
 ];
 
-export const AspectRatioOptions = [
+export const AspectRatioOptions: DropdownOption<AspectRatio>[] = [
     { label: "16:9 (YouTube / Film)", value: AspectRatios["16:9"] },
     { label: "9:16 (TikTok / Reels)", value: AspectRatios["9:16"] },
     { label: "1:1 (Instagram)", value: AspectRatios["1:1"] },
@@ -71,14 +72,14 @@ export const AspectRatioOptions = [
     { label: "4:3 (Classic Film)", value: AspectRatios["4:3"] },
 ];
 
-export const ResolutionOptions = [
+export const ResolutionOptions: DropdownOption<Resolution>[] = [
     { label: "720p HD", value: Resolutions["720p"] },
     { label: "1080p Full HD", value: Resolutions["1080p"] },
     { label: "1440p QHD", value: Resolutions["1440p"] },
     { label: "4K Ultra HD", value: Resolutions["4k"] },
 ];
 
-export const LightingOptions = [
+export const LightingOptions: DropdownOption<Lighting>[] = [
     { label: "Golden Hour", value: Lightings.golden_hour },
     { label: "Blue Hour", value: Lightings.blue_hour },
     { label: "Neon", value: Lightings.neon },
@@ -88,7 +89,7 @@ export const LightingOptions = [
     { label: "Studio Light", value: Lightings.studio_light },
 ];
 
-export const ColorGradeOptions = [
+export const ColorGradeOptions: DropdownOption<ColorGrade>[] = [
     { label: "Teal & Orange", value: ColorGrades.teal_orange },
     { label: "Desaturated", value: ColorGrades.desaturated },
     { label: "Vibrant", value: ColorGrades.vibrant },
@@ -96,13 +97,36 @@ export const ColorGradeOptions = [
     { label: "Vintage Film", value: ColorGrades.vintage_film },
 ];
 
-export const AiModelOptions = [
+export const AudioStyleOptions: DropdownOption<AudioStyle>[] = [
+    { label: "Orchestral", value: AudioStyles.orchestral },
+    { label: "Cinematic", value: AudioStyles.cinematic },
+    { label: "Ambient", value: AudioStyles.ambient },
+    { label: "Electronic", value: AudioStyles.electronic },
+    { label: "Rock", value: AudioStyles.rock },
+    { label: "Jazz", value: AudioStyles.jazz },
+    { label: "Blues", value: AudioStyles.blues },
+    { label: "Hip Hop", value: AudioStyles.hip_hop },
+    { label: "Pop", value: AudioStyles.pop },
+    { label: "Country", value: AudioStyles.country },
+    { label: "Folk", value: AudioStyles.folk },
+    { label: "Classical", value: AudioStyles.classical },
+    { label: "Electronic", value: AudioStyles.electronic },
+    { label: "Rock", value: AudioStyles.rock },
+    { label: "Jazz", value: AudioStyles.jazz },
+    { label: "Blues", value: AudioStyles.blues },
+    { label: "Hip Hop", value: AudioStyles.hip_hop },
+    { label: "Pop", value: AudioStyles.pop },
+    { label: "Country", value: AudioStyles.country },
+    { label: "Folk", value: AudioStyles.folk },
+    { label: "Classical", value: AudioStyles.classical },
+];
+
+export const AiModelOptions: DropdownOption<AiModel>[] = [
     { label: "Veo 3", value: AiModels.VEO3 },
     { label: "Runway", value: AiModels.RUNWAY },
     { label: "Pika", value: AiModels.PIKA },
     { label: "Stability", value: AiModels.STABILITY },
 ];
-
 
 
 export const CameraMovementOptionsLabels = {
@@ -200,4 +224,75 @@ export const AudioStyleOptionsLabels = {
     cinematic_trailer: "Cinematic Trailer",
     synthwave: "Synthwave",
     minimal: "Minimal",
+    rock: "Rock",
+    jazz: "Jazz",
+    blues: "Blues",
+    hip_hop: "Hip Hop",
+    pop: "Pop",
+    country: "Country",
+    folk: "Folk",
+    classical: "Classical",
+    cinematic: "Cinematic",
+    electronic: "Electronic",
 } as const;
+
+export const MotionStrengthSliderOptions: SliderConfig = {
+    min: 0,
+    max: 1,
+    step: 0.05,
+    defaultValue: 0.5,
+    marks: [
+        { value: 0.1, label: "Very Low" },
+        { value: 0.5, label: "Medium" },
+        { value: 1, label: "Very High" },
+    ],
+};
+
+export const GuidanceScaleSliderOptions: SliderConfig = {
+    min: 3,
+    max: 15,
+    step: 0.5,
+    defaultValue: 7.5,
+    marks: [
+        { value: 5, label: "Loose" },
+        { value: 7.5, label: "Balanced" },
+        { value: 12, label: "Strict" },
+    ],
+};
+
+export const CreativitySliderOptions: SliderConfig = {
+    min: 0,
+    max: 1,
+    step: 0.05,
+    defaultValue: 0.5,
+    marks: [
+        { value: 0.1, label: "Conservative" },
+        { value: 0.5, label: "Balanced" },
+        { value: 1, label: "Experimental" },
+    ],
+};
+
+export const DurationSliderOptions: SliderConfig = {
+    min: 2,
+    max: 15,
+    step: 1,
+    defaultValue: 5,
+    marks: [
+        { value: 3, label: "3s" },
+        { value: 5, label: "5s" },
+        { value: 8, label: "8s" },
+        { value: 10, label: "10s" },
+    ],
+};
+
+export const FpsSliderOptions: SliderConfig = {
+    min: 24,
+    max: 60,
+    step: 1,
+    defaultValue: 24,
+    marks: [
+        { value: 24, label: "24 (Cinematic)" },
+        { value: 30, label: "30 (Standard)" },
+        { value: 60, label: "60 (Smooth)" },
+    ],
+};
