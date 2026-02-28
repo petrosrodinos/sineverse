@@ -2,9 +2,6 @@ import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProjectDto {
-  @ApiProperty({ description: 'UUID of the user who owns the project' })
-  @IsString()
-  user_uuid: string;
 
   @ApiPropertyOptional({ description: 'Title of the project' })
   @IsString()

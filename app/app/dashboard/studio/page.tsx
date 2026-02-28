@@ -1,9 +1,13 @@
-import { StudioLayout } from "@/app/dashboard/studio/components/StudioLayout";
+"use client";
 
-export default function DashboardPage() {
-  return (
-    <div className="h-[calc(100vh-4rem)] min-h-0">
-      <StudioLayout />
-    </div>
-  );
+import { ProjectsGrid } from "./components/ProjectsGrid";
+import { ProjectsHeader } from "./components/ProjectsHeader";
+
+export default function ProjectPage() {
+    return (
+        <div className="p-8 max-w-7xl mx-auto w-full">
+            <ProjectsHeader />
+            <ProjectsGrid />
+        </div>
+    );
 }
