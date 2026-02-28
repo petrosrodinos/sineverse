@@ -6,6 +6,7 @@ import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 export interface SceneVariation {
     id: string;
     uuid: string;
+    user_uuid: string;
     prompt_image_uuid?: string;
     scene_uuid: string;
     style?: Style;

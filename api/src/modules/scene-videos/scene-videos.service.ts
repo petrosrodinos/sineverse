@@ -9,7 +9,7 @@ export class SceneVideosService {
 
   async create(user_uuid: string, createSceneVideoDto: CreateSceneVideoDto) {
     try {
-      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid: createSceneVideoDto.prompt_variation_uuid, scene: { project: { user_uuid } } } });
+      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid: createSceneVideoDto.scene_variation_uuid, user_uuid } });
       if (!variation) throw new NotFoundException('Scene variation not found');
 
       return await this.prisma.sceneVideo.create({
@@ -17,6 +17,8 @@ export class SceneVideosService {
           ...createSceneVideoDto,
           status: createSceneVideoDto.status as any,
           provider: createSceneVideoDto.provider as any,
+          user_uuid,
+          scene_uuid: variation.scene_uuid,
         }
       });
     } catch (error) {
@@ -27,7 +29,7 @@ export class SceneVideosService {
 
   async findAll(user_uuid: string) {
     try {
-      return await this.prisma.sceneVideo.findMany({ where: { prompt_variation: { scene: { project: { user_uuid } } } } });
+      return await this.prisma.sceneVideo.findMany({ where: { user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene videos', { cause: error });
     }
@@ -35,7 +37,7 @@ export class SceneVideosService {
 
   async findOne(user_uuid: string, uuid: string) {
     try {
-      const video = await this.prisma.sceneVideo.findFirst({ where: { uuid, prompt_variation: { scene: { project: { user_uuid } } } } });
+      const video = await this.prisma.sceneVideo.findFirst({ where: { uuid, user_uuid } });
       if (!video) throw new NotFoundException('Scene video not found');
       return video;
     } catch (error) {

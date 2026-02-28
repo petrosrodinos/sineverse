@@ -7,25 +7,25 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 export class ScenesService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async create(createSceneDto: CreateSceneDto) {
+  async create(user_uuid: string, createSceneDto: CreateSceneDto) {
     try {
-      return await this.prisma.scene.create({ data: createSceneDto });
+      return await this.prisma.scene.create({ data: { ...createSceneDto, user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to create scene', { cause: error });
     }
   }
 
-  async findAll() {
+  async findAll(user_uuid: string) {
     try {
-      return await this.prisma.scene.findMany();
+      return await this.prisma.scene.findMany({ where: { user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scenes', { cause: error });
     }
   }
 
-  async findOne(uuid: string) {
+  async findOne(user_uuid: string, uuid: string) {
     try {
-      const scene = await this.prisma.scene.findUnique({ where: { uuid } });
+      const scene = await this.prisma.scene.findFirst({ where: { uuid, user_uuid } });
       if (!scene) throw new NotFoundException('Scene not found');
       return scene;
     } catch (error) {
@@ -34,17 +34,17 @@ export class ScenesService {
     }
   }
 
-  async update(uuid: string, updateSceneDto: UpdateSceneDto) {
+  async update(user_uuid: string, uuid: string, updateSceneDto: UpdateSceneDto) {
     try {
-      return await this.prisma.scene.update({ where: { uuid }, data: updateSceneDto });
+      return await this.prisma.scene.update({ where: { uuid, user_uuid }, data: updateSceneDto });
     } catch (error) {
       throw new InternalServerErrorException('Failed to update scene', { cause: error });
     }
   }
 
-  async remove(uuid: string) {
+  async remove(user_uuid: string, uuid: string) {
     try {
-      return await this.prisma.scene.delete({ where: { uuid } });
+      return await this.prisma.scene.delete({ where: { uuid, user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene', { cause: error });
     }

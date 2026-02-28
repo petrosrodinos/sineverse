@@ -2,9 +2,13 @@ import { IsString, IsOptional, IsBoolean, IsInt } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateSceneVideoDto {
-  @ApiProperty({ description: 'UUID of the prompt variation' })
+  @ApiProperty({ description: 'UUID of the scene variation' })
   @IsString()
-  prompt_variation_uuid: string;
+  scene_variation_uuid: string;
+
+  @ApiProperty({ description: 'UUID of the scene' })
+  @IsString()
+  scene_uuid: string;
 
   @ApiProperty({ description: 'AI video generation provider enum' })
   @IsString()

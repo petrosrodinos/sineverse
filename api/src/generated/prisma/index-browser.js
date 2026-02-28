@@ -149,6 +149,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
 exports.Prisma.SceneScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
+  user_uuid: 'user_uuid',
   project_uuid: 'project_uuid',
   title: 'title',
   description: 'description',
@@ -161,6 +162,7 @@ exports.Prisma.SceneScalarFieldEnum = {
 exports.Prisma.SceneVariationScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
+  user_uuid: 'user_uuid',
   scene_uuid: 'scene_uuid',
   prompt_image_uuid: 'prompt_image_uuid',
   prompt_text: 'prompt_text',
@@ -195,7 +197,9 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
 exports.Prisma.SceneVideoScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
-  prompt_variation_uuid: 'prompt_variation_uuid',
+  user_uuid: 'user_uuid',
+  scene_uuid: 'scene_uuid',
+  scene_variation_uuid: 'scene_variation_uuid',
   provider: 'provider',
   selected: 'selected',
   provider_job_id: 'provider_job_id',

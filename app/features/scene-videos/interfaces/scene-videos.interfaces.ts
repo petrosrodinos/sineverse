@@ -1,9 +1,12 @@
 import { Document } from "@/features/documents/interfaces/document.interfaces";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 export interface SceneVideo {
     id: string;
     uuid: string;
+    user_uuid: string;
+    scene_uuid: string;
     prompt_variation_uuid: string;
     provider: string;
     selected: boolean;
@@ -16,10 +19,12 @@ export interface SceneVideo {
     created_at: string;
     updated_at: string;
     video?: Document;
-    prompt_variation?: SceneVariation;
+    scene?: Scene;
+    scene_variation?: SceneVariation;
 }
 
 export interface CreateSceneVideoDto {
+    scene_uuid: string;
     prompt_variation_uuid: string;
     provider: string;
     selected?: boolean;
