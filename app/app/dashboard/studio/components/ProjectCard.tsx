@@ -19,7 +19,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 <div className="flex flex-col">
                     <p className="text-md font-bold">{project.title}</p>
                     <p className="text-small text-default-500">
-                        {new Date(project.createdAt).toLocaleDateString()}
+                        {new Date(project.created_at).toLocaleDateString()}
                     </p>
                 </div>
                 <Chip size="sm" color={project.status === ProjectStatuses.COMPLETED ? "success" : "primary"} variant="flat">

@@ -163,6 +163,8 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   uuid: 'uuid',
   scene_uuid: 'scene_uuid',
   prompt_image_uuid: 'prompt_image_uuid',
+  prompt_text: 'prompt_text',
+  negative_prompt: 'negative_prompt',
   style: 'style',
   tone: 'tone',
   genre: 'genre',
@@ -185,8 +187,6 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   guidance_scale: 'guidance_scale',
   audio_style: 'audio_style',
   include_sound: 'include_sound',
-  prompt_text: 'prompt_text',
-  negative_prompt: 'negative_prompt',
   selected: 'selected',
   created_at: 'created_at',
   updated_at: 'updated_at'

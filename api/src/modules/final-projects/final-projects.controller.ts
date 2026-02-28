@@ -16,15 +16,15 @@ export class FinalProjectsController {
     @Post()
     @ApiOperation({ summary: 'Create a new final project entry' })
     @ApiResponse({ status: 201, description: 'The final project has been successfully created.' })
-    create(@CurrentUser('user_uuid') user_uuid: string, @Body() createFinalProjectDto: CreateFinalProjectDto) {
-        return this.finalProjectsService.create(user_uuid, createFinalProjectDto);
+    create(@CurrentUser('uuid') uuid: string, @Body() createFinalProjectDto: CreateFinalProjectDto) {
+        return this.finalProjectsService.create(uuid, createFinalProjectDto);
     }
 
     @Get()
     @ApiOperation({ summary: 'Retrieve all final projects' })
     @ApiResponse({ status: 200, description: 'Returned all final projects successfully.' })
-    findAll(@CurrentUser('user_uuid') user_uuid: string) {
-        return this.finalProjectsService.findAll(user_uuid);
+    findAll(@CurrentUser('uuid') uuid: string) {
+        return this.finalProjectsService.findAll(uuid);
     }
 
     @Get(':uuid')
@@ -32,7 +32,7 @@ export class FinalProjectsController {
     @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
     @ApiResponse({ status: 200, description: 'Returned the final project successfully.' })
     @ApiResponse({ status: 404, description: 'Final project not found.' })
-    findOne(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    findOne(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
         return this.finalProjectsService.findOne(user_uuid, uuid);
     }
 
@@ -41,7 +41,7 @@ export class FinalProjectsController {
     @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
     @ApiResponse({ status: 200, description: 'The final project has been successfully updated.' })
     @ApiResponse({ status: 404, description: 'Final project not found.' })
-    update(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateFinalProjectDto: UpdateFinalProjectDto) {
+    update(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateFinalProjectDto: UpdateFinalProjectDto) {
         return this.finalProjectsService.update(user_uuid, uuid, updateFinalProjectDto);
     }
 
@@ -50,7 +50,7 @@ export class FinalProjectsController {
     @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
     @ApiResponse({ status: 200, description: 'The final project has been successfully deleted.' })
     @ApiResponse({ status: 404, description: 'Final project not found.' })
-    remove(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
         return this.finalProjectsService.remove(user_uuid, uuid);
     }
 }

@@ -13,8 +13,8 @@ export interface SceneVideo {
     resolution?: string;
     status: VideoStatus;
     error_message?: string;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
     video?: Document;
     prompt_variation?: SceneVariation;
 }

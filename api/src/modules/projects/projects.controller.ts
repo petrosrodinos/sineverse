@@ -17,15 +17,15 @@ export class ProjectsController {
   @Post()
   @ApiOperation({ summary: 'Create a new project' })
   @ApiResponse({ status: 201, description: 'The project has been successfully created.' })
-  create(@CurrentUser('user_uuid') user_uuid: string, @Body() createProjectDto: CreateProjectDto) {
-    return this.projectsService.create(user_uuid, createProjectDto);
+  create(@CurrentUser('uuid') uuid: string, @Body() createProjectDto: CreateProjectDto) {
+    return this.projectsService.create(uuid, createProjectDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve all projects' })
   @ApiResponse({ status: 200, description: 'Returned all projects successfully.' })
-  findAll(@CurrentUser('user_uuid') user_uuid: string) {
-    return this.projectsService.findAll(user_uuid);
+  findAll(@CurrentUser('uuid') uuid: string) {
+    return this.projectsService.findAll(uuid);
   }
 
   @Get(':uuid')
@@ -33,7 +33,7 @@ export class ProjectsController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the project' })
   @ApiResponse({ status: 200, description: 'Returned the project successfully.' })
   @ApiResponse({ status: 404, description: 'Project not found.' })
-  findOne(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+  findOne(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectsService.findOne(user_uuid, uuid);
   }
 
@@ -42,7 +42,7 @@ export class ProjectsController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the project' })
   @ApiResponse({ status: 200, description: 'The project has been successfully updated.' })
   @ApiResponse({ status: 404, description: 'Project not found.' })
-  update(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateProjectDto: UpdateProjectDto) {
+  update(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateProjectDto: UpdateProjectDto) {
     return this.projectsService.update(user_uuid, uuid, updateProjectDto);
   }
 
@@ -51,7 +51,7 @@ export class ProjectsController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the project' })
   @ApiResponse({ status: 200, description: 'The project has been successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Project not found.' })
-  remove(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+  remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectsService.remove(user_uuid, uuid);
   }
 }

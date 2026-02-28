@@ -7,8 +7,8 @@ export interface Project {
     genre_values?: ProjectGenre[];
     tone_values?: ProjectTone[];
     status: ProjectStatus;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface CreateProjectDto {

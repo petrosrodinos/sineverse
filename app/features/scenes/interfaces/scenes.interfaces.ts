@@ -6,8 +6,8 @@ export interface Scene {
     description: string;
     order: number;
     duration_sec?: number;
-    createdAt: string;
-    updatedAt: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface CreateSceneDto {

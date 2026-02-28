@@ -15,15 +15,15 @@ export class SceneVideosController {
   @Post()
   @ApiOperation({ summary: 'Create a new scene video reference' })
   @ApiResponse({ status: 201, description: 'The scene video has been successfully created.' })
-  create(@CurrentUser('user_uuid') user_uuid: string, @Body() createSceneVideoDto: CreateSceneVideoDto) {
-    return this.sceneVideosService.create(user_uuid, createSceneVideoDto);
+  create(@CurrentUser('uuid') uuid: string, @Body() createSceneVideoDto: CreateSceneVideoDto) {
+    return this.sceneVideosService.create(uuid, createSceneVideoDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve all scene videos' })
   @ApiResponse({ status: 200, description: 'Returned all scene videos successfully.' })
-  findAll(@CurrentUser('user_uuid') user_uuid: string) {
-    return this.sceneVideosService.findAll(user_uuid);
+  findAll(@CurrentUser('uuid') uuid: string) {
+    return this.sceneVideosService.findAll(uuid);
   }
 
   @Get(':uuid')
@@ -31,7 +31,7 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'Returned the scene video successfully.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  findOne(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+  findOne(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.sceneVideosService.findOne(user_uuid, uuid);
   }
 
@@ -40,7 +40,7 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'The scene video has been successfully updated.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  update(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateSceneVideoDto: UpdateSceneVideoDto) {
+  update(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateSceneVideoDto: UpdateSceneVideoDto) {
     return this.sceneVideosService.update(user_uuid, uuid, updateSceneVideoDto);
   }
 
@@ -49,7 +49,7 @@ export class SceneVideosController {
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene video' })
   @ApiResponse({ status: 200, description: 'The scene video has been successfully deleted.' })
   @ApiResponse({ status: 404, description: 'Scene video not found.' })
-  remove(@CurrentUser('user_uuid') user_uuid: string, @Param('uuid') uuid: string) {
+  remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.sceneVideosService.remove(user_uuid, uuid);
   }
 }

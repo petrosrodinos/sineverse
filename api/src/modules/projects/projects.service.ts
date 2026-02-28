@@ -8,15 +8,21 @@ export class ProjectsService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(user_uuid: string, createProjectDto: CreateProjectDto) {
+    console.log('user_uuid', user_uuid);
     try {
       return await this.prisma.project.create({
         data: {
           ...createProjectDto,
-          user_uuid,
           status: createProjectDto.status as any,
-        }
+          user: {
+            connect: {
+              uuid: user_uuid,
+            },
+          },
+        },
       });
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to create project', { cause: error });
     }
   }
