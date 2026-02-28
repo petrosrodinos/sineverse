@@ -1,3 +1,4 @@
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 export interface Scene {
     id: string;
     uuid: string;
@@ -8,6 +9,9 @@ export interface Scene {
     duration_sec?: number;
     created_at: string;
     updated_at: string;
+    scene_variations?: any[];
+    aiSettings?: any;
+
 }
 
 export interface CreateSceneDto {

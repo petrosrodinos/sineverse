@@ -1,14 +1,13 @@
 "use client";
-
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Textarea } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
 import { Sparkles, RefreshCw } from "lucide-react";
-import type { MovieIdea } from "@/types/studio";
+
 
 interface IdeaSectionProps {
-  idea: MovieIdea;
+  idea: { raw: string; enriched: string | null };
   onIdeaChange: (raw: string) => void;
   onEnrich: () => void;
   onRegenerateEnriched: () => void;

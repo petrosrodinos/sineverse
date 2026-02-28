@@ -1,12 +1,12 @@
 "use client";
 
+import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Film, RefreshCw } from "lucide-react";
-import type { Scene } from "@/types/studio";
 import { getSceneStatusLabel } from "@/utils/studio";
-import { SceneStatus } from "@/types/studio";
+
 
 interface ScenesSidebarProps {
   scenes: Scene[];
@@ -27,7 +27,7 @@ export function ScenesSidebar({ scenes, selectedSceneId, onSelectScene, onGenera
       <div className="flex-1 overflow-auto space-y-2">
         {scenes.map((scene) => {
           const isSelected = selectedSceneId === scene.id;
-          const statusColor = scene.status === SceneStatus.VideosGenerated ? "success" : scene.status === SceneStatus.PromptsGenerated ? "warning" : "default";
+          const statusColor = scene.project_uuid === "VIDEOS_GENERATED" ? "success" : scene.project_uuid === "PROMPTS_GENERATED" ? "warning" : "default";
           return (
             <Card
               key={scene.id}
@@ -42,7 +42,7 @@ export function ScenesSidebar({ scenes, selectedSceneId, onSelectScene, onGenera
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-xs font-semibold text-default-500">Scene {scene.order}</span>
                   <Chip size="sm" variant="flat" color={statusColor}>
-                    {getSceneStatusLabel(scene.status)}
+                    {getSceneStatusLabel(scene.project_uuid)}
                   </Chip>
                 </div>
                 <p className="text-sm font-medium text-foreground line-clamp-1">{scene.title || "Untitled"}</p>

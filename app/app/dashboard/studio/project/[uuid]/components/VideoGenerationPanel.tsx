@@ -4,14 +4,13 @@ import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Select, SelectItem } from "@heroui/select";
 import { Upload } from "lucide-react";
-import type { PromptVariation } from "@/types/studio";
 import { videoModels, aspectRatios, durations } from "@/config/studio";
-import { AIModel } from "@/types/studio";
 import { VideoCard } from "./VideoCard";
+import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 
 interface VideoGenerationPanelProps {
-  variation: PromptVariation;
-  onModelChange: (model: AIModel) => void;
+  variation: SceneVariation;
+  onModelChange: (ai_model: string) => void;
   onAspectRatioChange: (value: string) => void;
   onDurationChange: (seconds: number) => void;
   onReferenceImagesChange: (urls: string[]) => void;
@@ -40,7 +39,7 @@ export function VideoGenerationPanel({
     const files = e.target.files;
     if (!files?.length) return;
     const urls = Array.from(files).map((f) => URL.createObjectURL(f));
-    onReferenceImagesChange([...variation.referenceImageUrls, ...urls]);
+    onReferenceImagesChange([...(variation.prompt_image_uuid ? [variation.prompt_image_uuid] : []), ...urls]);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -49,7 +48,7 @@ export function VideoGenerationPanel({
     const files = e.dataTransfer.files;
     if (!files?.length) return;
     const urls = Array.from(files).map((f) => URL.createObjectURL(f));
-    onReferenceImagesChange([...variation.referenceImageUrls, ...urls]);
+    onReferenceImagesChange([...(variation.prompt_image_uuid ? [variation.prompt_image_uuid] : []), ...urls]);
   };
 
   return (
@@ -57,9 +56,9 @@ export function VideoGenerationPanel({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Select
           label="Model"
-          selectedKeys={[variation.model]}
+          selectedKeys={variation.ai_model ? [variation.ai_model] : []}
           onSelectionChange={(keys) => {
-            const v = Array.from(keys)[0] as AIModel;
+            const v = Array.from(keys)[0] as string;
             if (v) onModelChange(v);
           }}
           variant="bordered"
@@ -71,7 +70,7 @@ export function VideoGenerationPanel({
         </Select>
         <Select
           label="Aspect ratio"
-          selectedKeys={[variation.aspectRatio]}
+          selectedKeys={variation.aspect_ratio ? [variation.aspect_ratio] : []}
           onSelectionChange={(keys) => {
             const v = Array.from(keys)[0] as string;
             if (v) onAspectRatioChange(v);
@@ -85,7 +84,7 @@ export function VideoGenerationPanel({
         </Select>
         <Select
           label="Duration"
-          selectedKeys={[String(variation.durationSeconds)]}
+          selectedKeys={variation.duration_sec ? [String(variation.duration_sec)] : []}
           onSelectionChange={(keys) => {
             const v = Array.from(keys)[0] as string;
             if (v) onDurationChange(Number(v));
@@ -118,8 +117,8 @@ export function VideoGenerationPanel({
         <label htmlFor={`ref-${variation.id}`} className="cursor-pointer flex flex-col items-center gap-2">
           <Upload className="size-8 text-default-400" />
           <span className="text-sm text-default-500">Drop reference images or click to upload</span>
-          {variation.referenceImageUrls.length > 0 && (
-            <span className="text-xs text-default-400">{variation.referenceImageUrls.length} file(s)</span>
+          {variation.prompt_image_uuid && (
+            <span className="text-xs text-default-400">1 file(s)</span>
           )}
         </label>
       </div>
@@ -132,11 +131,11 @@ export function VideoGenerationPanel({
       >
         Generate Videos
       </Button>
-      {variation.videos.length > 0 && (
+      {variation.videos && variation.videos.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium text-foreground">Generated videos</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {variation.videos.map((v) => (
+            {variation.videos.map((v: any) => (
               <VideoCard
                 key={v.id}
                 video={v}

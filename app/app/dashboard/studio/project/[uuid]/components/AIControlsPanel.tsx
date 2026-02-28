@@ -2,12 +2,12 @@
 
 import { Button } from "@heroui/button";
 import { Select, SelectItem } from "@heroui/select";
-import type { SceneAISettings } from "@/types/studio";
+
 import { globalStyles, tones, cameraStyles, lightingOptions } from "@/config/studio";
 
 interface AIControlsPanelProps {
-  settings: SceneAISettings;
-  onChange: (settings: Partial<SceneAISettings>) => void;
+  settings: any;
+  onChange: (settings: Partial<any>) => void;
   onSave: () => void;
   hasScene: boolean;
 }

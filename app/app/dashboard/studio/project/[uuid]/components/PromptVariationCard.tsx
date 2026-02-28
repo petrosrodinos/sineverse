@@ -1,5 +1,5 @@
 "use client";
-
+import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { useState } from "react";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Button } from "@heroui/button";
@@ -7,15 +7,15 @@ import { Card } from "@heroui/card";
 import { Textarea } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
 import { RefreshCw, Plus } from "lucide-react";
-import type { PromptVariation } from "@/types/studio";
+
 import { VideoGenerationPanel } from "./VideoGenerationPanel";
-import { AIModel } from "@/types/studio";
+
 
 interface PromptVariationCardProps {
-  variation: PromptVariation;
-  onPromptChange: (prompt: string) => void;
+  variation: SceneVariation;
+  onPromptChange: (prompt_text: string) => void;
   onNegativePromptChange: (negative: string) => void;
-  onModelChange: (model: AIModel) => void;
+  onModelChange: (ai_model: string) => void;
   onAspectRatioChange: (value: string) => void;
   onDurationChange: (seconds: number) => void;
   onReferenceImagesChange: (urls: string[]) => void;
@@ -37,8 +37,8 @@ export function PromptVariationCard({ variation, onPromptChange, onNegativePromp
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground bg-default-200 px-2.5 py-1 rounded-lg dark:bg-default-100/30">{variation.versionLabel}</span>
-            <span className="text-sm text-default-500">{variation.styleLabel}</span>
+            <span className="text-sm font-semibold text-foreground bg-default-200 px-2.5 py-1 rounded-lg dark:bg-default-100/30">{variation.uuid}</span>
+            <span className="text-sm text-default-500">{variation.style}</span>
           </div>
           <div className="flex gap-2">
             <Button size="sm" variant="flat" onPress={onRegenerateThisVariation} isDisabled={isRegenerating} isLoading={isRegenerating} startContent={!isRegenerating ? <RefreshCw className="size-4" /> : undefined}>
@@ -49,10 +49,10 @@ export function PromptVariationCard({ variation, onPromptChange, onNegativePromp
             </Button>
           </div>
         </div>
-        {isRegenerating ? <Skeleton className="rounded-xl h-20 w-full" /> : <Textarea label="Prompt" value={variation.prompt} onValueChange={onPromptChange} variant="bordered" classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} minRows={3} />}
+        {isRegenerating ? <Skeleton className="rounded-xl h-20 w-full" /> : <Textarea label="Prompt" value={variation.prompt_text} onValueChange={onPromptChange} variant="bordered" classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} minRows={3} />}
         <Accordion className="px-0 gap-0" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
           <AccordionItem key="negative" aria-label="Negative prompt" title="Negative prompt" classNames={{ trigger: "py-2", content: "pb-2" }}>
-            <Textarea value={variation.negativePrompt} onValueChange={onNegativePromptChange} variant="bordered" classNames={{ inputWrapper: "rounded-xl" }} minRows={2} />
+            <Textarea value={variation.negative_prompt} onValueChange={onNegativePromptChange} variant="bordered" classNames={{ inputWrapper: "rounded-xl" }} minRows={2} />
           </AccordionItem>
         </Accordion>
         <div className="pt-2 border-t border-default-200 dark:border-default-100/20">

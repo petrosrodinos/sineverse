@@ -1,20 +1,18 @@
 "use client";
-
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
 import { RefreshCw } from "lucide-react";
-import type { Scene } from "@/types/studio";
 import { PromptVariationCard } from "./PromptVariationCard";
-import { AIModel } from "@/types/studio";
+import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 interface SceneWorkspaceProps {
   scene: Scene;
   onTitleChange: (title: string) => void;
   onDescriptionChange: (description: string) => void;
   onRegenerateScene: () => void;
-  onVariationPromptChange: (variationId: string, prompt: string) => void;
+  onVariationPromptChange: (variationId: string, prompt_text: string) => void;
   onVariationNegativeChange: (variationId: string, negative: string) => void;
-  onVariationModelChange: (variationId: string, model: AIModel) => void;
+  onVariationModelChange: (variationId: string, ai_model: string) => void;
   onVariationAspectRatioChange: (variationId: string, value: string) => void;
   onVariationDurationChange: (variationId: string, seconds: number) => void;
   onVariationReferenceImagesChange: (variationId: string, urls: string[]) => void;
@@ -41,7 +39,7 @@ export function SceneWorkspace({ scene, onTitleChange, onDescriptionChange, onRe
       </div>
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Prompt variations</h3>
-        {scene.variations.map((variation, idx) => (
+        {(scene.scene_variations || []).map((variation: any, idx: number) => (
           <PromptVariationCard
             key={variation.id}
             variation={variation}

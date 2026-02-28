@@ -1,6 +1,6 @@
 import { FinalProject } from "@/features/final-projects/interfaces/final-projects.interfaces";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import { SceneVideo } from "@/types/studio";
+import { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 
 export interface Document {
     id: number;

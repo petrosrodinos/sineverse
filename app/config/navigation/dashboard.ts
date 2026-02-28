@@ -1,6 +1,6 @@
 "use client";
 
-import type { DashboardSidebarItem } from "@/types";
+import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
 import { BarChart3, Clock, LayoutDashboard, Users, Upload, Coins, Settings } from "lucide-react";
 
 export const dashboardSidebarItems: DashboardSidebarItem[] = [

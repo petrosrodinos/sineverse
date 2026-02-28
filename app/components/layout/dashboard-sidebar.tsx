@@ -10,9 +10,9 @@ import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
 import { siteConfig } from "@/config/navigation/site";
-import type { DashboardSidebarItem } from "@/types";
 import { signOut, useSession } from "next-auth/react";
 import { Routes } from "@/config/routes";
+import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
 

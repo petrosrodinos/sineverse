@@ -1,11 +1,8 @@
-import type { VideoModelOption } from "@/types/studio";
-import { AIModel } from "@/types/studio";
-
-export const videoModels: VideoModelOption[] = [
-  { id: AIModel.Veo3, label: "Veo 3" },
-  { id: AIModel.Runway, label: "Runway" },
-  { id: AIModel.Pika, label: "Pika" },
-  { id: AIModel.Stability, label: "Stability" },
+export const videoModels = [
+  { id: "VEO3", label: "Veo 3" },
+  { id: "RUNWAY", label: "Runway" },
+  { id: "PIKA", label: "Pika" },
+  { id: "STABILITY", label: "Stability" },
 ];
 
 export const aspectRatios = [

@@ -1,6 +1,7 @@
 import { Document } from "@/features/documents/interfaces/document.interfaces";
 import { ProjectTone, ProjectGenre } from "@/features/projects/interfaces/projects.interfaces";
-import { Scene, SceneVideo } from "@/types/studio";
+import { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 export interface SceneVariation {
     id: string;

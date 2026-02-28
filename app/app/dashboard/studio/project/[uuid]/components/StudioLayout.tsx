@@ -1,8 +1,6 @@
 "use client";
-
+import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import { useState, useCallback } from "react";
-import type { MovieIdea, Scene, SceneAISettings } from "@/types/studio";
-import { SceneStatus, VideoStatus, AIModel } from "@/types/studio";
 import { getDefaultAISettings, createDefaultScene, createVariation, createDefaultSceneVideo } from "@/utils/studio";
 import { IdeaSection } from "./IdeaSection";
 import { ScenesSidebar } from "./ScenesSidebar";
@@ -12,7 +10,7 @@ import { AIControlsPanel } from "./AIControlsPanel";
 const MOCK_DELAY_MS = 1500;
 
 export function StudioLayout() {
-  const [idea, setIdea] = useState<MovieIdea>({ raw: "", enriched: null });
+  const [idea, setIdea] = useState<{ raw: string; enriched: string | null }>({ raw: "", enriched: null });
   const [scenes, setScenes] = useState<Scene[]>([]);
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
   const [isEnriching, setIsEnriching] = useState(false);
@@ -28,12 +26,12 @@ export function StudioLayout() {
     setScenes((prev) => prev.map((s) => (s.id === sceneId ? updater(s) : s)));
   }, []);
 
-  type PromptVariation = import("@/types/studio").PromptVariation;
+  type SceneVariation = any;
   const updateVariationTyped = useCallback(
-    (sceneId: string, variationId: string, updater: (v: PromptVariation) => PromptVariation) => {
-      updateScene(sceneId, (s) => ({
+    (sceneId: string, variationId: string, updater: (v: SceneVariation) => SceneVariation) => {
+      updateScene(sceneId, (s: any) => ({
         ...s,
-        variations: s.variations.map((v) => (v.id === variationId ? updater(v) : v)),
+        scene_variations: s.scene_variations.map((v: any) => (v.id === variationId ? updater(v) : v)),
       }));
     },
     [updateScene],
@@ -73,65 +71,65 @@ export function StudioLayout() {
     (sceneId: string) => {
       setRegeneratingSceneId(sceneId);
       setTimeout(() => {
-        updateScene(sceneId, (s) => ({ ...s, description: (s.description || "") + " [AI regenerated.]" }));
+        updateScene(sceneId, (s: any) => ({ ...s, description: (s.description || "") + " [AI regenerated.]" }));
         setRegeneratingSceneId(null);
       }, MOCK_DELAY_MS);
     },
     [updateScene],
   );
 
-  const handleSceneTitleChange = useCallback((sceneId: string, title: string) => updateScene(sceneId, (s) => ({ ...s, title })), [updateScene]);
-  const handleSceneDescriptionChange = useCallback((sceneId: string, description: string) => updateScene(sceneId, (s) => ({ ...s, description })), [updateScene]);
+  const handleSceneTitleChange = useCallback((sceneId: string, title: string) => updateScene(sceneId, (s: any) => ({ ...s, title })), [updateScene]);
+  const handleSceneDescriptionChange = useCallback((sceneId: string, description: string) => updateScene(sceneId, (s: any) => ({ ...s, description })), [updateScene]);
 
   const handleRegenerateScene = useCallback(() => {
     if (!selectedSceneId) return;
     setRegeneratingSceneId(selectedSceneId);
     setTimeout(() => {
-      updateScene(selectedSceneId, (s) => ({ ...s, description: (s.description || "") + " [Scene AI regenerated.]" }));
+      updateScene(selectedSceneId, (s: any) => ({ ...s, description: (s.description || "") + " [Scene AI regenerated.]" }));
       setRegeneratingSceneId(null);
     }, MOCK_DELAY_MS);
   }, [selectedSceneId, updateScene]);
 
   const handleAISettingsChange = useCallback(
-    (sceneId: string, settings: Partial<SceneAISettings>) => {
-      updateScene(sceneId, (s) => ({ ...s, aiSettings: { ...s.aiSettings, ...settings } }));
+    (sceneId: string, settings: Partial<any>) => {
+      updateScene(sceneId, (s: any) => ({ ...s, aiSettings: { ...s.aiSettings, ...settings } }));
     },
     [updateScene],
   );
 
   const handleVariationPromptChange = useCallback(
-    (sceneId: string, variationId: string, prompt: string) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, prompt }));
+    (sceneId: string, variationId: string, prompt_text: string) => {
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, prompt_text }));
     },
     [updateVariationTyped],
   );
   const handleVariationNegativeChange = useCallback(
     (sceneId: string, variationId: string, negative: string) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, negativePrompt: negative }));
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, negative_prompt: negative }));
     },
     [updateVariationTyped],
   );
   const handleVariationModelChange = useCallback(
-    (sceneId: string, variationId: string, model: AIModel) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, model }));
+    (sceneId: string, variationId: string, ai_model: string) => {
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, ai_model }));
     },
     [updateVariationTyped],
   );
   const handleVariationAspectRatioChange = useCallback(
     (sceneId: string, variationId: string, value: string) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, aspectRatio: value }));
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, aspect_ratio: value }));
     },
     [updateVariationTyped],
   );
   const handleVariationDurationChange = useCallback(
     (sceneId: string, variationId: string, seconds: number) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, durationSeconds: seconds }));
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, duration_sec: seconds }));
     },
     [updateVariationTyped],
   );
   const handleVariationReferenceImagesChange = useCallback(
     (sceneId: string, variationId: string, urls: string[]) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({ ...v, referenceImageUrls: urls }));
+      updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, prompt_image_uuid: urls }));
     },
     [updateVariationTyped],
   );
@@ -141,14 +139,14 @@ export function StudioLayout() {
       setGeneratingVideosVariationId(variationId);
       setProgressText("Rendering video 1 of 2…");
       setTimeout(() => {
-        updateVariationTyped(sceneId, variationId, (v) => {
+        updateVariationTyped(sceneId, variationId, (v: any) => {
           const video1 = createDefaultSceneVideo(variationId);
           const video2 = createDefaultSceneVideo(variationId);
-          video2.status = VideoStatus.Completed;
+          video2.status = "COMPLETED";
           video2.thumbnailUrl = "https://placehold.co/320x180?text=Preview";
           return { ...v, videos: [...v.videos, video1, video2] };
         });
-        updateScene(sceneId, (s) => ({ ...s, status: SceneStatus.VideosGenerated }));
+        updateScene(sceneId, (s: any) => ({ ...s, status: "VIDEOS_GENERATED" }));
         setGeneratingVideosVariationId(null);
         setProgressText("");
       }, MOCK_DELAY_MS);
@@ -158,17 +156,17 @@ export function StudioLayout() {
 
   const handleSelectFinalVideo = useCallback(
     (sceneId: string, variationId: string, videoId: string) => {
-      updateScene(sceneId, (s) => {
-        const nextVariations = s.variations.map((v) => {
+      updateScene(sceneId, (s: any) => {
+        const nextVariations = s.scene_variations.map((v: any) => {
           if (v.id !== variationId) {
-            return { ...v, videos: v.videos.map((videos) => ({ ...videos, isFinal: false })) };
+            return { ...v, videos: v.videos.map((videos: any) => ({ ...videos, selected: false })) };
           }
           return {
             ...v,
-            videos: v.videos.map((vid) => ({ ...vid, isFinal: vid.id === videoId })),
+            videos: v.videos.map((vid: any) => ({ ...vid, selected: vid.id === videoId })),
           };
         });
-        return { ...s, variations: nextVariations, selectedVideoId: videoId };
+        return { ...s, scene_variations: nextVariations, _mockSelectedVideoId: videoId };
       });
     },
     [updateScene],
@@ -176,14 +174,14 @@ export function StudioLayout() {
 
   const handleRegenerateVideo = useCallback(
     (sceneId: string, variationId: string, videoId: string) => {
-      updateVariationTyped(sceneId, variationId, (v) => ({
+      updateVariationTyped(sceneId, variationId, (v: any) => ({
         ...v,
-        videos: v.videos.map((vid) => (vid.id === videoId ? { ...vid, status: VideoStatus.Processing as const } : vid)),
+        videos: v.videos.map((vid: any) => (vid.id === videoId ? { ...vid, status: "PROCESSING" as const } : vid)),
       }));
       setTimeout(() => {
-        updateVariationTyped(sceneId, variationId, (v) => ({
+        updateVariationTyped(sceneId, variationId, (v: any) => ({
           ...v,
-          videos: v.videos.map((vid) => (vid.id === videoId ? { ...vid, status: VideoStatus.Completed as const } : vid)),
+          videos: v.videos.map((vid: any) => (vid.id === videoId ? { ...vid, status: "COMPLETED" as const } : vid)),
         }));
       }, MOCK_DELAY_MS);
     },
@@ -194,7 +192,7 @@ export function StudioLayout() {
     (sceneId: string, variationId: string) => {
       setRegeneratingVariationId(variationId);
       setTimeout(() => {
-        updateVariationTyped(sceneId, variationId, (v) => ({ ...v, prompt: (v.prompt || "") + " [Regenerated.]" }));
+        updateVariationTyped(sceneId, variationId, (v: any) => ({ ...v, prompt_text: (v.prompt_text || "") + " [Regenerated.]" }));
         setRegeneratingVariationId(null);
       }, MOCK_DELAY_MS);
     },
@@ -203,10 +201,10 @@ export function StudioLayout() {
 
   const handleAddVariation = useCallback(() => {
     if (!selectedSceneId) return;
-    updateScene(selectedSceneId, (s) => ({
+    updateScene(selectedSceneId, (s: any) => ({
       ...s,
-      variations: [...s.variations, createVariation(s.variations.length)],
-      status: SceneStatus.PromptsGenerated,
+      scene_variations: [...s.scene_variations, createVariation(s.scene_variations.length)],
+      status: "PROMPTS_GENERATED",
     }));
   }, [selectedSceneId, updateScene]);
 
@@ -227,10 +225,10 @@ export function StudioLayout() {
             onVariationAspectRatioChange={(vid, v) => handleVariationAspectRatioChange(selectedScene.id, vid, v)}
             onVariationDurationChange={(vid, s) => handleVariationDurationChange(selectedScene.id, vid, s)}
             onVariationReferenceImagesChange={(vid, urls) => handleVariationReferenceImagesChange(selectedScene.id, vid, urls)}
-            onGenerateVideos={(vid) => handleGenerateVideos(selectedScene.id, vid)}
+            onGenerateVideos={(vid: any) => handleGenerateVideos(selectedScene.id, vid)}
             onSelectFinalVideo={(vid, videoId) => handleSelectFinalVideo(selectedScene.id, vid, videoId)}
             onRegenerateVideo={(vid, videoId) => handleRegenerateVideo(selectedScene.id, vid, videoId)}
-            onRegenerateVariation={(vid) => handleRegenerateVariation(selectedScene.id, vid)}
+            onRegenerateVariation={(vid: any) => handleRegenerateVariation(selectedScene.id, vid)}
             onAddVariation={handleAddVariation}
             isRegeneratingScene={regeneratingSceneId === selectedScene.id}
             generatingVariationId={regeneratingVariationId}
@@ -242,7 +240,7 @@ export function StudioLayout() {
         ) : null}
       </div>
       <div className="w-64 shrink-0">
-        <AIControlsPanel settings={selectedScene?.aiSettings ?? getDefaultAISettings()} onChange={(s) => (selectedSceneId ? handleAISettingsChange(selectedSceneId, s) : undefined)} onSave={() => {}} hasScene={!!selectedScene} />
+        <AIControlsPanel settings={selectedScene?.aiSettings ?? getDefaultAISettings()} onChange={(s: any) => (selectedSceneId ? handleAISettingsChange(selectedSceneId, s) : undefined)} onSave={() => {}} hasScene={!!selectedScene} />
       </div>
     </div>
   );
