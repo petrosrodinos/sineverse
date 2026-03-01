@@ -1,6 +1,4 @@
 "use client";
-
-import { Skeleton } from "@heroui/skeleton";
 import { use } from "react";
 import { StudioLayout } from "@/app/dashboard/studio/project/[uuid]/components/StudioLayout";
 import { ProjectHeader } from "@/app/dashboard/studio/project/[uuid]/components/ProjectHeader";

@@ -1,61 +1,52 @@
 "use client";
-import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
-import { Textarea } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
-import { Sparkles, RefreshCw } from "lucide-react";
-
+import { Textarea } from "@heroui/input";
+import { useParams } from "next/navigation";
+import { useProject } from "@/features/projects/hooks/use-projects";
+import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
 
 interface IdeaSectionProps {
-  idea: { raw: string; enriched: string | null };
-  onIdeaChange: (raw: string) => void;
-  onEnrich: () => void;
-  onRegenerateEnriched: () => void;
-  isEnriching?: boolean;
 }
 
-export function IdeaSection({ idea, onIdeaChange, onEnrich, onRegenerateEnriched, isEnriching }: IdeaSectionProps) {
+export function IdeaSection({}: IdeaSectionProps) {
+  const params = useParams();
+  const uuid = params.uuid as string;
+  const { data: project, isLoading } = useProject(uuid);
+  const isEnriching = false;
+
+  if (isLoading) {
+      return <Skeleton className="h-[100px] w-full rounded-xl" />;
+  }
+
+  const handleEnrich = (instructions: string) => {
+    // Implement enrichment logic with instructions
+  }
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <label className="text-sm font-medium text-foreground">Describe your movie idea</label>
-        <Textarea
-          placeholder="A detective in 2040 hunts a clone of himself..."
-          value={idea.raw}
-          onValueChange={onIdeaChange}
-          variant="bordered"
-          classNames={{ input: "min-h-[100px]", inputWrapper: "rounded-xl" }}
-          minRows={4}
+        <div className="p-4 rounded-xl border-2 border-default-200 min-h-[100px] text-default-700 bg-transparent">
+          {project?.original_concept}
+        </div>
+        <EnrichPromptPopover 
+          onEnrich={handleEnrich} 
+          isLoading={isEnriching} 
+          isDisabled={!project?.original_concept?.trim() || isEnriching} 
         />
-        <Button
-          color="primary"
-          onPress={onEnrich}
-          isDisabled={!idea.raw.trim() || isEnriching}
-          isLoading={isEnriching}
-          startContent={!isEnriching ? <Sparkles className="size-4" /> : undefined}
-          className="rounded-xl font-medium"
-        >
-          Enrich with AI
-        </Button>
       </div>
-      {idea.enriched && (
+      {project?.enriched_concept && (
         <Card className="rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/10 p-4">
           {isEnriching ? (
             <Skeleton className="rounded-xl h-24 w-full" />
           ) : (
-            <>
-              <p className="text-foreground/90 whitespace-pre-wrap">{idea.enriched}</p>
-              <Button
-                size="sm"
-                variant="flat"
-                className="mt-3"
-                onPress={onRegenerateEnriched}
-                isDisabled={isEnriching}
-                startContent={<RefreshCw className="size-4" />}
-              >
-                Regenerate Enriched Idea
-              </Button>
-            </>
+              <Textarea
+                value={project.enriched_concept}
+                variant="bordered"
+                classNames={{ input: "min-h-[100px] text-foreground/90", inputWrapper: "rounded-xl bg-transparent border-none" }}
+                minRows={4}
+              />
           )}
         </Card>
       )}

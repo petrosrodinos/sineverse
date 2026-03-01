@@ -41,7 +41,7 @@ export function SceneCard({ scene }: SceneCardProps) {
           )}
         </div>
         <p className="text-sm font-medium text-foreground line-clamp-1 w-full text-left">{scene.title || "Untitled"}</p>
-        <p className="text-xs text-default-500 line-clamp-2 w-full text-left">{scene.description}</p>
+        {scene.description && (<p className="text-xs text-default-500 line-clamp-2 w-full text-left">{scene.description}</p>)}
       </div>
     </Card>
   );

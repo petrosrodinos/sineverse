@@ -5,31 +5,14 @@ import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Textarea } from "@heroui/input";
-import { Skeleton } from "@heroui/skeleton";
 import { RefreshCw, Plus } from "lucide-react";
-
-import { VideoGenerationPanel } from "./VideoGenerationPanel";
 
 
 interface PromptVariationCardProps {
   variation: SceneVariation;
-  onPromptChange: (prompt_text: string) => void;
-  onNegativePromptChange: (negative: string) => void;
-  onModelChange: (ai_model: string) => void;
-  onAspectRatioChange: (value: string) => void;
-  onDurationChange: (seconds: number) => void;
-  onReferenceImagesChange: (urls: string[]) => void;
-  onGenerateVideos: () => void;
-  onSelectFinalVideo: (videoId: string) => void;
-  onRegenerateVideo: (videoId: string) => void;
-  onRegenerateThisVariation: () => void;
-  onAddVariation: () => void;
-  isRegenerating?: boolean;
-  isGeneratingVideos?: boolean;
-  progressText?: string;
 }
 
-export function PromptVariationCard({ variation, onPromptChange, onNegativePromptChange, onModelChange, onAspectRatioChange, onDurationChange, onReferenceImagesChange, onGenerateVideos, onSelectFinalVideo, onRegenerateVideo, onRegenerateThisVariation, onAddVariation, isRegenerating, isGeneratingVideos, progressText }: PromptVariationCardProps) {
+export function PromptVariationCard({ variation }: PromptVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
 
   return (
@@ -41,23 +24,20 @@ export function PromptVariationCard({ variation, onPromptChange, onNegativePromp
             <span className="text-sm text-default-500">{variation.style}</span>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" variant="flat" onPress={onRegenerateThisVariation} isDisabled={isRegenerating} isLoading={isRegenerating} startContent={!isRegenerating ? <RefreshCw className="size-4" /> : undefined}>
+            <Button size="sm" variant="flat" startContent={<RefreshCw className="size-4" />}>
               Regenerate This
             </Button>
-            <Button size="sm" variant="flat" color="primary" onPress={onAddVariation} startContent={<Plus className="size-4" />}>
+            <Button size="sm" variant="flat" color="primary" startContent={<Plus className="size-4" />}>
               New Variation
             </Button>
           </div>
         </div>
-        {isRegenerating ? <Skeleton className="rounded-xl h-20 w-full" /> : <Textarea label="Prompt" value={variation.prompt_text} onValueChange={onPromptChange} variant="bordered" classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} minRows={3} />}
+        <Textarea label="Prompt" variant="bordered" classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} minRows={3} />
         <Accordion className="px-0 gap-0" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
           <AccordionItem key="negative" aria-label="Negative prompt" title="Negative prompt" classNames={{ trigger: "py-2", content: "pb-2" }}>
-            <Textarea value={variation.negative_prompt} onValueChange={onNegativePromptChange} variant="bordered" classNames={{ inputWrapper: "rounded-xl" }} minRows={2} />
+            <Textarea variant="bordered" classNames={{ inputWrapper: "rounded-xl" }} minRows={2} />
           </AccordionItem>
         </Accordion>
-        <div className="pt-2 border-t border-default-200 dark:border-default-100/20">
-          <VideoGenerationPanel variation={variation} onModelChange={onModelChange} onAspectRatioChange={onAspectRatioChange} onDurationChange={onDurationChange} onReferenceImagesChange={onReferenceImagesChange} onGenerateVideos={onGenerateVideos} onSelectFinal={onSelectFinalVideo} onRegenerateVideo={onRegenerateVideo} isGenerating={isGeneratingVideos} progressText={progressText} />
-        </div>
       </div>
     </Card>
   );
