@@ -8,12 +8,10 @@ export class ProjectsService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(user_uuid: string, createProjectDto: CreateProjectDto) {
-    console.log('user_uuid', user_uuid);
     try {
       return await this.prisma.project.create({
         data: {
           ...createProjectDto,
-          status: createProjectDto.status as any,
           user: {
             connect: {
               uuid: user_uuid,
@@ -53,7 +51,6 @@ export class ProjectsService {
         where: { uuid },
         data: {
           ...updateProjectDto,
-          status: updateProjectDto.status as any,
         }
       });
     } catch (error) {

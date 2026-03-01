@@ -8,8 +8,7 @@ export class CreateSceneDto {
 
   @ApiPropertyOptional({ description: 'Title of the scene' })
   @IsString()
-  @IsOptional()
-  title?: string;
+  title: string;
 
   @ApiPropertyOptional({ description: 'Description of the scene' })
   @IsString()

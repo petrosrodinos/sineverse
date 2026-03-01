@@ -1,12 +1,25 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
-import { useState } from "react";
+import { Select, SelectItem } from "@heroui/select";
 import { useCreateProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { Project } from "@/features/projects/interfaces/projects.interfaces";
+import { Project, ProjectGenre, ProjectTone } from "@/features/projects/interfaces/projects.interfaces";
+import { GenreOptions, ToneOptions } from "@/config/dropdowns/project/project.options";
 import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const createProjectSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    concept: z.string().min(1, "Concept is required"),
+    genres: z.array(z.string()).max(3, "Maximum 3 genres allowed").optional(),
+    tones: z.array(z.string()).max(3, "Maximum 3 tones allowed").optional(),
+});
+
+type CreateProjectFormValues = z.infer<typeof createProjectSchema>;
 
 export function CreateProjectModal({ 
     isOpen, 
@@ -23,24 +36,43 @@ export function CreateProjectModal({
     const { mutate: updateProject, isPending: isUpdating } = useUpdateProject();
     const router = useRouter();
 
-    const [title, setTitle] = useState("");
-    const [concept, setConcept] = useState("");
-
     const isPending = isCreating || isUpdating;
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm<CreateProjectFormValues>({
+        resolver: zodResolver(createProjectSchema),
+        defaultValues: {
+            title: "",
+            concept: "",
+            genres: [],
+            tones: [],
+        }
+    });
 
     useEffect(() => {
         if (isOpen) {
-            setTitle(project?.title || "");
-            setConcept(project?.original_concept || "");
+            reset({
+                title: project?.title || "",
+                concept: project?.original_concept || "",
+                genres: project?.genres || [],
+                tones: project?.tones || [],
+            });
         }
-    }, [isOpen, project]);
+    }, [isOpen, project, reset]);
 
-    const handleSave = () => {
-        if (!title || !concept) return;
-        
+    const onSubmit = (data: CreateProjectFormValues) => {
         if (project) {
             updateProject(
-                { uuid: project.uuid, project: { title, original_concept: concept } },
+                { uuid: project.uuid, project: { 
+                    title: data.title, 
+                    original_concept: data.concept,
+                    genres: data.genres as ProjectGenre[],
+                    tones: data.tones as ProjectTone[]
+                } },
                 {
                     onSuccess: () => {
                         onClose();
@@ -49,7 +81,12 @@ export function CreateProjectModal({
             );
         } else {
             createProject(
-                { title, original_concept: concept }, 
+                { 
+                    title: data.title, 
+                    original_concept: data.concept,
+                    genres: data.genres as ProjectGenre[],
+                    tones: data.tones as ProjectTone[]
+                }, 
                 {
                     onSuccess: (newProject) => {
                         onClose();
@@ -58,41 +95,125 @@ export function CreateProjectModal({
                 }
             );
         }
-    }
+    };
 
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent>
                 {(onClose) => (
-                    <>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <ModalHeader className="flex flex-col gap-1">{project ? "Edit Project" : "Create New Project"}</ModalHeader>
                         <ModalBody>
-                            <Input
-                                autoFocus
-                                label="Title"
-                                placeholder="Enter project title"
-                                variant="bordered"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                            <Controller
+                                name="title"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        autoFocus
+                                        label="Title"
+                                        placeholder="Enter project title"
+                                        variant="bordered"
+                                        isInvalid={!!errors.title}
+                                        errorMessage={errors.title?.message}
+                                    />
+                                )}
                             />
-                            <Textarea
-                                label="Concept"
-                                placeholder="Describe your creative vision"
-                                variant="bordered"
-                                value={concept}
-                                onChange={(e) => setConcept(e.target.value)}
-                                minRows={4}
+                            <Controller
+                                name="concept"
+                                control={control}
+                                render={({ field }) => (
+                                    <Textarea
+                                        {...field}
+                                        label="Concept"
+                                        placeholder="Describe your creative vision"
+                                        variant="bordered"
+                                        minRows={4}
+                                        isInvalid={!!errors.concept}
+                                        errorMessage={errors.concept?.message}
+                                    />
+                                )}
+                            />
+                            <Controller
+                                name="genres"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        className="w-full"
+                                        label="Genres"
+                                        variant="bordered"
+                                        placeholder="Select up to 3 genres"
+                                        selectionMode="multiple"
+                                        selectedKeys={new Set(field.value || [])}
+                                        onSelectionChange={(keys) => {
+                                            if (Array.from(keys).length <= 3) {
+                                                field.onChange(Array.from(keys));
+                                            }
+                                        }}
+                                        isInvalid={!!errors.genres}
+                                        errorMessage={errors.genres?.message}
+                                        classNames={{
+                                            value: "truncate",
+                                        }}
+                                        renderValue={(items) => (
+                                            <span className="truncate block w-full text-left">
+                                                {items.map((item) => item.textValue).join(", ")}
+                                            </span>
+                                        )}
+                                    >
+                                        {GenreOptions.map((genre) => (
+                                            <SelectItem key={genre.value} textValue={genre.label}>
+                                                {genre.label}
+                                            </SelectItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
+                            <Controller
+                                name="tones"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        className="w-full"
+                                        label="Tones"
+                                        variant="bordered"
+                                        placeholder="Select up to 3 tones"
+                                        selectionMode="multiple"
+                                        selectedKeys={new Set(field.value || [])}
+                                        onSelectionChange={(keys) => {
+                                            if (Array.from(keys).length <= 3) {
+                                                field.onChange(Array.from(keys));
+                                            }
+                                        }}
+                                        isInvalid={!!errors.tones}
+                                        errorMessage={errors.tones?.message}
+                                        classNames={{
+                                            value: "truncate",
+                                        }}
+                                        renderValue={(items) => (
+                                            <span className="truncate block w-full text-left">
+                                                {items.map((item) => item.textValue).join(", ")}
+                                            </span>
+                                        )}
+                                    >
+                                        {ToneOptions.map((tone) => (
+                                            <SelectItem key={tone.value} textValue={tone.label}>
+                                                {tone.label}
+                                            </SelectItem>
+                                        ))}
+                                    </Select>
+                                )}
                             />
                         </ModalBody>
                         <ModalFooter>
                             <Button color="danger" variant="flat" onPress={onClose}>
                                 Cancel
                             </Button>
-                            <Button color="primary" onPress={handleSave} isLoading={isPending} isDisabled={!title || !concept}>
+                            <Button color="primary" type="submit" isLoading={isPending}>
                                 {project ? "Save Changes" : "Create Project"}
                             </Button>
                         </ModalFooter>
-                    </>
+                    </form>
                 )}
             </ModalContent>
         </Modal>

@@ -3016,8 +3016,6 @@ export namespace Prisma {
     title: string | null
     original_concept: string | null
     enriched_concept: string | null
-    genre: string | null
-    tone: string | null
     status: $Enums.ProjectStatus | null
     created_at: Date | null
     updated_at: Date | null
@@ -3030,8 +3028,6 @@ export namespace Prisma {
     title: string | null
     original_concept: string | null
     enriched_concept: string | null
-    genre: string | null
-    tone: string | null
     status: $Enums.ProjectStatus | null
     created_at: Date | null
     updated_at: Date | null
@@ -3044,8 +3040,8 @@ export namespace Prisma {
     title: number
     original_concept: number
     enriched_concept: number
-    genre: number
-    tone: number
+    genres: number
+    tones: number
     status: number
     created_at: number
     updated_at: number
@@ -3068,8 +3064,6 @@ export namespace Prisma {
     title?: true
     original_concept?: true
     enriched_concept?: true
-    genre?: true
-    tone?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -3082,8 +3076,6 @@ export namespace Prisma {
     title?: true
     original_concept?: true
     enriched_concept?: true
-    genre?: true
-    tone?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -3096,8 +3088,8 @@ export namespace Prisma {
     title?: true
     original_concept?: true
     enriched_concept?: true
-    genre?: true
-    tone?: true
+    genres?: true
+    tones?: true
     status?: true
     created_at?: true
     updated_at?: true
@@ -3194,11 +3186,11 @@ export namespace Prisma {
     id: number
     uuid: string
     user_uuid: string
-    title: string | null
+    title: string
     original_concept: string
     enriched_concept: string | null
-    genre: string | null
-    tone: string | null
+    genres: JsonValue | null
+    tones: JsonValue | null
     status: $Enums.ProjectStatus
     created_at: Date
     updated_at: Date
@@ -3230,8 +3222,8 @@ export namespace Prisma {
     title?: boolean
     original_concept?: boolean
     enriched_concept?: boolean
-    genre?: boolean
-    tone?: boolean
+    genres?: boolean
+    tones?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3248,8 +3240,8 @@ export namespace Prisma {
     title?: boolean
     original_concept?: boolean
     enriched_concept?: boolean
-    genre?: boolean
-    tone?: boolean
+    genres?: boolean
+    tones?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3263,8 +3255,8 @@ export namespace Prisma {
     title?: boolean
     original_concept?: boolean
     enriched_concept?: boolean
-    genre?: boolean
-    tone?: boolean
+    genres?: boolean
+    tones?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -3278,14 +3270,14 @@ export namespace Prisma {
     title?: boolean
     original_concept?: boolean
     enriched_concept?: boolean
-    genre?: boolean
-    tone?: boolean
+    genres?: boolean
+    tones?: boolean
     status?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "title" | "original_concept" | "enriched_concept" | "genre" | "tone" | "status" | "created_at" | "updated_at", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "title" | "original_concept" | "enriched_concept" | "genres" | "tones" | "status" | "created_at" | "updated_at", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scenes?: boolean | Project$scenesArgs<ExtArgs>
@@ -3310,11 +3302,11 @@ export namespace Prisma {
       id: number
       uuid: string
       user_uuid: string
-      title: string | null
+      title: string
       original_concept: string
       enriched_concept: string | null
-      genre: string | null
-      tone: string | null
+      genres: Prisma.JsonValue | null
+      tones: Prisma.JsonValue | null
       status: $Enums.ProjectStatus
       created_at: Date
       updated_at: Date
@@ -3750,8 +3742,8 @@ export namespace Prisma {
     readonly title: FieldRef<"Project", 'String'>
     readonly original_concept: FieldRef<"Project", 'String'>
     readonly enriched_concept: FieldRef<"Project", 'String'>
-    readonly genre: FieldRef<"Project", 'String'>
-    readonly tone: FieldRef<"Project", 'String'>
+    readonly genres: FieldRef<"Project", 'Json'>
+    readonly tones: FieldRef<"Project", 'Json'>
     readonly status: FieldRef<"Project", 'ProjectStatus'>
     readonly created_at: FieldRef<"Project", 'DateTime'>
     readonly updated_at: FieldRef<"Project", 'DateTime'>
@@ -4425,7 +4417,7 @@ export namespace Prisma {
     uuid: string
     user_uuid: string
     project_uuid: string
-    title: string | null
+    title: string
     description: string | null
     order: number
     duration_sec: number | null
@@ -4543,7 +4535,7 @@ export namespace Prisma {
       uuid: string
       user_uuid: string
       project_uuid: string
-      title: string | null
+      title: string
       description: string | null
       order: number
       duration_sec: number | null
@@ -10782,8 +10774,8 @@ export namespace Prisma {
     title: 'title',
     original_concept: 'original_concept',
     enriched_concept: 'enriched_concept',
-    genre: 'genre',
-    tone: 'tone',
+    genres: 'genres',
+    tones: 'tones',
     status: 'status',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -10908,6 +10900,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -10922,6 +10922,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -10982,6 +10991,20 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -11161,11 +11184,11 @@ export namespace Prisma {
     id?: IntFilter<"Project"> | number
     uuid?: StringFilter<"Project"> | string
     user_uuid?: StringFilter<"Project"> | string
-    title?: StringNullableFilter<"Project"> | string | null
+    title?: StringFilter<"Project"> | string
     original_concept?: StringFilter<"Project"> | string
     enriched_concept?: StringNullableFilter<"Project"> | string | null
-    genre?: StringNullableFilter<"Project"> | string | null
-    tone?: StringNullableFilter<"Project"> | string | null
+    genres?: JsonNullableFilter<"Project">
+    tones?: JsonNullableFilter<"Project">
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     created_at?: DateTimeFilter<"Project"> | Date | string
     updated_at?: DateTimeFilter<"Project"> | Date | string
@@ -11178,11 +11201,11 @@ export namespace Prisma {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
-    title?: SortOrderInput | SortOrder
+    title?: SortOrder
     original_concept?: SortOrder
     enriched_concept?: SortOrderInput | SortOrder
-    genre?: SortOrderInput | SortOrder
-    tone?: SortOrderInput | SortOrder
+    genres?: SortOrderInput | SortOrder
+    tones?: SortOrderInput | SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -11198,11 +11221,11 @@ export namespace Prisma {
     OR?: ProjectWhereInput[]
     NOT?: ProjectWhereInput | ProjectWhereInput[]
     user_uuid?: StringFilter<"Project"> | string
-    title?: StringNullableFilter<"Project"> | string | null
+    title?: StringFilter<"Project"> | string
     original_concept?: StringFilter<"Project"> | string
     enriched_concept?: StringNullableFilter<"Project"> | string | null
-    genre?: StringNullableFilter<"Project"> | string | null
-    tone?: StringNullableFilter<"Project"> | string | null
+    genres?: JsonNullableFilter<"Project">
+    tones?: JsonNullableFilter<"Project">
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     created_at?: DateTimeFilter<"Project"> | Date | string
     updated_at?: DateTimeFilter<"Project"> | Date | string
@@ -11215,11 +11238,11 @@ export namespace Prisma {
     id?: SortOrder
     uuid?: SortOrder
     user_uuid?: SortOrder
-    title?: SortOrderInput | SortOrder
+    title?: SortOrder
     original_concept?: SortOrder
     enriched_concept?: SortOrderInput | SortOrder
-    genre?: SortOrderInput | SortOrder
-    tone?: SortOrderInput | SortOrder
+    genres?: SortOrderInput | SortOrder
+    tones?: SortOrderInput | SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -11237,11 +11260,11 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Project"> | number
     uuid?: StringWithAggregatesFilter<"Project"> | string
     user_uuid?: StringWithAggregatesFilter<"Project"> | string
-    title?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    title?: StringWithAggregatesFilter<"Project"> | string
     original_concept?: StringWithAggregatesFilter<"Project"> | string
     enriched_concept?: StringNullableWithAggregatesFilter<"Project"> | string | null
-    genre?: StringNullableWithAggregatesFilter<"Project"> | string | null
-    tone?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    genres?: JsonNullableWithAggregatesFilter<"Project">
+    tones?: JsonNullableWithAggregatesFilter<"Project">
     status?: EnumProjectStatusWithAggregatesFilter<"Project"> | $Enums.ProjectStatus
     created_at?: DateTimeWithAggregatesFilter<"Project"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -11255,7 +11278,7 @@ export namespace Prisma {
     uuid?: StringFilter<"Scene"> | string
     user_uuid?: StringFilter<"Scene"> | string
     project_uuid?: StringFilter<"Scene"> | string
-    title?: StringNullableFilter<"Scene"> | string | null
+    title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
     duration_sec?: IntNullableFilter<"Scene"> | number | null
@@ -11272,7 +11295,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     project_uuid?: SortOrder
-    title?: SortOrderInput | SortOrder
+    title?: SortOrder
     description?: SortOrderInput | SortOrder
     order?: SortOrder
     duration_sec?: SortOrderInput | SortOrder
@@ -11293,7 +11316,7 @@ export namespace Prisma {
     NOT?: SceneWhereInput | SceneWhereInput[]
     user_uuid?: StringFilter<"Scene"> | string
     project_uuid?: StringFilter<"Scene"> | string
-    title?: StringNullableFilter<"Scene"> | string | null
+    title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
     duration_sec?: IntNullableFilter<"Scene"> | number | null
@@ -11310,7 +11333,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     project_uuid?: SortOrder
-    title?: SortOrderInput | SortOrder
+    title?: SortOrder
     description?: SortOrderInput | SortOrder
     order?: SortOrder
     duration_sec?: SortOrderInput | SortOrder
@@ -11331,7 +11354,7 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"Scene"> | string
     user_uuid?: StringWithAggregatesFilter<"Scene"> | string
     project_uuid?: StringWithAggregatesFilter<"Scene"> | string
-    title?: StringNullableWithAggregatesFilter<"Scene"> | string | null
+    title?: StringWithAggregatesFilter<"Scene"> | string
     description?: StringNullableWithAggregatesFilter<"Scene"> | string | null
     order?: IntWithAggregatesFilter<"Scene"> | number
     duration_sec?: IntNullableWithAggregatesFilter<"Scene"> | number | null
@@ -11947,11 +11970,11 @@ export namespace Prisma {
 
   export type ProjectCreateInput = {
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -11964,11 +11987,11 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -11978,11 +12001,11 @@ export namespace Prisma {
 
   export type ProjectUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11995,11 +12018,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12011,11 +12034,11 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -12023,11 +12046,11 @@ export namespace Prisma {
 
   export type ProjectUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12037,11 +12060,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12049,7 +12072,7 @@ export namespace Prisma {
 
   export type SceneCreateInput = {
     uuid?: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -12066,7 +12089,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -12078,7 +12101,7 @@ export namespace Prisma {
 
   export type SceneUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -12095,7 +12118,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -12110,7 +12133,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -12120,7 +12143,7 @@ export namespace Prisma {
 
   export type SceneUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -12133,7 +12156,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -12931,6 +12954,29 @@ export namespace Prisma {
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type EnumProjectStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
@@ -12951,8 +12997,8 @@ export namespace Prisma {
     title?: SortOrder
     original_concept?: SortOrder
     enriched_concept?: SortOrder
-    genre?: SortOrder
-    tone?: SortOrder
+    genres?: SortOrder
+    tones?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -12969,8 +13015,6 @@ export namespace Prisma {
     title?: SortOrder
     original_concept?: SortOrder
     enriched_concept?: SortOrder
-    genre?: SortOrder
-    tone?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -12983,8 +13027,6 @@ export namespace Prisma {
     title?: SortOrder
     original_concept?: SortOrder
     enriched_concept?: SortOrder
-    genre?: SortOrder
-    tone?: SortOrder
     status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -12992,6 +13034,32 @@ export namespace Prisma {
 
   export type ProjectSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -14527,6 +14595,29 @@ export namespace Prisma {
     notIn?: $Enums.ProjectStatus[] | ListEnumProjectStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumProjectStatusFilter<$PrismaModel> | $Enums.ProjectStatus
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel>
@@ -14664,11 +14755,11 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutUserInput = {
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -14679,11 +14770,11 @@ export namespace Prisma {
   export type ProjectUncheckedCreateWithoutUserInput = {
     id?: number
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -14703,7 +14794,7 @@ export namespace Prisma {
 
   export type SceneCreateWithoutUserInput = {
     uuid?: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -14718,7 +14809,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -14916,11 +15007,11 @@ export namespace Prisma {
     id?: IntFilter<"Project"> | number
     uuid?: StringFilter<"Project"> | string
     user_uuid?: StringFilter<"Project"> | string
-    title?: StringNullableFilter<"Project"> | string | null
+    title?: StringFilter<"Project"> | string
     original_concept?: StringFilter<"Project"> | string
     enriched_concept?: StringNullableFilter<"Project"> | string | null
-    genre?: StringNullableFilter<"Project"> | string | null
-    tone?: StringNullableFilter<"Project"> | string | null
+    genres?: JsonNullableFilter<"Project">
+    tones?: JsonNullableFilter<"Project">
     status?: EnumProjectStatusFilter<"Project"> | $Enums.ProjectStatus
     created_at?: DateTimeFilter<"Project"> | Date | string
     updated_at?: DateTimeFilter<"Project"> | Date | string
@@ -14950,7 +15041,7 @@ export namespace Prisma {
     uuid?: StringFilter<"Scene"> | string
     user_uuid?: StringFilter<"Scene"> | string
     project_uuid?: StringFilter<"Scene"> | string
-    title?: StringNullableFilter<"Scene"> | string | null
+    title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
     duration_sec?: IntNullableFilter<"Scene"> | number | null
@@ -15119,7 +15210,7 @@ export namespace Prisma {
 
   export type SceneCreateWithoutProjectInput = {
     uuid?: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -15134,7 +15225,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -15299,11 +15390,11 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutScenesInput = {
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -15315,11 +15406,11 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -15508,11 +15599,11 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutScenesInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15524,11 +15615,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15605,7 +15696,7 @@ export namespace Prisma {
 
   export type SceneCreateWithoutScene_variationsInput = {
     uuid?: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -15621,7 +15712,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -15771,7 +15862,7 @@ export namespace Prisma {
 
   export type SceneUpdateWithoutScene_variationsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -15787,7 +15878,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -15894,7 +15985,7 @@ export namespace Prisma {
 
   export type SceneCreateWithoutScene_videosInput = {
     uuid?: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -15910,7 +16001,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -16091,7 +16182,7 @@ export namespace Prisma {
 
   export type SceneUpdateWithoutScene_videosInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16107,7 +16198,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16278,11 +16369,11 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutFinal_projectsInput = {
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -16294,11 +16385,11 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -16441,11 +16532,11 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutFinal_projectsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16457,11 +16548,11 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16811,11 +16902,11 @@ export namespace Prisma {
   export type ProjectCreateManyUserInput = {
     id?: number
     uuid?: string
-    title?: string | null
+    title: string
     original_concept: string
     enriched_concept?: string | null
-    genre?: string | null
-    tone?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: $Enums.ProjectStatus
     created_at?: Date | string
     updated_at?: Date | string
@@ -16825,7 +16916,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     project_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -16898,11 +16989,11 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16913,11 +17004,11 @@ export namespace Prisma {
   export type ProjectUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16928,11 +17019,11 @@ export namespace Prisma {
   export type ProjectUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     original_concept?: StringFieldUpdateOperationsInput | string
     enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
-    genre?: NullableStringFieldUpdateOperationsInput | string | null
-    tone?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     status?: EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16940,7 +17031,7 @@ export namespace Prisma {
 
   export type SceneUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16955,7 +17046,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16969,7 +17060,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -17169,7 +17260,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    title?: string | null
+    title: string
     description?: string | null
     order: number
     duration_sec?: number | null
@@ -17191,7 +17282,7 @@ export namespace Prisma {
 
   export type SceneUpdateWithoutProjectInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -17206,7 +17297,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -17220,7 +17311,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null

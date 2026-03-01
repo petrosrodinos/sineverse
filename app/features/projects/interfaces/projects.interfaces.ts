@@ -4,8 +4,8 @@ export interface Project {
     title: string;
     original_concept: string;
     enriched_concept?: string;
-    genre_values?: ProjectGenre[];
-    tone_values?: ProjectTone[];
+    genres?: ProjectGenre[];
+    tones?: ProjectTone[];
     status: ProjectStatus;
     created_at: string;
     updated_at: string;
@@ -15,16 +15,16 @@ export interface CreateProjectDto {
     title: string;
     original_concept: string;
     enriched_concept?: string;
-    genre_values?: ProjectGenre[];
-    tone_values?: ProjectTone[];
+    genres?: ProjectGenre[];
+    tones?: ProjectTone[];
 }
 
 export interface UpdateProjectDto {
     title?: string;
     original_concept?: string;
     enriched_concept?: string;
-    genre_values?: ProjectGenre[];
-    tone_values?: ProjectTone[];
+    genres?: ProjectGenre[];
+    tones?: ProjectTone[];
 }
 
 export const ProjectGenres = {

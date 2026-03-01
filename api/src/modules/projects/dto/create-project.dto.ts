@@ -1,12 +1,11 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsArray } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProjectDto {
 
   @ApiPropertyOptional({ description: 'Title of the project' })
   @IsString()
-  @IsOptional()
-  title?: string;
+  title: string;
 
   @ApiProperty({ description: 'Original concept of the project' })
   @IsString()
@@ -17,18 +16,16 @@ export class CreateProjectDto {
   @IsOptional()
   enriched_concept?: string;
 
-  @ApiPropertyOptional({ description: 'Genre of the project' })
-  @IsString()
+  @ApiPropertyOptional({ description: 'Genres of the project', type: [String] })
+  @IsArray()
+  @IsString({ each: true })
   @IsOptional()
-  genre?: string;
+  genres?: string[];
 
-  @ApiPropertyOptional({ description: 'Tone of the project' })
-  @IsString()
+  @ApiPropertyOptional({ description: 'Tones of the project', type: [String] })
+  @IsArray()
+  @IsString({ each: true })
   @IsOptional()
-  tone?: string;
+  tones?: string[];
 
-  @ApiPropertyOptional({ description: 'Current status of the project', enum: ['DRAFT', 'ENRICHED', 'SCENES_GENERATED', 'PROMPTS_GENERATED', 'VIDEOS_GENERATING', 'COMPLETED'] })
-  @IsString()
-  @IsOptional()
-  status?: string;
 }
