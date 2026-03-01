@@ -29,7 +29,7 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
         prompt_text: editedVariation.prompt_text,
         negative_prompt: editedVariation.negative_prompt,
         style: editedVariation.style,
-        camera: editedVariation.camera,
+        camera_style: editedVariation.camera_style,
         shot_type: editedVariation.shot_type,
         camera_movement: editedVariation.camera_movement,
         lens_type: editedVariation.lens_type,

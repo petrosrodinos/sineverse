@@ -21,11 +21,11 @@ export interface Document {
 }
 
 export const DocumentTypes = {
-    VIDEO: "video",
-    IMAGE: "image",
-    AUDIO: "audio",
-    DOCUMENT: "document",
-    THUMBNAIL: "thumbnail",
+    VIDEO: "VIDEO",
+    IMAGE: "IMAGE",
+    AUDIO: "AUDIO",
+    DOCUMENT: "DOCUMENT",
+    THUMBNAIL: "THUMBNAIL",
 } as const;
 
 export type DocumentType = (typeof DocumentTypes)[keyof typeof DocumentTypes];

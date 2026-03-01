@@ -16,7 +16,7 @@ export interface SceneVariation {
     style?: Style;
     tone?: ProjectTone;
     genre?: ProjectGenre;
-    camera?: CameraStyle;
+    camera_style?: CameraStyle;
     shot_type?: ShotType;
     camera_movement?: CameraMovement;
     lens_type?: LensType;
@@ -38,7 +38,7 @@ export interface SceneVariation {
     created_at: string;
     updated_at: string;
     prompt_image?: Document;
-    video?: SceneVideo;
+    scene_video?: SceneVideo;
     scene?: Scene;
 }
 
@@ -80,7 +80,7 @@ export interface UpdateSceneVariationDto {
     style?: Style;
     tone?: ProjectTone;
     genre?: ProjectGenre;
-    camera?: CameraStyle;
+    camera_style?: CameraStyle;
     shot_type?: ShotType;
     camera_movement?: CameraMovement;
     lens_type?: LensType;

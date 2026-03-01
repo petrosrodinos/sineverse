@@ -102,7 +102,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                     <h4 className="text-medium font-semibold text-foreground">Cinematography</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <Select
-                            label={<LabelWithTooltip label="Camera Movement" tooltip="How the camera physically moves through the scene." />}
+                            label={<LabelWithTooltip label="Camera Movement" tooltip="How the camera_style physically moves through the scene." />}
                             defaultSelectedKeys={sceneVariation?.camera_movement ? [sceneVariation.camera_movement] : undefined}
                             onChange={(e) => handleValueChange("camera_movement", e.target.value)}
                             variant="bordered"
@@ -114,7 +114,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                         </Select>
 
                         <Select
-                            label={<LabelWithTooltip label="Lens Type" tooltip="The physical characteristics of the simulated camera lens." />}
+                            label={<LabelWithTooltip label="Lens Type" tooltip="The physical characteristics of the simulated camera_style lens." />}
                             defaultSelectedKeys={sceneVariation?.lens_type ? [sceneVariation.lens_type] : undefined}
                             onChange={(e) => handleValueChange("lens_type", e.target.value)}
                             variant="bordered"
@@ -126,9 +126,9 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                         </Select>
 
                         <Select
-                            label={<LabelWithTooltip label="Camera Style" tooltip="The mounting or handling style of the camera." />}
-                            defaultSelectedKeys={sceneVariation?.camera ? [sceneVariation.camera] : undefined}
-                            onChange={(e) => handleValueChange("camera", e.target.value)}
+                            label={<LabelWithTooltip label="Camera Style" tooltip="The mounting or handling style of the camera_style." />}
+                            defaultSelectedKeys={sceneVariation?.camera_style ? [sceneVariation.camera_style] : undefined}
+                            onChange={(e) => handleValueChange("camera_style", e.target.value)}
                             variant="bordered"
                             className="max-w-full w-full"
                         >

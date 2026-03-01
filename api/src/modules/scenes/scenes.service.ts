@@ -11,7 +11,7 @@ export class ScenesService {
   async create(user_uuid: string, createSceneDto: CreateSceneDto) {
     try {
 
-      const scenes = await this.findAll(user_uuid);
+      const scenes = await this.findAll(user_uuid, { project_uuid: createSceneDto.project_uuid });
       const order = scenes.length + 1;
 
       return await this.prisma.scene.create({ data: { ...createSceneDto, user_uuid, order } });

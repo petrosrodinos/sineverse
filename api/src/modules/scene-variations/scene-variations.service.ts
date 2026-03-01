@@ -65,6 +65,7 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
+      console.log(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to update scene variation', { cause: error });
     }

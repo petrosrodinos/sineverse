@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Project, ProjectStatuses } from "@/features/projects/interfaces/projects.interfaces";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { ProjectStatusesLabels } from "@/config/dropdowns/project/project.options";
+import { ProjectStatusesLabels, GenreOptionsLabels } from "@/config/dropdowns/project/project.options";
 
 interface ProjectCardProps {
     project: Project;
@@ -27,6 +27,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 </Chip>
             </CardHeader>
             <CardBody>
+                {project.genres && project.genres.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                        {project.genres.map((genre, idx) => (
+                            <Chip key={idx} size="sm" variant="flat" color="secondary">
+                                {GenreOptionsLabels[genre] || genre}
+                            </Chip>
+                        ))}
+                    </div>
+                )}
                 <p className="text-default-600 line-clamp-3">
                     {project.original_concept}
                 </p>
