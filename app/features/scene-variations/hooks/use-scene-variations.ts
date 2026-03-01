@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation } from "../services/scene-variations.services";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto } from "../interfaces/scene-variations.interfaces";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation } from "../services/scene-variations.services";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -99,3 +99,25 @@ export const useDuplicateSceneVariation = () => {
         }
     });
 }
+
+export const useEnrichSceneVariation = (uuid: string) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ uuid, enrichDto }: { uuid: string, enrichDto: SceneVariationEnrichDto }) => enrichSceneVariation(uuid, enrichDto),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
+            addToast({
+                title: "Scene variation enriched successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to enrich scene variation",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+

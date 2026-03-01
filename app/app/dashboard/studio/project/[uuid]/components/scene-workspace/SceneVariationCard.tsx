@@ -24,35 +24,12 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
   const handleSave = async () => {
     if (!variation?.uuid) return;
     
-    const dto: UpdateSceneVariationDto = {
-        title: editedVariation.title,
-        prompt_text: editedVariation.prompt_text,
-        negative_prompt: editedVariation.negative_prompt,
-        style: editedVariation.style,
-        camera_style: editedVariation.camera_style,
-        shot_type: editedVariation.shot_type,
-        camera_movement: editedVariation.camera_movement,
-        lens_type: editedVariation.lens_type,
-        depth_of_field: editedVariation.depth_of_field,
-        lighting: editedVariation.lighting,
-        color_grade: editedVariation.color_grade,
-        time_of_day: editedVariation.time_of_day,
-        aspect_ratio: editedVariation.aspect_ratio,
-        resolution: editedVariation.resolution,
-        fps: editedVariation.fps,
-        duration_sec: editedVariation.duration_sec,
-        ai_model: editedVariation.ai_model,
-        creativity: editedVariation.creativity,
-        motion_strength: editedVariation.motion_strength,
-        guidance_scale: editedVariation.guidance_scale,
-    };
-    
     // Clean up undefined properties
-    Object.keys(dto).forEach(key => dto[key as keyof UpdateSceneVariationDto] === undefined && delete dto[key as keyof UpdateSceneVariationDto]);
+    Object.keys(editedVariation).forEach(key => editedVariation[key as keyof UpdateSceneVariationDto] === undefined && delete editedVariation[key as keyof UpdateSceneVariationDto]);
 
     await updateMutation.mutateAsync({
       uuid: variation.uuid,
-      sceneVariation: dto,
+      sceneVariation: editedVariation,
     });
   };
 
@@ -105,7 +82,6 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
           </AccordionItem>
         </Accordion>
       </div>
-
       <div className="flex justify-end pt-2 border-t border-default-200 dark:border-default-100/10">
         <Button 
             color="primary" 

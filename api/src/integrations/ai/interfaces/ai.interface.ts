@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-export interface AIGenerateOptions {
+export interface AIGenerateOptions<T = any> {
     provider?: AiProvider;
     model?: AiModel;
     system?: string;
     prompt: string;
-    schema?: z.ZodSchema;
+    schema?: z.ZodSchema<T>;
     output?: 'json' | 'no-schema';
     temperature?: number;
     maxTokens?: number;
@@ -19,8 +19,8 @@ export interface AIGenerateTextResponse {
     usage?: AICostResponse
 }
 
-export interface AIGenerateObjectResponse {
-    response: z.ZodSchema[] | null;
+export interface AIGenerateObjectResponse<T = any> {
+    response: T | null;
     usage?: AICostResponse
 }
 

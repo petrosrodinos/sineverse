@@ -54,7 +54,7 @@ export class AiService {
     }
 
 
-    async generateTextWithSchema(options: AIGenerateOptions): Promise<AIGenerateObjectResponse> {
+    async generateTextWithSchema<T>(options: AIGenerateOptions<T>): Promise<AIGenerateObjectResponse<T>> {
         const maxRetries = 3;
         let lastError: Error;
 
@@ -64,7 +64,6 @@ export class AiService {
 
                 const { object, usage } = await generateObject({
                     model: modelAdapter,
-                    output: 'array',
                     schema: options?.schema || z.any(),
                     prompt: options.prompt,
                     system: options?.system || 'You are a helpful assistant.',

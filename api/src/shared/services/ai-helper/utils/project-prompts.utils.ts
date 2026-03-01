@@ -1,9 +1,9 @@
-import { AiPromptResponse, EnrichProjectConceptPrompt } from "../interfaces/ai-helper.interfaces";
+import { AiPromptResponse, EnrichProjectConceptConfig } from "../interfaces/ai-helper.interfaces";
 
 export const generateEnrichProjectConceptPrompt = (
-    prompt: EnrichProjectConceptPrompt
+    config: EnrichProjectConceptConfig
 ): AiPromptResponse => {
-    const { original_concept, enriched_concept, genres, tones, directions } = prompt;
+    const { original_concept, enriched_concept, genres, tones, directions } = config;
 
     return {
         system: `

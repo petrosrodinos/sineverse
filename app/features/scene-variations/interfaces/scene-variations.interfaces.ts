@@ -105,6 +105,13 @@ export interface SceneVariationsQueryDto {
     scene_uuid?: string;
 }
 
+export interface SceneVariationEnrichDto {
+    directions?: string;
+    include_prompt: boolean;
+    include_negative_prompt: boolean;
+    include_video_generation_options: boolean;
+}
+
 export const Styles = {
     cinematic: "cinematic",
     hyper_realistic: "hyper_realistic",

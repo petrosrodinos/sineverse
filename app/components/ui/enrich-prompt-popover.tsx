@@ -31,7 +31,7 @@ export function EnrichPromptPopover({ onEnrich, isLoading, isDisabled }: EnrichP
           startContent={!isLoading ? <Sparkles className="size-4" /> : undefined}
           className="rounded-xl font-medium"
         >
-          Enrich with AI
+          Enrich
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[340px] p-4">

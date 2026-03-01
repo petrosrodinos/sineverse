@@ -3,10 +3,12 @@ import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { SceneVariationQueryDto } from './dto/query-scene-variation.dto';
+import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
+import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 
 @Injectable()
 export class SceneVariationsService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService, private readonly aiHelperService: AiHelperService) { }
 
   async create(user_uuid: string, createSceneVariationDto: CreateSceneVariationDto) {
     try {
@@ -96,6 +98,59 @@ export class SceneVariationsService {
       console.log(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
+    }
+  }
+
+  async enrichSceneVariation(user_uuid: string, uuid: string, enrichSceneVariationDto: EnrichSceneVariationDto) {
+
+    try {
+
+      const { directions, include_prompt, include_negative_prompt, include_video_generation_options } = enrichSceneVariationDto;
+
+      const variation = await this.prisma.sceneVariation.findFirst({
+        where: { uuid, user_uuid },
+        include: {
+          scene: {
+            include: {
+              project: true
+            }
+          }
+        }
+      });
+
+      if (!variation) throw new NotFoundException('Scene variation not found');
+
+      const scene = variation.scene;
+      const project = scene.project;
+
+      const enrichedData = await this.aiHelperService.enrichSceneVariation({
+        original_concept: project.original_concept,
+        enriched_concept: project.enriched_concept,
+        genres: project.genres as string[],
+        tones: project.tones as string[],
+        prompt: variation.prompt_text,
+        negative_prompt: variation.negative_prompt,
+        project_title: project.title,
+        scene_title: scene.title,
+        scene_description: scene.description,
+        scene_variation_title: variation.title,
+        ai_model: variation.ai_model,
+        directions: directions,
+        include_prompt,
+        include_negative_prompt,
+        include_video_generation_options,
+      });
+
+      return this.prisma.sceneVariation.update({
+        where: { uuid },
+        data: {
+          ...enrichedData,
+        }
+      });
+
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to enrich scene variation', { cause: error });
     }
   }
 }
