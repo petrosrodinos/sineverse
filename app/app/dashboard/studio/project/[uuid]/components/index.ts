@@ -1,11 +1,6 @@
-import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
-import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import type { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 export { StudioLayout } from "./StudioLayout";
 export { IdeaSection } from "./IdeaSection";
-export { ScenesSidebar } from "./scenes/ScenesSidebar";
-export { SceneWorkspace } from "./SceneWorkspace";
-export { PromptVariationCard } from "./PromptVariationCard";
-export { VideoGenerationPanel } from "./VideoGenerationPanel";
-export { VideoCard } from "./VideoCard";
-export { AIControlsPanel } from "./AIControlsPanel";
+export { ScenesSidebar } from "./scenes";
+export { SceneWorkspace } from "./scene-workspace";
+export { PromptVariationCard } from "./scene-workspace/SceneVariationCard";
+export { VideoCard } from "./scene-workspace/VideoCard";

@@ -7,8 +7,8 @@ import { useDisclosure } from "@heroui/modal";
 import { Plus } from "lucide-react";
 import { useScenes } from "@/features/scenes/hooks/use-scenes";
 import { CreateSceneModal } from "./CreateSceneModal";
-import { NoScenes } from "./NoScenes";
-import { ScenesLoadingSkeleton } from "./ScenesLoadingSkeleton";
+import { NoScenes } from "./states/NoScenes";
+import { ScenesLoadingSkeleton } from "./states/ScenesLoadingSkeleton";
 import { SceneCard } from "./SceneCard";
 
 export function ScenesSidebar() {

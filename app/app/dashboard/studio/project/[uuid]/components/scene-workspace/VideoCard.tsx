@@ -1,11 +1,10 @@
 "use client";
-import type { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { VideoStatusLabels } from "@/config/dropdowns/project/video.options";
+import { VideoStatuses, type SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Check, RefreshCw } from "lucide-react";
-import { getVideoStatusLabel } from "@/utils/studio";
-
 
 interface VideoCardProps {
   video: SceneVideo;
@@ -15,8 +14,7 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, onSelectFinal, onRegenerate, isDisabled }: VideoCardProps) {
-  const statusLabel = getVideoStatusLabel(video.status);
-  const isProcessing = video.status === "PROCESSING";
+  const isProcessing = video.status === VideoStatuses.PROCESSING;
 
   return (
     <Card
@@ -38,8 +36,8 @@ export function VideoCard({ video, onSelectFinal, onRegenerate, isDisabled }: Vi
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-default-500">{video.duration_sec}s</span>
           <span className="text-xs text-default-500">{video.resolution}</span>
-          <Chip size="sm" variant="flat" color={video.status === "FAILED" ? "danger" : video.status === "COMPLETED" ? "success" : "warning"}>
-            {statusLabel}
+          <Chip size="sm" variant="flat" color={video.status === VideoStatuses.FAILED ? "danger" : video.status === VideoStatuses.COMPLETED ? "success" : "warning"}>
+            {VideoStatusLabels[video.status]}
           </Chip>
         </div>
         <div className="flex gap-2">

@@ -8,11 +8,11 @@ import { Textarea } from "@heroui/input";
 import { RefreshCw, Plus } from "lucide-react";
 
 
-interface PromptVariationCardProps {
+interface SceneVariationCardProps {
   variation: SceneVariation;
 }
 
-export function PromptVariationCard({ variation }: PromptVariationCardProps) {
+export function SceneVariationCard({ variation }: SceneVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
 
   return (
@@ -26,9 +26,6 @@ export function PromptVariationCard({ variation }: PromptVariationCardProps) {
           <div className="flex gap-2">
             <Button size="sm" variant="flat" startContent={<RefreshCw className="size-4" />}>
               Regenerate This
-            </Button>
-            <Button size="sm" variant="flat" color="primary" startContent={<Plus className="size-4" />}>
-              New Variation
             </Button>
           </div>
         </div>
