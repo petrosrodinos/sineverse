@@ -69,7 +69,10 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
         <div className="flex flex-1 flex-col gap-1.5">
           {items.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            const isActive = 
+              pathname === item.href || 
+              (item.href !== Routes.dashboard && pathname.startsWith(item.href)) || 
+              (item.href === Routes.dashboard && pathname.startsWith(Routes.studio));
             const link = (
               <NextLink
                 key={item.name}

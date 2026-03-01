@@ -27,7 +27,7 @@ export class ProjectsService {
 
   async findAll(user_uuid: string) {
     try {
-      return await this.prisma.project.findMany({ where: { user_uuid } });
+      return await this.prisma.project.findMany({ where: { user_uuid }, orderBy: { created_at: 'desc' } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve projects', { cause: error });
     }

@@ -129,6 +129,19 @@ export const AiModelOptions: DropdownOption<AiModel>[] = [
 ];
 
 
+export const StylesOptionsLabels = {
+    cinematic: "Cinematic",
+    hyper_realistic: "Hyper Realistic",
+    anime: "Anime",
+    noir: "Noir",
+    cyberpunk: "Cyberpunk",
+    fantasy: "Fantasy",
+    documentary: "Documentary",
+    western: "Western",
+    horror: "Horror",
+    sci_fi: "Sci-Fi",
+} as const;
+
 export const CameraMovementOptionsLabels = {
     static: "Static",
     pan: "Pan",

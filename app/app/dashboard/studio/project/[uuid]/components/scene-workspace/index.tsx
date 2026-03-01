@@ -10,8 +10,9 @@ import { Trash2, Copy } from "lucide-react";
 import { SceneVariationCard } from "./SceneVariationCard";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { SceneVariation, Style } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { CreateVariationPopover } from "./CreateVariationPopover";
+import { StylesOptionsLabels } from "@/config/dropdowns/project/scene-variations.options";
 
 interface SceneWorkspaceProps {}
 
@@ -103,7 +104,7 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
                   </div>
                 </div>
               }
-              subtitle={<span className="text-xs text-default-400">{variation.style || "No Style Selected"}</span>}
+              subtitle={<span className="text-xs text-default-400">{StylesOptionsLabels[variation.style as Style] || "No Style Selected"}</span>}
               aria-label={variation.title}
             >
               <SceneVariationCard variation={variation} />

@@ -113,7 +113,7 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
             onPress={handleSave}
             isLoading={updateMutation.isPending}
         >
-            Save Changes
+            Save
         </Button>
       </div>
     </div>
