@@ -51,7 +51,6 @@ enum DocumentType {
   THUMBNAIL
 }
 
-
 model User {
   id         Int      @id @default(autoincrement())
   uuid       String   @unique @default(uuid())
@@ -63,11 +62,11 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  projects   Project[]
-  scenes     Scene[]
+  projects         Project[]
+  scenes           Scene[]
   scene_variations SceneVariation[]
-  scene_videos SceneVideo[]
-  final_projects FinalProject[]
+  scene_videos     SceneVideo[]
+  final_projects   FinalProject[]
 
   @@index([email])
   @@index([phone])
@@ -76,21 +75,21 @@ model User {
 }
 
 model Project {
-  id              Int      @id @default(autoincrement())
-  uuid            String   @unique @default(uuid())
-  user_uuid       String
-  title           String
-  original_concept String   @db.Text
-  enriched_concept String?  @db.Text
+  id               Int           @id @default(autoincrement())
+  uuid             String        @unique @default(uuid())
+  user_uuid        String
+  title            String
+  original_concept String        @db.Text
+  enriched_concept String?       @db.Text
   genres           Json?
-  tones           Json?
-  status          ProjectStatus @default(DRAFT)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  tones            Json?
+  status           ProjectStatus @default(DRAFT)
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
 
-  user            User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
-  scenes          Scene[]
-  final_projects    FinalProject[]
+  user           User           @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  scenes         Scene[]
+  final_projects FinalProject[]
 
   @@index([uuid])
   @@index([user_uuid])
@@ -98,79 +97,79 @@ model Project {
 }
 
 model Scene {
-  id            Int      @id @default(autoincrement())
-  uuid          String   @unique @default(uuid())
-  user_uuid       String
-  project_uuid  String
-  title         String
-  description   String?  @db.Text
-  order    Int
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  user_uuid    String
+  project_uuid String
+  title        String
+  description  String?  @db.Text
+  order        Int
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
-  user            User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
-  project       Project @relation(fields: [project_uuid],references: [uuid],onDelete: Cascade)
+  user             User             @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  project          Project          @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
   scene_variations SceneVariation[]
-  scene_videos SceneVideo[]
+  scene_videos     SceneVideo[]
 
+  @@unique([project_uuid, order])
   @@index([uuid])
   @@index([project_uuid])
-  @@unique([project_uuid, order])
   @@map("scenes")
 }
 
 model SceneVariation {
-  id              Int      @id @default(autoincrement())
-  uuid            String   @unique @default(uuid())
-  user_uuid       String
-  scene_uuid      String
-  title           String
-  prompt_text     String?   @db.Text
-  negative_prompt String?  @db.Text
+  id                Int     @id @default(autoincrement())
+  uuid              String  @unique @default(uuid())
+  user_uuid         String
+  scene_uuid        String
+  title             String
+  prompt_text       String? @db.Text
+  negative_prompt   String? @db.Text
   prompt_image_uuid String?
+  selected          Boolean @default(false)
 
   // Creative direction
-  style           String?  // cinematic, anime, noir, hyperrealistic
-  tone            String?  // dark, uplifting, tense, dreamy
-  genre           String?  // sci-fi, western, horror, fantasy
+  style String? // cinematic, anime, noir, hyperrealistic
+  tone  String? // dark, uplifting, tense, dreamy
+  genre String? // sci-fi, western, horror, fantasy
 
   // Camera & composition
-  camera_style    String?  // handheld, drone, steadicam
-  shot_type       String?  // close-up, wide shot, over-the-shoulder
-  camera_movement String?  // slow pan, fast tracking, dolly in
-  lens_type       String?  // 35mm, 50mm, anamorphic
-  depth_of_field  String?  // shallow, deep
+  camera_style    String? // handheld, drone, steadicam
+  shot_type       String? // close-up, wide shot, over-the-shoulder
+  camera_movement String? // slow pan, fast tracking, dolly in
+  lens_type       String? // 35mm, 50mm, anamorphic
+  depth_of_field  String? // shallow, deep
 
   // Lighting & color
-  lighting        String?  // golden hour, neon, low-key
-  color_grade     String?  // teal-orange, desaturated, vibrant
-  time_of_day     String?  // sunrise, night, sunset
+  lighting    String? // golden hour, neon, low-key
+  color_grade String? // teal-orange, desaturated, vibrant
+  time_of_day String? // sunrise, night, sunset
 
   // Output format
-  aspect_ratio    String?  // 16:9, 9:16, 1:1, 2.35:1
-  resolution      String?  // 720p, 1080p, 4K
-  fps             Int?
-  duration_sec    Int?
+  aspect_ratio String? // 16:9, 9:16, 1:1, 2.35:1
+  resolution   String? // 720p, 1080p, 4K
+  fps          Int?
+  duration_sec Int?
 
   // AI generation control
   ai_model        VideoProvider?
   seed            Int?
-  creativity      Float?   // temperature-like control
-  motion_strength Float?   // how dynamic the scene is
-  guidance_scale  Float?   // prompt adherence
+  creativity      Float? // temperature-like control
+  motion_strength Float? // how dynamic the scene is
+  guidance_scale  Float? // prompt adherence
 
   // Audio style (future proof)
-  audio_style     String?  // orchestral, ambient, cinematic trailer
-  include_sound   Boolean  @default(false)
+  audio_style   String? // orchestral, ambient, cinematic trailer
+  include_sound Boolean @default(false)
 
-  selected        Boolean  @default(false)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  user            User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
-  scene           Scene @relation(fields: [scene_uuid],references: [uuid],onDelete: Cascade)
-  prompt_image      Document? @relation("SceneVariationImage", fields: [prompt_image_uuid],references: [uuid],onDelete: Cascade)
-  scene_videos          SceneVideo[]
+  user         User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  scene        Scene       @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
+  prompt_image Document?   @relation("SceneVariationImage", fields: [prompt_image_uuid], references: [uuid], onDelete: Cascade)
+  scene_video  SceneVideo?
 
   @@index([uuid])
   @@index([scene_uuid])
@@ -178,49 +177,43 @@ model SceneVariation {
 }
 
 model SceneVideo {
-  id                     Int      @id @default(autoincrement())
-  uuid                   String   @unique @default(uuid())
-  user_uuid              String
-  scene_uuid             String
-  scene_variation_uuid  String
-  provider               VideoProvider
-  selected               Boolean @default(false)
-  provider_job_id          String?
-  video_uuid               String?
-  duration_sec            Int?
-  resolution             String?
-  status                 VideoStatus @default(PENDING)
-  error_message           String?     @db.Text
-  created_at             DateTime @default(now())
-  updated_at             DateTime @updatedAt
+  id                   Int         @id @default(autoincrement())
+  uuid                 String      @unique @default(uuid())
+  user_uuid            String
+  scene_uuid           String
+  scene_variation_uuid String      @unique
+  provider_job_id      String?
+  video_uuid           String?
+  status               VideoStatus @default(PENDING)
+  error_message        String?     @db.Text
+  created_at           DateTime    @default(now())
+  updated_at           DateTime    @updatedAt
 
-  user            User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
-  scene                   Scene @relation(fields: [scene_uuid],references: [uuid],onDelete: Cascade)
-  scene_variation        SceneVariation @relation(fields: [scene_variation_uuid],references: [uuid],onDelete: Cascade)
-  video                   Document? @relation("SceneVideo", fields: [video_uuid],references: [uuid],onDelete: Cascade)
-  
+  user            User            @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  scene           Scene           @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
+  scene_variation SceneVariation? @relation(fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
+  video           Document?       @relation("SceneVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
+
   @@index([uuid])
-  @@index([scene_variation_uuid])
-  @@unique([scene_variation_uuid, selected])
   @@map("scene_videos")
 }
 
 model FinalProject {
-  id            Int      @id @default(autoincrement())
-  uuid          String   @unique @default(uuid())
-  user_uuid     String
-  project_uuid  String
-  title         String?
+  id             Int      @id @default(autoincrement())
+  uuid           String   @unique @default(uuid())
+  user_uuid      String
+  project_uuid   String
+  title          String?
   duration_sec   Int?
-  video_uuid    String?
+  video_uuid     String?
   thumbnail_uuid String?
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
-  user          User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
-  project       Project @relation(fields: [project_uuid],references: [uuid],onDelete: Cascade)
-  video         Document? @relation("FinalProjectVideo", fields: [video_uuid],references: [uuid],onDelete: Cascade)
-  thumbnail     Document? @relation("FinalProjectThumbnail", fields: [thumbnail_uuid],references: [uuid],onDelete: Cascade)
+  user      User      @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  project   Project   @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
+  video     Document? @relation("FinalProjectVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
+  thumbnail Document? @relation("FinalProjectThumbnail", fields: [thumbnail_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([uuid])
   @@index([project_uuid])
@@ -228,26 +221,25 @@ model FinalProject {
 }
 
 model Document {
-  id                 Int           @id @default(autoincrement())
-  uuid               String        @unique @default(uuid())
-  filename           String
-  mimetype           String
-  size               Int
-  url                String
-  path               String
-  type               DocumentType  @default(DOCUMENT)
-  order              Int      @default(0)
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
+  id         Int          @id @default(autoincrement())
+  uuid       String       @unique @default(uuid())
+  filename   String
+  mimetype   String
+  size       Int
+  url        String
+  path       String
+  type       DocumentType @default(DOCUMENT)
+  order      Int          @default(0)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
 
-  scene_videos SceneVideo[] @relation("SceneVideo")
-  prompt_images SceneVariation[] @relation("SceneVariationImage")
-  final_project_videos FinalProject[] @relation("FinalProjectVideo")
-  final_project_thumbnails FinalProject[] @relation("FinalProjectThumbnail")
+  scene_videos             SceneVideo[]     @relation("SceneVideo")
+  prompt_images            SceneVariation[] @relation("SceneVariationImage")
+  final_project_videos     FinalProject[]   @relation("FinalProjectVideo")
+  final_project_thumbnails FinalProject[]   @relation("FinalProjectThumbnail")
 
   @@index([uuid])
   @@index([type])
   @@index([order])
   @@map("documents")
 }
-

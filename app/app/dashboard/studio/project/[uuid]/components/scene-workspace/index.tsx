@@ -1,16 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useScene } from "@/features/scenes/hooks/use-scenes";
 import { NoSceneSelected } from "./states/NoSceneSelected";
 import { SceneLoading } from "./states/SceneLoading";
 import { SceneNotFound } from "./states/SceneNotFound";
+import { NoVariations } from "./states/NoVariations";
 import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Button } from "@heroui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Copy } from "lucide-react";
 import { SceneVariationCard } from "./SceneVariationCard";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import { useDeleteSceneVariation, useSceneVariations } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { CreateVariationPopover } from "./CreateVariationPopover";
 
@@ -21,12 +20,20 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
   const sceneUuid = searchParams.get("scene_uuid");
   const { data: scene_variations, isLoading } = useSceneVariations({scene_uuid: sceneUuid || ""});
   const [variationToDelete, setVariationToDelete] = useState<SceneVariation | null>(null);
+  const [variationToDuplicate, setVariationToDuplicate] = useState<SceneVariation | null>(null);
   const deleteMutation = useDeleteSceneVariation();
+  const duplicateMutation = useDuplicateSceneVariation();
 
   const handleDelete = async () => {
     if (!variationToDelete?.uuid) return;
     await deleteMutation.mutateAsync(variationToDelete.uuid);
     setVariationToDelete(null);
+  };
+
+  const handleDuplicate = async () => {
+    if (!variationToDuplicate?.uuid) return;
+    await duplicateMutation.mutateAsync(variationToDuplicate.uuid);
+    setVariationToDuplicate(null);
   };
 
   if (!sceneUuid) {
@@ -39,6 +46,10 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
 
   if (!scene_variations) {
     return <SceneNotFound />;
+  }
+
+  if (scene_variations.length === 0) {
+    return <NoVariations sceneUuid={sceneUuid} />;
   }
 
   return (
@@ -64,19 +75,32 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
               title={
                 <div className="flex items-center gap-2">
                   <span className="font-semibold truncate">{variation.title}</span>
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-2 text-danger hover:bg-danger/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
-                    onClick={(e: any) => {
-                      // Prevent accordion from toggling
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setVariationToDelete(variation);
-                    }}
-                  >
-                    <Trash2 className="size-4" />
-                  </span>
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex items-center gap-1">
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="p-2 text-default-500 hover:text-primary hover:bg-primary/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setVariationToDuplicate(variation);
+                      }}
+                    >
+                      <Copy className="size-4" />
+                    </span>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="p-2 text-danger hover:bg-danger/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setVariationToDelete(variation);
+                      }}
+                    >
+                      <Trash2 className="size-4" />
+                    </span>
+                  </div>
                 </div>
               }
               subtitle={<span className="text-xs text-default-400">{variation.style || "No Style Selected"}</span>}
@@ -97,6 +121,17 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
         confirmText="Delete"
         confirmColor="danger"
         isLoading={deleteMutation.isPending}
+      />
+
+      <ConfirmationModal
+        isOpen={!!variationToDuplicate}
+        onClose={() => setVariationToDuplicate(null)}
+        onConfirm={handleDuplicate}
+        title="Duplicate Scene Variation"
+        description={`Are you sure you want to duplicate "${variationToDuplicate?.title}"?`}
+        confirmText="Duplicate"
+        confirmColor="primary"
+        isLoading={duplicateMutation.isPending}
       />
     </div>
   );

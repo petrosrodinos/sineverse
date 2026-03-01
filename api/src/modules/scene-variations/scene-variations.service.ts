@@ -36,7 +36,7 @@ export class SceneVariationsService {
         ...(query.scene_uuid && { scene_uuid: query.scene_uuid }),
       };
 
-      return await this.prisma.sceneVariation.findMany({ where, include: { scene_videos: true } });
+      return await this.prisma.sceneVariation.findMany({ where, include: { scene_video: true } });
 
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
@@ -76,6 +76,25 @@ export class SceneVariationsService {
       return await this.prisma.sceneVariation.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene variation', { cause: error });
+    }
+  }
+
+  async duplicate(user_uuid: string, uuid: string) {
+    try {
+      const variation = await this.findOne(user_uuid, uuid);
+      const { id, uuid: oldUuid, created_at, updated_at, selected, ...dataToCopy } = variation;
+
+      return await this.prisma.sceneVariation.create({
+        data: {
+          ...dataToCopy,
+          title: `${variation.title} (Copy)`,
+          selected: false,
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
     }
   }
 }

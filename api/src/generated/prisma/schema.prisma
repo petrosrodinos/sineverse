@@ -127,6 +127,7 @@ model SceneVariation {
   prompt_text       String? @db.Text
   negative_prompt   String? @db.Text
   prompt_image_uuid String?
+  selected          Boolean @default(false)
 
   // Creative direction
   style String? // cinematic, anime, noir, hyperrealistic
@@ -162,14 +163,13 @@ model SceneVariation {
   audio_style   String? // orchestral, ambient, cinematic trailer
   include_sound Boolean @default(false)
 
-  selected   Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user         User         @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  scene        Scene        @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
-  prompt_image Document?    @relation("SceneVariationImage", fields: [prompt_image_uuid], references: [uuid], onDelete: Cascade)
-  scene_videos SceneVideo[]
+  user         User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  scene        Scene       @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
+  prompt_image Document?   @relation("SceneVariationImage", fields: [prompt_image_uuid], references: [uuid], onDelete: Cascade)
+  scene_video  SceneVideo?
 
   @@index([uuid])
   @@index([scene_uuid])
@@ -177,30 +177,24 @@ model SceneVariation {
 }
 
 model SceneVideo {
-  id                   Int           @id @default(autoincrement())
-  uuid                 String        @unique @default(uuid())
+  id                   Int         @id @default(autoincrement())
+  uuid                 String      @unique @default(uuid())
   user_uuid            String
   scene_uuid           String
-  scene_variation_uuid String
-  provider             VideoProvider
-  selected             Boolean       @default(false)
+  scene_variation_uuid String      @unique
   provider_job_id      String?
   video_uuid           String?
-  duration_sec         Int?
-  resolution           String?
-  status               VideoStatus   @default(PENDING)
-  error_message        String?       @db.Text
-  created_at           DateTime      @default(now())
-  updated_at           DateTime      @updatedAt
+  status               VideoStatus @default(PENDING)
+  error_message        String?     @db.Text
+  created_at           DateTime    @default(now())
+  updated_at           DateTime    @updatedAt
 
-  user            User           @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  scene           Scene          @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
-  scene_variation SceneVariation @relation(fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
-  video           Document?      @relation("SceneVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
+  user            User            @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
+  scene           Scene           @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
+  scene_variation SceneVariation? @relation(fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
+  video           Document?       @relation("SceneVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
 
-  @@unique([scene_variation_uuid, selected])
   @@index([uuid])
-  @@index([scene_variation_uuid])
   @@map("scene_videos")
 }
 

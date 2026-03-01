@@ -48,7 +48,7 @@ export class ScenesService {
         where: { uuid, user_uuid }, include: {
           scene_variations: {
             include: {
-              scene_videos: true
+              scene_video: true
             }
           }
         }

@@ -1,6 +1,7 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { SceneVideo, CreateSceneVideoDto, UpdateSceneVideoDto } from "../interfaces/scene-videos.interfaces";
+import { SceneVideo, CreateSceneVideoDto } from "../interfaces/scene-videos.interfaces";
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 
 export const getSceneVideos = async (): Promise<SceneVideo[]> => {
     try {
@@ -32,7 +33,7 @@ export const createSceneVideo = async (sceneVideo: CreateSceneVideoDto): Promise
     }
 }
 
-export const updateSceneVideo = async (uuid: string, sceneVideo: UpdateSceneVideoDto): Promise<SceneVideo> => {
+export const updateSceneVideo = async (uuid: string, sceneVideo: any): Promise<SceneVideo> => {
     try {
         const response = await axiosInstance.patch<SceneVideo>(ApiRoutes.scene_videos.scene_video(uuid), sceneVideo);
         return response.data;
@@ -51,3 +52,4 @@ export const deleteSceneVideo = async (uuid: string) => {
         throw error;
     }
 }
+

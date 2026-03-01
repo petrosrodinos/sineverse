@@ -7,13 +7,9 @@ export interface SceneVideo {
     uuid: string;
     user_uuid: string;
     scene_uuid: string;
-    prompt_variation_uuid: string;
-    provider: string;
-    selected: boolean;
+    scene_variation_uuid: string;
     provider_job_id?: string;
     video_uuid?: string;
-    duration_sec?: number;
-    resolution?: string;
     status: VideoStatus;
     error_message?: string;
     created_at: string;
@@ -25,19 +21,9 @@ export interface SceneVideo {
 
 export interface CreateSceneVideoDto {
     scene_uuid: string;
-    prompt_variation_uuid: string;
-    provider: string;
-    selected?: boolean;
-    duration_sec?: number;
-    resolution?: string;
+    scene_variation_uuid: string;
 }
 
-export interface UpdateSceneVideoDto {
-    selected?: boolean;
-    duration_sec?: number;
-    resolution?: string;
-    status?: string;
-}
 
 export const VideoStatuses = {
     PENDING: 'PENDING',

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation } from "../services/scene-variations.services";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation } from "../services/scene-variations.services";
 import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto } from "../interfaces/scene-variations.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -72,6 +72,27 @@ export const useDeleteSceneVariation = () => {
         onError: (error) => {
             addToast({
                 title: "Failed to delete scene variation",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
+export const useDuplicateSceneVariation = () => {
+    const queryClient = useQueryClient();
+    return useMutation<SceneVariation, Error, string>({
+        mutationFn: duplicateSceneVariation,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
+            addToast({
+                title: "Scene variation duplicated successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to duplicate scene variation",
                 description: error.message,
                 severity: "danger",
             });

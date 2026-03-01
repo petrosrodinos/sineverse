@@ -51,3 +51,13 @@ export const deleteSceneVariation = async (uuid: string) => {
         throw error;
     }
 }
+
+export const duplicateSceneVariation = async (uuid: string): Promise<SceneVariation> => {
+    try {
+        const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.duplicate(uuid));
+        return response.data;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to duplicate scene variation");
+        throw error;
+    }
+}

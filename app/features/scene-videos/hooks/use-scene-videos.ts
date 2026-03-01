@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSceneVideos, getSceneVideo, createSceneVideo, updateSceneVideo, deleteSceneVideo } from "../services/scene-videos.services";
-import { SceneVideo, CreateSceneVideoDto, UpdateSceneVideoDto } from "../interfaces/scene-videos.interfaces";
+import { SceneVideo, CreateSceneVideoDto } from "../interfaces/scene-videos.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -39,7 +39,7 @@ export const useCreateSceneVideo = () => {
 
 export const useUpdateSceneVideo = () => {
     const queryClient = useQueryClient();
-    return useMutation<SceneVideo, Error, { uuid: string, sceneVideo: UpdateSceneVideoDto }>({
+    return useMutation<SceneVideo, Error, { uuid: string, sceneVideo: any }>({
         mutationFn: ({ uuid, sceneVideo }) => updateSceneVideo(uuid, sceneVideo),
         onSuccess: (_, { uuid }) => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVideos] });

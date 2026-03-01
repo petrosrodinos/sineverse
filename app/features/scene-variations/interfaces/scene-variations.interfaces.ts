@@ -38,7 +38,7 @@ export interface SceneVariation {
     created_at: string;
     updated_at: string;
     prompt_image?: Document;
-    videos?: SceneVideo[];
+    video?: SceneVideo;
     scene?: Scene;
 }
 

@@ -16,9 +16,9 @@ export class SceneVideosService {
         data: {
           ...createSceneVideoDto,
           status: createSceneVideoDto.status as any,
-          provider: createSceneVideoDto.provider as any,
           user_uuid,
           scene_uuid: variation.scene_uuid,
+          scene_variation_uuid: variation.uuid,
         }
       });
     } catch (error) {
@@ -54,7 +54,6 @@ export class SceneVideosService {
         data: {
           ...updateSceneVideoDto,
           status: updateSceneVideoDto.status as any,
-          provider: updateSceneVideoDto.provider as any,
         }
       });
     } catch (error) {

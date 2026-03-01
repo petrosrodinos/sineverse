@@ -167,6 +167,7 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   prompt_text: 'prompt_text',
   negative_prompt: 'negative_prompt',
   prompt_image_uuid: 'prompt_image_uuid',
+  selected: 'selected',
   style: 'style',
   tone: 'tone',
   genre: 'genre',
@@ -189,7 +190,6 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   guidance_scale: 'guidance_scale',
   audio_style: 'audio_style',
   include_sound: 'include_sound',
-  selected: 'selected',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -200,12 +200,8 @@ exports.Prisma.SceneVideoScalarFieldEnum = {
   user_uuid: 'user_uuid',
   scene_uuid: 'scene_uuid',
   scene_variation_uuid: 'scene_variation_uuid',
-  provider: 'provider',
-  selected: 'selected',
   provider_job_id: 'provider_job_id',
   video_uuid: 'video_uuid',
-  duration_sec: 'duration_sec',
-  resolution: 'resolution',
   status: 'status',
   error_message: 'error_message',
   created_at: 'created_at',

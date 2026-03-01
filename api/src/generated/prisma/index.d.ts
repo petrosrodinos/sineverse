@@ -1629,37 +1629,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type SceneVariationCountOutputType
-   */
-
-  export type SceneVariationCountOutputType = {
-    scene_videos: number
-  }
-
-  export type SceneVariationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    scene_videos?: boolean | SceneVariationCountOutputTypeCountScene_videosArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * SceneVariationCountOutputType without action
-   */
-  export type SceneVariationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the SceneVariationCountOutputType
-     */
-    select?: SceneVariationCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * SceneVariationCountOutputType without action
-   */
-  export type SceneVariationCountOutputTypeCountScene_videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: SceneVideoWhereInput
-  }
-
-
-  /**
    * Count Type DocumentCountOutputType
    */
 
@@ -5464,6 +5433,7 @@ export namespace Prisma {
     prompt_text: string | null
     negative_prompt: string | null
     prompt_image_uuid: string | null
+    selected: boolean | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5486,7 +5456,6 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean | null
-    selected: boolean | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5500,6 +5469,7 @@ export namespace Prisma {
     prompt_text: string | null
     negative_prompt: string | null
     prompt_image_uuid: string | null
+    selected: boolean | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5522,7 +5492,6 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean | null
-    selected: boolean | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5536,6 +5505,7 @@ export namespace Prisma {
     prompt_text: number
     negative_prompt: number
     prompt_image_uuid: number
+    selected: number
     style: number
     tone: number
     genre: number
@@ -5558,7 +5528,6 @@ export namespace Prisma {
     guidance_scale: number
     audio_style: number
     include_sound: number
-    selected: number
     created_at: number
     updated_at: number
     _all: number
@@ -5594,6 +5563,7 @@ export namespace Prisma {
     prompt_text?: true
     negative_prompt?: true
     prompt_image_uuid?: true
+    selected?: true
     style?: true
     tone?: true
     genre?: true
@@ -5616,7 +5586,6 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
-    selected?: true
     created_at?: true
     updated_at?: true
   }
@@ -5630,6 +5599,7 @@ export namespace Prisma {
     prompt_text?: true
     negative_prompt?: true
     prompt_image_uuid?: true
+    selected?: true
     style?: true
     tone?: true
     genre?: true
@@ -5652,7 +5622,6 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
-    selected?: true
     created_at?: true
     updated_at?: true
   }
@@ -5666,6 +5635,7 @@ export namespace Prisma {
     prompt_text?: true
     negative_prompt?: true
     prompt_image_uuid?: true
+    selected?: true
     style?: true
     tone?: true
     genre?: true
@@ -5688,7 +5658,6 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
-    selected?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -5789,6 +5758,7 @@ export namespace Prisma {
     prompt_text: string | null
     negative_prompt: string | null
     prompt_image_uuid: string | null
+    selected: boolean
     style: string | null
     tone: string | null
     genre: string | null
@@ -5811,7 +5781,6 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean
-    selected: boolean
     created_at: Date
     updated_at: Date
     _count: SceneVariationCountAggregateOutputType | null
@@ -5844,6 +5813,7 @@ export namespace Prisma {
     prompt_text?: boolean
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
+    selected?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5866,14 +5836,12 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
-    selected?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
     prompt_image?: boolean | SceneVariation$prompt_imageArgs<ExtArgs>
-    scene_videos?: boolean | SceneVariation$scene_videosArgs<ExtArgs>
-    _count?: boolean | SceneVariationCountOutputTypeDefaultArgs<ExtArgs>
+    scene_video?: boolean | SceneVariation$scene_videoArgs<ExtArgs>
   }, ExtArgs["result"]["sceneVariation"]>
 
   export type SceneVariationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5885,6 +5853,7 @@ export namespace Prisma {
     prompt_text?: boolean
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
+    selected?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5907,7 +5876,6 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
-    selected?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5924,6 +5892,7 @@ export namespace Prisma {
     prompt_text?: boolean
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
+    selected?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5946,7 +5915,6 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
-    selected?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5963,6 +5931,7 @@ export namespace Prisma {
     prompt_text?: boolean
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
+    selected?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5985,18 +5954,16 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
-    selected?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "selected" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
+  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "selected" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
   export type SceneVariationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
     prompt_image?: boolean | SceneVariation$prompt_imageArgs<ExtArgs>
-    scene_videos?: boolean | SceneVariation$scene_videosArgs<ExtArgs>
-    _count?: boolean | SceneVariationCountOutputTypeDefaultArgs<ExtArgs>
+    scene_video?: boolean | SceneVariation$scene_videoArgs<ExtArgs>
   }
   export type SceneVariationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6015,7 +5982,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       scene: Prisma.$ScenePayload<ExtArgs>
       prompt_image: Prisma.$DocumentPayload<ExtArgs> | null
-      scene_videos: Prisma.$SceneVideoPayload<ExtArgs>[]
+      scene_video: Prisma.$SceneVideoPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6026,6 +5993,7 @@ export namespace Prisma {
       prompt_text: string | null
       negative_prompt: string | null
       prompt_image_uuid: string | null
+      selected: boolean
       style: string | null
       tone: string | null
       genre: string | null
@@ -6048,7 +6016,6 @@ export namespace Prisma {
       guidance_scale: number | null
       audio_style: string | null
       include_sound: boolean
-      selected: boolean
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["sceneVariation"]>
@@ -6448,7 +6415,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     scene<T extends SceneDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SceneDefaultArgs<ExtArgs>>): Prisma__SceneClient<$Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     prompt_image<T extends SceneVariation$prompt_imageArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$prompt_imageArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    scene_videos<T extends SceneVariation$scene_videosArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$scene_videosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SceneVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scene_video<T extends SceneVariation$scene_videoArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$scene_videoArgs<ExtArgs>>): Prisma__SceneVideoClient<$Result.GetResult<Prisma.$SceneVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6486,6 +6453,7 @@ export namespace Prisma {
     readonly prompt_text: FieldRef<"SceneVariation", 'String'>
     readonly negative_prompt: FieldRef<"SceneVariation", 'String'>
     readonly prompt_image_uuid: FieldRef<"SceneVariation", 'String'>
+    readonly selected: FieldRef<"SceneVariation", 'Boolean'>
     readonly style: FieldRef<"SceneVariation", 'String'>
     readonly tone: FieldRef<"SceneVariation", 'String'>
     readonly genre: FieldRef<"SceneVariation", 'String'>
@@ -6508,7 +6476,6 @@ export namespace Prisma {
     readonly guidance_scale: FieldRef<"SceneVariation", 'Float'>
     readonly audio_style: FieldRef<"SceneVariation", 'String'>
     readonly include_sound: FieldRef<"SceneVariation", 'Boolean'>
-    readonly selected: FieldRef<"SceneVariation", 'Boolean'>
     readonly created_at: FieldRef<"SceneVariation", 'DateTime'>
     readonly updated_at: FieldRef<"SceneVariation", 'DateTime'>
   }
@@ -6926,9 +6893,9 @@ export namespace Prisma {
   }
 
   /**
-   * SceneVariation.scene_videos
+   * SceneVariation.scene_video
    */
-  export type SceneVariation$scene_videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SceneVariation$scene_videoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SceneVideo
      */
@@ -6942,11 +6909,6 @@ export namespace Prisma {
      */
     include?: SceneVideoInclude<ExtArgs> | null
     where?: SceneVideoWhereInput
-    orderBy?: SceneVideoOrderByWithRelationInput | SceneVideoOrderByWithRelationInput[]
-    cursor?: SceneVideoWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: SceneVideoScalarFieldEnum | SceneVideoScalarFieldEnum[]
   }
 
   /**
@@ -6982,12 +6944,10 @@ export namespace Prisma {
 
   export type SceneVideoAvgAggregateOutputType = {
     id: number | null
-    duration_sec: number | null
   }
 
   export type SceneVideoSumAggregateOutputType = {
     id: number | null
-    duration_sec: number | null
   }
 
   export type SceneVideoMinAggregateOutputType = {
@@ -6996,12 +6956,8 @@ export namespace Prisma {
     user_uuid: string | null
     scene_uuid: string | null
     scene_variation_uuid: string | null
-    provider: $Enums.VideoProvider | null
-    selected: boolean | null
     provider_job_id: string | null
     video_uuid: string | null
-    duration_sec: number | null
-    resolution: string | null
     status: $Enums.VideoStatus | null
     error_message: string | null
     created_at: Date | null
@@ -7014,12 +6970,8 @@ export namespace Prisma {
     user_uuid: string | null
     scene_uuid: string | null
     scene_variation_uuid: string | null
-    provider: $Enums.VideoProvider | null
-    selected: boolean | null
     provider_job_id: string | null
     video_uuid: string | null
-    duration_sec: number | null
-    resolution: string | null
     status: $Enums.VideoStatus | null
     error_message: string | null
     created_at: Date | null
@@ -7032,12 +6984,8 @@ export namespace Prisma {
     user_uuid: number
     scene_uuid: number
     scene_variation_uuid: number
-    provider: number
-    selected: number
     provider_job_id: number
     video_uuid: number
-    duration_sec: number
-    resolution: number
     status: number
     error_message: number
     created_at: number
@@ -7048,12 +6996,10 @@ export namespace Prisma {
 
   export type SceneVideoAvgAggregateInputType = {
     id?: true
-    duration_sec?: true
   }
 
   export type SceneVideoSumAggregateInputType = {
     id?: true
-    duration_sec?: true
   }
 
   export type SceneVideoMinAggregateInputType = {
@@ -7062,12 +7008,8 @@ export namespace Prisma {
     user_uuid?: true
     scene_uuid?: true
     scene_variation_uuid?: true
-    provider?: true
-    selected?: true
     provider_job_id?: true
     video_uuid?: true
-    duration_sec?: true
-    resolution?: true
     status?: true
     error_message?: true
     created_at?: true
@@ -7080,12 +7022,8 @@ export namespace Prisma {
     user_uuid?: true
     scene_uuid?: true
     scene_variation_uuid?: true
-    provider?: true
-    selected?: true
     provider_job_id?: true
     video_uuid?: true
-    duration_sec?: true
-    resolution?: true
     status?: true
     error_message?: true
     created_at?: true
@@ -7098,12 +7036,8 @@ export namespace Prisma {
     user_uuid?: true
     scene_uuid?: true
     scene_variation_uuid?: true
-    provider?: true
-    selected?: true
     provider_job_id?: true
     video_uuid?: true
-    duration_sec?: true
-    resolution?: true
     status?: true
     error_message?: true
     created_at?: true
@@ -7203,12 +7137,8 @@ export namespace Prisma {
     user_uuid: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected: boolean
     provider_job_id: string | null
     video_uuid: string | null
-    duration_sec: number | null
-    resolution: string | null
     status: $Enums.VideoStatus
     error_message: string | null
     created_at: Date
@@ -7240,19 +7170,15 @@ export namespace Prisma {
     user_uuid?: boolean
     scene_uuid?: boolean
     scene_variation_uuid?: boolean
-    provider?: boolean
-    selected?: boolean
     provider_job_id?: boolean
     video_uuid?: boolean
-    duration_sec?: boolean
-    resolution?: boolean
     status?: boolean
     error_message?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }, ExtArgs["result"]["sceneVideo"]>
 
@@ -7262,19 +7188,15 @@ export namespace Prisma {
     user_uuid?: boolean
     scene_uuid?: boolean
     scene_variation_uuid?: boolean
-    provider?: boolean
-    selected?: boolean
     provider_job_id?: boolean
     video_uuid?: boolean
-    duration_sec?: boolean
-    resolution?: boolean
     status?: boolean
     error_message?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }, ExtArgs["result"]["sceneVideo"]>
 
@@ -7284,19 +7206,15 @@ export namespace Prisma {
     user_uuid?: boolean
     scene_uuid?: boolean
     scene_variation_uuid?: boolean
-    provider?: boolean
-    selected?: boolean
     provider_job_id?: boolean
     video_uuid?: boolean
-    duration_sec?: boolean
-    resolution?: boolean
     status?: boolean
     error_message?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }, ExtArgs["result"]["sceneVideo"]>
 
@@ -7306,35 +7224,31 @@ export namespace Prisma {
     user_uuid?: boolean
     scene_uuid?: boolean
     scene_variation_uuid?: boolean
-    provider?: boolean
-    selected?: boolean
     provider_job_id?: boolean
     video_uuid?: boolean
-    duration_sec?: boolean
-    resolution?: boolean
     status?: boolean
     error_message?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type SceneVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "scene_variation_uuid" | "provider" | "selected" | "provider_job_id" | "video_uuid" | "duration_sec" | "resolution" | "status" | "error_message" | "created_at" | "updated_at", ExtArgs["result"]["sceneVideo"]>
+  export type SceneVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "scene_variation_uuid" | "provider_job_id" | "video_uuid" | "status" | "error_message" | "created_at" | "updated_at", ExtArgs["result"]["sceneVideo"]>
   export type SceneVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }
   export type SceneVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }
   export type SceneVideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
-    scene_variation?: boolean | SceneVariationDefaultArgs<ExtArgs>
+    scene_variation?: boolean | SceneVideo$scene_variationArgs<ExtArgs>
     video?: boolean | SceneVideo$videoArgs<ExtArgs>
   }
 
@@ -7343,7 +7257,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       scene: Prisma.$ScenePayload<ExtArgs>
-      scene_variation: Prisma.$SceneVariationPayload<ExtArgs>
+      scene_variation: Prisma.$SceneVariationPayload<ExtArgs> | null
       video: Prisma.$DocumentPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -7352,12 +7266,8 @@ export namespace Prisma {
       user_uuid: string
       scene_uuid: string
       scene_variation_uuid: string
-      provider: $Enums.VideoProvider
-      selected: boolean
       provider_job_id: string | null
       video_uuid: string | null
-      duration_sec: number | null
-      resolution: string | null
       status: $Enums.VideoStatus
       error_message: string | null
       created_at: Date
@@ -7758,7 +7668,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     scene<T extends SceneDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SceneDefaultArgs<ExtArgs>>): Prisma__SceneClient<$Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    scene_variation<T extends SceneVariationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariationDefaultArgs<ExtArgs>>): Prisma__SceneVariationClient<$Result.GetResult<Prisma.$SceneVariationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    scene_variation<T extends SceneVideo$scene_variationArgs<ExtArgs> = {}>(args?: Subset<T, SceneVideo$scene_variationArgs<ExtArgs>>): Prisma__SceneVariationClient<$Result.GetResult<Prisma.$SceneVariationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     video<T extends SceneVideo$videoArgs<ExtArgs> = {}>(args?: Subset<T, SceneVideo$videoArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -7794,12 +7704,8 @@ export namespace Prisma {
     readonly user_uuid: FieldRef<"SceneVideo", 'String'>
     readonly scene_uuid: FieldRef<"SceneVideo", 'String'>
     readonly scene_variation_uuid: FieldRef<"SceneVideo", 'String'>
-    readonly provider: FieldRef<"SceneVideo", 'VideoProvider'>
-    readonly selected: FieldRef<"SceneVideo", 'Boolean'>
     readonly provider_job_id: FieldRef<"SceneVideo", 'String'>
     readonly video_uuid: FieldRef<"SceneVideo", 'String'>
-    readonly duration_sec: FieldRef<"SceneVideo", 'Int'>
-    readonly resolution: FieldRef<"SceneVideo", 'String'>
     readonly status: FieldRef<"SceneVideo", 'VideoStatus'>
     readonly error_message: FieldRef<"SceneVideo", 'String'>
     readonly created_at: FieldRef<"SceneVideo", 'DateTime'>
@@ -8197,6 +8103,25 @@ export namespace Prisma {
      * Limit how many SceneVideos to delete.
      */
     limit?: number
+  }
+
+  /**
+   * SceneVideo.scene_variation
+   */
+  export type SceneVideo$scene_variationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SceneVariation
+     */
+    select?: SceneVariationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SceneVariation
+     */
+    omit?: SceneVariationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SceneVariationInclude<ExtArgs> | null
+    where?: SceneVariationWhereInput
   }
 
   /**
@@ -10804,6 +10729,7 @@ export namespace Prisma {
     prompt_text: 'prompt_text',
     negative_prompt: 'negative_prompt',
     prompt_image_uuid: 'prompt_image_uuid',
+    selected: 'selected',
     style: 'style',
     tone: 'tone',
     genre: 'genre',
@@ -10826,7 +10752,6 @@ export namespace Prisma {
     guidance_scale: 'guidance_scale',
     audio_style: 'audio_style',
     include_sound: 'include_sound',
-    selected: 'selected',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -10840,12 +10765,8 @@ export namespace Prisma {
     user_uuid: 'user_uuid',
     scene_uuid: 'scene_uuid',
     scene_variation_uuid: 'scene_variation_uuid',
-    provider: 'provider',
-    selected: 'selected',
     provider_job_id: 'provider_job_id',
     video_uuid: 'video_uuid',
-    duration_sec: 'duration_sec',
-    resolution: 'resolution',
     status: 'status',
     error_message: 'error_message',
     created_at: 'created_at',
@@ -11019,6 +10940,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'VideoProvider'
    */
   export type EnumVideoProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VideoProvider'>
@@ -11043,13 +10971,6 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -11365,6 +11286,7 @@ export namespace Prisma {
     prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
+    selected?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11387,13 +11309,12 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
-    selected?: BoolFilter<"SceneVariation"> | boolean
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
     prompt_image?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    scene_videos?: SceneVideoListRelationFilter
+    scene_video?: XOR<SceneVideoNullableScalarRelationFilter, SceneVideoWhereInput> | null
   }
 
   export type SceneVariationOrderByWithRelationInput = {
@@ -11405,6 +11326,7 @@ export namespace Prisma {
     prompt_text?: SortOrderInput | SortOrder
     negative_prompt?: SortOrderInput | SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
+    selected?: SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11427,13 +11349,12 @@ export namespace Prisma {
     guidance_scale?: SortOrderInput | SortOrder
     audio_style?: SortOrderInput | SortOrder
     include_sound?: SortOrder
-    selected?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
     scene?: SceneOrderByWithRelationInput
     prompt_image?: DocumentOrderByWithRelationInput
-    scene_videos?: SceneVideoOrderByRelationAggregateInput
+    scene_video?: SceneVideoOrderByWithRelationInput
   }
 
   export type SceneVariationWhereUniqueInput = Prisma.AtLeast<{
@@ -11448,6 +11369,7 @@ export namespace Prisma {
     prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
+    selected?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11470,13 +11392,12 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
-    selected?: BoolFilter<"SceneVariation"> | boolean
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
     prompt_image?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    scene_videos?: SceneVideoListRelationFilter
+    scene_video?: XOR<SceneVideoNullableScalarRelationFilter, SceneVideoWhereInput> | null
   }, "id" | "uuid">
 
   export type SceneVariationOrderByWithAggregationInput = {
@@ -11488,6 +11409,7 @@ export namespace Prisma {
     prompt_text?: SortOrderInput | SortOrder
     negative_prompt?: SortOrderInput | SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
+    selected?: SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11510,7 +11432,6 @@ export namespace Prisma {
     guidance_scale?: SortOrderInput | SortOrder
     audio_style?: SortOrderInput | SortOrder
     include_sound?: SortOrder
-    selected?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: SceneVariationCountOrderByAggregateInput
@@ -11532,6 +11453,7 @@ export namespace Prisma {
     prompt_text?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
+    selected?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
     style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     tone?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     genre?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
@@ -11554,7 +11476,6 @@ export namespace Prisma {
     guidance_scale?: FloatNullableWithAggregatesFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     include_sound?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
-    selected?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
     created_at?: DateTimeWithAggregatesFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"SceneVariation"> | Date | string
   }
@@ -11568,19 +11489,15 @@ export namespace Prisma {
     user_uuid?: StringFilter<"SceneVideo"> | string
     scene_uuid?: StringFilter<"SceneVideo"> | string
     scene_variation_uuid?: StringFilter<"SceneVideo"> | string
-    provider?: EnumVideoProviderFilter<"SceneVideo"> | $Enums.VideoProvider
-    selected?: BoolFilter<"SceneVideo"> | boolean
     provider_job_id?: StringNullableFilter<"SceneVideo"> | string | null
     video_uuid?: StringNullableFilter<"SceneVideo"> | string | null
-    duration_sec?: IntNullableFilter<"SceneVideo"> | number | null
-    resolution?: StringNullableFilter<"SceneVideo"> | string | null
     status?: EnumVideoStatusFilter<"SceneVideo"> | $Enums.VideoStatus
     error_message?: StringNullableFilter<"SceneVideo"> | string | null
     created_at?: DateTimeFilter<"SceneVideo"> | Date | string
     updated_at?: DateTimeFilter<"SceneVideo"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
-    scene_variation?: XOR<SceneVariationScalarRelationFilter, SceneVariationWhereInput>
+    scene_variation?: XOR<SceneVariationNullableScalarRelationFilter, SceneVariationWhereInput> | null
     video?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
   }
 
@@ -11590,12 +11507,8 @@ export namespace Prisma {
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
     scene_variation_uuid?: SortOrder
-    provider?: SortOrder
-    selected?: SortOrder
     provider_job_id?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
-    duration_sec?: SortOrderInput | SortOrder
-    resolution?: SortOrderInput | SortOrder
     status?: SortOrder
     error_message?: SortOrderInput | SortOrder
     created_at?: SortOrder
@@ -11609,28 +11522,23 @@ export namespace Prisma {
   export type SceneVideoWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     uuid?: string
-    scene_variation_uuid_selected?: SceneVideoScene_variation_uuidSelectedCompoundUniqueInput
+    scene_variation_uuid?: string
     AND?: SceneVideoWhereInput | SceneVideoWhereInput[]
     OR?: SceneVideoWhereInput[]
     NOT?: SceneVideoWhereInput | SceneVideoWhereInput[]
     user_uuid?: StringFilter<"SceneVideo"> | string
     scene_uuid?: StringFilter<"SceneVideo"> | string
-    scene_variation_uuid?: StringFilter<"SceneVideo"> | string
-    provider?: EnumVideoProviderFilter<"SceneVideo"> | $Enums.VideoProvider
-    selected?: BoolFilter<"SceneVideo"> | boolean
     provider_job_id?: StringNullableFilter<"SceneVideo"> | string | null
     video_uuid?: StringNullableFilter<"SceneVideo"> | string | null
-    duration_sec?: IntNullableFilter<"SceneVideo"> | number | null
-    resolution?: StringNullableFilter<"SceneVideo"> | string | null
     status?: EnumVideoStatusFilter<"SceneVideo"> | $Enums.VideoStatus
     error_message?: StringNullableFilter<"SceneVideo"> | string | null
     created_at?: DateTimeFilter<"SceneVideo"> | Date | string
     updated_at?: DateTimeFilter<"SceneVideo"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
-    scene_variation?: XOR<SceneVariationScalarRelationFilter, SceneVariationWhereInput>
+    scene_variation?: XOR<SceneVariationNullableScalarRelationFilter, SceneVariationWhereInput> | null
     video?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-  }, "id" | "uuid" | "scene_variation_uuid_selected">
+  }, "id" | "uuid" | "scene_variation_uuid">
 
   export type SceneVideoOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11638,12 +11546,8 @@ export namespace Prisma {
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
     scene_variation_uuid?: SortOrder
-    provider?: SortOrder
-    selected?: SortOrder
     provider_job_id?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
-    duration_sec?: SortOrderInput | SortOrder
-    resolution?: SortOrderInput | SortOrder
     status?: SortOrder
     error_message?: SortOrderInput | SortOrder
     created_at?: SortOrder
@@ -11664,12 +11568,8 @@ export namespace Prisma {
     user_uuid?: StringWithAggregatesFilter<"SceneVideo"> | string
     scene_uuid?: StringWithAggregatesFilter<"SceneVideo"> | string
     scene_variation_uuid?: StringWithAggregatesFilter<"SceneVideo"> | string
-    provider?: EnumVideoProviderWithAggregatesFilter<"SceneVideo"> | $Enums.VideoProvider
-    selected?: BoolWithAggregatesFilter<"SceneVideo"> | boolean
     provider_job_id?: StringNullableWithAggregatesFilter<"SceneVideo"> | string | null
     video_uuid?: StringNullableWithAggregatesFilter<"SceneVideo"> | string | null
-    duration_sec?: IntNullableWithAggregatesFilter<"SceneVideo"> | number | null
-    resolution?: StringNullableWithAggregatesFilter<"SceneVideo"> | string | null
     status?: EnumVideoStatusWithAggregatesFilter<"SceneVideo"> | $Enums.VideoStatus
     error_message?: StringNullableWithAggregatesFilter<"SceneVideo"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"SceneVideo"> | Date | string
@@ -12158,6 +12058,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12180,13 +12081,12 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
     scene: SceneCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateInput = {
@@ -12198,6 +12098,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12220,10 +12121,9 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationUpdateInput = {
@@ -12231,6 +12131,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12253,13 +12154,12 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateInput = {
@@ -12271,6 +12171,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12293,10 +12194,9 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationCreateManyInput = {
@@ -12308,6 +12208,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12330,7 +12231,6 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -12340,6 +12240,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12362,7 +12263,6 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12376,6 +12276,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12398,25 +12299,20 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SceneVideoCreateInput = {
     uuid?: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutScene_videoInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -12426,12 +12322,8 @@ export namespace Prisma {
     user_uuid: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -12440,18 +12332,14 @@ export namespace Prisma {
 
   export type SceneVideoUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutScene_videoNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -12461,12 +12349,8 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12479,12 +12363,8 @@ export namespace Prisma {
     user_uuid: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -12493,11 +12373,7 @@ export namespace Prisma {
 
   export type SceneVideoUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12510,12 +12386,8 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -13124,6 +12996,11 @@ export namespace Prisma {
     order?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -13153,11 +13030,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type SceneScalarRelationFilter = {
     is?: SceneWhereInput
     isNot?: SceneWhereInput
@@ -13166,6 +13038,11 @@ export namespace Prisma {
   export type DocumentNullableScalarRelationFilter = {
     is?: DocumentWhereInput | null
     isNot?: DocumentWhereInput | null
+  }
+
+  export type SceneVideoNullableScalarRelationFilter = {
+    is?: SceneVideoWhereInput | null
+    isNot?: SceneVideoWhereInput | null
   }
 
   export type SceneVariationCountOrderByAggregateInput = {
@@ -13177,6 +13054,7 @@ export namespace Prisma {
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
+    selected?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13199,7 +13077,6 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
-    selected?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13223,6 +13100,7 @@ export namespace Prisma {
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
+    selected?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13245,7 +13123,6 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
-    selected?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13259,6 +13136,7 @@ export namespace Prisma {
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
+    selected?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13281,7 +13159,6 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
-    selected?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13294,6 +13171,14 @@ export namespace Prisma {
     creativity?: SortOrder
     motion_strength?: SortOrder
     guidance_scale?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13338,21 +13223,6 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type EnumVideoProviderFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumVideoProviderFilter<$PrismaModel> | $Enums.VideoProvider
-  }
-
   export type EnumVideoStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.VideoStatus | EnumVideoStatusFieldRefInput<$PrismaModel>
     in?: $Enums.VideoStatus[] | ListEnumVideoStatusFieldRefInput<$PrismaModel>
@@ -13360,14 +13230,9 @@ export namespace Prisma {
     not?: NestedEnumVideoStatusFilter<$PrismaModel> | $Enums.VideoStatus
   }
 
-  export type SceneVariationScalarRelationFilter = {
-    is?: SceneVariationWhereInput
-    isNot?: SceneVariationWhereInput
-  }
-
-  export type SceneVideoScene_variation_uuidSelectedCompoundUniqueInput = {
-    scene_variation_uuid: string
-    selected: boolean
+  export type SceneVariationNullableScalarRelationFilter = {
+    is?: SceneVariationWhereInput | null
+    isNot?: SceneVariationWhereInput | null
   }
 
   export type SceneVideoCountOrderByAggregateInput = {
@@ -13376,12 +13241,8 @@ export namespace Prisma {
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
     scene_variation_uuid?: SortOrder
-    provider?: SortOrder
-    selected?: SortOrder
     provider_job_id?: SortOrder
     video_uuid?: SortOrder
-    duration_sec?: SortOrder
-    resolution?: SortOrder
     status?: SortOrder
     error_message?: SortOrder
     created_at?: SortOrder
@@ -13390,7 +13251,6 @@ export namespace Prisma {
 
   export type SceneVideoAvgOrderByAggregateInput = {
     id?: SortOrder
-    duration_sec?: SortOrder
   }
 
   export type SceneVideoMaxOrderByAggregateInput = {
@@ -13399,12 +13259,8 @@ export namespace Prisma {
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
     scene_variation_uuid?: SortOrder
-    provider?: SortOrder
-    selected?: SortOrder
     provider_job_id?: SortOrder
     video_uuid?: SortOrder
-    duration_sec?: SortOrder
-    resolution?: SortOrder
     status?: SortOrder
     error_message?: SortOrder
     created_at?: SortOrder
@@ -13417,12 +13273,8 @@ export namespace Prisma {
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
     scene_variation_uuid?: SortOrder
-    provider?: SortOrder
-    selected?: SortOrder
     provider_job_id?: SortOrder
     video_uuid?: SortOrder
-    duration_sec?: SortOrder
-    resolution?: SortOrder
     status?: SortOrder
     error_message?: SortOrder
     created_at?: SortOrder
@@ -13431,17 +13283,6 @@ export namespace Prisma {
 
   export type SceneVideoSumOrderByAggregateInput = {
     id?: SortOrder
-    duration_sec?: SortOrder
-  }
-
-  export type EnumVideoProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumVideoProviderWithAggregatesFilter<$PrismaModel> | $Enums.VideoProvider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumVideoProviderFilter<$PrismaModel>
-    _max?: NestedEnumVideoProviderFilter<$PrismaModel>
   }
 
   export type EnumVideoStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -14040,18 +13881,20 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput
   }
 
-  export type SceneVideoCreateNestedManyWithoutScene_variationInput = {
-    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput> | SceneVideoCreateWithoutScene_variationInput[] | SceneVideoUncheckedCreateWithoutScene_variationInput[]
-    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput | SceneVideoCreateOrConnectWithoutScene_variationInput[]
-    createMany?: SceneVideoCreateManyScene_variationInputEnvelope
-    connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
+  export type SceneVideoCreateNestedOneWithoutScene_variationInput = {
+    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
+    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput
+    connect?: SceneVideoWhereUniqueInput
   }
 
-  export type SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput = {
-    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput> | SceneVideoCreateWithoutScene_variationInput[] | SceneVideoUncheckedCreateWithoutScene_variationInput[]
-    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput | SceneVideoCreateOrConnectWithoutScene_variationInput[]
-    createMany?: SceneVideoCreateManyScene_variationInputEnvelope
-    connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
+  export type SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput = {
+    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
+    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput
+    connect?: SceneVideoWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -14072,10 +13915,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutScene_variationsNestedInput = {
@@ -14104,32 +13943,24 @@ export namespace Prisma {
     update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutPrompt_imagesInput, DocumentUpdateWithoutPrompt_imagesInput>, DocumentUncheckedUpdateWithoutPrompt_imagesInput>
   }
 
-  export type SceneVideoUpdateManyWithoutScene_variationNestedInput = {
-    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput> | SceneVideoCreateWithoutScene_variationInput[] | SceneVideoUncheckedCreateWithoutScene_variationInput[]
-    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput | SceneVideoCreateOrConnectWithoutScene_variationInput[]
-    upsert?: SceneVideoUpsertWithWhereUniqueWithoutScene_variationInput | SceneVideoUpsertWithWhereUniqueWithoutScene_variationInput[]
-    createMany?: SceneVideoCreateManyScene_variationInputEnvelope
-    set?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    disconnect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    delete?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    update?: SceneVideoUpdateWithWhereUniqueWithoutScene_variationInput | SceneVideoUpdateWithWhereUniqueWithoutScene_variationInput[]
-    updateMany?: SceneVideoUpdateManyWithWhereWithoutScene_variationInput | SceneVideoUpdateManyWithWhereWithoutScene_variationInput[]
-    deleteMany?: SceneVideoScalarWhereInput | SceneVideoScalarWhereInput[]
+  export type SceneVideoUpdateOneWithoutScene_variationNestedInput = {
+    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
+    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput
+    upsert?: SceneVideoUpsertWithoutScene_variationInput
+    disconnect?: SceneVideoWhereInput | boolean
+    delete?: SceneVideoWhereInput | boolean
+    connect?: SceneVideoWhereUniqueInput
+    update?: XOR<XOR<SceneVideoUpdateToOneWithWhereWithoutScene_variationInput, SceneVideoUpdateWithoutScene_variationInput>, SceneVideoUncheckedUpdateWithoutScene_variationInput>
   }
 
-  export type SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput = {
-    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput> | SceneVideoCreateWithoutScene_variationInput[] | SceneVideoUncheckedCreateWithoutScene_variationInput[]
-    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput | SceneVideoCreateOrConnectWithoutScene_variationInput[]
-    upsert?: SceneVideoUpsertWithWhereUniqueWithoutScene_variationInput | SceneVideoUpsertWithWhereUniqueWithoutScene_variationInput[]
-    createMany?: SceneVideoCreateManyScene_variationInputEnvelope
-    set?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    disconnect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    delete?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
-    update?: SceneVideoUpdateWithWhereUniqueWithoutScene_variationInput | SceneVideoUpdateWithWhereUniqueWithoutScene_variationInput[]
-    updateMany?: SceneVideoUpdateManyWithWhereWithoutScene_variationInput | SceneVideoUpdateManyWithWhereWithoutScene_variationInput[]
-    deleteMany?: SceneVideoScalarWhereInput | SceneVideoScalarWhereInput[]
+  export type SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput = {
+    create?: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
+    connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput
+    upsert?: SceneVideoUpsertWithoutScene_variationInput
+    disconnect?: SceneVideoWhereInput | boolean
+    delete?: SceneVideoWhereInput | boolean
+    connect?: SceneVideoWhereUniqueInput
+    update?: XOR<XOR<SceneVideoUpdateToOneWithWhereWithoutScene_variationInput, SceneVideoUpdateWithoutScene_variationInput>, SceneVideoUncheckedUpdateWithoutScene_variationInput>
   }
 
   export type UserCreateNestedOneWithoutScene_videosInput = {
@@ -14144,9 +13975,9 @@ export namespace Prisma {
     connect?: SceneWhereUniqueInput
   }
 
-  export type SceneVariationCreateNestedOneWithoutScene_videosInput = {
-    create?: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
-    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videosInput
+  export type SceneVariationCreateNestedOneWithoutScene_videoInput = {
+    create?: XOR<SceneVariationCreateWithoutScene_videoInput, SceneVariationUncheckedCreateWithoutScene_videoInput>
+    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videoInput
     connect?: SceneVariationWhereUniqueInput
   }
 
@@ -14154,10 +13985,6 @@ export namespace Prisma {
     create?: XOR<DocumentCreateWithoutScene_videosInput, DocumentUncheckedCreateWithoutScene_videosInput>
     connectOrCreate?: DocumentCreateOrConnectWithoutScene_videosInput
     connect?: DocumentWhereUniqueInput
-  }
-
-  export type EnumVideoProviderFieldUpdateOperationsInput = {
-    set?: $Enums.VideoProvider
   }
 
   export type EnumVideoStatusFieldUpdateOperationsInput = {
@@ -14180,12 +14007,14 @@ export namespace Prisma {
     update?: XOR<XOR<SceneUpdateToOneWithWhereWithoutScene_videosInput, SceneUpdateWithoutScene_videosInput>, SceneUncheckedUpdateWithoutScene_videosInput>
   }
 
-  export type SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput = {
-    create?: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
-    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videosInput
-    upsert?: SceneVariationUpsertWithoutScene_videosInput
+  export type SceneVariationUpdateOneWithoutScene_videoNestedInput = {
+    create?: XOR<SceneVariationCreateWithoutScene_videoInput, SceneVariationUncheckedCreateWithoutScene_videoInput>
+    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videoInput
+    upsert?: SceneVariationUpsertWithoutScene_videoInput
+    disconnect?: SceneVariationWhereInput | boolean
+    delete?: SceneVariationWhereInput | boolean
     connect?: SceneVariationWhereUniqueInput
-    update?: XOR<XOR<SceneVariationUpdateToOneWithWhereWithoutScene_videosInput, SceneVariationUpdateWithoutScene_videosInput>, SceneVariationUncheckedUpdateWithoutScene_videosInput>
+    update?: XOR<XOR<SceneVariationUpdateToOneWithWhereWithoutScene_videoInput, SceneVariationUpdateWithoutScene_videoInput>, SceneVariationUncheckedUpdateWithoutScene_videoInput>
   }
 
   export type DocumentUpdateOneWithoutScene_videosNestedInput = {
@@ -14623,6 +14452,11 @@ export namespace Prisma {
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumVideoProviderNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
     in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
@@ -14641,9 +14475,12 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14688,36 +14525,11 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedEnumVideoProviderFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumVideoProviderFilter<$PrismaModel> | $Enums.VideoProvider
-  }
-
   export type NestedEnumVideoStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.VideoStatus | EnumVideoStatusFieldRefInput<$PrismaModel>
     in?: $Enums.VideoStatus[] | ListEnumVideoStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.VideoStatus[] | ListEnumVideoStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumVideoStatusFilter<$PrismaModel> | $Enums.VideoStatus
-  }
-
-  export type NestedEnumVideoProviderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel>
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel>
-    not?: NestedEnumVideoProviderWithAggregatesFilter<$PrismaModel> | $Enums.VideoProvider
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumVideoProviderFilter<$PrismaModel>
-    _max?: NestedEnumVideoProviderFilter<$PrismaModel>
   }
 
   export type NestedEnumVideoStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -14826,6 +14638,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -14848,12 +14661,11 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
     scene: SceneCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutUserInput = {
@@ -14864,6 +14676,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -14886,10 +14699,9 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutUserInput = {
@@ -14904,17 +14716,13 @@ export namespace Prisma {
 
   export type SceneVideoCreateWithoutUserInput = {
     uuid?: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutScene_videoInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -14923,12 +14731,8 @@ export namespace Prisma {
     uuid?: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -15070,6 +14874,7 @@ export namespace Prisma {
     prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
+    selected?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -15092,7 +14897,6 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
-    selected?: BoolFilter<"SceneVariation"> | boolean
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
   }
@@ -15122,12 +14926,8 @@ export namespace Prisma {
     user_uuid?: StringFilter<"SceneVideo"> | string
     scene_uuid?: StringFilter<"SceneVideo"> | string
     scene_variation_uuid?: StringFilter<"SceneVideo"> | string
-    provider?: EnumVideoProviderFilter<"SceneVideo"> | $Enums.VideoProvider
-    selected?: BoolFilter<"SceneVideo"> | boolean
     provider_job_id?: StringNullableFilter<"SceneVideo"> | string | null
     video_uuid?: StringNullableFilter<"SceneVideo"> | string | null
-    duration_sec?: IntNullableFilter<"SceneVideo"> | number | null
-    resolution?: StringNullableFilter<"SceneVideo"> | string | null
     status?: EnumVideoStatusFilter<"SceneVideo"> | $Enums.VideoStatus
     error_message?: StringNullableFilter<"SceneVideo"> | string | null
     created_at?: DateTimeFilter<"SceneVideo"> | Date | string
@@ -15419,6 +15219,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15441,12 +15242,11 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutSceneInput = {
@@ -15457,6 +15257,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15479,10 +15280,9 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutSceneInput = {
@@ -15497,17 +15297,13 @@ export namespace Prisma {
 
   export type SceneVideoCreateWithoutSceneInput = {
     uuid?: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutScene_videoInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -15516,12 +15312,8 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -15758,11 +15550,7 @@ export namespace Prisma {
 
   export type SceneVideoCreateWithoutScene_variationInput = {
     uuid?: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -15777,12 +15565,8 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -15792,11 +15576,6 @@ export namespace Prisma {
   export type SceneVideoCreateOrConnectWithoutScene_variationInput = {
     where: SceneVideoWhereUniqueInput
     create: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
-  }
-
-  export type SceneVideoCreateManyScene_variationInputEnvelope = {
-    data: SceneVideoCreateManyScene_variationInput | SceneVideoCreateManyScene_variationInput[]
-    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithoutScene_variationsInput = {
@@ -15921,20 +15700,40 @@ export namespace Prisma {
     final_project_thumbnails?: FinalProjectUncheckedUpdateManyWithoutThumbnailNestedInput
   }
 
-  export type SceneVideoUpsertWithWhereUniqueWithoutScene_variationInput = {
-    where: SceneVideoWhereUniqueInput
+  export type SceneVideoUpsertWithoutScene_variationInput = {
     update: XOR<SceneVideoUpdateWithoutScene_variationInput, SceneVideoUncheckedUpdateWithoutScene_variationInput>
     create: XOR<SceneVideoCreateWithoutScene_variationInput, SceneVideoUncheckedCreateWithoutScene_variationInput>
+    where?: SceneVideoWhereInput
   }
 
-  export type SceneVideoUpdateWithWhereUniqueWithoutScene_variationInput = {
-    where: SceneVideoWhereUniqueInput
+  export type SceneVideoUpdateToOneWithWhereWithoutScene_variationInput = {
+    where?: SceneVideoWhereInput
     data: XOR<SceneVideoUpdateWithoutScene_variationInput, SceneVideoUncheckedUpdateWithoutScene_variationInput>
   }
 
-  export type SceneVideoUpdateManyWithWhereWithoutScene_variationInput = {
-    where: SceneVideoScalarWhereInput
-    data: XOR<SceneVideoUpdateManyMutationInput, SceneVideoUncheckedUpdateManyWithoutScene_variationInput>
+  export type SceneVideoUpdateWithoutScene_variationInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
+    scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
+    video?: DocumentUpdateOneWithoutScene_videosNestedInput
+  }
+
+  export type SceneVideoUncheckedUpdateWithoutScene_variationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    scene_uuid?: StringFieldUpdateOperationsInput | string
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutScene_videosInput = {
@@ -16003,11 +15802,12 @@ export namespace Prisma {
     create: XOR<SceneCreateWithoutScene_videosInput, SceneUncheckedCreateWithoutScene_videosInput>
   }
 
-  export type SceneVariationCreateWithoutScene_videosInput = {
+  export type SceneVariationCreateWithoutScene_videoInput = {
     uuid?: string
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16030,7 +15830,6 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
@@ -16038,7 +15837,7 @@ export namespace Prisma {
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
   }
 
-  export type SceneVariationUncheckedCreateWithoutScene_videosInput = {
+  export type SceneVariationUncheckedCreateWithoutScene_videoInput = {
     id?: number
     uuid?: string
     user_uuid: string
@@ -16047,6 +15846,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16069,14 +15869,13 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
 
-  export type SceneVariationCreateOrConnectWithoutScene_videosInput = {
+  export type SceneVariationCreateOrConnectWithoutScene_videoInput = {
     where: SceneVariationWhereUniqueInput
-    create: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
+    create: XOR<SceneVariationCreateWithoutScene_videoInput, SceneVariationUncheckedCreateWithoutScene_videoInput>
   }
 
   export type DocumentCreateWithoutScene_videosInput = {
@@ -16195,22 +15994,23 @@ export namespace Prisma {
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
   }
 
-  export type SceneVariationUpsertWithoutScene_videosInput = {
-    update: XOR<SceneVariationUpdateWithoutScene_videosInput, SceneVariationUncheckedUpdateWithoutScene_videosInput>
-    create: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
+  export type SceneVariationUpsertWithoutScene_videoInput = {
+    update: XOR<SceneVariationUpdateWithoutScene_videoInput, SceneVariationUncheckedUpdateWithoutScene_videoInput>
+    create: XOR<SceneVariationCreateWithoutScene_videoInput, SceneVariationUncheckedCreateWithoutScene_videoInput>
     where?: SceneVariationWhereInput
   }
 
-  export type SceneVariationUpdateToOneWithWhereWithoutScene_videosInput = {
+  export type SceneVariationUpdateToOneWithWhereWithoutScene_videoInput = {
     where?: SceneVariationWhereInput
-    data: XOR<SceneVariationUpdateWithoutScene_videosInput, SceneVariationUncheckedUpdateWithoutScene_videosInput>
+    data: XOR<SceneVariationUpdateWithoutScene_videoInput, SceneVariationUncheckedUpdateWithoutScene_videoInput>
   }
 
-  export type SceneVariationUpdateWithoutScene_videosInput = {
+  export type SceneVariationUpdateWithoutScene_videoInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16233,7 +16033,6 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -16241,7 +16040,7 @@ export namespace Prisma {
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
   }
 
-  export type SceneVariationUncheckedUpdateWithoutScene_videosInput = {
+  export type SceneVariationUncheckedUpdateWithoutScene_videoInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
@@ -16250,6 +16049,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16272,7 +16072,6 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16639,18 +16438,14 @@ export namespace Prisma {
 
   export type SceneVideoCreateWithoutVideoInput = {
     uuid?: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutScene_videoInput
   }
 
   export type SceneVideoUncheckedCreateWithoutVideoInput = {
@@ -16659,11 +16454,7 @@ export namespace Prisma {
     user_uuid: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -16685,6 +16476,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16707,12 +16499,11 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
     scene: SceneCreateNestedOneWithoutScene_variationsInput
-    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutPrompt_imageInput = {
@@ -16723,6 +16514,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16745,10 +16537,9 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutPrompt_imageInput = {
@@ -16923,6 +16714,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16945,7 +16737,6 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -16955,12 +16746,8 @@ export namespace Prisma {
     uuid?: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -17062,6 +16849,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17084,12 +16872,11 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutUserInput = {
@@ -17100,6 +16887,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17122,10 +16910,9 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutUserInput = {
@@ -17136,6 +16923,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17158,24 +16946,19 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SceneVideoUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutScene_videoNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -17184,12 +16967,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17201,12 +16980,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17350,6 +17125,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17372,7 +17148,6 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17382,12 +17157,8 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
     video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -17399,6 +17170,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17421,12 +17193,11 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutSceneInput = {
@@ -17437,6 +17208,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17459,10 +17231,9 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutSceneInput = {
@@ -17473,6 +17244,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17495,24 +17267,19 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SceneVideoUpdateWithoutSceneInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutScene_videoNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -17521,12 +17288,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17538,79 +17301,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SceneVideoCreateManyScene_variationInput = {
-    id?: number
-    uuid?: string
-    user_uuid: string
-    scene_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
-    provider_job_id?: string | null
-    video_uuid?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
-    status?: $Enums.VideoStatus
-    error_message?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type SceneVideoUpdateWithoutScene_variationInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
-    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
-    scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    video?: DocumentUpdateOneWithoutScene_videosNestedInput
-  }
-
-  export type SceneVideoUncheckedUpdateWithoutScene_variationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    scene_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
-    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type SceneVideoUncheckedUpdateManyWithoutScene_variationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    scene_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
-    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17623,11 +17315,7 @@ export namespace Prisma {
     user_uuid: string
     scene_uuid: string
     scene_variation_uuid: string
-    provider: $Enums.VideoProvider
-    selected?: boolean
     provider_job_id?: string | null
-    duration_sec?: number | null
-    resolution?: string | null
     status?: $Enums.VideoStatus
     error_message?: string | null
     created_at?: Date | string
@@ -17642,6 +17330,7 @@ export namespace Prisma {
     title: string
     prompt_text?: string | null
     negative_prompt?: string | null
+    selected?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17664,7 +17353,6 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
-    selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17695,18 +17383,14 @@ export namespace Prisma {
 
   export type SceneVideoUpdateWithoutVideoInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutScene_videoNestedInput
   }
 
   export type SceneVideoUncheckedUpdateWithoutVideoInput = {
@@ -17715,11 +17399,7 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17732,11 +17412,7 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
     scene_variation_uuid?: StringFieldUpdateOperationsInput | string
-    provider?: EnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider
-    selected?: BoolFieldUpdateOperationsInput | boolean
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumVideoStatusFieldUpdateOperationsInput | $Enums.VideoStatus
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17748,6 +17424,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17770,12 +17447,11 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
-    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutPrompt_imageInput = {
@@ -17786,6 +17462,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17808,10 +17485,9 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutPrompt_imageInput = {
@@ -17822,6 +17498,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17844,7 +17521,6 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
-    selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

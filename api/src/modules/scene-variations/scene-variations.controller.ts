@@ -55,4 +55,13 @@ export class SceneVariationsController {
     remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
         return this.sceneVariationsService.remove(user_uuid, uuid);
     }
+
+    @Post(':uuid/duplicate')
+    @ApiOperation({ summary: 'Duplicate a scene variation by UUID' })
+    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+    @ApiResponse({ status: 201, description: 'The scene variation has been successfully duplicated.' })
+    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+    duplicate(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+        return this.sceneVariationsService.duplicate(user_uuid, uuid);
+    }
 }

@@ -26,6 +26,7 @@ export const ApiRoutes = {
     scene_variations: {
         prefix: "/scene-variations",
         scene_variation: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}`,
+        duplicate: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/duplicate`,
     },
     scene_videos: {
         prefix: "/scene-videos",
