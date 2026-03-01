@@ -8,9 +8,8 @@ import * as z from "zod";
 import { useCreateScene } from "@/features/scenes/hooks/use-scenes";
 
 const formSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().min(1, "Description is required"),
-  duration_sec: z.string().min(1, "Duration is required"),
+  title: z.string(),
+  description: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -28,7 +27,6 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid }:
     defaultValues: {
       title: "",
       description: "",
-      duration_sec: "30",
     },
   });
 
@@ -40,7 +38,6 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid }:
         project_uuid: projectUuid,
         title: data.title,
         description: data.description,
-        duration_sec: Number(data.duration_sec),
       },
       {
         onSuccess: () => {
@@ -64,7 +61,7 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid }:
                 render={({ field, fieldState }) => (
                   <Input
                     {...field}
-                    label="Scene Title (Optional)"
+                    label="Scene Title"
                     placeholder="Enter scene title"
                     errorMessage={fieldState.error?.message}
                     isInvalid={!!fieldState.error}
@@ -77,22 +74,8 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid }:
                 render={({ field, fieldState }) => (
                   <Textarea
                     {...field}
-                    label="Description"
+                    label="Description (Optional)"
                     placeholder="Enter scene description..."
-                    errorMessage={fieldState.error?.message}
-                    isInvalid={!!fieldState.error}
-                  />
-                )}
-              />
-              <Controller
-                name="duration_sec"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    type="number"
-                    label="Duration (seconds)"
-                    placeholder="e.g. 30"
                     errorMessage={fieldState.error?.message}
                     isInvalid={!!fieldState.error}
                   />

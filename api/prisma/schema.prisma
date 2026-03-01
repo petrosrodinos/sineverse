@@ -105,7 +105,6 @@ model Scene {
   title         String
   description   String?  @db.Text
   order    Int
-  duration_sec   Int?
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 

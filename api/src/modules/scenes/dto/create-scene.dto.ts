@@ -19,8 +19,4 @@ export class CreateSceneDto {
   @IsOptional()
   order: number;
 
-  @ApiPropertyOptional({ description: 'Duration in seconds' })
-  @IsInt()
-  @IsOptional()
-  duration_sec?: number;
 }
