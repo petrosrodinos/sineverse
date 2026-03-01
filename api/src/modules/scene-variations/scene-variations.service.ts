@@ -128,7 +128,7 @@ export class SceneVariationsService {
         enriched_concept: project.enriched_concept,
         genres: project.genres as string[],
         tones: project.tones as string[],
-        prompt: variation.prompt_text,
+        prompt_text: variation.prompt_text,
         negative_prompt: variation.negative_prompt,
         project_title: project.title,
         scene_title: scene.title,
@@ -140,6 +140,8 @@ export class SceneVariationsService {
         include_negative_prompt,
         include_video_generation_options,
       });
+
+      console.log(enrichedData)
 
       return this.prisma.sceneVariation.update({
         where: { uuid },

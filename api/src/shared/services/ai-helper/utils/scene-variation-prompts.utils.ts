@@ -13,7 +13,7 @@ export const generateEnrichSceneVariationPrompt = (
         scene_title,
         scene_variation_title,
         scene_description,
-        prompt,
+        prompt_text,
         negative_prompt,
         ai_model,
         include_prompt,
@@ -82,9 +82,9 @@ ${directions ? `Creative Directions:\n${directions}\n` : ""}
 
 SCENE INPUT
 ${scene_title ? `Scene Title:\n${scene_title}\n` : ""}
-${scene_variation_title ? `Scene Variation Title:\n${scene_variation_title}\n` : ""}
 ${scene_description ? `Scene Description:\n${scene_description}\n` : ""}
-${prompt ? `Current Prompt:\n${prompt}\n` : ""}
+${scene_variation_title ? `Scene Variation Title:\n${scene_variation_title}\n` : ""}
+${prompt_text ? `Current Prompt:\n${prompt_text}\n` : ""}
 ${negative_prompt ? `Current Negative Prompt:\n${negative_prompt}\n` : ""}
 
 AI Model:

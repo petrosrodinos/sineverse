@@ -7,6 +7,7 @@ import { Input, Textarea } from "@heroui/input";
 import { RefreshCw, Save } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { EnrichPromptPopover } from "./EnrichPromptPopover";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -40,9 +41,9 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
           <h4 className="text-base font-medium">Prompt & Configuration</h4>
           <p className="text-xs text-default-500">Edit prompt and generation settings.</p>
         </div>
-        <Button size="sm" variant="flat" startContent={<RefreshCw className="size-4" />}>
-          Regenerate
-        </Button>
+        <div className="flex items-center gap-2">
+          {variation?.uuid && <EnrichPromptPopover sceneVariationUuid={variation.uuid} />}
+        </div>
       </div>
       
       <div className="flex flex-col gap-4">

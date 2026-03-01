@@ -14,7 +14,7 @@ export interface EnrichSceneVariationConfig extends EnrichProjectConceptConfig {
     scene_title: string;
     scene_variation_title: string;
     scene_description?: string;
-    prompt?: string;
+    prompt_text?: string;
     negative_prompt?: string;
     ai_model?: string;
 }

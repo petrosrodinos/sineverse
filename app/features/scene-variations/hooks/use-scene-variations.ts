@@ -105,7 +105,7 @@ export const useEnrichSceneVariation = (uuid: string) => {
     return useMutation({
         mutationFn: ({ uuid, enrichDto }: { uuid: string, enrichDto: SceneVariationEnrichDto }) => enrichSceneVariation(uuid, enrichDto),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
             addToast({
                 title: "Scene variation enriched successfully",
                 severity: "success",
