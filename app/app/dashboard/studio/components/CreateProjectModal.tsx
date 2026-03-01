@@ -2,25 +2,62 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
 import { useState } from "react";
-import { useCreateProject } from "@/features/projects/hooks/use-projects";
+import { useCreateProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
+import { Project } from "@/features/projects/interfaces/projects.interfaces";
+import { useEffect } from "react";
 
-export function CreateProjectModal({ isOpen, onOpenChange, onClose }: { isOpen: boolean, onOpenChange: (open: boolean) => void, onClose: () => void }) {
-    const { mutate: createProject, isPending } = useCreateProject();
+export function CreateProjectModal({ 
+    isOpen, 
+    onOpenChange, 
+    onClose,
+    project 
+}: { 
+    isOpen: boolean, 
+    onOpenChange: (open: boolean) => void, 
+    onClose: () => void,
+    project?: Project
+}) {
+    const { mutate: createProject, isPending: isCreating } = useCreateProject();
+    const { mutate: updateProject, isPending: isUpdating } = useUpdateProject();
     const router = useRouter();
 
     const [title, setTitle] = useState("");
     const [concept, setConcept] = useState("");
 
-    const handleCreate = () => {
+    const isPending = isCreating || isUpdating;
+
+    useEffect(() => {
+        if (isOpen) {
+            setTitle(project?.title || "");
+            setConcept(project?.original_concept || "");
+        }
+    }, [isOpen, project]);
+
+    const handleSave = () => {
         if (!title || !concept) return;
-        createProject({ title, original_concept: concept }, {
-            onSuccess: (project) => {
-                onClose();
-                router.push(Routes.project(project.uuid));
-            }
-        });
+        
+        if (project) {
+            updateProject(
+                { uuid: project.uuid, project: { title, original_concept: concept } },
+                {
+                    onSuccess: () => {
+                        onClose();
+                    }
+                }
+            );
+        } else {
+            createProject(
+                { title, original_concept: concept }, 
+                {
+                    onSuccess: (newProject) => {
+                        onClose();
+                        router.push(Routes.project(newProject.uuid));
+                    }
+                }
+            );
+        }
     }
 
     return (
@@ -28,7 +65,7 @@ export function CreateProjectModal({ isOpen, onOpenChange, onClose }: { isOpen: 
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">Create New Project</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">{project ? "Edit Project" : "Create New Project"}</ModalHeader>
                         <ModalBody>
                             <Input
                                 autoFocus
@@ -51,8 +88,8 @@ export function CreateProjectModal({ isOpen, onOpenChange, onClose }: { isOpen: 
                             <Button color="danger" variant="flat" onPress={onClose}>
                                 Cancel
                             </Button>
-                            <Button color="primary" onPress={handleCreate} isLoading={isPending} isDisabled={!title || !concept}>
-                                Create Project
+                            <Button color="primary" onPress={handleSave} isLoading={isPending} isDisabled={!title || !concept}>
+                                {project ? "Save Changes" : "Create Project"}
                             </Button>
                         </ModalFooter>
                     </>

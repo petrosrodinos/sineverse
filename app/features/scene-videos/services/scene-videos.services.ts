@@ -34,7 +34,7 @@ export const createSceneVideo = async (sceneVideo: CreateSceneVideoDto): Promise
 
 export const updateSceneVideo = async (uuid: string, sceneVideo: UpdateSceneVideoDto): Promise<SceneVideo> => {
     try {
-        const response = await axiosInstance.put<SceneVideo>(ApiRoutes.scene_videos.scene_video(uuid), sceneVideo);
+        const response = await axiosInstance.patch<SceneVideo>(ApiRoutes.scene_videos.scene_video(uuid), sceneVideo);
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to update scene video");

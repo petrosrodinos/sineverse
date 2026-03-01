@@ -28,7 +28,7 @@ export function SceneCard({ scene }: SceneCardProps) {
       onPress={() => onSelectScene(scene.uuid)}
       className={`
         w-full rounded-2xl border transition-all duration-200 shadow-none
-        ${isSelected ? "ring-2 ring-primary border-primary/50 bg-primary/5" : "bg-transparent border-default-200 dark:border-default-100/20 hover:bg-default-100/50 dark:hover:bg-default-100/10"}
+        ${isSelected ? "ring-primary border-primary/50 bg-primary/5" : "bg-transparent border-default-200 dark:border-default-100/20 hover:bg-default-100/50 dark:hover:bg-default-100/10"}
       `}
     >
       <div className="p-3 space-y-2 text-left w-full flex flex-col items-start min-w-0">

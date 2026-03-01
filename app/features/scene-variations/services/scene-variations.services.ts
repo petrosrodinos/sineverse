@@ -34,7 +34,7 @@ export const createSceneVariation = async (sceneVariation: CreateSceneVariationD
 
 export const updateSceneVariation = async (uuid: string, sceneVariation: UpdateSceneVariationDto): Promise<SceneVariation> => {
     try {
-        const response = await axiosInstance.put<SceneVariation>(ApiRoutes.scene_variations.scene_variation(uuid), sceneVariation);
+        const response = await axiosInstance.patch<SceneVariation>(ApiRoutes.scene_variations.scene_variation(uuid), sceneVariation);
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to update scene variation");

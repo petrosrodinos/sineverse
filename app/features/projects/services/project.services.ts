@@ -32,7 +32,7 @@ export const createProject = async (project: CreateProjectDto): Promise<Project>
 
 export const updateProject = async (uuid: string, project: UpdateProjectDto): Promise<Project> => {
     try {
-        const response = await axiosInstance.put<Project>(ApiRoutes.projects.project(uuid), project);
+        const response = await axiosInstance.patch<Project>(ApiRoutes.projects.project(uuid), project);
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to update project");

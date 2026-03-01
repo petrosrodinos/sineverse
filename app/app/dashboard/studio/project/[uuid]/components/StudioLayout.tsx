@@ -53,19 +53,6 @@ export function StudioLayout() {
     }, MOCK_DELAY_MS);
   }, []);
 
-  const handleGenerateScenes = useCallback(() => {
-    setIsGeneratingScenes(true);
-    setProgressText("Generating scenes…");
-    setTimeout(() => {
-      const count = 3;
-      const newScenes = Array.from({ length: count }, (_, i) => createDefaultScene(i + 1));
-      setScenes(newScenes);
-      if (newScenes.length > 0) setSelectedSceneId(newScenes[0].id);
-      setIsGeneratingScenes(false);
-      setProgressText("");
-    }, MOCK_DELAY_MS);
-  }, []);
-
 
   const handleSceneTitleChange = useCallback((sceneId: string, title: string) => updateScene(sceneId, (s: any) => ({ ...s, title })), [updateScene]);
   const handleSceneDescriptionChange = useCallback((sceneId: string, description: string) => updateScene(sceneId, (s: any) => ({ ...s, description })), [updateScene]);

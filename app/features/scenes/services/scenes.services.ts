@@ -34,7 +34,7 @@ export const createScene = async (scene: CreateSceneDto): Promise<Scene> => {
 
 export const updateScene = async (uuid: string, scene: UpdateSceneDto): Promise<Scene> => {
     try {
-        const response = await axiosInstance.put<Scene>(ApiRoutes.scenes.scene(uuid), scene);
+        const response = await axiosInstance.patch<Scene>(ApiRoutes.scenes.scene(uuid), scene);
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to update scene");
