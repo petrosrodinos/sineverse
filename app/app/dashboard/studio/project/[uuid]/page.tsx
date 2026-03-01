@@ -9,7 +9,7 @@ export default function ProjectPage({ params }: { params: Promise<{ uuid: string
   const { data: project, isLoading } = useProject(uuid);
 
   return (
-    <div className="h-[calc(100vh-4rem)] min-h-0 flex flex-col">
+    <div className="flex flex-col lg:h-full lg:min-h-0">
       <div className="px-6 shrink-0 flex flex-col gap-2 pt-2 pb-2">
         <ProjectHeader project={project} isLoading={isLoading} />
       </div>

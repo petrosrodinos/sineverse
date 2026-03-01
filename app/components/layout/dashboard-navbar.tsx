@@ -13,9 +13,9 @@ export function DashboardNavbar() {
   const {full_name,email} = session || {}
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="end">
-        <NavbarItem className="hidden sm:flex items-center gap-3">
+    <HeroUINavbar maxWidth="xl" position="sticky" isBordered>
+      <NavbarContent className="w-full" justify="end">
+        <NavbarItem className="flex items-center gap-3 ml-auto">
           <ThemeSwitch />
           <Dropdown placement="bottom-end" classNames={{ content: "rounded-xl shadow-lg border border-default-200/80 p-0 min-w-[220px]" }}>
             <DropdownTrigger>

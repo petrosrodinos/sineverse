@@ -34,36 +34,34 @@ export function ProjectHeader({ project, isLoading }: ProjectHeaderProps) {
 
     if (isLoading) {
         return (
-            <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4 flex-1">
-                    <Button isIconOnly variant="flat" onPress={() => router.push(Routes.studio)}>
-                        <ArrowLeft className="w-5 h-5" />
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 w-full min-w-0">
+                <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-1 flex-1 min-w-0">
+                    <Button className="col-start-1 row-start-1 shrink-0 mt-0.5" isIconOnly variant="flat" onPress={() => router.push(Routes.studio)}>
+                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
-                    <div className="flex-1">
-                        <Skeleton className="h-8 w-3/5 rounded-lg" />
-                        <Skeleton className="h-5 w-4/5 rounded-lg mt-1" />
-                    </div>
+                    <Skeleton className="col-start-2 row-start-1 h-7 sm:h-8 w-3/4 sm:w-3/5 rounded-lg self-center sm:self-start mt-0.5" />
+                    <Skeleton className="col-start-1 col-span-2 sm:col-start-2 sm:col-span-1 row-start-2 h-4 sm:h-5 w-full sm:w-4/5 rounded-lg mt-1" />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex items-start justify-between gap-4">
-            <div className="flex items-start gap-4 flex-1 min-w-0 pr-4">
-                <Button isIconOnly variant="flat" onPress={() => router.push(Routes.studio)} className="mt-1 shrink-0">
-                    <ArrowLeft className="w-5 h-5" />
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 w-full min-w-0">
+            <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-1 flex-1 min-w-0 sm:pr-4">
+                <Button className="col-start-1 row-start-1 mt-0.5 shrink-0" isIconOnly variant="flat" onPress={() => router.push(Routes.studio)}>
+                    <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
-                <div className="flex-1 min-w-0">
-                    <h1 className="text-2xl font-bold tracking-tight truncate">
-                        {project?.title || "Project Not Found"}
-                    </h1>
-                    {project?.original_concept && (
-                        <p className="text-default-500 mt-1 truncate max-w-2xl">{project.original_concept}</p>
-                    )}
-                </div>
+                <h1 className="col-start-2 row-start-1 text-xl sm:text-2xl font-bold tracking-tight truncate self-center sm:self-start mt-0.5">
+                    {project?.title || "Project Not Found"}
+                </h1>
+                {project?.original_concept && (
+                    <p className="col-start-1 col-span-2 sm:col-start-2 sm:col-span-1 row-start-2 text-sm sm:text-base text-default-500 line-clamp-2 sm:line-clamp-3 break-words">
+                        {project.original_concept}
+                    </p>
+                )}
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
                 <Button isIconOnly variant="flat" onPress={onEditOpen}>
                     <Pencil className="w-4 h-4" />
                 </Button>

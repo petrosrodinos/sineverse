@@ -53,7 +53,7 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
         collapsed ? "w-[4.5rem] pl-2 pr-2" : "w-60 pl-2 pr-2"
       )}
     >
-      <nav className="flex w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-4 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-100/10 dark:shadow-black/10">
+      <nav className="flex w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-100/10 dark:shadow-black/10">
         <div className={clsx("flex items-center border-b border-default-200/60 dark:border-default-100/20 pb-3 mb-2", collapsed ? "justify-center px-0" : "justify-between px-4")}>
           {!collapsed && (
             <p className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate">
