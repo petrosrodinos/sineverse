@@ -2,8 +2,12 @@
 import { Card } from "@heroui/card";
 import { Skeleton } from "@heroui/skeleton";
 import { Textarea } from "@heroui/input";
+import { Button } from "@heroui/button";
+import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@heroui/modal";
+import { Maximize2 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEnrichProject, useProject } from "@/features/projects/hooks/use-projects";
+import { useState, useEffect } from "react";
+import { useEnrichProject, useProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
 import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
 import { Chip } from "@heroui/chip";
 
@@ -15,6 +19,16 @@ export function IdeaSection({}: IdeaSectionProps) {
   const uuid = params.uuid as string;
   const { data: project, isLoading } = useProject(uuid);
   const {mutate, isPending} = useEnrichProject(uuid);
+  const {mutate: updateProject, isPending: isUpdating} = useUpdateProject();
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+  const [localConcept, setLocalConcept] = useState("");
+
+  useEffect(() => {
+    if (project?.enriched_concept) {
+      setLocalConcept(project.enriched_concept);
+    }
+  }, [project?.enriched_concept]);
 
   if (isLoading) {
       return <Skeleton className="h-[100px] w-full rounded-xl" />;
@@ -56,15 +70,56 @@ export function IdeaSection({}: IdeaSectionProps) {
           {isPending ? (
             <Skeleton className="rounded-xl h-24 w-full" />
           ) : (
-              <Textarea
-                value={project.enriched_concept}
-                variant="bordered"
-                classNames={{ input: "min-h-[100px] text-foreground/90", inputWrapper: "rounded-xl bg-transparent border-none" }}
-                minRows={7}
-              />
+            <div className="flex flex-col gap-3">
+              <div className="relative">
+                <Textarea
+                  value={localConcept}
+                  onChange={(e) => setLocalConcept(e.target.value)}
+                  variant="bordered"
+                  classNames={{ input: "min-h-[100px] text-foreground/90 pr-10", inputWrapper: "rounded-xl bg-transparent border-none" }}
+                  minRows={7}
+                />
+                <Button 
+                  isIconOnly 
+                  variant="light" 
+                  size="sm" 
+                  className="absolute top-2 right-8 text-default-500 hover:text-foreground z-10" 
+                  onPress={onOpen} 
+                  aria-label="Expand concept"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex justify-end">
+                <Button 
+                  color="primary" 
+                  size="sm"
+                  isLoading={isUpdating} 
+                  onPress={() => updateProject({ uuid, project: { enriched_concept: localConcept } })} 
+                  isDisabled={localConcept === project?.enriched_concept || isUpdating}
+                >
+                  Save
+                </Button>
+              </div>
+            </div>
           )}
         </Card>
       )}
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="3xl" scrollBehavior="inside">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Enriched Concept</ModalHeader>
+              <ModalBody>
+                <div className="whitespace-pre-wrap text-foreground/90 pb-6 text-sm leading-relaxed">
+                  {localConcept}
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
