@@ -3,7 +3,7 @@ import { Card } from "@heroui/card";
 import { Skeleton } from "@heroui/skeleton";
 import { Textarea } from "@heroui/input";
 import { useParams } from "next/navigation";
-import { useProject } from "@/features/projects/hooks/use-projects";
+import { useEnrichProject, useProject } from "@/features/projects/hooks/use-projects";
 import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
 import { Chip } from "@heroui/chip";
 
@@ -14,14 +14,14 @@ export function IdeaSection({}: IdeaSectionProps) {
   const params = useParams();
   const uuid = params.uuid as string;
   const { data: project, isLoading } = useProject(uuid);
-  const isEnriching = false;
+  const {mutate, isPending} = useEnrichProject(uuid);
 
   if (isLoading) {
       return <Skeleton className="h-[100px] w-full rounded-xl" />;
   }
 
   const handleEnrich = (instructions: string) => {
-    // Implement enrichment logic with instructions
+    mutate({project_uuid: uuid, directions: instructions})
   }
 
   return (
@@ -47,20 +47,20 @@ export function IdeaSection({}: IdeaSectionProps) {
         </div>
         <EnrichPromptPopover 
           onEnrich={handleEnrich} 
-          isLoading={isEnriching} 
-          isDisabled={!project?.original_concept?.trim() || isEnriching} 
+          isLoading={isPending} 
+          isDisabled={!project?.original_concept?.trim() || isPending} 
         />
       </div>
       {project?.enriched_concept && (
         <Card className="rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/10 p-4">
-          {isEnriching ? (
+          {isPending ? (
             <Skeleton className="rounded-xl h-24 w-full" />
           ) : (
               <Textarea
                 value={project.enriched_concept}
                 variant="bordered"
                 classNames={{ input: "min-h-[100px] text-foreground/90", inputWrapper: "rounded-xl bg-transparent border-none" }}
-                minRows={4}
+                minRows={7}
               />
           )}
         </Card>

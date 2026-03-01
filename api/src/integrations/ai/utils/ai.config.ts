@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { createOpenAI } from '@ai-sdk/openai';
 import { AIModelInfo, AiModels, AiProvider, AiProviders } from '../interfaces/ai.interface';
-import { openai } from '@ai-sdk/openai';
+import { EnvConfig } from '../../../shared/config/env/env.validation';
 
 @Injectable()
 export class AiConfig {
-
+    private readonly logger = new Logger(AiConfig.name);
+    private readonly openaiClient: ReturnType<typeof createOpenAI>;
     private readonly supportedModels: AIModelInfo[] = [
         { provider: AiProviders.openai, model: AiModels.openai.gpt4o },
         { provider: AiProviders.openai, model: AiModels.openai.gpt4oMini },
@@ -18,17 +21,27 @@ export class AiConfig {
         { provider: AiProviders.gemini, model: AiModels.gemini.gemini15Pro },
     ];
 
+    constructor(private readonly configService: ConfigService<EnvConfig>) {
+        const apiKey = this.configService.get('OPENAI_API_KEY');
+        this.openaiClient = createOpenAI({ apiKey });
+        this.logger.debug('OpenAI client initialized');
+    }
+
     getModelAdapter(provider: AiProvider = AiProviders.openai, model: string = AiModels.openai.gpt4o) {
         switch (provider) {
             case AiProviders.openai:
-                return openai(model);
+                return this.openaiClient(model);
             case AiProviders.grok:
                 throw new Error('Grok provider not yet implemented. SDK required.');
             case AiProviders.gemini:
                 throw new Error('Gemini provider not yet implemented. SDK required.');
             default:
-                return openai(model);
+                return this.openaiClient(model);
         }
+    }
+
+    getEmbeddingModel(model: string = 'text-embedding-3-small') {
+        return this.openaiClient.embedding(model);
     }
 
 

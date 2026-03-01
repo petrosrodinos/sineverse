@@ -11,6 +11,11 @@ export interface Project {
     updated_at: string;
 }
 
+export interface EnrichProjectDto {
+    project_uuid: string;
+    directions: string;
+}
+
 export interface CreateProjectDto {
     title: string;
     original_concept: string;

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProjects, getProject, createProject, updateProject, deleteProject } from "../services/project.services";
+import { getProjects, getProject, createProject, updateProject, deleteProject, enrichProject } from "../services/project.services";
 import { Project, CreateProjectDto, UpdateProjectDto } from "../interfaces/projects.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -78,4 +78,25 @@ export const useDeleteProject = () => {
             });
         }
     });
+}
+
+export const useEnrichProject = (uuid: string) => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: enrichProject,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.project(uuid)] });
+            addToast({
+                title: "Concept enriched successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to enrich concept",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    })
 }

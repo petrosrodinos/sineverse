@@ -18,6 +18,7 @@ export const ApiRoutes = {
     projects: {
         prefix: "/projects",
         project: (project_uuid: string) => `/projects/${project_uuid}`,
+        enrich: (project_uuid: string) => `/projects/${project_uuid}/enrich-concept`,
     },
     scenes: {
         prefix: "/scenes",

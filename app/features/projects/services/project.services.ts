@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Project, CreateProjectDto, UpdateProjectDto } from "../interfaces/projects.interfaces";
+import { Project, CreateProjectDto, UpdateProjectDto, EnrichProjectDto } from "../interfaces/projects.interfaces";
 
 export const getProjects = async (): Promise<Project[]> => {
     try {
@@ -45,5 +45,14 @@ export const deleteProject = async (uuid: string) => {
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to delete project");
+    }
+}
+
+export const enrichProject = async (payload: EnrichProjectDto): Promise<Project> => {
+    try {
+        const response = await axiosInstance.post<Project>(ApiRoutes.projects.enrich(payload.project_uuid), { directions: payload.directions });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enrich project");
     }
 }

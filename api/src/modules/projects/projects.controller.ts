@@ -5,6 +5,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { EnrichProjectDto } from './dto/enrich-project.dto';
 
 
 @ApiTags('Projects')
@@ -53,5 +54,14 @@ export class ProjectsController {
   @ApiResponse({ status: 404, description: 'Project not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectsService.remove(user_uuid, uuid);
+  }
+
+  @Post(':uuid/enrich-concept')
+  @ApiOperation({ summary: 'Enrich a project concept by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the project' })
+  @ApiResponse({ status: 200, description: 'The project concept has been successfully enriched.' })
+  @ApiResponse({ status: 404, description: 'Project not found.' })
+  enrichProjectConcept(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() enrichProjectDto: EnrichProjectDto) {
+    return this.projectsService.enrichProjectConcept(user_uuid, uuid, enrichProjectDto);
   }
 }
