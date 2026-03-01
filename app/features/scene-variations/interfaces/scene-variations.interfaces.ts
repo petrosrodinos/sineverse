@@ -73,7 +73,6 @@ export interface CreateSceneVariationDto {
 }
 
 export interface UpdateSceneVariationDto {
-    scene_uuid: string;
     title?: string;
     prompt_text?: string;
     negative_prompt?: string;
@@ -100,6 +99,10 @@ export interface UpdateSceneVariationDto {
     guidance_scale?: GuidanceScale;
     audio_style?: AudioStyle;
     include_sound?: boolean;
+}
+
+export interface SceneVariationsQueryDto {
+    scene_uuid?: string;
 }
 
 export const Styles = {

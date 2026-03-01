@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { SceneVariationsService } from './scene-variations.service';
 import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
+import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
+import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
 
 @ApiTags('Scene Variations')
 @Controller('scene-variations')
@@ -23,8 +25,8 @@ export class SceneVariationsController {
     @Get()
     @ApiOperation({ summary: 'Retrieve all scene variations' })
     @ApiResponse({ status: 200, description: 'Returned all scene variations successfully.' })
-    findAll(@CurrentUser('uuid') uuid: string) {
-        return this.sceneVariationsService.findAll(uuid);
+    findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(SceneVariationQuerySchema)) query: SceneVariationQueryDto) {
+        return this.sceneVariationsService.findAll(uuid, query);
     }
 
     @Get(':uuid')

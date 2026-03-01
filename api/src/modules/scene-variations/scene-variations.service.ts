@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, InternalServerErrorException } from '@ne
 import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { SceneVariationQueryDto } from './dto/query-scene-variation.dto';
 
 @Injectable()
 export class SceneVariationsService {
@@ -26,9 +27,17 @@ export class SceneVariationsService {
     }
   }
 
-  async findAll(user_uuid: string) {
+  async findAll(user_uuid: string, query: SceneVariationQueryDto) {
+
     try {
-      return await this.prisma.sceneVariation.findMany({ where: { user_uuid } });
+
+      const where: any = {
+        user_uuid,
+        ...(query.scene_uuid && { scene_uuid: query.scene_uuid }),
+      };
+
+      return await this.prisma.sceneVariation.findMany({ where, include: { scene_videos: true } });
+
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
     }

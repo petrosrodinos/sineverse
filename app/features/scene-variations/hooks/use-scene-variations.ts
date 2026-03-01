@@ -1,16 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation } from "../services/scene-variations.services";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto } from "../interfaces/scene-variations.interfaces";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto } from "../interfaces/scene-variations.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
     sceneVariations: 'scene-variations',
     sceneVariation: (uuid: string) => `scene-variation-${uuid}`,
-    scenes: 'scenes',
 }
 
-export const useSceneVariations = () => {
-    return useQuery<SceneVariation[]>({ queryKey: [QueryKeys.sceneVariations], queryFn: getSceneVariations });
+export const useSceneVariations = (query: SceneVariationsQueryDto) => {
+    return useQuery<SceneVariation[]>({ queryKey: [QueryKeys.sceneVariations, query], queryFn: () => getSceneVariations(query) });
 }
 
 export const useSceneVariation = (uuid: string) => {
@@ -23,7 +22,6 @@ export const useCreateSceneVariation = () => {
         mutationFn: createSceneVariation,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.scenes] });
             addToast({
                 title: "Scene variation created successfully",
                 severity: "success",
@@ -43,9 +41,8 @@ export const useUpdateSceneVariation = () => {
     const queryClient = useQueryClient();
     return useMutation<SceneVariation, Error, { uuid: string, sceneVariation: UpdateSceneVariationDto }>({
         mutationFn: ({ uuid, sceneVariation }) => updateSceneVariation(uuid, sceneVariation),
-        onSuccess: (_, { uuid }) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
             addToast({
                 title: "Scene variation updated successfully",
                 severity: "success",

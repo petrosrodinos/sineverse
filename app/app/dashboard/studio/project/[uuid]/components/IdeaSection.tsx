@@ -26,7 +26,7 @@ export function IdeaSection({}: IdeaSectionProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Describe your movie idea</label>
+        <label className="text-sm font-medium text-foreground">Your original idea</label>
         <div className="p-4 rounded-xl border-2 border-default-200 min-h-[100px] text-default-700 bg-transparent">
           {project?.original_concept}
         </div>

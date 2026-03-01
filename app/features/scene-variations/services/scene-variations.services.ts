@@ -1,10 +1,10 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto } from "../interfaces/scene-variations.interfaces";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto } from "../interfaces/scene-variations.interfaces";
 
-export const getSceneVariations = async (): Promise<SceneVariation[]> => {
+export const getSceneVariations = async (query: SceneVariationsQueryDto): Promise<SceneVariation[]> => {
     try {
-        const response = await axiosInstance.get<SceneVariation[]>(ApiRoutes.scene_variations.prefix);
+        const response = await axiosInstance.get<SceneVariation[]>(ApiRoutes.scene_variations.prefix, { params: query });
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to fetch scene variations");

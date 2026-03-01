@@ -62,7 +62,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.ai_model ? [sceneVariation.ai_model] : undefined}
                             onChange={(e) => handleValueChange("ai_model", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {AiModelOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -74,7 +74,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.aspect_ratio ? [sceneVariation.aspect_ratio] : undefined}
                             onChange={(e) => handleValueChange("aspect_ratio", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {AspectRatioOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -86,7 +86,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.resolution ? [sceneVariation.resolution] : undefined}
                             onChange={(e) => handleValueChange("resolution", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {ResolutionOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -106,7 +106,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.camera_movement ? [sceneVariation.camera_movement] : undefined}
                             onChange={(e) => handleValueChange("camera_movement", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {CameraMovementOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -118,7 +118,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.lens_type ? [sceneVariation.lens_type] : undefined}
                             onChange={(e) => handleValueChange("lens_type", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {LensTypeOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -130,7 +130,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.camera ? [sceneVariation.camera] : undefined}
                             onChange={(e) => handleValueChange("camera", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {CameraStyleOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -142,7 +142,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.shot_type ? [sceneVariation.shot_type] : undefined}
                             onChange={(e) => handleValueChange("shot_type", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {ShotTypeOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -154,7 +154,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.depth_of_field ? [sceneVariation.depth_of_field] : undefined}
                             onChange={(e) => handleValueChange("depth_of_field", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {DepthOfFieldOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -174,7 +174,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.style ? [sceneVariation.style] : undefined}
                             onChange={(e) => handleValueChange("style", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {StylesOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -186,7 +186,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.lighting ? [sceneVariation.lighting] : undefined}
                             onChange={(e) => handleValueChange("lighting", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {LightingOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -198,7 +198,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.color_grade ? [sceneVariation.color_grade] : undefined}
                             onChange={(e) => handleValueChange("color_grade", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {ColorGradeOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -210,7 +210,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.time_of_day ? [sceneVariation.time_of_day] : undefined}
                             onChange={(e) => handleValueChange("time_of_day", e.target.value)}
                             variant="bordered"
-                            className="w-full"
+                            className="max-w-full w-full"
                         >
                             {TimeOfDayOptions.map((option) => (
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
@@ -233,7 +233,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultValue={sceneVariation?.motion_strength ?? (typeof MotionStrengthSliderOptions.defaultValue === "number" ? MotionStrengthSliderOptions.defaultValue : 0.5)}
                             marks={MotionStrengthSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("motion_strength", val)}
-                            className="w-full"
+                            className="max-w-full w-full"
                         />
 
                         <Slider
@@ -244,7 +244,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultValue={sceneVariation?.guidance_scale ?? (typeof GuidanceScaleSliderOptions.defaultValue === "number" ? GuidanceScaleSliderOptions.defaultValue : 7.5)}
                             marks={GuidanceScaleSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("guidance_scale", val)}
-                            className="w-full"
+                            className="max-w-full w-full"
                         />
 
                         <Slider
@@ -255,7 +255,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultValue={sceneVariation?.creativity ?? (typeof CreativitySliderOptions.defaultValue === "number" ? CreativitySliderOptions.defaultValue : 0.5)}
                             marks={CreativitySliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("creativity", val)}
-                            className="w-full"
+                            className="max-w-full w-full"
                         />
 
                         <Slider
@@ -266,7 +266,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultValue={sceneVariation?.duration_sec ?? (typeof DurationSliderOptions.defaultValue === "number" ? DurationSliderOptions.defaultValue : 5)}
                             marks={DurationSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("duration_sec", val)}
-                            className="w-full"
+                            className="max-w-full w-full"
                         />
 
                         <Slider
@@ -277,7 +277,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultValue={sceneVariation?.fps ?? (typeof FpsSliderOptions.defaultValue === "number" ? FpsSliderOptions.defaultValue : 24)}
                             marks={FpsSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("fps", val)}
-                            className="w-full"
+                            className="max-w-full w-full"
                         />
                     </div>
                 </div>
