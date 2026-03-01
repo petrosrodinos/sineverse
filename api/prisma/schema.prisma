@@ -124,9 +124,10 @@ model SceneVariation {
   uuid            String   @unique @default(uuid())
   user_uuid       String
   scene_uuid      String
-  prompt_image_uuid String?
-  prompt_text     String   @db.Text
+  title           String
+  prompt_text     String?   @db.Text
   negative_prompt String?  @db.Text
+  prompt_image_uuid String?
 
   // Creative direction
   style           String?  // cinematic, anime, noir, hyperrealistic

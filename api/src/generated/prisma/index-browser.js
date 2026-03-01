@@ -154,7 +154,6 @@ exports.Prisma.SceneScalarFieldEnum = {
   title: 'title',
   description: 'description',
   order: 'order',
-  duration_sec: 'duration_sec',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -164,9 +163,10 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   uuid: 'uuid',
   user_uuid: 'user_uuid',
   scene_uuid: 'scene_uuid',
-  prompt_image_uuid: 'prompt_image_uuid',
+  title: 'title',
   prompt_text: 'prompt_text',
   negative_prompt: 'negative_prompt',
+  prompt_image_uuid: 'prompt_image_uuid',
   style: 'style',
   tone: 'tone',
   genre: 'genre',

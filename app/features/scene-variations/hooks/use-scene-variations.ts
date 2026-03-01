@@ -6,6 +6,7 @@ import { addToast } from "@heroui/toast";
 const QueryKeys = {
     sceneVariations: 'scene-variations',
     sceneVariation: (uuid: string) => `scene-variation-${uuid}`,
+    scenes: 'scenes',
 }
 
 export const useSceneVariations = () => {
@@ -22,6 +23,7 @@ export const useCreateSceneVariation = () => {
         mutationFn: createSceneVariation,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.scenes] });
             addToast({
                 title: "Scene variation created successfully",
                 severity: "success",

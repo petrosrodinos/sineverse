@@ -4224,13 +4224,11 @@ export namespace Prisma {
   export type SceneAvgAggregateOutputType = {
     id: number | null
     order: number | null
-    duration_sec: number | null
   }
 
   export type SceneSumAggregateOutputType = {
     id: number | null
     order: number | null
-    duration_sec: number | null
   }
 
   export type SceneMinAggregateOutputType = {
@@ -4241,7 +4239,6 @@ export namespace Prisma {
     title: string | null
     description: string | null
     order: number | null
-    duration_sec: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -4254,7 +4251,6 @@ export namespace Prisma {
     title: string | null
     description: string | null
     order: number | null
-    duration_sec: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -4267,7 +4263,6 @@ export namespace Prisma {
     title: number
     description: number
     order: number
-    duration_sec: number
     created_at: number
     updated_at: number
     _all: number
@@ -4277,13 +4272,11 @@ export namespace Prisma {
   export type SceneAvgAggregateInputType = {
     id?: true
     order?: true
-    duration_sec?: true
   }
 
   export type SceneSumAggregateInputType = {
     id?: true
     order?: true
-    duration_sec?: true
   }
 
   export type SceneMinAggregateInputType = {
@@ -4294,7 +4287,6 @@ export namespace Prisma {
     title?: true
     description?: true
     order?: true
-    duration_sec?: true
     created_at?: true
     updated_at?: true
   }
@@ -4307,7 +4299,6 @@ export namespace Prisma {
     title?: true
     description?: true
     order?: true
-    duration_sec?: true
     created_at?: true
     updated_at?: true
   }
@@ -4320,7 +4311,6 @@ export namespace Prisma {
     title?: true
     description?: true
     order?: true
-    duration_sec?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -4420,7 +4410,6 @@ export namespace Prisma {
     title: string
     description: string | null
     order: number
-    duration_sec: number | null
     created_at: Date
     updated_at: Date
     _count: SceneCountAggregateOutputType | null
@@ -4452,7 +4441,6 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     order?: boolean
-    duration_sec?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4470,7 +4458,6 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     order?: boolean
-    duration_sec?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4485,7 +4472,6 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     order?: boolean
-    duration_sec?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -4500,12 +4486,11 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     order?: boolean
-    duration_sec?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type SceneOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "description" | "order" | "duration_sec" | "created_at" | "updated_at", ExtArgs["result"]["scene"]>
+  export type SceneOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "description" | "order" | "created_at" | "updated_at", ExtArgs["result"]["scene"]>
   export type SceneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -4538,7 +4523,6 @@ export namespace Prisma {
       title: string
       description: string | null
       order: number
-      duration_sec: number | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["scene"]>
@@ -4975,7 +4959,6 @@ export namespace Prisma {
     readonly title: FieldRef<"Scene", 'String'>
     readonly description: FieldRef<"Scene", 'String'>
     readonly order: FieldRef<"Scene", 'Int'>
-    readonly duration_sec: FieldRef<"Scene", 'Int'>
     readonly created_at: FieldRef<"Scene", 'DateTime'>
     readonly updated_at: FieldRef<"Scene", 'DateTime'>
   }
@@ -5477,9 +5460,10 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     scene_uuid: string | null
-    prompt_image_uuid: string | null
+    title: string | null
     prompt_text: string | null
     negative_prompt: string | null
+    prompt_image_uuid: string | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5512,9 +5496,10 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     scene_uuid: string | null
-    prompt_image_uuid: string | null
+    title: string | null
     prompt_text: string | null
     negative_prompt: string | null
+    prompt_image_uuid: string | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5547,9 +5532,10 @@ export namespace Prisma {
     uuid: number
     user_uuid: number
     scene_uuid: number
-    prompt_image_uuid: number
+    title: number
     prompt_text: number
     negative_prompt: number
+    prompt_image_uuid: number
     style: number
     tone: number
     genre: number
@@ -5604,9 +5590,10 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     scene_uuid?: true
-    prompt_image_uuid?: true
+    title?: true
     prompt_text?: true
     negative_prompt?: true
+    prompt_image_uuid?: true
     style?: true
     tone?: true
     genre?: true
@@ -5639,9 +5626,10 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     scene_uuid?: true
-    prompt_image_uuid?: true
+    title?: true
     prompt_text?: true
     negative_prompt?: true
+    prompt_image_uuid?: true
     style?: true
     tone?: true
     genre?: true
@@ -5674,9 +5662,10 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     scene_uuid?: true
-    prompt_image_uuid?: true
+    title?: true
     prompt_text?: true
     negative_prompt?: true
+    prompt_image_uuid?: true
     style?: true
     tone?: true
     genre?: true
@@ -5796,9 +5785,10 @@ export namespace Prisma {
     uuid: string
     user_uuid: string
     scene_uuid: string
-    prompt_image_uuid: string | null
-    prompt_text: string
+    title: string
+    prompt_text: string | null
     negative_prompt: string | null
+    prompt_image_uuid: string | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5850,9 +5840,10 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     scene_uuid?: boolean
-    prompt_image_uuid?: boolean
+    title?: boolean
     prompt_text?: boolean
     negative_prompt?: boolean
+    prompt_image_uuid?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5890,9 +5881,10 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     scene_uuid?: boolean
-    prompt_image_uuid?: boolean
+    title?: boolean
     prompt_text?: boolean
     negative_prompt?: boolean
+    prompt_image_uuid?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5928,9 +5920,10 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     scene_uuid?: boolean
-    prompt_image_uuid?: boolean
+    title?: boolean
     prompt_text?: boolean
     negative_prompt?: boolean
+    prompt_image_uuid?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5966,9 +5959,10 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     scene_uuid?: boolean
-    prompt_image_uuid?: boolean
+    title?: boolean
     prompt_text?: boolean
     negative_prompt?: boolean
+    prompt_image_uuid?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5996,7 +5990,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "prompt_image_uuid" | "prompt_text" | "negative_prompt" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "selected" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
+  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "selected" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
   export type SceneVariationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
@@ -6028,9 +6022,10 @@ export namespace Prisma {
       uuid: string
       user_uuid: string
       scene_uuid: string
-      prompt_image_uuid: string | null
-      prompt_text: string
+      title: string
+      prompt_text: string | null
       negative_prompt: string | null
+      prompt_image_uuid: string | null
       style: string | null
       tone: string | null
       genre: string | null
@@ -6487,9 +6482,10 @@ export namespace Prisma {
     readonly uuid: FieldRef<"SceneVariation", 'String'>
     readonly user_uuid: FieldRef<"SceneVariation", 'String'>
     readonly scene_uuid: FieldRef<"SceneVariation", 'String'>
-    readonly prompt_image_uuid: FieldRef<"SceneVariation", 'String'>
+    readonly title: FieldRef<"SceneVariation", 'String'>
     readonly prompt_text: FieldRef<"SceneVariation", 'String'>
     readonly negative_prompt: FieldRef<"SceneVariation", 'String'>
+    readonly prompt_image_uuid: FieldRef<"SceneVariation", 'String'>
     readonly style: FieldRef<"SceneVariation", 'String'>
     readonly tone: FieldRef<"SceneVariation", 'String'>
     readonly genre: FieldRef<"SceneVariation", 'String'>
@@ -10792,7 +10788,6 @@ export namespace Prisma {
     title: 'title',
     description: 'description',
     order: 'order',
-    duration_sec: 'duration_sec',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -10805,9 +10800,10 @@ export namespace Prisma {
     uuid: 'uuid',
     user_uuid: 'user_uuid',
     scene_uuid: 'scene_uuid',
-    prompt_image_uuid: 'prompt_image_uuid',
+    title: 'title',
     prompt_text: 'prompt_text',
     negative_prompt: 'negative_prompt',
+    prompt_image_uuid: 'prompt_image_uuid',
     style: 'style',
     tone: 'tone',
     genre: 'genre',
@@ -11281,7 +11277,6 @@ export namespace Prisma {
     title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
-    duration_sec?: IntNullableFilter<"Scene"> | number | null
     created_at?: DateTimeFilter<"Scene"> | Date | string
     updated_at?: DateTimeFilter<"Scene"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11298,7 +11293,6 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     order?: SortOrder
-    duration_sec?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -11319,7 +11313,6 @@ export namespace Prisma {
     title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
-    duration_sec?: IntNullableFilter<"Scene"> | number | null
     created_at?: DateTimeFilter<"Scene"> | Date | string
     updated_at?: DateTimeFilter<"Scene"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11336,7 +11329,6 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     order?: SortOrder
-    duration_sec?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: SceneCountOrderByAggregateInput
@@ -11357,7 +11349,6 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Scene"> | string
     description?: StringNullableWithAggregatesFilter<"Scene"> | string | null
     order?: IntWithAggregatesFilter<"Scene"> | number
-    duration_sec?: IntNullableWithAggregatesFilter<"Scene"> | number | null
     created_at?: DateTimeWithAggregatesFilter<"Scene"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"Scene"> | Date | string
   }
@@ -11370,9 +11361,10 @@ export namespace Prisma {
     uuid?: StringFilter<"SceneVariation"> | string
     user_uuid?: StringFilter<"SceneVariation"> | string
     scene_uuid?: StringFilter<"SceneVariation"> | string
-    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
-    prompt_text?: StringFilter<"SceneVariation"> | string
+    title?: StringFilter<"SceneVariation"> | string
+    prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
+    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11409,9 +11401,10 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
-    prompt_image_uuid?: SortOrderInput | SortOrder
-    prompt_text?: SortOrder
+    title?: SortOrder
+    prompt_text?: SortOrderInput | SortOrder
     negative_prompt?: SortOrderInput | SortOrder
+    prompt_image_uuid?: SortOrderInput | SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11451,9 +11444,10 @@ export namespace Prisma {
     NOT?: SceneVariationWhereInput | SceneVariationWhereInput[]
     user_uuid?: StringFilter<"SceneVariation"> | string
     scene_uuid?: StringFilter<"SceneVariation"> | string
-    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
-    prompt_text?: StringFilter<"SceneVariation"> | string
+    title?: StringFilter<"SceneVariation"> | string
+    prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
+    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11490,9 +11484,10 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
-    prompt_image_uuid?: SortOrderInput | SortOrder
-    prompt_text?: SortOrder
+    title?: SortOrder
+    prompt_text?: SortOrderInput | SortOrder
     negative_prompt?: SortOrderInput | SortOrder
+    prompt_image_uuid?: SortOrderInput | SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11533,9 +11528,10 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"SceneVariation"> | string
     user_uuid?: StringWithAggregatesFilter<"SceneVariation"> | string
     scene_uuid?: StringWithAggregatesFilter<"SceneVariation"> | string
-    prompt_image_uuid?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
-    prompt_text?: StringWithAggregatesFilter<"SceneVariation"> | string
+    title?: StringWithAggregatesFilter<"SceneVariation"> | string
+    prompt_text?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
+    prompt_image_uuid?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     tone?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     genre?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
@@ -12075,7 +12071,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScenesInput
@@ -12092,7 +12087,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_variations?: SceneVariationUncheckedCreateNestedManyWithoutSceneInput
@@ -12104,7 +12098,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScenesNestedInput
@@ -12121,7 +12114,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
@@ -12136,7 +12128,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -12146,7 +12137,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12159,14 +12149,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SceneVariationCreateInput = {
     uuid?: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -12204,9 +12194,10 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12237,7 +12228,8 @@ export namespace Prisma {
 
   export type SceneVariationUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12275,9 +12267,10 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12311,9 +12304,10 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12343,7 +12337,8 @@ export namespace Prisma {
 
   export type SceneVariationUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12377,9 +12372,10 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13072,17 +13068,6 @@ export namespace Prisma {
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type ProjectScalarRelationFilter = {
     is?: ProjectWhereInput
     isNot?: ProjectWhereInput
@@ -13101,7 +13086,6 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     order?: SortOrder
-    duration_sec?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13109,7 +13093,6 @@ export namespace Prisma {
   export type SceneAvgOrderByAggregateInput = {
     id?: SortOrder
     order?: SortOrder
-    duration_sec?: SortOrder
   }
 
   export type SceneMaxOrderByAggregateInput = {
@@ -13120,7 +13103,6 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     order?: SortOrder
-    duration_sec?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13133,7 +13115,6 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     order?: SortOrder
-    duration_sec?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13141,10 +13122,9 @@ export namespace Prisma {
   export type SceneSumOrderByAggregateInput = {
     id?: SortOrder
     order?: SortOrder
-    duration_sec?: SortOrder
   }
 
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+  export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -13152,12 +13132,7 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type EnumVideoProviderNullableFilter<$PrismaModel = never> = {
@@ -13198,9 +13173,10 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
-    prompt_image_uuid?: SortOrder
+    title?: SortOrder
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
+    prompt_image_uuid?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13243,9 +13219,10 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
-    prompt_image_uuid?: SortOrder
+    title?: SortOrder
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
+    prompt_image_uuid?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13278,9 +13255,10 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     scene_uuid?: SortOrder
-    prompt_image_uuid?: SortOrder
+    title?: SortOrder
     prompt_text?: SortOrder
     negative_prompt?: SortOrder
+    prompt_image_uuid?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13316,6 +13294,22 @@ export namespace Prisma {
     creativity?: SortOrder
     motion_strength?: SortOrder
     guidance_scale?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EnumVideoProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13956,14 +13950,6 @@ export namespace Prisma {
     connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserUpdateOneRequiredWithoutScenesNestedInput = {
     create?: XOR<UserCreateWithoutScenesInput, UserUncheckedCreateWithoutScenesInput>
     connectOrCreate?: UserCreateOrConnectWithoutScenesInput
@@ -14066,6 +14052,14 @@ export namespace Prisma {
     connectOrCreate?: SceneVideoCreateOrConnectWithoutScene_variationInput | SceneVideoCreateOrConnectWithoutScene_variationInput[]
     createMany?: SceneVideoCreateManyScene_variationInputEnvelope
     connect?: SceneVideoWhereUniqueInput | SceneVideoWhereUniqueInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableEnumVideoProviderFieldUpdateOperationsInput = {
@@ -14629,6 +14623,29 @@ export namespace Prisma {
     _max?: NestedEnumProjectStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumVideoProviderNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
+    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumVideoProviderNullableFilter<$PrismaModel> | $Enums.VideoProvider | null
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -14643,29 +14660,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedEnumVideoProviderNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumVideoProviderNullableFilter<$PrismaModel> | $Enums.VideoProvider | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedEnumVideoProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14797,7 +14791,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     project: ProjectCreateNestedOneWithoutScenesInput
@@ -14812,7 +14805,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_variations?: SceneVariationUncheckedCreateNestedManyWithoutSceneInput
@@ -14831,7 +14823,8 @@ export namespace Prisma {
 
   export type SceneVariationCreateWithoutUserInput = {
     uuid?: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -14867,9 +14860,10 @@ export namespace Prisma {
     id?: number
     uuid?: string
     scene_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15044,7 +15038,6 @@ export namespace Prisma {
     title?: StringFilter<"Scene"> | string
     description?: StringNullableFilter<"Scene"> | string | null
     order?: IntFilter<"Scene"> | number
-    duration_sec?: IntNullableFilter<"Scene"> | number | null
     created_at?: DateTimeFilter<"Scene"> | Date | string
     updated_at?: DateTimeFilter<"Scene"> | Date | string
   }
@@ -15073,9 +15066,10 @@ export namespace Prisma {
     uuid?: StringFilter<"SceneVariation"> | string
     user_uuid?: StringFilter<"SceneVariation"> | string
     scene_uuid?: StringFilter<"SceneVariation"> | string
-    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
-    prompt_text?: StringFilter<"SceneVariation"> | string
+    title?: StringFilter<"SceneVariation"> | string
+    prompt_text?: StringNullableFilter<"SceneVariation"> | string | null
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
+    prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -15213,7 +15207,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScenesInput
@@ -15228,7 +15221,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_variations?: SceneVariationUncheckedCreateNestedManyWithoutSceneInput
@@ -15424,7 +15416,8 @@ export namespace Prisma {
 
   export type SceneVariationCreateWithoutSceneInput = {
     uuid?: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -15460,9 +15453,10 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15699,7 +15693,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScenesInput
@@ -15715,7 +15708,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutSceneInput
@@ -15865,7 +15857,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScenesNestedInput
@@ -15881,7 +15872,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_videos?: SceneVideoUncheckedUpdateManyWithoutSceneNestedInput
@@ -15988,7 +15978,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScenesInput
@@ -16004,7 +15993,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_variations?: SceneVariationUncheckedCreateNestedManyWithoutSceneInput
@@ -16017,7 +16005,8 @@ export namespace Prisma {
 
   export type SceneVariationCreateWithoutScene_videosInput = {
     uuid?: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -16054,9 +16043,10 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16185,7 +16175,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScenesNestedInput
@@ -16201,7 +16190,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
@@ -16220,7 +16208,8 @@ export namespace Prisma {
 
   export type SceneVariationUpdateWithoutScene_videosInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16257,9 +16246,10 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16692,7 +16682,8 @@ export namespace Prisma {
 
   export type SceneVariationCreateWithoutPrompt_imageInput = {
     uuid?: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -16729,7 +16720,8 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -16919,7 +16911,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -16928,9 +16919,10 @@ export namespace Prisma {
     id?: number
     uuid?: string
     scene_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17034,7 +17026,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutScenesNestedInput
@@ -17049,7 +17040,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
@@ -17063,14 +17053,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SceneVariationUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17106,9 +17096,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17141,9 +17132,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17263,7 +17255,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     order: number
-    duration_sec?: number | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17285,7 +17276,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScenesNestedInput
@@ -17300,7 +17290,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
@@ -17314,7 +17303,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17358,9 +17346,10 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
-    prompt_image_uuid?: string | null
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
+    prompt_image_uuid?: string | null
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17407,7 +17396,8 @@ export namespace Prisma {
 
   export type SceneVariationUpdateWithoutSceneInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17443,9 +17433,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17478,9 +17469,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17647,7 +17639,8 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     scene_uuid: string
-    prompt_text: string
+    title: string
+    prompt_text?: string | null
     negative_prompt?: string | null
     style?: string | null
     tone?: string | null
@@ -17752,7 +17745,8 @@ export namespace Prisma {
 
   export type SceneVariationUpdateWithoutPrompt_imageInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17789,7 +17783,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17824,7 +17819,8 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: StringFieldUpdateOperationsInput | string
-    prompt_text?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null

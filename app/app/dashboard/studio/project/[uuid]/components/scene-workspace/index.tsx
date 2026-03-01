@@ -5,9 +5,11 @@ import { SceneVariationCard } from "./SceneVariationCard";
 import { NoSceneSelected } from "./states/NoSceneSelected";
 import { SceneLoading } from "./states/SceneLoading";
 import { SceneNotFound } from "./states/SceneNotFound";
+import { Accordion, AccordionItem } from "@heroui/accordion";
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { CreateVariationPopover } from "./CreateVariationPopover";
 
-interface SceneWorkspaceProps {
-}
+interface SceneWorkspaceProps {}
 
 export function SceneWorkspace({}: SceneWorkspaceProps) {
   const searchParams = useSearchParams();
@@ -28,15 +30,34 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Scene variations</h3>
-        {(scene.scene_variations || []).map((variation: any) => (
-          <SceneVariationCard
-            key={variation.id}
-            variation={variation}
-          />
-        ))}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-foreground">Scene Variations</h3>
+          <p className="text-sm text-default-500 mt-1">
+            Configure the specific settings for these video variations to tune the scene generation exactly as needed.
+          </p>
+        </div>
+        <CreateVariationPopover sceneUuid={sceneUuid} />
       </div>
+      
+      <Accordion variant="splitted" className="px-0 gap-4">
+        {[
+          ...(scene.scene_variations || []).map((variation: SceneVariation, index: number) => (
+            <AccordionItem
+              key={variation.id || index}
+              title={
+                  <div className="flex items-center gap-2">
+                      <span className="font-semibold">{variation.title}</span>
+                  </div>
+              }
+              subtitle={<span className="text-xs text-default-400">{variation.style || "No Style Selected"}</span>}
+              aria-label={variation.title}
+            >
+              <SceneVariationCard variation={variation} />
+            </AccordionItem>
+          ))
+        ]}
+      </Accordion>
     </div>
   );
 }

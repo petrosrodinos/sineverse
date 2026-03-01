@@ -7,8 +7,12 @@ export interface SceneVariation {
     id: string;
     uuid: string;
     user_uuid: string;
-    prompt_image_uuid?: string;
     scene_uuid: string;
+    title: string;
+    prompt_text?: string;
+    negative_prompt?: string;
+    selected?: boolean;
+    prompt_image_uuid?: string;
     style?: Style;
     tone?: ProjectTone;
     genre?: ProjectGenre;
@@ -31,9 +35,6 @@ export interface SceneVariation {
     guidance_scale?: GuidanceScale;
     audio_style?: AudioStyle;
     include_sound?: boolean;
-    prompt_text: string;
-    negative_prompt?: string;
-    selected?: boolean;
     created_at: string;
     updated_at: string;
     prompt_image?: Document;
@@ -43,6 +44,10 @@ export interface SceneVariation {
 
 export interface CreateSceneVariationDto {
     scene_uuid: string;
+    title: string;
+    prompt_text?: string;
+    negative_prompt?: string;
+    selected?: boolean;
     style?: Style;
     tone?: ProjectTone;
     genre?: ProjectGenre;
@@ -65,13 +70,14 @@ export interface CreateSceneVariationDto {
     guidance_scale?: GuidanceScale;
     audio_style?: AudioStyle;
     include_sound?: boolean;
-    prompt_text: string;
-    negative_prompt?: string;
-    selected?: boolean;
 }
 
 export interface UpdateSceneVariationDto {
     scene_uuid: string;
+    title?: string;
+    prompt_text?: string;
+    negative_prompt?: string;
+    selected?: boolean;
     style?: Style;
     tone?: ProjectTone;
     genre?: ProjectGenre;
@@ -94,9 +100,6 @@ export interface UpdateSceneVariationDto {
     guidance_scale?: GuidanceScale;
     audio_style?: AudioStyle;
     include_sound?: boolean;
-    prompt_text: string;
-    negative_prompt?: string;
-    selected?: boolean;
 }
 
 export const Styles = {

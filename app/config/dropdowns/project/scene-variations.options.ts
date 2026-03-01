@@ -291,8 +291,8 @@ export const FpsSliderOptions: SliderConfig = {
     step: 1,
     defaultValue: 24,
     marks: [
-        { value: 24, label: "24 (Cinematic)" },
-        { value: 30, label: "30 (Standard)" },
-        { value: 60, label: "60 (Smooth)" },
+        { value: 24, label: "24" },
+        { value: 30, label: "30" },
+        { value: 60, label: "60" },
     ],
 };

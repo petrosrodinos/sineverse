@@ -6,6 +6,25 @@ export class CreateSceneVariationDto {
   @IsString()
   scene_uuid: string;
 
+  @ApiProperty({ description: 'Title of the variation' })
+  @IsString()
+  title: string;
+
+  @ApiProperty({ description: 'The generation prompt text' })
+  @IsString()
+  @IsOptional()
+  prompt_text?: string;
+
+  @ApiPropertyOptional({ description: 'Negative prompts to avoid' })
+  @IsString()
+  @IsOptional()
+  negative_prompt?: string;
+
+  @ApiPropertyOptional({ description: 'Whether this variation is the selected one' })
+  @IsBoolean()
+  @IsOptional()
+  selected?: boolean;
+
   @ApiPropertyOptional({ description: 'Creative style' })
   @IsString()
   @IsOptional()
@@ -116,17 +135,4 @@ export class CreateSceneVariationDto {
   @IsOptional()
   include_sound?: boolean;
 
-  @ApiProperty({ description: 'The generation prompt text' })
-  @IsString()
-  prompt_text: string;
-
-  @ApiPropertyOptional({ description: 'Negative prompts to avoid' })
-  @IsString()
-  @IsOptional()
-  negative_prompt?: string;
-
-  @ApiPropertyOptional({ description: 'Whether this variation is the selected one' })
-  @IsBoolean()
-  @IsOptional()
-  selected?: boolean;
 }

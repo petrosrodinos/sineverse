@@ -1,0 +1,26 @@
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(5,32): error TS2307: Cannot find module '@/features/scene-variations/interfaces/scene-variations.interfaces' or its corresponding type declarations.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(24,8): error TS2307: Cannot find module '@/config/dropdowns/project/scene-variations.options' or its corresponding type declarations.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(49,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(63,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(77,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(91,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(105,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(119,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(133,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(147,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(161,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(175,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(189,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+app/dashboard/studio/project/[uuid]/components/scene-workspace/VideoGenerationOptions.tsx(203,56): error TS2322: Type '{ children: any; key: any; value: any; }' is not assignable to type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
+  Property 'value' does not exist on type 'IntrinsicAttributes & Omit<ListboxItemBaseProps<object>, "value">'.
