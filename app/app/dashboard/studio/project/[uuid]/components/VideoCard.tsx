@@ -1,6 +1,4 @@
 "use client";
-import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
-import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import type { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { Button } from "@heroui/button";
 import { Card } from "@heroui/card";

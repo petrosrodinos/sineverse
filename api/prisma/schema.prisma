@@ -170,7 +170,7 @@ model SceneVariation {
   user            User @relation(fields: [user_uuid],references: [uuid],onDelete: Cascade)
   scene           Scene @relation(fields: [scene_uuid],references: [uuid],onDelete: Cascade)
   prompt_image      Document? @relation("SceneVariationImage", fields: [prompt_image_uuid],references: [uuid],onDelete: Cascade)
-  videos          SceneVideo[]
+  scene_videos          SceneVideo[]
 
   @@index([uuid])
   @@index([scene_uuid])

@@ -3,7 +3,7 @@ import type { SceneVariation } from "@/features/scene-variations/interfaces/scen
 import type { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 export { StudioLayout } from "./StudioLayout";
 export { IdeaSection } from "./IdeaSection";
-export { ScenesSidebar } from "./ScenesSidebar";
+export { ScenesSidebar } from "./scenes/ScenesSidebar";
 export { SceneWorkspace } from "./SceneWorkspace";
 export { PromptVariationCard } from "./PromptVariationCard";
 export { VideoGenerationPanel } from "./VideoGenerationPanel";

@@ -1633,11 +1633,11 @@ export namespace Prisma {
    */
 
   export type SceneVariationCountOutputType = {
-    videos: number
+    scene_videos: number
   }
 
   export type SceneVariationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    videos?: boolean | SceneVariationCountOutputTypeCountVideosArgs
+    scene_videos?: boolean | SceneVariationCountOutputTypeCountScene_videosArgs
   }
 
   // Custom InputTypes
@@ -1654,7 +1654,7 @@ export namespace Prisma {
   /**
    * SceneVariationCountOutputType without action
    */
-  export type SceneVariationCountOutputTypeCountVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SceneVariationCountOutputTypeCountScene_videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SceneVideoWhereInput
   }
 
@@ -5889,7 +5889,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
     prompt_image?: boolean | SceneVariation$prompt_imageArgs<ExtArgs>
-    videos?: boolean | SceneVariation$videosArgs<ExtArgs>
+    scene_videos?: boolean | SceneVariation$scene_videosArgs<ExtArgs>
     _count?: boolean | SceneVariationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sceneVariation"]>
 
@@ -6009,7 +6009,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
     prompt_image?: boolean | SceneVariation$prompt_imageArgs<ExtArgs>
-    videos?: boolean | SceneVariation$videosArgs<ExtArgs>
+    scene_videos?: boolean | SceneVariation$scene_videosArgs<ExtArgs>
     _count?: boolean | SceneVariationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SceneVariationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6029,7 +6029,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       scene: Prisma.$ScenePayload<ExtArgs>
       prompt_image: Prisma.$DocumentPayload<ExtArgs> | null
-      videos: Prisma.$SceneVideoPayload<ExtArgs>[]
+      scene_videos: Prisma.$SceneVideoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6461,7 +6461,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     scene<T extends SceneDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SceneDefaultArgs<ExtArgs>>): Prisma__SceneClient<$Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     prompt_image<T extends SceneVariation$prompt_imageArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$prompt_imageArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    videos<T extends SceneVariation$videosArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$videosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SceneVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    scene_videos<T extends SceneVariation$scene_videosArgs<ExtArgs> = {}>(args?: Subset<T, SceneVariation$scene_videosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SceneVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6938,9 +6938,9 @@ export namespace Prisma {
   }
 
   /**
-   * SceneVariation.videos
+   * SceneVariation.scene_videos
    */
-  export type SceneVariation$videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type SceneVariation$scene_videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the SceneVideo
      */
@@ -11378,7 +11378,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
     prompt_image?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    videos?: SceneVideoListRelationFilter
+    scene_videos?: SceneVideoListRelationFilter
   }
 
   export type SceneVariationOrderByWithRelationInput = {
@@ -11417,7 +11417,7 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     scene?: SceneOrderByWithRelationInput
     prompt_image?: DocumentOrderByWithRelationInput
-    videos?: SceneVideoOrderByRelationAggregateInput
+    scene_videos?: SceneVideoOrderByRelationAggregateInput
   }
 
   export type SceneVariationWhereUniqueInput = Prisma.AtLeast<{
@@ -11459,7 +11459,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     scene?: XOR<SceneScalarRelationFilter, SceneWhereInput>
     prompt_image?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    videos?: SceneVideoListRelationFilter
+    scene_videos?: SceneVideoListRelationFilter
   }, "id" | "uuid">
 
   export type SceneVariationOrderByWithAggregationInput = {
@@ -12173,7 +12173,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutScene_variationsInput
     scene: SceneCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateInput = {
@@ -12209,7 +12209,7 @@ export namespace Prisma {
     selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationUpdateInput = {
@@ -12244,7 +12244,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateInput = {
@@ -12280,7 +12280,7 @@ export namespace Prisma {
     selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationCreateManyInput = {
@@ -12397,7 +12397,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutVideosInput
+    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -12432,7 +12432,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutVideosNestedInput
+    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -14082,9 +14082,9 @@ export namespace Prisma {
     connect?: SceneWhereUniqueInput
   }
 
-  export type SceneVariationCreateNestedOneWithoutVideosInput = {
-    create?: XOR<SceneVariationCreateWithoutVideosInput, SceneVariationUncheckedCreateWithoutVideosInput>
-    connectOrCreate?: SceneVariationCreateOrConnectWithoutVideosInput
+  export type SceneVariationCreateNestedOneWithoutScene_videosInput = {
+    create?: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
+    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videosInput
     connect?: SceneVariationWhereUniqueInput
   }
 
@@ -14118,12 +14118,12 @@ export namespace Prisma {
     update?: XOR<XOR<SceneUpdateToOneWithWhereWithoutScene_videosInput, SceneUpdateWithoutScene_videosInput>, SceneUncheckedUpdateWithoutScene_videosInput>
   }
 
-  export type SceneVariationUpdateOneRequiredWithoutVideosNestedInput = {
-    create?: XOR<SceneVariationCreateWithoutVideosInput, SceneVariationUncheckedCreateWithoutVideosInput>
-    connectOrCreate?: SceneVariationCreateOrConnectWithoutVideosInput
-    upsert?: SceneVariationUpsertWithoutVideosInput
+  export type SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput = {
+    create?: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
+    connectOrCreate?: SceneVariationCreateOrConnectWithoutScene_videosInput
+    upsert?: SceneVariationUpsertWithoutScene_videosInput
     connect?: SceneVariationWhereUniqueInput
-    update?: XOR<XOR<SceneVariationUpdateToOneWithWhereWithoutVideosInput, SceneVariationUpdateWithoutVideosInput>, SceneVariationUncheckedUpdateWithoutVideosInput>
+    update?: XOR<XOR<SceneVariationUpdateToOneWithWhereWithoutScene_videosInput, SceneVariationUpdateWithoutScene_videosInput>, SceneVariationUncheckedUpdateWithoutScene_videosInput>
   }
 
   export type DocumentUpdateOneWithoutScene_videosNestedInput = {
@@ -14769,7 +14769,7 @@ export namespace Prisma {
     updated_at?: Date | string
     scene: SceneCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutUserInput = {
@@ -14804,7 +14804,7 @@ export namespace Prisma {
     selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutUserInput = {
@@ -14829,7 +14829,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutVideosInput
+    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -15362,7 +15362,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
-    videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutSceneInput = {
@@ -15397,7 +15397,7 @@ export namespace Prisma {
     selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutSceneInput = {
@@ -15422,7 +15422,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutVideosInput
+    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
     video?: DocumentCreateNestedOneWithoutScene_videosInput
   }
 
@@ -15924,7 +15924,7 @@ export namespace Prisma {
     create: XOR<SceneCreateWithoutScene_videosInput, SceneUncheckedCreateWithoutScene_videosInput>
   }
 
-  export type SceneVariationCreateWithoutVideosInput = {
+  export type SceneVariationCreateWithoutScene_videosInput = {
     uuid?: string
     prompt_text: string
     negative_prompt?: string | null
@@ -15958,7 +15958,7 @@ export namespace Prisma {
     prompt_image?: DocumentCreateNestedOneWithoutPrompt_imagesInput
   }
 
-  export type SceneVariationUncheckedCreateWithoutVideosInput = {
+  export type SceneVariationUncheckedCreateWithoutScene_videosInput = {
     id?: number
     uuid?: string
     user_uuid: string
@@ -15993,9 +15993,9 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-  export type SceneVariationCreateOrConnectWithoutVideosInput = {
+  export type SceneVariationCreateOrConnectWithoutScene_videosInput = {
     where: SceneVariationWhereUniqueInput
-    create: XOR<SceneVariationCreateWithoutVideosInput, SceneVariationUncheckedCreateWithoutVideosInput>
+    create: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
   }
 
   export type DocumentCreateWithoutScene_videosInput = {
@@ -16116,18 +16116,18 @@ export namespace Prisma {
     scene_variations?: SceneVariationUncheckedUpdateManyWithoutSceneNestedInput
   }
 
-  export type SceneVariationUpsertWithoutVideosInput = {
-    update: XOR<SceneVariationUpdateWithoutVideosInput, SceneVariationUncheckedUpdateWithoutVideosInput>
-    create: XOR<SceneVariationCreateWithoutVideosInput, SceneVariationUncheckedCreateWithoutVideosInput>
+  export type SceneVariationUpsertWithoutScene_videosInput = {
+    update: XOR<SceneVariationUpdateWithoutScene_videosInput, SceneVariationUncheckedUpdateWithoutScene_videosInput>
+    create: XOR<SceneVariationCreateWithoutScene_videosInput, SceneVariationUncheckedCreateWithoutScene_videosInput>
     where?: SceneVariationWhereInput
   }
 
-  export type SceneVariationUpdateToOneWithWhereWithoutVideosInput = {
+  export type SceneVariationUpdateToOneWithWhereWithoutScene_videosInput = {
     where?: SceneVariationWhereInput
-    data: XOR<SceneVariationUpdateWithoutVideosInput, SceneVariationUncheckedUpdateWithoutVideosInput>
+    data: XOR<SceneVariationUpdateWithoutScene_videosInput, SceneVariationUncheckedUpdateWithoutScene_videosInput>
   }
 
-  export type SceneVariationUpdateWithoutVideosInput = {
+  export type SceneVariationUpdateWithoutScene_videosInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     prompt_text?: StringFieldUpdateOperationsInput | string
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16161,7 +16161,7 @@ export namespace Prisma {
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
   }
 
-  export type SceneVariationUncheckedUpdateWithoutVideosInput = {
+  export type SceneVariationUncheckedUpdateWithoutScene_videosInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
@@ -16569,7 +16569,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_videosInput
     scene: SceneCreateNestedOneWithoutScene_videosInput
-    scene_variation: SceneVariationCreateNestedOneWithoutVideosInput
+    scene_variation: SceneVariationCreateNestedOneWithoutScene_videosInput
   }
 
   export type SceneVideoUncheckedCreateWithoutVideoInput = {
@@ -16630,7 +16630,7 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
     scene: SceneCreateNestedOneWithoutScene_variationsInput
-    videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationUncheckedCreateWithoutPrompt_imageInput = {
@@ -16665,7 +16665,7 @@ export namespace Prisma {
     selected?: boolean
     created_at?: Date | string
     updated_at?: Date | string
-    videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
+    scene_videos?: SceneVideoUncheckedCreateNestedManyWithoutScene_variationInput
   }
 
   export type SceneVariationCreateOrConnectWithoutPrompt_imageInput = {
@@ -17008,7 +17008,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutUserInput = {
@@ -17043,7 +17043,7 @@ export namespace Prisma {
     selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutUserInput = {
@@ -17092,7 +17092,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutVideosNestedInput
+    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -17345,7 +17345,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     prompt_image?: DocumentUpdateOneWithoutPrompt_imagesNestedInput
-    videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutSceneInput = {
@@ -17380,7 +17380,7 @@ export namespace Prisma {
     selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutSceneInput = {
@@ -17429,7 +17429,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutVideosNestedInput
+    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
     video?: DocumentUpdateOneWithoutScene_videosNestedInput
   }
 
@@ -17622,7 +17622,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_videosNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_videosNestedInput
-    scene_variation?: SceneVariationUpdateOneRequiredWithoutVideosNestedInput
+    scene_variation?: SceneVariationUpdateOneRequiredWithoutScene_videosNestedInput
   }
 
   export type SceneVideoUncheckedUpdateWithoutVideoInput = {
@@ -17690,7 +17690,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
-    videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateWithoutPrompt_imageInput = {
@@ -17725,7 +17725,7 @@ export namespace Prisma {
     selected?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
+    scene_videos?: SceneVideoUncheckedUpdateManyWithoutScene_variationNestedInput
   }
 
   export type SceneVariationUncheckedUpdateManyWithoutPrompt_imageInput = {

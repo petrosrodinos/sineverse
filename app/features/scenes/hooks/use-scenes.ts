@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getScenes, getScene, createScene, updateScene, deleteScene } from "../services/scenes.services";
-import { Scene, CreateSceneDto, UpdateSceneDto } from "../interfaces/scenes.interfaces";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto } from "../interfaces/scenes.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -8,8 +8,8 @@ const QueryKeys = {
     scene: (uuid: string) => `scene-${uuid}`,
 }
 
-export const useScenes = () => {
-    return useQuery<Scene[]>({ queryKey: [QueryKeys.scenes], queryFn: getScenes });
+export const useScenes = (query?: SceneQueryDto) => {
+    return useQuery<Scene[]>({ queryKey: [QueryKeys.scenes, query], queryFn: () => getScenes(query) });
 }
 
 export const useScene = (uuid: string) => {

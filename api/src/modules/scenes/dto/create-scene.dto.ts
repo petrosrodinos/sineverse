@@ -13,11 +13,11 @@ export class CreateSceneDto {
 
   @ApiPropertyOptional({ description: 'Description of the scene' })
   @IsString()
-  @IsOptional()
-  description?: string;
+  description: string;
 
   @ApiProperty({ description: 'Order sequence of the scene' })
   @IsInt()
+  @IsOptional()
   order: number;
 
   @ApiPropertyOptional({ description: 'Duration in seconds' })

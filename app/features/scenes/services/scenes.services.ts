@@ -1,10 +1,10 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Scene, CreateSceneDto, UpdateSceneDto } from "../interfaces/scenes.interfaces";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto } from "../interfaces/scenes.interfaces";
 
-export const getScenes = async (): Promise<Scene[]> => {
+export const getScenes = async (query?: SceneQueryDto): Promise<Scene[]> => {
     try {
-        const response = await axiosInstance.get<Scene[]>(ApiRoutes.scenes.prefix);
+        const response = await axiosInstance.get<Scene[]>(ApiRoutes.scenes.prefix, { params: query });
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to fetch scenes");

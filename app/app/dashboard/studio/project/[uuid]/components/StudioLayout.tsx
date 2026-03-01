@@ -3,9 +3,8 @@ import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import { useState, useCallback } from "react";
 import { getDefaultAISettings, createDefaultScene, createVariation, createDefaultSceneVideo } from "@/utils/studio";
 import { IdeaSection } from "./IdeaSection";
-import { ScenesSidebar } from "./ScenesSidebar";
+import { ScenesSidebar } from "./scenes/ScenesSidebar";
 import { SceneWorkspace } from "./SceneWorkspace";
-import { AIControlsPanel } from "./AIControlsPanel";
 
 const MOCK_DELAY_MS = 1500;
 
@@ -67,16 +66,6 @@ export function StudioLayout() {
     }, MOCK_DELAY_MS);
   }, []);
 
-  const handleRegenerateDescription = useCallback(
-    (sceneId: string) => {
-      setRegeneratingSceneId(sceneId);
-      setTimeout(() => {
-        updateScene(sceneId, (s: any) => ({ ...s, description: (s.description || "") + " [AI regenerated.]" }));
-        setRegeneratingSceneId(null);
-      }, MOCK_DELAY_MS);
-    },
-    [updateScene],
-  );
 
   const handleSceneTitleChange = useCallback((sceneId: string, title: string) => updateScene(sceneId, (s: any) => ({ ...s, title })), [updateScene]);
   const handleSceneDescriptionChange = useCallback((sceneId: string, description: string) => updateScene(sceneId, (s: any) => ({ ...s, description })), [updateScene]);
@@ -89,13 +78,6 @@ export function StudioLayout() {
       setRegeneratingSceneId(null);
     }, MOCK_DELAY_MS);
   }, [selectedSceneId, updateScene]);
-
-  const handleAISettingsChange = useCallback(
-    (sceneId: string, settings: Partial<any>) => {
-      updateScene(sceneId, (s: any) => ({ ...s, aiSettings: { ...s.aiSettings, ...settings } }));
-    },
-    [updateScene],
-  );
 
   const handleVariationPromptChange = useCallback(
     (sceneId: string, variationId: string, prompt_text: string) => {
@@ -210,7 +192,7 @@ export function StudioLayout() {
 
   return (
     <div className="flex h-full min-h-0 gap-4 p-4">
-      <ScenesSidebar scenes={scenes} selectedSceneId={selectedSceneId} onSelectScene={setSelectedSceneId} onGenerateScenes={handleGenerateScenes} onRegenerateDescription={handleRegenerateDescription} isGeneratingScenes={isGeneratingScenes} canGenerateScenes={!!idea.enriched} />
+      <ScenesSidebar />
       <div className="flex-1 min-w-0 flex flex-col gap-6 overflow-auto rounded-2xl border border-default-200 bg-default-100 dark:border-default-100/20 dark:bg-default-100/5 p-6">
         <IdeaSection idea={idea} onIdeaChange={(raw) => setIdea((prev) => ({ ...prev, raw }))} onEnrich={handleEnrich} onRegenerateEnriched={handleRegenerateEnriched} isEnriching={isEnriching} />
         {selectedScene ? (
@@ -238,9 +220,6 @@ export function StudioLayout() {
         ) : scenes.length > 0 ? (
           <p className="text-default-500 text-sm">Select a scene from the sidebar.</p>
         ) : null}
-      </div>
-      <div className="w-64 shrink-0">
-        <AIControlsPanel settings={selectedScene?.aiSettings ?? getDefaultAISettings()} onChange={(s: any) => (selectedSceneId ? handleAISettingsChange(selectedSceneId, s) : undefined)} onSave={() => {}} hasScene={!!selectedScene} />
       </div>
     </div>
   );
