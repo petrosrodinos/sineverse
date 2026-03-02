@@ -59,6 +59,7 @@ export class SceneVariationsService {
   async update(user_uuid: string, uuid: string, updateSceneVariationDto: UpdateSceneVariationDto) {
     try {
       await this.findOne(user_uuid, uuid);
+
       return await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
@@ -141,14 +142,12 @@ export class SceneVariationsService {
         include_video_generation_options,
       });
 
-      console.log(enrichedData)
+      const newVariation = {
+        ...variation,
+        ...enrichedData,
+      };
 
-      return this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          ...enrichedData,
-        }
-      });
+      return newVariation;
 
     } catch (error) {
       if (error instanceof NotFoundException) throw error;

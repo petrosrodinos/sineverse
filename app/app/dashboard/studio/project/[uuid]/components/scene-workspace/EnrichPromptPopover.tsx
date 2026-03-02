@@ -10,7 +10,9 @@ import { Textarea } from "@heroui/input";
 import { Checkbox } from "@heroui/checkbox";
 import { Sparkles } from "lucide-react";
 import { useEnrichSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { SceneVariationEnrichDto } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { SceneVariationEnrichDto, SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { ReusableModal } from "@/components/ui/modal";
+import { SceneVariationCard } from "./SceneVariationCard";
 
 const enrichSchema = z.object({
   directions: z.string().optional(),
@@ -27,7 +29,9 @@ interface EnrichPromptPopoverProps {
 
 export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const {mutateAsync, isPending} = useEnrichSceneVariation(sceneVariationUuid);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [enrichedVariation, setEnrichedVariation] = useState<SceneVariation | null>(null);
+  const {mutate, isPending} = useEnrichSceneVariation(sceneVariationUuid);
 
   const {
     register,
@@ -47,15 +51,22 @@ export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverP
   });
 
   const onSubmit = async (data: EnrichFormValues) => {
-    await mutateAsync({
+    mutate({
       uuid: sceneVariationUuid,
       enrichDto: data as SceneVariationEnrichDto,
-    });
-    setIsOpen(false);
-    reset();
+    }, {
+      onSuccess: (data) => {
+        setEnrichedVariation(data);
+        setIsOpen(false);
+        reset();
+        setIsModalOpen(true);
+      },
+    })
+    
   };
 
   return (
+    <>
     <Popover isOpen={isOpen} onOpenChange={setIsOpen} placement="bottom-end" showArrow offset={10}>
       <PopoverTrigger>
         <Button
@@ -123,5 +134,18 @@ export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverP
         </form>
       </PopoverContent>
     </Popover>
+
+    <ReusableModal
+      isOpen={isModalOpen}
+      onOpenChange={setIsModalOpen}
+      title={<h3 className="text-lg font-semibold">Review Enriched Variation</h3>}
+      size="2xl"
+      scrollBehavior="inside"
+    >
+      <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
+        {enrichedVariation && <SceneVariationCard variation={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)}/>}
+      </div>
+    </ReusableModal>
+    </>
   );
 }

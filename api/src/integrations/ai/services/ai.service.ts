@@ -69,6 +69,8 @@ export class AiService {
                     system: options?.system || 'You are a helpful assistant.',
                 });
 
+                console.log('useage', usage)
+
                 const cost = calculateAiCost({
                     provider: options.provider,
                     model: options.model,

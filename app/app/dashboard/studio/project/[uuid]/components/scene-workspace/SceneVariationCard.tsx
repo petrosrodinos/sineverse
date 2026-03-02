@@ -1,22 +1,30 @@
 "use client";
 import type { SceneVariation, UpdateSceneVariationDto } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
-import { RefreshCw, Save } from "lucide-react";
+import {Save } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { EnrichPromptPopover } from "./EnrichPromptPopover";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
+  isEnriched?: boolean;
+  handleClose?: () => void;
 }
 
-export function SceneVariationCard({ variation }: SceneVariationCardProps) {
+export function SceneVariationCard({ variation, isEnriched, handleClose }: SceneVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
+
+  useEffect(() => {
+    if (variation) {
+      setEditedVariation(variation);
+    }
+  }, [variation]);
 
   const handleOptionChange = (field: string, value: any) => {
     setEditedVariation(prev => ({ ...prev, [field]: value }));
@@ -25,13 +33,40 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
   const handleSave = async () => {
     if (!variation?.uuid) return;
     
+ const dto: UpdateSceneVariationDto = {
+        title: editedVariation.title,
+        prompt_text: editedVariation.prompt_text,
+        negative_prompt: editedVariation.negative_prompt,
+        style: editedVariation.style,
+        camera_style: editedVariation.camera_style,
+        shot_type: editedVariation.shot_type,
+        camera_movement: editedVariation.camera_movement,
+        lens_type: editedVariation.lens_type,
+        depth_of_field: editedVariation.depth_of_field,
+        lighting: editedVariation.lighting,
+        color_grade: editedVariation.color_grade,
+        time_of_day: editedVariation.time_of_day,
+        aspect_ratio: editedVariation.aspect_ratio,
+        resolution: editedVariation.resolution,
+        fps: editedVariation.fps,
+        duration_sec: editedVariation.duration_sec,
+        ai_model: editedVariation.ai_model,
+        creativity: editedVariation.creativity,
+        motion_strength: editedVariation.motion_strength,
+        guidance_scale: editedVariation.guidance_scale,
+    };
+    
     // Clean up undefined properties
-    Object.keys(editedVariation).forEach(key => editedVariation[key as keyof UpdateSceneVariationDto] === undefined && delete editedVariation[key as keyof UpdateSceneVariationDto]);
+    Object.keys(dto).forEach(key => dto[key as keyof UpdateSceneVariationDto] === undefined && delete dto[key as keyof UpdateSceneVariationDto]);
 
     await updateMutation.mutateAsync({
       uuid: variation.uuid,
-      sceneVariation: editedVariation,
+      sceneVariation: dto,
     });
+
+    if(isEnriched) {
+      handleClose?.();
+    }
   };
 
   return (
@@ -41,9 +76,9 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
           <h4 className="text-base font-medium">Prompt & Configuration</h4>
           <p className="text-xs text-default-500">Edit prompt and generation settings.</p>
         </div>
-        <div className="flex items-center gap-2">
+        {!isEnriched &&<div className="flex items-center gap-2">
           {variation?.uuid && <EnrichPromptPopover sceneVariationUuid={variation.uuid} />}
-        </div>
+        </div>}
       </div>
       
       <div className="flex flex-col gap-4">
@@ -84,6 +119,14 @@ export function SceneVariationCard({ variation }: SceneVariationCardProps) {
         </Accordion>
       </div>
       <div className="flex justify-end pt-2 border-t border-default-200 dark:border-default-100/10">
+        
+        {isEnriched && (
+          <Button
+          color="danger"
+          className="mr-2"
+          onPress={handleClose}
+          >Cancel</Button>
+        )}
         <Button 
             color="primary" 
             startContent={<Save className="size-4" />} 

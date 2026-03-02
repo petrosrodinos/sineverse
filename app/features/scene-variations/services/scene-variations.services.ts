@@ -7,8 +7,7 @@ export const getSceneVariations = async (query: SceneVariationsQueryDto): Promis
         const response = await axiosInstance.get<SceneVariation[]>(ApiRoutes.scene_variations.prefix, { params: query });
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to fetch scene variations");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to fetch scene variations")
     }
 }
 
@@ -17,8 +16,7 @@ export const getSceneVariation = async (uuid: string): Promise<SceneVariation> =
         const response = await axiosInstance.get<SceneVariation>(ApiRoutes.scene_variations.scene_variation(uuid));
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to fetch scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to fetch scene variation")
     }
 }
 
@@ -27,8 +25,7 @@ export const createSceneVariation = async (sceneVariation: CreateSceneVariationD
         const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.prefix, sceneVariation);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to create scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to create scene variation")
     }
 }
 
@@ -37,8 +34,7 @@ export const updateSceneVariation = async (uuid: string, sceneVariation: UpdateS
         const response = await axiosInstance.patch<SceneVariation>(ApiRoutes.scene_variations.scene_variation(uuid), sceneVariation);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to update scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to update scene variation")
     }
 }
 
@@ -47,8 +43,7 @@ export const deleteSceneVariation = async (uuid: string) => {
         const response = await axiosInstance.delete(ApiRoutes.scene_variations.scene_variation(uuid));
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to delete scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to delete scene variation")
     }
 }
 
@@ -57,8 +52,7 @@ export const duplicateSceneVariation = async (uuid: string): Promise<SceneVariat
         const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.duplicate(uuid));
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to duplicate scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to duplicate scene variation")
     }
 }
 
@@ -67,8 +61,7 @@ export const enrichSceneVariation = async (uuid: string, enrichDto: SceneVariati
         const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.enrich(uuid), enrichDto);
         return response.data;
     } catch (error: any) {
-        console.error(error?.response?.data?.message || "Failed to enrich scene variation");
-        throw error;
+        throw new Error(error?.response?.data?.message || "Failed to enrich scene variation")
     }
 }
 

@@ -20,9 +20,9 @@ export const SceneVariationEnrichSchema = z.object({
     audio_style: z.enum(AUDIO_STYLE_VALUES).optional(),
     fps: z.union([z.literal(24), z.literal(25), z.literal(30), z.literal(48), z.literal(60)]).optional(),
     duration_sec: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(5), z.literal(6), z.literal(8), z.literal(10), z.literal(15)]).optional(),
-    creativity: z.union([z.literal(0.1), z.literal(0.25), z.literal(0.5), z.literal(0.75), z.literal(1)]).optional(),
-    motion_strength: z.union([z.literal(0.1), z.literal(0.25), z.literal(0.5), z.literal(0.75), z.literal(1)]).optional(),
-    guidance_scale: z.union([z.literal(3), z.literal(5), z.literal(7.5), z.literal(10), z.literal(15)]).optional(),
-});
+    guidance_scale: z.number().min(1).max(20).optional(),
+    motion_strength: z.number().min(0).max(1).optional(),
+    creativity: z.number().min(0).max(1).optional(),
+}).strict();
 
 export type SceneVariationEnrichSchemaType = z.infer<typeof SceneVariationEnrichSchema>;
