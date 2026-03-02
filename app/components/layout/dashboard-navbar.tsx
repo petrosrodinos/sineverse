@@ -4,16 +4,26 @@ import { Navbar as HeroUINavbar, NavbarContent, NavbarItem } from "@heroui/navba
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
-import { User, CreditCard, LogOut } from "lucide-react";
+import { User, CreditCard, LogOut, Menu } from "lucide-react";
+import { Button } from "@heroui/button";
 import { signOut, useSession } from "next-auth/react";
 import { Routes } from "@/config/routes";
+import { useLayoutStore } from "@/stores/layout.store";
 
 export function DashboardNavbar() {
   const { data: session } = useSession();
   const {full_name,email} = session || {}
+  const { toggleMobileDrawer } = useLayoutStore();
 
   return (
     <HeroUINavbar maxWidth="xl" position="sticky" isBordered>
+      <NavbarContent className="md:hidden" justify="start">
+        <NavbarItem>
+          <Button isIconOnly variant="light" size="sm" onPress={toggleMobileDrawer}>
+            <Menu className="size-5" />
+          </Button>
+        </NavbarItem>
+      </NavbarContent>
       <NavbarContent className="w-full" justify="end">
         <NavbarItem className="flex items-center gap-3 ml-auto">
           <ThemeSwitch />

@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { ChevronsUpDown, CreditCard, LogOut, User, PanelLeftClose, PanelLeft } from "lucide-react";
+import { ChevronsUpDown, CreditCard, LogOut, User, PanelLeftClose, PanelLeft, X } from "lucide-react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
+import { Drawer, DrawerContent, DrawerBody } from "@heroui/drawer";
 import { siteConfig } from "@/config/navigation/site";
 import { signOut, useSession } from "next-auth/react";
 import { Routes } from "@/config/routes";
+import { useLayoutStore } from "@/stores/layout.store";
 import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
@@ -29,7 +31,7 @@ function useSidebarCollapsed() {
     return () => mql.removeEventListener("change", handler);
   }, []);
 
-  const collapsed = isMobile || userCollapsed;
+  const collapsed = !isMobile && userCollapsed;
   const setCollapsed = (value: boolean) => setUserCollapsed(value);
   const toggle = () => setUserCollapsed((c) => !c);
 
@@ -43,28 +45,28 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ items }: DashboardSidebarProps) {
   const pathname = usePathname();
   const { collapsed, toggle } = useSidebarCollapsed();
+  const { isMobileDrawerOpen, setMobileDrawerOpen } = useLayoutStore();
   const { data: session } = useSession();
   const {full_name,email} = session || {}
 
-  return (
-    <aside
-      className={clsx(
-        "flex h-screen shrink-0 items-stretch py-3 transition-[width] duration-200",
-        collapsed ? "w-[4.5rem] pl-2 pr-2" : "w-60 pl-2 pr-2"
-      )}
-    >
-      <nav className="flex w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-100/10 dark:shadow-black/10">
+  const sidebarContent = (
+    <nav className="flex h-full w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-50 dark:shadow-black/10">
         <div className={clsx("flex items-center border-b border-default-200/60 dark:border-default-100/20 pb-3 mb-2", collapsed ? "justify-center px-0" : "justify-between px-4")}>
           {!collapsed && (
             <p className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate">
               {siteConfig.name}
             </p>
           )}
-          <Tooltip content={collapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
-            <Button isIconOnly variant="light" size="sm" onPress={toggle} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} className="shrink-0">
-              {collapsed ? <PanelLeft className="size-5" /> : <PanelLeftClose className="size-5" />}
-            </Button>
-          </Tooltip>
+          <div className="hidden md:block">
+            <Tooltip content={collapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
+              <Button isIconOnly variant="light" size="sm" onPress={toggle} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"} className="shrink-0">
+                {collapsed ? <PanelLeft className="size-5" /> : <PanelLeftClose className="size-5" />}
+              </Button>
+            </Tooltip>
+          </div>
+          <Button isIconOnly variant="light" size="sm" onPress={() => setMobileDrawerOpen(false)} aria-label="Close menu" className="md:hidden shrink-0">
+            <X className="size-5" />
+          </Button>
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
           {items.map((item) => {
@@ -139,6 +141,33 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
           </Dropdown>
         </div>
       </nav>
-    </aside>
+  );
+
+  return (
+    <>
+      <aside
+        className={clsx(
+          "hidden md:flex h-screen shrink-0 items-stretch py-3 transition-[width] duration-200",
+          collapsed ? "w-[4.5rem] pl-2 pr-2" : "w-60 pl-2 pr-2"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+
+      <Drawer 
+        isOpen={isMobileDrawerOpen} 
+        onOpenChange={setMobileDrawerOpen} 
+        placement="left" 
+        size="xs" 
+        className="md:hidden"
+        hideCloseButton
+      >
+        <DrawerContent className="bg-transparent shadow-none w-72 max-w-[80vw]">
+          <DrawerBody className="p-0 px-2 py-3">
+            {sidebarContent}
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }
