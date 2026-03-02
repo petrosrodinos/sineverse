@@ -7,7 +7,7 @@ import { Input, Textarea } from "@heroui/input";
 import {Save } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { EnrichPromptPopover } from "./EnrichPromptPopover";
+import { EnrichVariationPopover } from "./EnrichVariationPopover";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -77,7 +77,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           <p className="text-xs text-default-500">Edit prompt and generation settings.</p>
         </div>
         {!isEnriched &&<div className="flex items-center gap-2">
-          {variation?.uuid && <EnrichPromptPopover sceneVariationUuid={variation.uuid} />}
+          {variation?.uuid && <EnrichVariationPopover sceneVariationUuid={variation.uuid} />}
         </div>}
       </div>
       

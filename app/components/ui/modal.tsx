@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
+import { Modal as HeroModal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { ReactNode } from "react";
 
 interface ReusableModalProps {
@@ -13,7 +13,7 @@ interface ReusableModalProps {
   scrollBehavior?: "inside" | "outside" | "normal";
 }
 
-export function ReusableModal({
+export function Modal({
   isOpen,
   onOpenChange,
   title,
@@ -23,7 +23,7 @@ export function ReusableModal({
   scrollBehavior = "inside",
 }: ReusableModalProps) {
   return (
-    <Modal 
+    <HeroModal 
       isOpen={isOpen} 
       onOpenChange={onOpenChange} 
       size={size} 
@@ -54,6 +54,6 @@ export function ReusableModal({
           </>
         )}
       </ModalContent>
-    </Modal>
+    </HeroModal>  
   );
 }

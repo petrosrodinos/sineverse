@@ -11,7 +11,7 @@ import { Checkbox } from "@heroui/checkbox";
 import { Sparkles } from "lucide-react";
 import { useEnrichSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { SceneVariationEnrichDto, SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import { ReusableModal } from "@/components/ui/modal";
+import { Modal } from "@/components/ui/modal";
 import { SceneVariationCard } from "./SceneVariationCard";
 
 const enrichSchema = z.object({
@@ -23,11 +23,11 @@ const enrichSchema = z.object({
 
 type EnrichFormValues = z.infer<typeof enrichSchema>;
 
-interface EnrichPromptPopoverProps {
+interface EnrichVariationPopoverProps {
   sceneVariationUuid: string;
 }
 
-export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverProps) {
+export function EnrichVariationPopover({ sceneVariationUuid }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [enrichedVariation, setEnrichedVariation] = useState<SceneVariation | null>(null);
@@ -135,7 +135,7 @@ export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverP
       </PopoverContent>
     </Popover>
 
-    <ReusableModal
+    <Modal
       isOpen={isModalOpen}
       onOpenChange={setIsModalOpen}
       title={<h3 className="text-lg font-semibold">Review Enriched Variation</h3>}
@@ -145,7 +145,7 @@ export function EnrichPromptPopover({ sceneVariationUuid }: EnrichPromptPopoverP
       <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
         {enrichedVariation && <SceneVariationCard variation={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)}/>}
       </div>
-    </ReusableModal>
+    </Modal>
     </>
   );
 }
