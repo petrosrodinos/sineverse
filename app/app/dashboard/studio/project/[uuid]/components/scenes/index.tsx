@@ -6,7 +6,7 @@ import { useDisclosure } from "@heroui/modal";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Plus } from "lucide-react";
 import { useScenes } from "@/features/scenes/hooks/use-scenes";
-import { CreateSceneModal } from "./CreateSceneModal";
+import { CreateSceneModal } from "./create-scene";
 import { NoScenes } from "./states/NoScenes";
 import { ScenesLoadingSkeleton } from "./states/ScenesLoadingSkeleton";
 import { SceneCard } from "./SceneCard";
@@ -27,7 +27,7 @@ export function ScenesSidebar() {
     return (
       <>
         <NoScenes onOpen={onOpen} />
-        <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} />
+        <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} scenes={[]}/>
       </>
     );
   }
@@ -71,7 +71,7 @@ export function ScenesSidebar() {
           ))}
         </div>
       </aside>
-      <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} />
+      <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} scenes={scenes}/>
     </>
   );
 }

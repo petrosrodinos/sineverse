@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useCreateScene } from "@/features/scenes/hooks/use-scenes";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 const formSchema = z.object({
   title: z.string(),
@@ -19,9 +20,10 @@ interface CreateSceneModalProps {
   onOpenChange: (isOpen: boolean) => void;
   onClose: () => void;
   projectUuid: string;
+  scenes: Scene[];
 }
 
-export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid }: CreateSceneModalProps) {
+export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, scenes }: CreateSceneModalProps) {
   const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
