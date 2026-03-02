@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getScenes, getScene, createScene, updateScene, deleteScene } from "../services/scenes.services";
+import { getScenes, getScene, createScene, updateScene, deleteScene, generateAiScenes } from "../services/scenes.services";
 import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto } from "../interfaces/scenes.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -79,3 +79,25 @@ export const useDeleteScene = () => {
         }
     });
 }
+
+export const useGenerateAiScenes = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: generateAiScenes,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.scenes] });
+            addToast({
+                title: "Scenes generated successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to generate scenes",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+

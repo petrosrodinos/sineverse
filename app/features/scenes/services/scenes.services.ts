@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto } from "../interfaces/scenes.interfaces";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, GenerateAiScenesDto } from "../interfaces/scenes.interfaces";
 
 export const getScenes = async (query?: SceneQueryDto): Promise<Scene[]> => {
     try {
@@ -48,6 +48,16 @@ export const deleteScene = async (uuid: string) => {
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to delete scene");
+        throw error;
+    }
+}
+
+export const generateAiScenes = async (scene: GenerateAiScenesDto): Promise<Scene[]> => {
+    try {
+        const response = await axiosInstance.post<Scene[]>(ApiRoutes.scenes.generate_ai_scenes, scene);
+        return response.data;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to generate scenes");
         throw error;
     }
 }

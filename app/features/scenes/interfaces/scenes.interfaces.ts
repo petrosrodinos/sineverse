@@ -32,3 +32,12 @@ export interface UpdateSceneDto {
 export interface SceneQueryDto {
     project_uuid: string;
 }
+
+export interface GenerateAiScenesDto {
+    project_uuid: string;
+    number_of_scenes: number;
+    scene_variations: number[];
+    continue_scenes: boolean;
+    enrich_prompt: boolean;
+    instructions?: string;
+}
