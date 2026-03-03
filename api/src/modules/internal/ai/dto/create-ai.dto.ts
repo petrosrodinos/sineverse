@@ -25,7 +25,7 @@ export class CreateAiDto {
 
     @IsOptional()
     @IsNumber()
-    maxTokens?: number;
+    maxOutputTokens?: number;
 
     @IsOptional()
     @IsNumber()

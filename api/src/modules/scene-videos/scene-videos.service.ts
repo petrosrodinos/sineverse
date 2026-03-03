@@ -2,28 +2,53 @@ import { Injectable, NotFoundException, InternalServerErrorException } from '@ne
 import { CreateSceneVideoDto } from './dto/create-scene-video.dto';
 import { UpdateSceneVideoDto } from './dto/update-scene-video.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import { VIDEO_GENERATION_QUEUE, VIDEO_GENERATION_JOB } from './queues/video.constants';
+import { VideoStatus } from '@/generated/prisma';
 
 @Injectable()
 export class SceneVideosService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectQueue(VIDEO_GENERATION_QUEUE) private readonly videoQueue: Queue,
+  ) { }
 
   async create(user_uuid: string, createSceneVideoDto: CreateSceneVideoDto) {
     try {
-      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid: createSceneVideoDto.scene_variation_uuid, user_uuid } });
+      const variation = await this.prisma.sceneVariation.findFirst({
+        where: { uuid: createSceneVideoDto.scene_variation_uuid, user_uuid }
+      });
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      return await this.prisma.sceneVideo.create({
+      const sceneVideo = await this.prisma.sceneVideo.create({
         data: {
-          ...createSceneVideoDto,
-          status: createSceneVideoDto.status as any,
           user_uuid,
           scene_uuid: variation.scene_uuid,
           scene_variation_uuid: variation.uuid,
+          status: VideoStatus.PENDING,
         }
       });
+
+      await this.videoQueue.add(VIDEO_GENERATION_JOB, {
+        sceneVideoUuid: sceneVideo.uuid,
+      }, {
+        attempts: 3,
+        backoff: {
+          type: 'exponential',
+          delay: 5000,
+        },
+        removeOnComplete: true,
+      });
+
+      return {
+        status: 'started',
+        provider_job_id: sceneVideo.uuid,
+        data: sceneVideo,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to create scene video', { cause: error });
+      throw new InternalServerErrorException('Failed to trigger video generation', { cause: error });
     }
   }
 
@@ -53,7 +78,6 @@ export class SceneVideosService {
         where: { uuid },
         data: {
           ...updateSceneVideoDto,
-          status: updateSceneVideoDto.status as any,
         }
       });
     } catch (error) {

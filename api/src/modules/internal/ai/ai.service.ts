@@ -15,7 +15,7 @@ export class InternalAiService {
         system: createAiDto.system,
         prompt: createAiDto.prompt,
         temperature: createAiDto.temperature,
-        maxTokens: createAiDto.maxTokens,
+        maxOutputTokens: createAiDto.maxOutputTokens,
         topP: createAiDto.topP,
       });
     } catch (error) {

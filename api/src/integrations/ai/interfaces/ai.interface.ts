@@ -8,7 +8,7 @@ export interface AIGenerateOptions<T = any> {
     schema?: z.ZodSchema<T>;
     output?: 'json' | 'no-schema';
     temperature?: number;
-    maxTokens?: number;
+    maxOutputTokens?: number;
     topP?: number;
     frequencyPenalty?: number;
     presencePenalty?: number;
@@ -22,6 +22,25 @@ export interface AIGenerateTextResponse {
 export interface AIGenerateObjectResponse<T = any> {
     response: T | null;
     usage?: AICostResponse
+}
+
+export interface AIGenerateVideoOptions {
+    provider: string;
+    model: string;
+    prompt: string;
+    negative_prompt?: string;
+    aspect_ratio?: string;
+    resolution?: string;
+    duration_sec?: number;
+    seed?: string;
+}
+
+export interface AIVideoResponse {
+    provider_job_id: string;
+    status: 'pending' | 'processing' | 'completed' | 'failed';
+    url?: string;
+    videoBuffer?: Uint8Array;
+    error?: string;
 }
 
 
@@ -58,6 +77,8 @@ export const AiProviders = {
     openai: 'openai',
     grok: 'grok',
     gemini: 'gemini',
+    runway: 'RUNWAY',
+    pika: 'PIKA',
 } as const;
 
 export const AiModels = {

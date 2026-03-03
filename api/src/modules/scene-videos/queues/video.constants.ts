@@ -1,0 +1,2 @@
+export const VIDEO_GENERATION_QUEUE = 'video-generation';
+export const VIDEO_GENERATION_JOB = 'generate-video';

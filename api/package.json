@@ -31,7 +31,8 @@
     "debug:dev": "npx dotenv -e .env.development -- node --inspect-brk -r tsconfig-paths/register -r ts-node/register ./node_modules/@nestjs/cli/bin/nest.js start --watch"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.3.23",
+    "@ai-sdk/google": "^3.0.36",
+    "@ai-sdk/openai": "^3.0.39",
     "@bull-board/api": "^6.16.2",
     "@bull-board/express": "^6.16.2",
     "@google-cloud/storage": "^7.18.0",
@@ -55,7 +56,7 @@
     "@sendgrid/client": "^8.1.5",
     "@sendgrid/mail": "^8.1.5",
     "@types/node-telegram-bot-api": "^0.64.9",
-    "ai": "^4.3.17",
+    "ai": "^6.0.108",
     "apollo-server-express": "^3.13.0",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
