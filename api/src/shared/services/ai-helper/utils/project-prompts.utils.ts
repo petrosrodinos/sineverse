@@ -3,7 +3,7 @@ import { AiPromptResponse, EnrichProjectConceptConfig } from "../interfaces/ai-h
 export const generateEnrichProjectConceptPrompt = (
     config: EnrichProjectConceptConfig
 ): AiPromptResponse => {
-    const { original_concept, enriched_concept, genres, tones, directions } = config;
+    const { project_title, original_concept, enriched_concept, genres, tones, directions } = config;
 
     return {
         system: `
@@ -60,6 +60,10 @@ Make it emotionally grounded and production-ready.
     `.trim(),
 
         prompt: `
+
+Project Title:
+${project_title}
+
 Original Concept:
 ${original_concept}
 

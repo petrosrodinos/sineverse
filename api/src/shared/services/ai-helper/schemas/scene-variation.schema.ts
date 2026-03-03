@@ -25,4 +25,18 @@ export const SceneVariationEnrichSchema = z.object({
     creativity: z.number().min(0).max(1).optional(),
 }).strict();
 
+export const GenerateAiScenesSchema = z.object({
+    scenes: z.array(z.object({
+        title: z.string().trim().min(1),
+        description: z.string().trim().min(1),
+        order: z.number().min(1),
+        scene_variations: z.array(
+            SceneVariationEnrichSchema.extend({
+                title: z.string().trim().min(1),
+            })
+        ),
+    })),
+});
+
 export type SceneVariationEnrichSchemaType = z.infer<typeof SceneVariationEnrichSchema>;
+export type GenerateAiScenesSchemaType = z.infer<typeof GenerateAiScenesSchema>;

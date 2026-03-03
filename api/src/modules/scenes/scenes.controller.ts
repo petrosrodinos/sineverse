@@ -7,6 +7,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneQuerySchema, SceneQueryDto } from './dto/query-scene.dto';
+import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
 @ApiTags('Scenes')
 @Controller('scenes')
 @UseGuards(JwtGuard)
@@ -57,4 +58,11 @@ export class ScenesController {
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.scenesService.remove(user_uuid, uuid);
   }
-}
+
+  @Post('generate-ai-scenes')
+  @ApiOperation({ summary: 'Generate AI scenes' })
+  @ApiResponse({ status: 200, description: 'The AI scenes have been successfully generated.' })
+  generateAiScenes(@CurrentUser('uuid') user_uuid: string, @Body() generateAiScenesDto: GenerateAiScenesDto) {
+    return this.scenesService.generateAiScenes(user_uuid, generateAiScenesDto);
+  }
+} 

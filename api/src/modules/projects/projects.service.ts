@@ -77,6 +77,7 @@ export class ProjectsService {
       if (!project) throw new NotFoundException('Project not found');
 
       const { response } = await this.aiHelperService.enrichProjectConcept({
+        project_title: project.title,
         original_concept: project.original_concept,
         genres: project?.genres as string[],
         tones: project?.tones as string[],

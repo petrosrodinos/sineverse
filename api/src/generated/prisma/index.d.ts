@@ -5434,6 +5434,7 @@ export namespace Prisma {
     negative_prompt: string | null
     prompt_image_uuid: string | null
     selected: boolean | null
+    ai_generated: boolean | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5470,6 +5471,7 @@ export namespace Prisma {
     negative_prompt: string | null
     prompt_image_uuid: string | null
     selected: boolean | null
+    ai_generated: boolean | null
     style: string | null
     tone: string | null
     genre: string | null
@@ -5506,6 +5508,7 @@ export namespace Prisma {
     negative_prompt: number
     prompt_image_uuid: number
     selected: number
+    ai_generated: number
     style: number
     tone: number
     genre: number
@@ -5564,6 +5567,7 @@ export namespace Prisma {
     negative_prompt?: true
     prompt_image_uuid?: true
     selected?: true
+    ai_generated?: true
     style?: true
     tone?: true
     genre?: true
@@ -5600,6 +5604,7 @@ export namespace Prisma {
     negative_prompt?: true
     prompt_image_uuid?: true
     selected?: true
+    ai_generated?: true
     style?: true
     tone?: true
     genre?: true
@@ -5636,6 +5641,7 @@ export namespace Prisma {
     negative_prompt?: true
     prompt_image_uuid?: true
     selected?: true
+    ai_generated?: true
     style?: true
     tone?: true
     genre?: true
@@ -5759,6 +5765,7 @@ export namespace Prisma {
     negative_prompt: string | null
     prompt_image_uuid: string | null
     selected: boolean
+    ai_generated: boolean
     style: string | null
     tone: string | null
     genre: string | null
@@ -5814,6 +5821,7 @@ export namespace Prisma {
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
     selected?: boolean
+    ai_generated?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5854,6 +5862,7 @@ export namespace Prisma {
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
     selected?: boolean
+    ai_generated?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5893,6 +5902,7 @@ export namespace Prisma {
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
     selected?: boolean
+    ai_generated?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5932,6 +5942,7 @@ export namespace Prisma {
     negative_prompt?: boolean
     prompt_image_uuid?: boolean
     selected?: boolean
+    ai_generated?: boolean
     style?: boolean
     tone?: boolean
     genre?: boolean
@@ -5958,7 +5969,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "selected" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
+  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "selected" | "ai_generated" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
   export type SceneVariationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
@@ -5994,6 +6005,7 @@ export namespace Prisma {
       negative_prompt: string | null
       prompt_image_uuid: string | null
       selected: boolean
+      ai_generated: boolean
       style: string | null
       tone: string | null
       genre: string | null
@@ -6454,6 +6466,7 @@ export namespace Prisma {
     readonly negative_prompt: FieldRef<"SceneVariation", 'String'>
     readonly prompt_image_uuid: FieldRef<"SceneVariation", 'String'>
     readonly selected: FieldRef<"SceneVariation", 'Boolean'>
+    readonly ai_generated: FieldRef<"SceneVariation", 'Boolean'>
     readonly style: FieldRef<"SceneVariation", 'String'>
     readonly tone: FieldRef<"SceneVariation", 'String'>
     readonly genre: FieldRef<"SceneVariation", 'String'>
@@ -10730,6 +10743,7 @@ export namespace Prisma {
     negative_prompt: 'negative_prompt',
     prompt_image_uuid: 'prompt_image_uuid',
     selected: 'selected',
+    ai_generated: 'ai_generated',
     style: 'style',
     tone: 'tone',
     genre: 'genre',
@@ -11287,6 +11301,7 @@ export namespace Prisma {
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     selected?: BoolFilter<"SceneVariation"> | boolean
+    ai_generated?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11327,6 +11342,7 @@ export namespace Prisma {
     negative_prompt?: SortOrderInput | SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
     selected?: SortOrder
+    ai_generated?: SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11370,6 +11386,7 @@ export namespace Prisma {
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     selected?: BoolFilter<"SceneVariation"> | boolean
+    ai_generated?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -11410,6 +11427,7 @@ export namespace Prisma {
     negative_prompt?: SortOrderInput | SortOrder
     prompt_image_uuid?: SortOrderInput | SortOrder
     selected?: SortOrder
+    ai_generated?: SortOrder
     style?: SortOrderInput | SortOrder
     tone?: SortOrderInput | SortOrder
     genre?: SortOrderInput | SortOrder
@@ -11454,6 +11472,7 @@ export namespace Prisma {
     negative_prompt?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     selected?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
+    ai_generated?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
     style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     tone?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     genre?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
@@ -12059,6 +12078,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12099,6 +12119,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12132,6 +12153,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12172,6 +12194,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12209,6 +12232,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -12241,6 +12265,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -12277,6 +12302,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -13055,6 +13081,7 @@ export namespace Prisma {
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
     selected?: SortOrder
+    ai_generated?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13101,6 +13128,7 @@ export namespace Prisma {
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
     selected?: SortOrder
+    ai_generated?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -13137,6 +13165,7 @@ export namespace Prisma {
     negative_prompt?: SortOrder
     prompt_image_uuid?: SortOrder
     selected?: SortOrder
+    ai_generated?: SortOrder
     style?: SortOrder
     tone?: SortOrder
     genre?: SortOrder
@@ -14639,6 +14668,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -14677,6 +14707,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -14875,6 +14906,7 @@ export namespace Prisma {
     negative_prompt?: StringNullableFilter<"SceneVariation"> | string | null
     prompt_image_uuid?: StringNullableFilter<"SceneVariation"> | string | null
     selected?: BoolFilter<"SceneVariation"> | boolean
+    ai_generated?: BoolFilter<"SceneVariation"> | boolean
     style?: StringNullableFilter<"SceneVariation"> | string | null
     tone?: StringNullableFilter<"SceneVariation"> | string | null
     genre?: StringNullableFilter<"SceneVariation"> | string | null
@@ -15220,6 +15252,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15258,6 +15291,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15808,6 +15842,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -15847,6 +15882,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16011,6 +16047,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16050,6 +16087,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16477,6 +16515,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16515,6 +16554,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16715,6 +16755,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -16850,6 +16891,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16888,6 +16930,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16924,6 +16967,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17126,6 +17170,7 @@ export namespace Prisma {
     negative_prompt?: string | null
     prompt_image_uuid?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17171,6 +17216,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17209,6 +17255,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17245,6 +17292,7 @@ export namespace Prisma {
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     prompt_image_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17331,6 +17379,7 @@ export namespace Prisma {
     prompt_text?: string | null
     negative_prompt?: string | null
     selected?: boolean
+    ai_generated?: boolean
     style?: string | null
     tone?: string | null
     genre?: string | null
@@ -17425,6 +17474,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17463,6 +17513,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17499,6 +17550,7 @@ export namespace Prisma {
     prompt_text?: NullableStringFieldUpdateOperationsInput | string | null
     negative_prompt?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
+    ai_generated?: BoolFieldUpdateOperationsInput | boolean
     style?: NullableStringFieldUpdateOperationsInput | string | null
     tone?: NullableStringFieldUpdateOperationsInput | string | null
     genre?: NullableStringFieldUpdateOperationsInput | string | null

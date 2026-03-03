@@ -38,6 +38,6 @@ export interface GenerateAiScenesDto {
     number_of_scenes: number;
     scene_variations: number[];
     continue_scenes: boolean;
-    enrich_prompt: boolean;
-    instructions?: string;
+    enrich_concept: boolean;
+    directions?: string;
 }

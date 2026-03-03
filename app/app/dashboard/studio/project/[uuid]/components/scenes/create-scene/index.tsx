@@ -55,8 +55,8 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, s
       number_of_scenes: data.number_of_scenes,
       scene_variations: data.scene_variations,
       continue_scenes: aiMode === "continue",
-      enrich_prompt: data.enrich_prompt,
-      instructions: data.instructions,
+      enrich_concept: data.enrich_concept,
+      directions: data.directions,
     }, {
       onSuccess: () => {
         onClose();

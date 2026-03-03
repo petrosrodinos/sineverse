@@ -3,10 +3,13 @@ import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { SceneQueryDto } from './dto/query-scene.dto';
+import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
+import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
+import { GenerateAiScenesSchemaType } from '@/shared/services/ai-helper/schemas/scene-variation.schema';
 
 @Injectable()
 export class ScenesService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService, private readonly aiHelperService: AiHelperService) { }
 
   async create(user_uuid: string, createSceneDto: CreateSceneDto) {
     try {
@@ -79,4 +82,80 @@ export class ScenesService {
       throw new InternalServerErrorException('Failed to delete scene', { cause: error });
     }
   }
+
+  async generateAiScenes(user_uuid: string, generateAiScenesDto: GenerateAiScenesDto) {
+
+    try {
+
+      const {
+        project_uuid,
+        number_of_scenes,
+        scene_variations,
+        continue_scenes,
+        enrich_concept,
+        directions,
+      } = generateAiScenesDto;
+
+      const project = await this.prisma.project.findUnique({
+        where: { user_uuid, uuid: project_uuid }, include: {
+          scenes: true
+        }
+      });
+
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      const config = {
+        project_title: project.title,
+        original_concept: project.original_concept,
+        enriched_concept: project.enriched_concept,
+        genres: project.genres as string[],
+        tones: project.tones as string[],
+        directions,
+        number_of_scenes,
+        scene_variations,
+        continue_scenes,
+        enrich_concept,
+        scenes: project.scenes.map(scene => ({
+          order: scene.order,
+          title: scene.title,
+          description: scene.description
+        }))
+      }
+
+      const generatedAiScenes: GenerateAiScenesSchemaType = await this.aiHelperService.generateAiScenes(config);
+
+      if (!generatedAiScenes?.scenes?.length) {
+        throw new InternalServerErrorException('Failed to generate ai scenes');
+      }
+
+      const newScenes = await this.prisma.$transaction(
+        generatedAiScenes.scenes.map(scene =>
+          this.prisma.scene.create({
+            data: {
+              project: { connect: { uuid: project_uuid } },
+              user: { connect: { uuid: user_uuid } },
+              order: scene.order,
+              title: scene.title,
+              description: scene.description,
+              scene_variations: {
+                create: scene.scene_variations.map(({ title, ...variation }) => ({
+                  ...variation,
+                  title,
+                  user: { connect: { uuid: user_uuid } },
+                })),
+              },
+            },
+          }),
+        ),
+      );
+
+      return newScenes;
+
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to generate ai scenes', { cause: error });
+    }
+  }
+
 }

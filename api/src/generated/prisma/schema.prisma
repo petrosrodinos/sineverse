@@ -128,6 +128,7 @@ model SceneVariation {
   negative_prompt   String? @db.Text
   prompt_image_uuid String?
   selected          Boolean @default(false)
+  ai_generated      Boolean @default(false)
 
   // Creative direction
   style String? // cinematic, anime, noir, hyperrealistic

@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 export const aiFormSchema = z.object({
-  instructions: z.string().optional(),
+  directions: z.string().optional(),
   number_of_scenes: z.number().min(1, "Must be at least 1"),
   scene_variations: z.array(z.number().min(1, "Must be at least 1")),
-  enrich_prompt: z.boolean(),
+  enrich_concept: z.boolean(),
 });
 
 export type AIFormValues = z.infer<typeof aiFormSchema>;
@@ -23,10 +23,10 @@ export function AISceneGenerationForm({ startingIndex, onSubmit }: AISceneGenera
   const { control, handleSubmit, watch, setValue } = useForm<AIFormValues>({
     resolver: zodResolver(aiFormSchema),
     defaultValues: {
-      instructions: "",
+      directions: "",
       number_of_scenes: 1,
       scene_variations: [1],
-      enrich_prompt: true,
+      enrich_concept: true,
     },
   });
 
@@ -52,13 +52,13 @@ export function AISceneGenerationForm({ startingIndex, onSubmit }: AISceneGenera
   return (
     <form id="ai-scene-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 py-2">
       <Controller
-        name="instructions"
+        name="directions"
         control={control}
         render={({ field, fieldState }) => (
           <Textarea
             {...field}
             label="Instructions (Optional)"
-            placeholder="Enter generation instructions..."
+            placeholder="Enter generation directions..."
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
           />
@@ -106,7 +106,7 @@ export function AISceneGenerationForm({ startingIndex, onSubmit }: AISceneGenera
       </div>
       
       <Controller
-        name="enrich_prompt"
+        name="enrich_concept"
         control={control}
         render={({ field }) => (
           <Checkbox

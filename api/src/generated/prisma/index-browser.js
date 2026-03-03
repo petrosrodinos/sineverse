@@ -168,6 +168,7 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   negative_prompt: 'negative_prompt',
   prompt_image_uuid: 'prompt_image_uuid',
   selected: 'selected',
+  ai_generated: 'ai_generated',
   style: 'style',
   tone: 'tone',
   genre: 'genre',
