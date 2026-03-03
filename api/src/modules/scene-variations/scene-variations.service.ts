@@ -58,7 +58,30 @@ export class SceneVariationsService {
 
   async update(user_uuid: string, uuid: string, updateSceneVariationDto: UpdateSceneVariationDto) {
     try {
-      await this.findOne(user_uuid, uuid);
+      const variation = await this.findOne(user_uuid, uuid);
+
+      if (updateSceneVariationDto.selected === true) {
+        return await this.prisma.$transaction(async (tx) => {
+          // Deselect all other variations of the same scene
+          await tx.sceneVariation.updateMany({
+            where: {
+              scene_uuid: variation.scene_uuid,
+              uuid: { not: uuid },
+              user_uuid,
+            },
+            data: { selected: false }
+          });
+
+          // Update this variation
+          return await tx.sceneVariation.update({
+            where: { uuid },
+            data: {
+              ...updateSceneVariationDto,
+              ai_model: updateSceneVariationDto.ai_model as any,
+            }
+          });
+        });
+      }
 
       return await this.prisma.sceneVariation.update({
         where: { uuid },

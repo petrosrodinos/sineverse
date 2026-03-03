@@ -168,6 +168,7 @@ model SceneVariation {
 
   @@index([uuid])
   @@index([scene_uuid])
+  @@unique([scene_uuid, selected])
   @@map("scene_variations")
 }
 
