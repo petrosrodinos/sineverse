@@ -29,7 +29,7 @@ export interface SceneVariation {
     fps?: Fps;
     duration_sec?: Duration;
     ai_model?: AiModel;
-    seed?: number;
+    seed?: string;
     creativity?: Creativity;
     motion_strength?: MotionStrength;
     guidance_scale?: GuidanceScale;
@@ -64,7 +64,7 @@ export interface CreateSceneVariationDto {
     fps?: Fps;
     duration_sec?: Duration;
     ai_model?: AiModel;
-    seed?: number;
+    seed?: string;
     creativity?: Creativity;
     motion_strength?: MotionStrength;
     guidance_scale?: GuidanceScale;
@@ -93,7 +93,7 @@ export interface UpdateSceneVariationDto {
     fps?: Fps;
     duration_sec?: Duration;
     ai_model?: AiModel;
-    seed?: number;
+    seed?: string;
     creativity?: Creativity;
     motion_strength?: MotionStrength;
     guidance_scale?: GuidanceScale;

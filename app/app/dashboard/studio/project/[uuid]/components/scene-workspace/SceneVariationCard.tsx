@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
-import {Save } from "lucide-react";
+import { Checkbox } from "@heroui/checkbox";
+import { Tooltip } from "@heroui/tooltip";
+import { Save, Info } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
@@ -54,6 +56,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
         creativity: editedVariation.creativity,
         motion_strength: editedVariation.motion_strength,
         guidance_scale: editedVariation.guidance_scale,
+        selected: editedVariation.selected,
+        seed: editedVariation.seed,
     };
     
     // Clean up undefined properties
@@ -97,6 +101,24 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
+              <div className="flex items-center px-1">
+          <Checkbox
+              isSelected={editedVariation.selected ?? false}
+              onValueChange={(val) => handleOptionChange("selected", val)}
+              classNames={{
+                  label: "w-full"
+              }}
+          >
+              <div className="flex items-center gap-1.5 pointer-events-none">
+                  <span className="pointer-events-auto text-sm font-medium">Selected</span>
+                  <Tooltip content="Mark this variation as the selected one for the scene." placement="top" className="max-w-[250px]" delay={0} closeDelay={0}>
+                      <span className="pointer-events-auto flex items-center">
+                          <Info className="w-3.5 h-3.5 text-default-400 cursor-help" />
+                      </span>
+                  </Tooltip>
+              </div>
+          </Checkbox>
+      </div>
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
           <AccordionItem key="negative" aria-label="Negative prompt" title={<span className="text-sm font-medium">Negative Prompt</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
             <Textarea 
@@ -110,6 +132,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           </AccordionItem>
         </Accordion>
       </div>
+
+
 
       <div className="dark:border-default-100/10">
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden">

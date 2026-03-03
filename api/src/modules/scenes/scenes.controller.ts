@@ -3,11 +3,13 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/
 import { ScenesService } from './scenes.service';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
+import { ReorderScenesDto } from './dto/reorder-scenes.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneQuerySchema, SceneQueryDto } from './dto/query-scene.dto';
 import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
+
 @ApiTags('Scenes')
 @Controller('scenes')
 @UseGuards(JwtGuard)
@@ -65,4 +67,11 @@ export class ScenesController {
   generateAiScenes(@CurrentUser('uuid') user_uuid: string, @Body() generateAiScenesDto: GenerateAiScenesDto) {
     return this.scenesService.generateAiScenes(user_uuid, generateAiScenesDto);
   }
-} 
+
+  @Post('reorder')
+  @ApiOperation({ summary: 'Reorder scenes' })
+  @ApiResponse({ status: 200, description: 'The scenes have been successfully reordered.' })
+  reorder(@Body() reorderScenesDto: ReorderScenesDto) {
+    return this.scenesService.reorder(reorderScenesDto);
+  }
+}

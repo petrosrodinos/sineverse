@@ -6,6 +6,7 @@ import { SceneQueryDto } from './dto/query-scene.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
 import { GenerateAiScenesSchemaType } from '@/shared/services/ai-helper/schemas/scene-variation.schema';
+import { ReorderScenesDto } from './dto/reorder-scenes.dto';
 
 @Injectable()
 export class ScenesService {
@@ -34,8 +35,12 @@ export class ScenesService {
       }
 
       return await this.prisma.scene.findMany({
-        where: whereClause, include: {
+        where: whereClause,
+        include: {
           scene_variations: true
+        },
+        orderBy: {
+          order: 'asc'
         }
       });
 
@@ -158,4 +163,31 @@ export class ScenesService {
     }
   }
 
+  async reorder(reorderScenesDto: ReorderScenesDto) {
+    try {
+      const { scenes } = reorderScenesDto;
+
+      return await this.prisma.$transaction(async (tx) => {
+        // Step 1: Displacement to temporary high values to avoid unique constraint conflict
+        const offset = 10000;
+        for (const scene of scenes) {
+          await tx.scene.update({
+            where: { uuid: scene.uuid },
+            data: { order: scene.order + offset },
+          });
+        }
+
+        // Step 2: Final update to intended orders
+        for (const scene of scenes) {
+          await tx.scene.update({
+            where: { uuid: scene.uuid },
+            data: { order: scene.order },
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Failed to reorder scenes', { cause: error });
+    }
+  }
 }

@@ -4,31 +4,51 @@ import { useParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import { useDisclosure } from "@heroui/modal";
 import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Plus, Pencil, PencilOff } from "lucide-react";
-import { useScenes, useDeleteScene } from "@/features/scenes/hooks/use-scenes";
+import { Plus, Pencil, PencilOff, GripVertical } from "lucide-react";
+import { useScenes, useDeleteScene, useReorderScenes } from "@/features/scenes/hooks/use-scenes";
 import { CreateSceneModal } from "./create-scene";
 import { NoScenes } from "./states/NoScenes";
 import { ScenesLoadingSkeleton } from "./states/ScenesLoadingSkeleton";
 import { SceneCard } from "./SceneCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditSceneModal } from "./create-scene/edit-scene-modal";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
+import { Reorder } from "framer-motion";
 
 export function ScenesSidebar() {
 
   const params = useParams();
   const projectUuid = params.uuid as string;
 
-  const { data: scenes, isLoading } = useScenes({ project_uuid: projectUuid });
+  const { data: scenesData, isLoading } = useScenes({ project_uuid: projectUuid });
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const { isOpen: isEditModalOpen, onOpen: onEditModalOpen, onOpenChange: onEditModalOpenChange, onClose: onEditModalClose } = useDisclosure();
   const { isOpen: isDeleteModalOpen, onOpen: onDeleteModalOpen, onClose: onDeleteModalClose } = useDisclosure();
   
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
+  const [orderedScenes, setOrderedScenes] = useState<Scene[]>([]);
+
+  useEffect(() => {
+    if (scenesData) {
+      setOrderedScenes(scenesData);
+    }
+  }, [scenesData]);
 
   const { mutate: deleteScene, isPending: isDeleting } = useDeleteScene();
+  const { mutate: reorderScenes } = useReorderScenes();
+
+  const handleReorder = (newOrder: Scene[]) => {
+    setOrderedScenes(newOrder);
+    const reorderDto = {
+      scenes: newOrder.map((s, index) => ({
+        uuid: s.uuid,
+        order: index + 1
+      }))
+    };
+    reorderScenes(reorderDto);
+  };
 
   const handleEdit = (scene: Scene) => {
     setSelectedScene(scene);
@@ -55,7 +75,7 @@ export function ScenesSidebar() {
     return <ScenesLoadingSkeleton />;
   }
 
-  if (!scenes || scenes.length === 0) {
+  if (!scenesData || scenesData.length === 0) {
     return (
       <>
         <NoScenes onOpen={onOpen} />
@@ -83,15 +103,18 @@ export function ScenesSidebar() {
                   {isEditMode ? <PencilOff className="size-4" /> : <Pencil className="size-4" />}
                 </Button>
               </div>
-              {scenes.map((scene) => (
-                <SceneCard 
-                  key={scene.uuid} 
-                  scene={scene} 
-                  isEditMode={isEditMode} 
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              ))}
+              <Reorder.Group axis="y" values={orderedScenes} onReorder={handleReorder} className="space-y-2">
+                {orderedScenes.map((scene) => (
+                  <Reorder.Item key={scene.uuid} value={scene} dragListener={isEditMode}>
+                    <SceneCard 
+                      scene={scene} 
+                      isEditMode={isEditMode} 
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  </Reorder.Item>
+                ))}
+              </Reorder.Group>
             </div>
           </AccordionItem>
         </Accordion>
@@ -110,19 +133,22 @@ export function ScenesSidebar() {
             </Button>
           </div>
         </div>
-        <div className="flex-1 overflow-auto space-y-2">
-          {scenes.map((scene) => (
-            <SceneCard
-              key={scene.uuid}
-              scene={scene}
-              isEditMode={isEditMode}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
+        <div className="flex-1 overflow-auto">
+          <Reorder.Group axis="y" values={orderedScenes} onReorder={handleReorder} className="space-y-2">
+            {orderedScenes.map((scene) => (
+              <Reorder.Item key={scene.uuid} value={scene} dragListener={isEditMode}>
+                <SceneCard
+                  scene={scene}
+                  isEditMode={isEditMode}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
         </div>
       </aside>
-      <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} scenes={scenes}/>
+      <CreateSceneModal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} projectUuid={projectUuid} scenes={orderedScenes}/>
       <EditSceneModal isOpen={isEditModalOpen} onOpenChange={onEditModalOpenChange} onClose={onEditModalClose} scene={selectedScene} />
       <ConfirmationModal 
         isOpen={isDeleteModalOpen} 

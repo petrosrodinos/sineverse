@@ -106,9 +106,9 @@ export class CreateSceneVariationDto {
   ai_model?: string;
 
   @ApiPropertyOptional({ description: 'Generation seed' })
-  @IsInt()
+  @IsString()
   @IsOptional()
-  seed?: number;
+  seed?: string;
 
   @ApiPropertyOptional({ description: 'Creativity ratio (0-1)' })
   @IsNumber()

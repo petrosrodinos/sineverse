@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, GenerateAiScenesDto } from "../interfaces/scenes.interfaces";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, GenerateAiScenesDto, ReorderScenesDto } from "../interfaces/scenes.interfaces";
 
 export const getScenes = async (query?: SceneQueryDto): Promise<Scene[]> => {
     try {
@@ -58,6 +58,15 @@ export const generateAiScenes = async (scene: GenerateAiScenesDto): Promise<Scen
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to generate scenes");
+        throw error;
+    }
+}
+
+export const reorderScenes = async (reorder: ReorderScenesDto): Promise<void> => {
+    try {
+        await axiosInstance.post(ApiRoutes.scenes.reorder, reorder);
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to reorder scenes");
         throw error;
     }
 }

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getScenes, getScene, createScene, updateScene, deleteScene, generateAiScenes } from "../services/scenes.services";
-import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto } from "../interfaces/scenes.interfaces";
+import { getScenes, getScene, createScene, updateScene, deleteScene, generateAiScenes, reorderScenes } from "../services/scenes.services";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, ReorderScenesDto } from "../interfaces/scenes.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -94,6 +94,27 @@ export const useGenerateAiScenes = () => {
         onError: (error) => {
             addToast({
                 title: "Failed to generate scenes",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
+export const useReorderScenes = () => {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, ReorderScenesDto>({
+        mutationFn: reorderScenes,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.scenes] });
+            addToast({
+                title: "Scenes reordered",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to reorder scenes",
                 description: error.message,
                 severity: "danger",
             });

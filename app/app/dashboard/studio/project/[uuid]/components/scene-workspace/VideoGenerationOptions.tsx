@@ -4,6 +4,7 @@ import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { Tooltip } from "@heroui/tooltip";
 import { Divider } from "@heroui/divider";
+import { Input } from "@heroui/input";
 import { Info } from "lucide-react";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import {
@@ -92,6 +93,15 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                                 <SelectItem key={option.value}>{option.label}</SelectItem>
                             ))}
                         </Select>
+
+                        <Input
+                            label={<LabelWithTooltip label="Seed" tooltip="Set a specific seed for reproducible results. Leave empty for random results." />}
+                            placeholder="Random"
+                            variant="bordered"
+                            value={sceneVariation?.seed?.toString() || ""}
+                            onChange={(e) => handleValueChange("seed", e.target.value)}
+                            className="max-w-full w-full"
+                        />
                     </div>
                 </div>
 

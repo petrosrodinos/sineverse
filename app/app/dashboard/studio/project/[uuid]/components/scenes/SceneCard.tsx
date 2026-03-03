@@ -3,7 +3,7 @@ import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { Button } from "@heroui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, GripVertical } from "lucide-react";
 
 interface SceneCardProps {
   scene: Scene;
@@ -40,7 +40,10 @@ export function SceneCard({ scene, isEditMode, onEdit, onDelete }: SceneCardProp
     >
       <div className="p-3 space-y-2 text-left w-full flex flex-col items-start min-w-0">
         <div className="flex items-center justify-between gap-1 w-full">
-          <span className="text-xs font-semibold text-default-500">Scene {scene.order}</span>
+          <div className="flex items-center gap-2">
+            {isEditMode && <GripVertical className="size-4 text-default-400 cursor-grab active:cursor-grabbing" />}
+            <span className="text-xs font-semibold text-default-500">Scene {scene.order}</span>
+          </div>
           {!isEditMode ? (
             scene.scene_variations !== undefined && (
               <span className="text-[10px] font-medium text-default-500 border border-default-200 bg-default-50 px-2 py-0.5 rounded-full dark:border-default-100 dark:bg-default-200">

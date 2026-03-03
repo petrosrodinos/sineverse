@@ -41,3 +41,7 @@ export interface GenerateAiScenesDto {
     enrich_concept: boolean;
     directions?: string;
 }
+
+export interface ReorderScenesDto {
+    scenes: { uuid: string; order: number }[];
+}
