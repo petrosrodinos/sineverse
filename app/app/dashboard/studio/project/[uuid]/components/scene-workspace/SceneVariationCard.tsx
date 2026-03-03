@@ -10,6 +10,7 @@ import { Save, Info } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
+import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -93,11 +94,11 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             variant="bordered"
             classNames={{ inputWrapper: "rounded-xl" }}
         />
-        <Textarea 
+        <ExpandableTextarea 
             label="Prompt" 
             variant="bordered" 
             value={editedVariation.prompt_text || ""}
-            onValueChange={(val) => handleOptionChange("prompt_text", val)}
+            onValueChange={(val: string) => handleOptionChange("prompt_text", val)}
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />

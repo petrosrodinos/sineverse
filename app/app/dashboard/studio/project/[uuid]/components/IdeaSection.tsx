@@ -1,15 +1,13 @@
 "use client";
 import { Card } from "@heroui/card";
 import { Skeleton } from "@heroui/skeleton";
-import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
-import { Modal, ModalContent, ModalHeader, ModalBody, useDisclosure } from "@heroui/modal";
-import { Maximize2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useEnrichProject, useProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
 import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
 import { Chip } from "@heroui/chip";
+import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 
 interface IdeaSectionProps {
 }
@@ -20,7 +18,6 @@ export function IdeaSection({}: IdeaSectionProps) {
   const { data: project, isLoading } = useProject(uuid);
   const {mutate, isPending} = useEnrichProject(uuid);
   const {mutate: updateProject, isPending: isUpdating} = useUpdateProject();
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   const [localConcept, setLocalConcept] = useState("");
 
@@ -71,25 +68,14 @@ export function IdeaSection({}: IdeaSectionProps) {
             <Skeleton className="rounded-xl h-24 w-full" />
           ) : (
             <div className="flex flex-col gap-3">
-              <div className="relative">
-                <Textarea
+                <ExpandableTextarea
                   value={localConcept}
-                  onChange={(e) => setLocalConcept(e.target.value)}
+                  onChange={(e: any) => setLocalConcept(e.target.value)}
                   variant="bordered"
                   classNames={{ input: "min-h-[100px] text-foreground/90 pr-10", inputWrapper: "rounded-xl bg-transparent border-none" }}
                   minRows={7}
+                  label="Enriched Concept"
                 />
-                <Button 
-                  isIconOnly 
-                  variant="light" 
-                  size="sm" 
-                  className="absolute top-2 right-8 text-default-500 hover:text-foreground z-10" 
-                  onPress={onOpen} 
-                  aria-label="Expand concept"
-                >
-                  <Maximize2 className="h-4 w-4" />
-                </Button>
-              </div>
               <div className="flex justify-end">
                 <Button 
                   color="primary" 
@@ -106,20 +92,6 @@ export function IdeaSection({}: IdeaSectionProps) {
         </Card>
       )}
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="3xl" scrollBehavior="inside">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Enriched Concept</ModalHeader>
-              <ModalBody>
-                <div className="whitespace-pre-wrap text-foreground/90 pb-6 text-sm leading-relaxed">
-                  {localConcept}
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </div>
   );
 }
