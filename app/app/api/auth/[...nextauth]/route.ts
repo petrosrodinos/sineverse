@@ -96,6 +96,10 @@ const authOptions: NextAuthOptions = {
             return session;
         },
     },
+    pages: {
+        signIn: '/auth/sign-in',
+        error: '/auth/sign-in',
+    },
     secret: process.env.NEXTAUTH_SECRET,
 };
 

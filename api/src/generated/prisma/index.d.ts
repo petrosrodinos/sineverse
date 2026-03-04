@@ -85,16 +85,6 @@ export const VideoStatus: {
 export type VideoStatus = (typeof VideoStatus)[keyof typeof VideoStatus]
 
 
-export const VideoProvider: {
-  VEO3: 'VEO3',
-  RUNWAY: 'RUNWAY',
-  PIKA: 'PIKA',
-  STABILITY: 'STABILITY'
-};
-
-export type VideoProvider = (typeof VideoProvider)[keyof typeof VideoProvider]
-
-
 export const DocumentType: {
   VIDEO: 'VIDEO',
   IMAGE: 'IMAGE',
@@ -118,10 +108,6 @@ export const ProjectStatus: typeof $Enums.ProjectStatus
 export type VideoStatus = $Enums.VideoStatus
 
 export const VideoStatus: typeof $Enums.VideoStatus
-
-export type VideoProvider = $Enums.VideoProvider
-
-export const VideoProvider: typeof $Enums.VideoProvider
 
 export type DocumentType = $Enums.DocumentType
 
@@ -5448,7 +5434,7 @@ export namespace Prisma {
     resolution: string | null
     fps: number | null
     duration_sec: number | null
-    ai_model: $Enums.VideoProvider | null
+    ai_model: string | null
     seed: string | null
     creativity: number | null
     motion_strength: number | null
@@ -5485,7 +5471,7 @@ export namespace Prisma {
     resolution: string | null
     fps: number | null
     duration_sec: number | null
-    ai_model: $Enums.VideoProvider | null
+    ai_model: string | null
     seed: string | null
     creativity: number | null
     motion_strength: number | null
@@ -5777,7 +5763,7 @@ export namespace Prisma {
     resolution: string | null
     fps: number | null
     duration_sec: number | null
-    ai_model: $Enums.VideoProvider | null
+    ai_model: string | null
     seed: string | null
     creativity: number | null
     motion_strength: number | null
@@ -6017,7 +6003,7 @@ export namespace Prisma {
       resolution: string | null
       fps: number | null
       duration_sec: number | null
-      ai_model: $Enums.VideoProvider | null
+      ai_model: string | null
       seed: string | null
       creativity: number | null
       motion_strength: number | null
@@ -6478,7 +6464,7 @@ export namespace Prisma {
     readonly resolution: FieldRef<"SceneVariation", 'String'>
     readonly fps: FieldRef<"SceneVariation", 'Int'>
     readonly duration_sec: FieldRef<"SceneVariation", 'Int'>
-    readonly ai_model: FieldRef<"SceneVariation", 'VideoProvider'>
+    readonly ai_model: FieldRef<"SceneVariation", 'String'>
     readonly seed: FieldRef<"SceneVariation", 'String'>
     readonly creativity: FieldRef<"SceneVariation", 'Float'>
     readonly motion_strength: FieldRef<"SceneVariation", 'Float'>
@@ -10957,20 +10943,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'VideoProvider'
-   */
-  export type EnumVideoProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VideoProvider'>
-    
-
-
-  /**
-   * Reference to a field of type 'VideoProvider[]'
-   */
-  export type ListEnumVideoProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VideoProvider[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -11313,7 +11285,7 @@ export namespace Prisma {
     resolution?: StringNullableFilter<"SceneVariation"> | string | null
     fps?: IntNullableFilter<"SceneVariation"> | number | null
     duration_sec?: IntNullableFilter<"SceneVariation"> | number | null
-    ai_model?: EnumVideoProviderNullableFilter<"SceneVariation"> | $Enums.VideoProvider | null
+    ai_model?: StringNullableFilter<"SceneVariation"> | string | null
     seed?: StringNullableFilter<"SceneVariation"> | string | null
     creativity?: FloatNullableFilter<"SceneVariation"> | number | null
     motion_strength?: FloatNullableFilter<"SceneVariation"> | number | null
@@ -11398,7 +11370,7 @@ export namespace Prisma {
     resolution?: StringNullableFilter<"SceneVariation"> | string | null
     fps?: IntNullableFilter<"SceneVariation"> | number | null
     duration_sec?: IntNullableFilter<"SceneVariation"> | number | null
-    ai_model?: EnumVideoProviderNullableFilter<"SceneVariation"> | $Enums.VideoProvider | null
+    ai_model?: StringNullableFilter<"SceneVariation"> | string | null
     seed?: StringNullableFilter<"SceneVariation"> | string | null
     creativity?: FloatNullableFilter<"SceneVariation"> | number | null
     motion_strength?: FloatNullableFilter<"SceneVariation"> | number | null
@@ -11484,7 +11456,7 @@ export namespace Prisma {
     resolution?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     fps?: IntNullableWithAggregatesFilter<"SceneVariation"> | number | null
     duration_sec?: IntNullableWithAggregatesFilter<"SceneVariation"> | number | null
-    ai_model?: EnumVideoProviderNullableWithAggregatesFilter<"SceneVariation"> | $Enums.VideoProvider | null
+    ai_model?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     seed?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     creativity?: FloatNullableWithAggregatesFilter<"SceneVariation"> | number | null
     motion_strength?: FloatNullableWithAggregatesFilter<"SceneVariation"> | number | null
@@ -12090,7 +12062,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -12131,7 +12103,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -12165,7 +12137,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -12206,7 +12178,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -12244,7 +12216,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -12277,7 +12249,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -12314,7 +12286,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -13034,13 +13006,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type EnumVideoProviderNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumVideoProviderNullableFilter<$PrismaModel> | $Enums.VideoProvider | null
-  }
-
   export type FloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -13218,16 +13183,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type EnumVideoProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumVideoProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.VideoProvider | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumVideoProviderNullableFilter<$PrismaModel>
-    _max?: NestedEnumVideoProviderNullableFilter<$PrismaModel>
   }
 
   export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -13928,10 +13883,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type NullableEnumVideoProviderFieldUpdateOperationsInput = {
-    set?: $Enums.VideoProvider | null
-  }
-
   export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -14480,13 +14431,6 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedEnumVideoProviderNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumVideoProviderNullableFilter<$PrismaModel> | $Enums.VideoProvider | null
-  }
-
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -14520,16 +14464,6 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumVideoProviderNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.VideoProvider | EnumVideoProviderFieldRefInput<$PrismaModel> | null
-    in?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.VideoProvider[] | ListEnumVideoProviderFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumVideoProviderNullableWithAggregatesFilter<$PrismaModel> | $Enums.VideoProvider | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumVideoProviderNullableFilter<$PrismaModel>
-    _max?: NestedEnumVideoProviderNullableFilter<$PrismaModel>
   }
 
   export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14678,7 +14612,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -14717,7 +14651,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -14916,7 +14850,7 @@ export namespace Prisma {
     resolution?: StringNullableFilter<"SceneVariation"> | string | null
     fps?: IntNullableFilter<"SceneVariation"> | number | null
     duration_sec?: IntNullableFilter<"SceneVariation"> | number | null
-    ai_model?: EnumVideoProviderNullableFilter<"SceneVariation"> | $Enums.VideoProvider | null
+    ai_model?: StringNullableFilter<"SceneVariation"> | string | null
     seed?: StringNullableFilter<"SceneVariation"> | string | null
     creativity?: FloatNullableFilter<"SceneVariation"> | number | null
     motion_strength?: FloatNullableFilter<"SceneVariation"> | number | null
@@ -15262,7 +15196,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -15301,7 +15235,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -15852,7 +15786,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -15892,7 +15826,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -16057,7 +15991,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -16097,7 +16031,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -16525,7 +16459,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -16564,7 +16498,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -16765,7 +16699,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -16901,7 +16835,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -16940,7 +16874,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -16977,7 +16911,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17180,7 +17114,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -17226,7 +17160,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17265,7 +17199,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17302,7 +17236,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17389,7 +17323,7 @@ export namespace Prisma {
     resolution?: string | null
     fps?: number | null
     duration_sec?: number | null
-    ai_model?: $Enums.VideoProvider | null
+    ai_model?: string | null
     seed?: string | null
     creativity?: number | null
     motion_strength?: number | null
@@ -17484,7 +17418,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17523,7 +17457,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -17560,7 +17494,7 @@ export namespace Prisma {
     resolution?: NullableStringFieldUpdateOperationsInput | string | null
     fps?: NullableIntFieldUpdateOperationsInput | number | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    ai_model?: NullableEnumVideoProviderFieldUpdateOperationsInput | $Enums.VideoProvider | null
+    ai_model?: NullableStringFieldUpdateOperationsInput | string | null
     seed?: NullableStringFieldUpdateOperationsInput | string | null
     creativity?: NullableFloatFieldUpdateOperationsInput | number | null
     motion_strength?: NullableFloatFieldUpdateOperationsInput | number | null

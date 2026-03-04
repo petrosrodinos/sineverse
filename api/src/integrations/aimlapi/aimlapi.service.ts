@@ -6,10 +6,6 @@ import { CreateVideoResponse, VideoStatusResponse } from './core/schemas/video.s
 export class AimlApiService {
     constructor(private readonly videoService: CreateVideoService) { }
 
-    /**
-     * Video capability namespace.
-     * Usage: aimlApiService.video.create(...)
-     */
     get video() {
         return {
             create: (request: unknown): Promise<CreateVideoResponse> => {
@@ -21,10 +17,6 @@ export class AimlApiService {
         };
     }
 
-    /**
-     * Image capability namespace (Placeholder for future expansion).
-     * Usage: aimlApiService.image.create(...)
-     */
     get image() {
         return {
             create: async (request: unknown) => {

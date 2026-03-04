@@ -30,12 +30,6 @@ enum VideoStatus {
   FAILED
 }
 
-enum VideoProvider {
-  VEO3
-  RUNWAY
-  PIKA
-  STABILITY
-}
 
 enum DocumentType {
   VIDEO
@@ -148,7 +142,7 @@ model SceneVariation {
   duration_sec Int?
 
   // AI generation control
-  ai_model        VideoProvider?
+  ai_model        String?
   seed            String?
   creativity      Float? // temperature-like control
   motion_strength Float? // how dynamic the scene is
@@ -168,7 +162,6 @@ model SceneVariation {
 
   @@index([uuid])
   @@index([scene_uuid])
-  @@unique([scene_uuid, selected])
   @@map("scene_variations")
 }
 

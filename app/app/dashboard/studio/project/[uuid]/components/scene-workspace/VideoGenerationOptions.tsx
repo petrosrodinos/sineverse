@@ -1,11 +1,13 @@
 "use client";
 
-import { Select, SelectItem } from "@heroui/select";
+import { Select, SelectItem, SelectSection } from "@heroui/select";
+import { Autocomplete, AutocompleteItem, AutocompleteSection } from "@heroui/autocomplete";
 import { Slider } from "@heroui/slider";
 import { Tooltip } from "@heroui/tooltip";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Info } from "lucide-react";
+import { useMemo } from "react";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import {
     StylesOptions,
@@ -19,13 +21,13 @@ import {
     ResolutionOptions,
     LightingOptions,
     ColorGradeOptions,
-    AiModelOptions,
     MotionStrengthSliderOptions,
     GuidanceScaleSliderOptions,
     CreativitySliderOptions,
     DurationSliderOptions,
     FpsSliderOptions
 } from "@/config/dropdowns/project/scene-variations.options";
+import { VideoModels } from "@/config/dropdowns/project/video.options";
 
 interface VideoGenerationOptionsProps {
     sceneVariation?: Partial<SceneVariation>;
@@ -43,7 +45,24 @@ const LabelWithTooltip = ({ label, tooltip }: { label: string; tooltip: string }
     </div>
 );
 
+const formatPrice = (price: { perSecond?: number; perGeneration?: number; perMillionTokens?: number }) => {
+    if (price.perSecond !== undefined) return `$${price.perSecond}/s`;
+    if (price.perGeneration !== undefined) return `$${price.perGeneration}/gen`;
+    if (price.perMillionTokens !== undefined) return `$${price.perMillionTokens}/1M tokens`;
+    return "";
+};
+
 export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenerationOptionsProps) {
+    const groupedModels = useMemo(() => {
+        const groups: Record<string, typeof VideoModels> = {};
+        VideoModels.forEach(model => {
+            const provider = model.provider || "Other";
+            if (!groups[provider]) groups[provider] = [];
+            groups[provider].push(model);
+        });
+        return groups;
+    }, []);
+
     const handleValueChange = (field: string, value: any) => {
         if (onChange) {
             onChange(field, value);
@@ -55,26 +74,47 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
             <div className="flex flex-col gap-6">
                 
                 {/* Format & Model */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     <h4 className="text-medium font-semibold text-foreground">Model & Format</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <Select
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
+                        <Autocomplete
                             label={<LabelWithTooltip label="AI Model" tooltip="Select the underlying AI model used for video generation." />}
-                            defaultSelectedKeys={sceneVariation?.ai_model ? [sceneVariation.ai_model] : undefined}
-                            onChange={(e) => handleValueChange("ai_model", e.target.value)}
+                            defaultSelectedKey={sceneVariation?.ai_model}
+                            onSelectionChange={(key) => handleValueChange("ai_model", key)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
+                            placeholder="Select a model"
+                            scrollShadowProps={{
+                                isEnabled: false
+                            }}
                         >
-                            {AiModelOptions.map((option) => (
-                                <SelectItem key={option.value}>{option.label}</SelectItem>
+                            {Object.entries(groupedModels).map(([provider, models]) => (
+                                <AutocompleteSection key={provider} title={provider} showDivider>
+                                    {models.map((model) => (
+                                        <AutocompleteItem 
+                                            key={model.name} 
+                                            textValue={model.label}
+                                            description={formatPrice(model.price)}
+                                            classNames={{
+                                                base: "py-2",
+                                                title: "text-small font-medium",
+                                                description: "text-tiny text-default-400"
+                                            }}
+                                        >
+                                            {model.label}
+                                        </AutocompleteItem>
+                                    ))}
+                                </AutocompleteSection>
                             ))}
-                        </Select>
+                        </Autocomplete>
 
                         <Select
                             label={<LabelWithTooltip label="Aspect Ratio" tooltip="The framing format for the final video." />}
                             defaultSelectedKeys={sceneVariation?.aspect_ratio ? [sceneVariation.aspect_ratio] : undefined}
                             onChange={(e) => handleValueChange("aspect_ratio", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {AspectRatioOptions.map((option) => (
@@ -87,6 +127,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.resolution ? [sceneVariation.resolution] : undefined}
                             onChange={(e) => handleValueChange("resolution", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {ResolutionOptions.map((option) => (
@@ -98,6 +139,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             label={<LabelWithTooltip label="Seed" tooltip="Set a specific seed for reproducible results. Leave empty for random results." />}
                             placeholder="Random"
                             variant="bordered"
+                            labelPlacement="outside"
                             value={sceneVariation?.seed?.toString() || ""}
                             onChange={(e) => handleValueChange("seed", e.target.value)}
                             className="max-w-full w-full"
@@ -108,14 +150,15 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                 <Divider />
 
                 {/* Cinematography */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     <h4 className="text-medium font-semibold text-foreground">Cinematography</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
                         <Select
                             label={<LabelWithTooltip label="Camera Movement" tooltip="How the camera_style physically moves through the scene." />}
                             defaultSelectedKeys={sceneVariation?.camera_movement ? [sceneVariation.camera_movement] : undefined}
                             onChange={(e) => handleValueChange("camera_movement", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {CameraMovementOptions.map((option) => (
@@ -128,6 +171,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.lens_type ? [sceneVariation.lens_type] : undefined}
                             onChange={(e) => handleValueChange("lens_type", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {LensTypeOptions.map((option) => (
@@ -140,6 +184,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.camera_style ? [sceneVariation.camera_style] : undefined}
                             onChange={(e) => handleValueChange("camera_style", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {CameraStyleOptions.map((option) => (
@@ -152,6 +197,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.shot_type ? [sceneVariation.shot_type] : undefined}
                             onChange={(e) => handleValueChange("shot_type", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {ShotTypeOptions.map((option) => (
@@ -164,6 +210,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.depth_of_field ? [sceneVariation.depth_of_field] : undefined}
                             onChange={(e) => handleValueChange("depth_of_field", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {DepthOfFieldOptions.map((option) => (
@@ -176,14 +223,15 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                 <Divider />
 
                 {/* Lighting & Style */}
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-6">
                     <h4 className="text-medium font-semibold text-foreground">Lighting & Style</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
                         <Select
                             label={<LabelWithTooltip label="Style" tooltip="The core artistic or visual style of the generation." />}
                             defaultSelectedKeys={sceneVariation?.style ? [sceneVariation.style] : undefined}
                             onChange={(e) => handleValueChange("style", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {StylesOptions.map((option) => (
@@ -196,6 +244,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.lighting ? [sceneVariation.lighting] : undefined}
                             onChange={(e) => handleValueChange("lighting", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {LightingOptions.map((option) => (
@@ -208,6 +257,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.color_grade ? [sceneVariation.color_grade] : undefined}
                             onChange={(e) => handleValueChange("color_grade", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {ColorGradeOptions.map((option) => (
@@ -220,6 +270,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             defaultSelectedKeys={sceneVariation?.time_of_day ? [sceneVariation.time_of_day] : undefined}
                             onChange={(e) => handleValueChange("time_of_day", e.target.value)}
                             variant="bordered"
+                            labelPlacement="outside"
                             className="max-w-full w-full"
                         >
                             {TimeOfDayOptions.map((option) => (

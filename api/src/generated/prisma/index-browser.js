@@ -277,13 +277,6 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   COMPLETED: 'COMPLETED'
 };
 
-exports.VideoProvider = exports.$Enums.VideoProvider = {
-  VEO3: 'VEO3',
-  RUNWAY: 'RUNWAY',
-  PIKA: 'PIKA',
-  STABILITY: 'STABILITY'
-};
-
 exports.VideoStatus = exports.$Enums.VideoStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',

@@ -5,22 +5,23 @@ import { addToast } from "@heroui/toast";
 import { Routes } from "@/config/routes";
 import { signIn, getSession } from "next-auth/react"
 import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "next/navigation";
 
 
 export function useSignin() {
     const { login } = useAuthStore((state) => state);
+    const router = useRouter();
 
     return useMutation({
         mutationFn: async (data: SignInUser): Promise<LoggedInUser> => {
             const result = await signIn("credentials", {
                 email: data.email,
                 password: data.password,
-                redirect: true,
-                callbackUrl: Routes.dashboard,
+                redirect: false,
             })
 
-            if (!result?.ok) {
-                throw new Error("Could not sign in: Invalid credentials");
+            if (result?.error) {
+                throw new Error(result.error || "Could not sign in: Invalid credentials");
             }
 
             const session = await getSession();
@@ -50,6 +51,7 @@ export function useSignin() {
                 description: "You have successfully logged in",
                 color: "success",
             });
+            router.push(Routes.dashboard);
         },
         onError: (error: any) => {
             addToast({
@@ -64,6 +66,7 @@ export function useSignin() {
 
 export function useSignup() {
     const { login } = useAuthStore((state) => state);
+    const router = useRouter();
 
     return useMutation({
         mutationFn: async (data: SignUpUser): Promise<LoggedInUser> => {
@@ -72,12 +75,11 @@ export function useSignup() {
                 password: data.password,
                 full_name: data.full_name,
                 action: "register",
-                redirect: true,
-                callbackUrl: Routes.dashboard,
+                redirect: false,
             })
 
-            if (!result?.ok) {
-                throw new Error("Could not sign up: Invalid credentials or user exists");
+            if (result?.error) {
+                throw new Error(result.error || "Could not sign up: Invalid credentials or user exists");
             }
 
             const session = await getSession();
@@ -107,6 +109,7 @@ export function useSignup() {
                 description: "You have successfully registered in",
                 color: "success",
             });
+            router.push(Routes.dashboard);
         },
         onError: (error: any) => {
             addToast({

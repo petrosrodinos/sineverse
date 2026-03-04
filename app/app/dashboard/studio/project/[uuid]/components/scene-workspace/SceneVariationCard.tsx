@@ -6,11 +6,14 @@ import { Button } from "@heroui/button";
 import { Input, Textarea } from "@heroui/input";
 import { Checkbox } from "@heroui/checkbox";
 import { Tooltip } from "@heroui/tooltip";
-import { Save, Info } from "lucide-react";
+import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useCreateSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
+import { VideoStatuses } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
+import { Spinner } from "@heroui/spinner";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -22,6 +25,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
+  const createVideoMutation = useCreateSceneVideo();
 
   useEffect(() => {
     if (variation) {
@@ -74,6 +78,15 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     }
   };
 
+  const handleGenerateVideo = async () => {
+    if (!variation?.uuid || !variation?.scene_uuid) return;
+    
+    await createVideoMutation.mutateAsync({
+      scene_uuid: variation.scene_uuid,
+      scene_variation_uuid: variation.uuid,
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6 w-full pb-4">
       <div className="flex items-center justify-between w-full">
@@ -85,6 +98,38 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           {variation?.uuid && <EnrichVariationPopover sceneVariationUuid={variation.uuid} />}
         </div>}
       </div>
+
+      {/* Video Display */}
+      {variation?.scene_video?.status === VideoStatuses.PROCESSING && (
+        <div className="w-full aspect-video rounded-xl bg-default-100 dark:bg-default-50 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-default-200">
+          <Spinner size="lg" color="primary" />
+          <div className="text-center">
+            <p className="text-sm font-medium">Generating Video...</p>
+            <p className="text-xs text-default-500">This may take a few minutes</p>
+          </div>
+        </div>
+      )}
+
+      {variation?.scene_video?.status === VideoStatuses.COMPLETED && variation.scene_video.video?.url && (
+        <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 ring-default-200">
+          <video 
+            src={variation.scene_video.video.url} 
+            controls 
+            className="w-full h-full object-contain"
+            poster={variation.prompt_image?.url}
+          />
+        </div>
+      )}
+
+      {variation?.scene_video?.status === VideoStatuses.FAILED && (
+        <div className="w-full p-4 rounded-xl bg-danger-50 dark:bg-danger-900/10 border border-danger-200 flex items-start gap-3">
+          <AlertCircle className="size-5 text-danger" />
+          <div>
+            <p className="text-sm font-semibold text-danger">Generation Failed</p>
+            <p className="text-xs text-danger-500">{variation.scene_video.error_message || "An unexpected error occurred during generation."}</p>
+          </div>
+        </div>
+      )}
       
       <div className="flex flex-col gap-4">
         <Input
@@ -152,6 +197,17 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           onPress={handleClose}
           >Cancel</Button>
         )}
+        <Button 
+            variant="flat"
+            color="primary"
+            startContent={<Video className="size-4" />}
+            onPress={handleGenerateVideo}
+            isLoading={createVideoMutation.isPending}
+            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || variation?.scene_video?.status === VideoStatuses.PROCESSING}
+            className="mr-2"
+        >
+            Generate Video
+        </Button>
         <Button 
             color="primary" 
             startContent={<Save className="size-4" />} 

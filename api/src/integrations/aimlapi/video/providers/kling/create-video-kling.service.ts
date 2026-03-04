@@ -2,7 +2,8 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { AiProvider, KlingModel } from '../../../core/constants';
+import { AiProvider, VideoModel, GenerationType } from '../../../core/constants';
+import { MODELS_CONFIG } from '../../../core/config/models.config';
 import { VideoGenerationProvider } from '../../../core/interfaces/video-provider.interface';
 import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../../../core/schemas/video.schema';
 
@@ -57,38 +58,55 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
     }
 
     /**
-     * Type-safe request mapping using discriminated union logic.
+     * Categorical request mapping.
+     * Kling API usually expects similar payloads for models with the same generation type.
      */
     private mapRequestToPayload(request: CreateVideoRequest): any {
-        // Direct access within switch for perfect TypeScript narrowing
-        switch (request.model) {
-            case KlingModel.V3_PRO_TEXT_TO_VIDEO:
+        const modelConfig = MODELS_CONFIG[request.model];
+
+        if (!modelConfig) {
+            throw new Error(`Model configuration missing for: ${request.model}`);
+        }
+
+        const commonPayload = {
+            model: request.model,
+            duration: request.duration,
+            aspect_ratio: request.aspect_ratio,
+            negative_prompt: request.negative_prompt,
+            cfg_scale: request.cfg_scale,
+            seed: request.seed,
+        };
+
+        // Categorical mapping based on GenerationType
+        switch (modelConfig.type) {
+            case GenerationType.TEXT_TO_VIDEO:
+                const textReq = request as any;
                 return {
-                    model: request.model,
-                    prompt: request.prompt,
-                    multi_prompt: request.multi_prompt,
-                    duration: request.duration,
-                    aspect_ratio: request.aspect_ratio,
-                    negative_prompt: request.negative_prompt,
-                    cfg_scale: request.cfg_scale,
+                    ...commonPayload,
+                    prompt: textReq.prompt,
+                    multi_prompt: textReq.multi_prompt,
                 };
 
-            case KlingModel.V1_STANDARD_IMAGE_TO_VIDEO:
+            case GenerationType.IMAGE_TO_VIDEO:
+                const imageReq = request as any;
                 return {
-                    model: request.model,
-                    image_url: request.image_url,
-                    prompt: request.prompt,
-                    tail_image_url: request.tail_image_url,
-                    duration: request.duration,
-                    negative_prompt: request.negative_prompt,
-                    cfg_scale: request.cfg_scale,
-                    camera_control: request.camera_control,
+                    ...commonPayload,
+                    image_url: imageReq.image_url,
+                    prompt: imageReq.prompt,
+                    tail_image_url: imageReq.tail_image_url,
+                    camera_control: imageReq.camera_control,
+                };
+
+            case GenerationType.VIDEO_TO_VIDEO:
+                const videoReq = request as any;
+                return {
+                    ...commonPayload,
+                    video_url: videoReq.video_url,
+                    prompt: videoReq.prompt,
                 };
 
             default:
-                // This ensures all cases in the union are handled
-                const _exhaustiveCheck: never = request;
-                throw new Error(`Model mapping not implemented for: ${(request as any).model}`);
+                throw new Error(`Unsupported generation type ${modelConfig.type} for provider Kling`);
         }
     }
 

@@ -7,6 +7,8 @@ import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { GCPDocumentsService } from '../services/gcp-documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
+import { MODELS_CONFIG } from '@/integrations/aimlapi/core/config/models.config';
+import { GenerationType, VideoModel } from '@/integrations/aimlapi/core/constants';
 
 export interface VideoGenerationJobData {
     sceneVideoUuid: string;
@@ -47,18 +49,46 @@ export class VideoGenerationProcessor extends WorkerHost {
             });
 
             const variation = sceneVideo.scene_variation;
-            const model = variation.ai_model || 'klingai/video-v3-pro-text-to-video';
+            const model = variation.ai_model || VideoModel.KLING_VIDEO_V3_STANDARD;
+            const modelConfig = MODELS_CONFIG[model];
 
-            // 1. Trigger AI generation
+            // 1. Prepare payload based on generation type
             this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);
 
-            const genResponse = await this.aimlApiService.video.create({
+            const commonParams = {
                 model,
-                prompt: variation.prompt_text,
-                negative_prompt: variation.negative_prompt,
-                aspect_ratio: variation.aspect_ratio || '16:9',
                 duration: variation.duration_sec || 5,
-            });
+                aspect_ratio: variation.aspect_ratio || '16:9',
+                negative_prompt: variation.negative_prompt,
+                seed: variation.seed ? parseInt(variation.seed) : undefined,
+                cfg_scale: variation.guidance_scale,
+            };
+
+            let aiPayload: any = { ...commonParams };
+
+            if (modelConfig?.type === GenerationType.IMAGE_TO_VIDEO) {
+                // Fetch image url if it's an image-to-video model
+                const variationWithImage = await this.prisma.sceneVariation.findUnique({
+                    where: { uuid: variation.uuid },
+                    include: { prompt_image: true }
+                });
+
+                aiPayload.image_url = variationWithImage?.prompt_image?.url;
+                aiPayload.prompt = variation.prompt_text;
+
+                if (!aiPayload.image_url) {
+                    throw new Error(`Model ${model} requires an image, but no prompt image found for variation ${variation.uuid}`);
+                }
+            } else if (modelConfig?.type === GenerationType.VIDEO_TO_VIDEO) {
+                // For video-to-video, we might need a source video (currently not fully supported in variation schema, but placeholder here)
+                aiPayload.prompt = variation.prompt_text;
+                // aiPayload.video_url = ... 
+            } else {
+                // Default to Text-to-Video
+                aiPayload.prompt = variation.prompt_text;
+            }
+
+            const genResponse = await this.aimlApiService.video.create(aiPayload);
 
             if (!genResponse.id) {
                 throw new Error('Failed to get a generation ID from AIML API');
