@@ -1,8 +1,9 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Logger } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { VIDEO_GENERATION_QUEUE } from '../queues/video.constants';
-import { AiService } from '@/integrations/ai/services/ai.service';
+import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { GCPDocumentsService } from '../services/gcp-documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
@@ -14,11 +15,13 @@ export interface VideoGenerationJobData {
 @Processor(VIDEO_GENERATION_QUEUE)
 export class VideoGenerationProcessor extends WorkerHost {
     private readonly logger = new Logger(VideoGenerationProcessor.name);
+    private readonly POLL_INTERVAL_MS = 15000; // 15 seconds
 
     constructor(
         private readonly prisma: PrismaService,
-        private readonly aiService: AiService,
+        private readonly aimlApiService: AimlApiService,
         private readonly gcpService: GCPDocumentsService,
+        private readonly schedulerRegistry: SchedulerRegistry,
     ) {
         super();
     }
@@ -44,45 +47,46 @@ export class VideoGenerationProcessor extends WorkerHost {
             });
 
             const variation = sceneVideo.scene_variation;
+            const model = variation.ai_model || 'klingai/video-v3-pro-text-to-video';
 
-            // 1. Trigger AI generation (Blocking call with internal SDK polling)
-            this.logger.log(`Starting video generation for ${sceneVideoUuid} using ${variation.ai_model}`);
+            // 1. Trigger AI generation
+            this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);
 
-            const genResponse = await this.aiService.generateVideo({
-                provider: variation.ai_model || 'veo',
-                model: variation.ai_model || 'veo-3',
+            const genResponse = await this.aimlApiService.video.create({
+                model,
                 prompt: variation.prompt_text,
                 negative_prompt: variation.negative_prompt,
-                aspect_ratio: variation.aspect_ratio,
-                resolution: variation.resolution,
-                duration_sec: variation.duration_sec,
-                seed: variation.seed,
+                aspect_ratio: variation.aspect_ratio || '16:9',
+                duration: variation.duration_sec || 5,
             });
 
-            if (genResponse.status === 'completed' && genResponse.videoBuffer) {
-                // 2. Save the generated video buffer to GCP
-                const buffer = Buffer.from(genResponse.videoBuffer);
-                const videoUuid = await this.gcpService.saveVideoFromBuffer(
-                    buffer,
-                    `video_${sceneVideoUuid}.mp4`
-                );
-
-                await this.prisma.sceneVideo.update({
-                    where: { uuid: sceneVideoUuid },
-                    data: {
-                        status: VideoStatus.COMPLETED,
-                        video_uuid: videoUuid,
-                        provider_job_id: genResponse.provider_job_id,
-                    },
-                });
-
-                this.logger.log(`Successfully completed video generation for ${sceneVideoUuid}`);
-            } else {
-                throw new Error('Video generation failed to return a valid result');
+            if (!genResponse.id) {
+                throw new Error('Failed to get a generation ID from AIML API');
             }
 
+            // 2. Clear existing polling if any (defensive)
+            const intervalName = `poll_video_${sceneVideoUuid}`;
+            this.stopPolling(intervalName);
+
+            // 3. Update job ID in DB
+            await this.prisma.sceneVideo.update({
+                where: { uuid: sceneVideoUuid },
+                data: { provider_job_id: genResponse.id },
+            });
+
+            // 4. Start polling cron job (Interval)
+            this.logger.log(`Starting polling interval for task ${genResponse.id}`);
+
+            const interval = setInterval(async () => {
+                await this.pollStatus(genResponse.id, model, sceneVideoUuid, intervalName);
+            }, this.POLL_INTERVAL_MS);
+
+            this.schedulerRegistry.addInterval(intervalName, interval);
+
+            return { status: 'polling_initiated', taskId: genResponse.id };
+
         } catch (error) {
-            this.logger.error(`Failed to generate video: ${error.message}`, error.stack);
+            this.logger.error(`Failed to initiate video generation: ${error.message}`, error.stack);
 
             await this.prisma.sceneVideo.update({
                 where: { uuid: sceneVideoUuid },
@@ -93,6 +97,62 @@ export class VideoGenerationProcessor extends WorkerHost {
             });
 
             throw error;
+        }
+    }
+
+    private async pollStatus(taskId: string, model: string, sceneVideoUuid: string, intervalName: string) {
+        try {
+            const statusResponse = await this.aimlApiService.video.getStatus(taskId, model);
+            this.logger.debug(`Polling status for ${sceneVideoUuid}: ${statusResponse.status}`);
+
+            if (statusResponse.status === 'completed' && statusResponse.video?.url) {
+                this.logger.log(`Video generation COMPLETED for ${sceneVideoUuid}. Saving...`);
+
+                // Stop polling
+                this.stopPolling(intervalName);
+
+                // Save to GCP
+                const videoUuid = await this.gcpService.saveVideoFromUrl(
+                    statusResponse.video.url,
+                    `video_${sceneVideoUuid}.mp4`
+                );
+
+                // Update final status
+                await this.prisma.sceneVideo.update({
+                    where: { uuid: sceneVideoUuid },
+                    data: {
+                        status: VideoStatus.COMPLETED,
+                        video_uuid: videoUuid,
+                    },
+                });
+
+            } else if (statusResponse.status === 'error') {
+                const errorMsg = statusResponse.error?.message || 'Unknown provider error';
+                this.logger.error(`Video generation FAILED for ${sceneVideoUuid}: ${errorMsg}`);
+
+                this.stopPolling(intervalName);
+
+                await this.prisma.sceneVideo.update({
+                    where: { uuid: sceneVideoUuid },
+                    data: {
+                        status: VideoStatus.FAILED,
+                        error_message: errorMsg,
+                    },
+                });
+            }
+        } catch (error) {
+            this.logger.error(`Error during status polling for ${sceneVideoUuid}: ${error.message}`);
+            // We keep polling unless it's a critical fatal error or multiple failures
+        }
+    }
+
+    private stopPolling(name: string) {
+        try {
+            this.schedulerRegistry.getInterval(name);
+            this.schedulerRegistry.deleteInterval(name);
+            this.logger.log(`Stopped polling interval: ${name}`);
+        } catch (e) {
+            // Interval not found, ignore
         }
     }
 }

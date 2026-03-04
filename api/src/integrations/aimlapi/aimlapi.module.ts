@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { CreateVideoService } from './video/create-video.service';
 import { CreateVideoKlingService } from './video/providers/kling/create-video-kling.service';
+import { AimlApiService } from './aimlapi.service';
 import { VIDEO_PROVIDER_TOKEN } from './core/constants';
 
 @Module({
@@ -9,6 +10,7 @@ import { VIDEO_PROVIDER_TOKEN } from './core/constants';
     providers: [
         CreateVideoKlingService,
         CreateVideoService,
+        AimlApiService,
         {
             provide: VIDEO_PROVIDER_TOKEN,
             useFactory: (klingProvider: CreateVideoKlingService) => {
@@ -17,6 +19,6 @@ import { VIDEO_PROVIDER_TOKEN } from './core/constants';
             inject: [CreateVideoKlingService],
         },
     ],
-    exports: [CreateVideoService],
+    exports: [AimlApiService, CreateVideoService],
 })
 export class AimlApiModule { }
