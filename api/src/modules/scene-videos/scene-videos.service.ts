@@ -21,8 +21,15 @@ export class SceneVideosService {
       });
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      const sceneVideo = await this.prisma.sceneVideo.create({
-        data: {
+      const sceneVideo = await this.prisma.sceneVideo.upsert({
+        where: { scene_variation_uuid: variation.uuid },
+        update: {
+          status: VideoStatus.PENDING,
+          error_message: null,
+          provider_job_id: null,
+          video_uuid: null,
+        },
+        create: {
           user_uuid,
           scene_uuid: variation.scene_uuid,
           scene_variation_uuid: variation.uuid,
@@ -47,6 +54,7 @@ export class SceneVideosService {
         data: sceneVideo,
       };
     } catch (error) {
+      console.error('CRITICAL ERROR in SceneVideosService.create:', error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to trigger video generation', { cause: error });
     }

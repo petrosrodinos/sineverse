@@ -115,14 +115,20 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             return { status: 'polling_initiated', taskId: genResponse.id };
 
-        } catch (error) {
-            this.logger.error(`Failed to initiate video generation: ${error.message}`, error.stack);
+        } catch (error: any) {
+            let details = error.message;
+            if (error.getResponse && typeof error.getResponse === 'function') {
+                const response = error.getResponse();
+                details = response?.details || response?.message || JSON.stringify(response);
+            }
+
+            this.logger.error(`Failed to initiate video generation: ${details}`, error.stack);
 
             await this.prisma.sceneVideo.update({
                 where: { uuid: sceneVideoUuid },
                 data: {
                     status: VideoStatus.FAILED,
-                    error_message: error.message,
+                    error_message: details,
                 },
             });
 

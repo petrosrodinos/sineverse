@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { AiProvider, VideoModel, GenerationType } from '../../../core/constants';
-import { MODELS_CONFIG } from '../../../core/config/models.config';
+import { MODELS_CONFIG, getProviderModelId } from '../../../core/config/models.config';
 import { VideoGenerationProvider } from '../../../core/interfaces/video-provider.interface';
 import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../../../core/schemas/video.schema';
 
@@ -20,6 +20,7 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
 
     async createVideo(request: CreateVideoRequest): Promise<CreateVideoResponse> {
         const payload = this.mapRequestToPayload(request);
+        this.logger.debug(`[KlingProvider] Sending generation payload: ${JSON.stringify(payload, null, 2)}`);
 
         try {
             const response = await this.performApiCall<any>('POST', '/video/generations', payload);
@@ -68,46 +69,75 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
             throw new Error(`Model configuration missing for: ${request.model}`);
         }
 
-        const commonPayload = {
-            model: request.model,
+        const commonPayload: any = {
+            model: getProviderModelId(request.model),
             duration: request.duration,
             aspect_ratio: request.aspect_ratio,
             negative_prompt: request.negative_prompt,
-            cfg_scale: request.cfg_scale,
+            cfg_scale: request.cfg_scale !== undefined
+                ? (request.cfg_scale > 1 ? Math.min(request.cfg_scale / 10, 1.0) : request.cfg_scale)
+                : undefined,
             seed: request.seed,
         };
+
+        let specificPayload: any = {};
 
         // Categorical mapping based on GenerationType
         switch (modelConfig.type) {
             case GenerationType.TEXT_TO_VIDEO:
                 const textReq = request as any;
-                return {
-                    ...commonPayload,
+                specificPayload = {
                     prompt: textReq.prompt,
                     multi_prompt: textReq.multi_prompt,
                 };
+                break;
 
             case GenerationType.IMAGE_TO_VIDEO:
                 const imageReq = request as any;
-                return {
-                    ...commonPayload,
+                specificPayload = {
                     image_url: imageReq.image_url,
                     prompt: imageReq.prompt,
                     tail_image_url: imageReq.tail_image_url,
                     camera_control: imageReq.camera_control,
                 };
+                break;
 
             case GenerationType.VIDEO_TO_VIDEO:
                 const videoReq = request as any;
-                return {
-                    ...commonPayload,
+                specificPayload = {
                     video_url: videoReq.video_url,
                     prompt: videoReq.prompt,
                 };
+                break;
 
             default:
                 throw new Error(`Unsupported generation type ${modelConfig.type} for provider Kling`);
         }
+
+        // Merge and deep clean undefined/null values
+        return this.cleanPayload({ ...commonPayload, ...specificPayload });
+    }
+
+    private cleanPayload(obj: any): any {
+        const clean: any = {};
+        Object.keys(obj).forEach(key => {
+            const value = obj[key];
+            if (value !== undefined && value !== null) {
+                if (typeof value === 'object' && !Array.isArray(value)) {
+                    const nested = this.cleanPayload(value);
+                    if (Object.keys(nested).length > 0) {
+                        clean[key] = nested;
+                    }
+                } else if (Array.isArray(value)) {
+                    if (value.length > 0) {
+                        clean[key] = value;
+                    }
+                } else {
+                    clean[key] = value;
+                }
+            }
+        });
+        return clean;
     }
 
     private async performApiCall<T>(method: 'GET' | 'POST', path: string, data?: any): Promise<T> {

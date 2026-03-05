@@ -30,7 +30,11 @@ import type { RedisOptions } from 'ioredis';
                         password: url.password || undefined,
                         username: url.username || undefined,
                         maxRetriesPerRequest: null,
-                        reconnectOnError: () => false,
+                        enableReadyCheck: false,
+                        retryStrategy: (times) => {
+                            const delay = Math.min(times * 100, 3000);
+                            return delay;
+                        },
                     };
                 } catch (error) {
                     logger.error(`Invalid REDIS_URL: ${redisUrl}, falling back to localhost:6379`);
