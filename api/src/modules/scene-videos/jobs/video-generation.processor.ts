@@ -147,20 +147,31 @@ export class VideoGenerationProcessor extends WorkerHost {
                 // Stop polling
                 this.stopPolling(intervalName);
 
-                // Save to GCP
-                const videoUuid = await this.gcpService.saveVideoFromUrl(
-                    statusResponse.video.url,
-                    `video_${sceneVideoUuid}.mp4`
-                );
+                try {
+                    // Save to GCP
+                    const videoUuid = await this.gcpService.saveVideoFromUrl(
+                        statusResponse.video.url,
+                        `video_${sceneVideoUuid}.mp4`
+                    );
 
-                // Update final status
-                await this.prisma.sceneVideo.update({
-                    where: { uuid: sceneVideoUuid },
-                    data: {
-                        status: VideoStatus.COMPLETED,
-                        video_uuid: videoUuid,
-                    },
-                });
+                    // Update final status
+                    await this.prisma.sceneVideo.update({
+                        where: { uuid: sceneVideoUuid },
+                        data: {
+                            status: VideoStatus.COMPLETED,
+                            video_uuid: videoUuid,
+                        },
+                    });
+                } catch (saveError) {
+                    this.logger.error(`Failed to save video to storage: ${saveError.message}`);
+                    await this.prisma.sceneVideo.update({
+                        where: { uuid: sceneVideoUuid },
+                        data: {
+                            status: VideoStatus.FAILED,
+                            error_message: `Storage Error: ${saveError.message}`,
+                        },
+                    });
+                }
 
             } else if (statusResponse.status === 'error') {
                 const errorMsg = statusResponse.error?.message || 'Unknown provider error';

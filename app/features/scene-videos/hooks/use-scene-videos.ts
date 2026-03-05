@@ -12,8 +12,12 @@ export const useSceneVideos = () => {
     return useQuery<SceneVideo[]>({ queryKey: [QueryKeys.sceneVideos], queryFn: getSceneVideos });
 }
 
-export const useSceneVideo = (uuid: string) => {
-    return useQuery<SceneVideo>({ queryKey: [QueryKeys.sceneVideo(uuid)], queryFn: () => getSceneVideo(uuid) });
+export const useSceneVideo = (uuid: string, options?: any) => {
+    return useQuery<SceneVideo>({
+        queryKey: [QueryKeys.sceneVideo(uuid)],
+        queryFn: () => getSceneVideo(uuid),
+        ...options
+    });
 }
 
 export const useCreateSceneVideo = () => {

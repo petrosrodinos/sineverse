@@ -37,8 +37,6 @@ export class GCPDocumentsService {
                 buffer,
                 filename,
                 'video/mp4',
-                'scene-videos',
-                true
             );
 
             // 2. Create Document record

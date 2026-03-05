@@ -9,11 +9,13 @@ import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useCreateSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
-import { VideoStatuses } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { useCreateSceneVideo, useSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
+import { VideoStatuses, SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 import { Spinner } from "@heroui/spinner";
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -23,9 +25,33 @@ interface SceneVariationCardProps {
 
 export function SceneVariationCard({ variation, isEnriched, handleClose }: SceneVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
   const createVideoMutation = useCreateSceneVideo();
+  const queryClient = useQueryClient();
+
+  const videoUuid = variation?.scene_video?.uuid;
+  const isProcessing = variation?.scene_video?.status === VideoStatuses.PROCESSING;
+
+  const { data: polledVideo } = useSceneVideo(videoUuid || "", {
+    enabled: !!videoUuid && isProcessing,
+    refetchInterval: (data: SceneVideo | undefined) => {
+      if (data?.status === VideoStatuses.COMPLETED || data?.status === VideoStatuses.FAILED) {
+        return false;
+      }
+      return 3000;
+    },
+  });
+
+  useEffect(() => {
+    if (polledVideo?.status === VideoStatuses.COMPLETED || polledVideo?.status === VideoStatuses.FAILED) {
+      queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
+    }
+  }, [polledVideo?.status, queryClient]);
+
+  const displayVideoStatus = polledVideo?.status || variation?.scene_video?.status;
+  const displayVideo = polledVideo || variation?.scene_video;
 
   useEffect(() => {
     if (variation) {
@@ -81,10 +107,22 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const handleGenerateVideo = async () => {
     if (!variation?.uuid || !variation?.scene_uuid) return;
     
+    if (variation?.scene_video?.status === VideoStatuses.COMPLETED) {
+      setIsConfirmOpen(true);
+      return;
+    }
+
+    await executeGeneration();
+  };
+
+  const executeGeneration = async () => {
+    if (!variation?.uuid || !variation?.scene_uuid) return;
+    
     await createVideoMutation.mutateAsync({
       scene_uuid: variation.scene_uuid,
       scene_variation_uuid: variation.uuid,
     });
+    setIsConfirmOpen(false);
   };
 
   return (
@@ -100,7 +138,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       </div>
 
       {/* Video Display */}
-      {variation?.scene_video?.status === VideoStatuses.PROCESSING && (
+      {displayVideoStatus === VideoStatuses.PROCESSING && (
         <div className="w-full aspect-video rounded-xl bg-default-100 dark:bg-default-50 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-default-200">
           <Spinner size="lg" color="primary" />
           <div className="text-center">
@@ -110,23 +148,23 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
         </div>
       )}
 
-      {variation?.scene_video?.status === VideoStatuses.COMPLETED && variation.scene_video.video?.url && (
+      {displayVideoStatus === VideoStatuses.COMPLETED && displayVideo?.video?.url && (
         <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 ring-default-200">
           <video 
-            src={variation.scene_video.video.url} 
+            src={displayVideo.video.url} 
             controls 
             className="w-full h-full object-contain"
-            poster={variation.prompt_image?.url}
+            poster={displayVideo?.video?.url ? undefined : variation?.prompt_image?.url}
           />
         </div>
       )}
 
-      {variation?.scene_video?.status === VideoStatuses.FAILED && (
+      {displayVideoStatus === VideoStatuses.FAILED && (
         <div className="w-full p-4 rounded-xl bg-danger-50 dark:bg-danger-900/10 border border-danger-200 flex items-start gap-3">
           <AlertCircle className="size-5 text-danger" />
           <div>
             <p className="text-sm font-semibold text-danger">Generation Failed</p>
-            <p className="text-xs text-danger-500">{variation.scene_video.error_message || "An unexpected error occurred during generation."}</p>
+            <p className="text-xs text-danger-500">{displayVideo?.error_message || "An unexpected error occurred during generation."}</p>
           </div>
         </div>
       )}
@@ -203,10 +241,10 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             startContent={<Video className="size-4" />}
             onPress={handleGenerateVideo}
             isLoading={createVideoMutation.isPending}
-            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || variation?.scene_video?.status === VideoStatuses.PROCESSING}
+            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || displayVideoStatus === VideoStatuses.PROCESSING}
             className="mr-2"
         >
-            Generate Video
+            {displayVideoStatus === VideoStatuses.COMPLETED ? "Regenerate Video" : "Generate Video"}
         </Button>
         <Button 
             color="primary" 
@@ -217,6 +255,16 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             Save
         </Button>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={executeGeneration}
+        title="Regenerate Video"
+        description="Are you sure you want to regenerate this video? The previous video will be lost."
+        confirmText="Regenerate"
+        confirmColor="primary"
+        isLoading={createVideoMutation.isPending}
+      />
     </div>
   );
 }
