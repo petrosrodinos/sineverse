@@ -2,15 +2,12 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { AiProvider } from '../../../core/constants';
-import { VideoGenerationProvider } from '../../../core/interfaces/video-provider.interface';
 import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../../../core/schemas';
 
 @Injectable()
-export class CreateVideoKlingService implements VideoGenerationProvider {
-    private readonly logger = new Logger(CreateVideoKlingService.name);
+export class CreateVideoAdapter {
+    private readonly logger = new Logger(CreateVideoAdapter.name);
     private readonly baseUrl = 'https://api.aimlapi.com/v2';
-    readonly providerName = AiProvider.KLING;
 
     constructor(
         private readonly httpService: HttpService,
@@ -19,18 +16,18 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
 
     async createVideo(request: CreateVideoRequest): Promise<CreateVideoResponse> {
         const payload = this.cleanPayload(request);
-        this.logger.debug(`[KlingProvider] Sending generation payload: ${JSON.stringify(payload, null, 2)}`);
+        this.logger.debug(`Sending generation payload: ${JSON.stringify(payload, null, 2)}`);
 
         try {
             const response = await this.performApiCall<any>('POST', '/video/generations', payload);
 
             if (!response || !response.id) {
-                throw new Error('Invalid response from Kling API: Missing generation ID');
+                throw new Error('Invalid response: Missing generation ID');
             }
 
             return {
                 id: response.id,
-                status: this.normalizeStatus(response.status),
+                status: response.status,
             };
         } catch (error) {
             this.handleProviderError(error, `generation with model ${request.model}`);
@@ -43,7 +40,7 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
 
             return {
                 id: response.id,
-                status: this.normalizeStatus(response.status),
+                status: response.status,
                 video: response.video ? { url: response.video.url } : null,
                 error: response.error ? { name: response.error.name, message: response.error.message } : null,
             };
@@ -51,12 +48,6 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
             this.handleProviderError(error, 'status retrieval');
         }
     }
-
-    async cancelVideo(taskId: string): Promise<void> {
-        this.logger.warn(`Cancel requested for ${taskId} but not implemented by provider.`);
-        throw new HttpException('Cancel operation not supported by Kling provider.', HttpStatus.NOT_IMPLEMENTED);
-    }
-
 
 
     private cleanPayload(obj: any): any {
@@ -106,24 +97,13 @@ export class CreateVideoKlingService implements VideoGenerationProvider {
         }
     }
 
-    private normalizeStatus(status: string): 'queued' | 'generating' | 'completed' | 'error' {
-        const statusMap: Record<string, 'queued' | 'generating' | 'completed' | 'error'> = {
-            'queued': 'queued',
-            'generating': 'generating',
-            'completed': 'completed',
-            'error': 'error',
-        };
-        return statusMap[status] || 'error';
-    }
-
     private handleProviderError(error: any, context: string): never {
         const statusCode = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
-        const errorMessage = error.response?.data?.error?.message || error.message || 'Unknown provider error';
+        const errorMessage = error.response?.data?.error?.message || error.message || 'Unknown error';
 
-        this.logger.error(`[KlingProvider] Failure during ${context}: ${errorMessage}`);
+        this.logger.error(`Failure during ${context}: ${errorMessage}`);
 
         throw new HttpException({
-            provider: this.providerName,
             error: 'ProviderExecutionError',
             details: errorMessage,
         }, statusCode);

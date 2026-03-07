@@ -11,8 +11,8 @@ export class AimlApiService {
             create: (request: unknown): Promise<CreateVideoResponse> => {
                 return this.videoService.execute(request);
             },
-            getStatus: (taskId: string, model: string): Promise<VideoStatusResponse> => {
-                return this.videoService.getStatus(taskId, model);
+            getStatus: (taskId: string): Promise<VideoStatusResponse> => {
+                return this.videoService.getStatus(taskId);
             }
         };
     }
