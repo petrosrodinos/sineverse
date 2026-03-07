@@ -57,4 +57,61 @@ export class GCPDocumentsService {
             throw error;
         }
     }
+
+    async deleteDocument(documentUuid: string): Promise<void> {
+        try {
+            const document = await this.prisma.document.findUnique({
+                where: { uuid: documentUuid }
+            });
+
+            if (!document) {
+                return;
+            }
+
+            try {
+                await this.gcsService.deleteImage({
+                    filename: document.path,
+                });
+            } catch (error) {
+            }
+
+            await this.prisma.document.delete({
+                where: { uuid: documentUuid }
+            });
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async deleteExistingVideoForVariation(variationUuid: string): Promise<void> {
+        try {
+            const sceneVideo = await this.prisma.sceneVideo.findUnique({
+                where: { scene_variation_uuid: variationUuid },
+                include: { video: true }
+            });
+
+            if (sceneVideo?.video_uuid) {
+                await this.deleteDocument(sceneVideo.video_uuid);
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async deleteExistingPromptImageForVariation(variationUuid: string): Promise<void> {
+        try {
+            const variation = await this.prisma.sceneVariation.findUnique({
+                where: { uuid: variationUuid },
+                include: { prompt_image: true }
+            });
+
+            if (variation?.prompt_image_uuid) {
+                await this.deleteDocument(variation.prompt_image_uuid);
+            }
+
+        } catch (error) {
+            throw error;
+        }
+    }
 }
