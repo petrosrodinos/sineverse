@@ -119,6 +119,7 @@ export class SceneVariationsService {
   async remove(user_uuid: string, uuid: string) {
     try {
       await this.findOne(user_uuid, uuid);
+      await this.documentsService.deleteVariationDocuments(uuid);
       return await this.prisma.sceneVariation.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene variation', { cause: error });

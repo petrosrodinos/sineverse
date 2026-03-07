@@ -4,10 +4,15 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { EnrichProjectDto } from './dto/enrich-project.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
+import { DocumentsService } from '../documents/documents.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService, private readonly aiHelperService: AiHelperService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiHelperService: AiHelperService,
+    private readonly documentsService: DocumentsService,
+  ) { }
 
   async create(user_uuid: string, createProjectDto: CreateProjectDto) {
     try {
@@ -63,6 +68,7 @@ export class ProjectsService {
   async remove(user_uuid: string, uuid: string) {
     try {
       await this.findOne(user_uuid, uuid);
+      await this.documentsService.deleteProjectDocuments(uuid);
       return await this.prisma.project.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete project', { cause: error });

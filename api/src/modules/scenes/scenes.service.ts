@@ -7,10 +7,15 @@ import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.
 import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
 import { GenerateAiScenesSchemaType } from '@/shared/services/ai-helper/schemas/scene-variation.schema';
 import { ReorderScenesDto } from './dto/reorder-scenes.dto';
+import { DocumentsService } from '../documents/documents.service';
 
 @Injectable()
 export class ScenesService {
-  constructor(private readonly prisma: PrismaService, private readonly aiHelperService: AiHelperService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiHelperService: AiHelperService,
+    private readonly documentsService: DocumentsService,
+  ) { }
 
   async create(user_uuid: string, createSceneDto: CreateSceneDto) {
     try {
@@ -82,6 +87,7 @@ export class ScenesService {
 
   async remove(user_uuid: string, uuid: string) {
     try {
+      await this.documentsService.deleteSceneDocuments(uuid);
       return await this.prisma.scene.delete({ where: { uuid, user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene', { cause: error });

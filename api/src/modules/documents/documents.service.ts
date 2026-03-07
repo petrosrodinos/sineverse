@@ -130,5 +130,55 @@ export class DocumentsService {
     }
   }
 
+  async deleteVariationDocuments(variationUuid: string): Promise<void> {
+    try {
+      const variation = await this.prisma.sceneVariation.findUnique({
+        where: { uuid: variationUuid },
+        include: { scene_video: true }
+      });
+
+      if (!variation) return;
+
+      if (variation.prompt_image_uuid) {
+        await this.deleteDocument(variation.prompt_image_uuid);
+      }
+
+      if (variation.scene_video?.video_uuid) {
+        await this.deleteDocument(variation.scene_video.video_uuid);
+      }
+    } catch (error) {
+      this.logger.error(`Error deleting documents for variation ${variationUuid}: ${error.message}`);
+    }
+  }
+
+  async deleteSceneDocuments(sceneUuid: string): Promise<void> {
+    try {
+      const variations = await this.prisma.sceneVariation.findMany({
+        where: { scene_uuid: sceneUuid },
+        select: { uuid: true }
+      });
+
+      for (const variation of variations) {
+        await this.deleteVariationDocuments(variation.uuid);
+      }
+    } catch (error) {
+      this.logger.error(`Error deleting documents for scene ${sceneUuid}: ${error.message}`);
+    }
+  }
+
+  async deleteProjectDocuments(projectUuid: string): Promise<void> {
+    try {
+      const scenes = await this.prisma.scene.findMany({
+        where: { project_uuid: projectUuid },
+        select: { uuid: true }
+      });
+
+      for (const scene of scenes) {
+        await this.deleteSceneDocuments(scene.uuid);
+      }
+    } catch (error) {
+      this.logger.error(`Error deleting documents for project ${projectUuid}: ${error.message}`);
+    }
+  }
 
 }
