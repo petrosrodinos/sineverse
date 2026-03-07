@@ -50,7 +50,7 @@ export const SeedanceLiteT2VSchema = z.object({
 
 
 export const SeedanceLiteI2VSchema = z.object({
-    model: z.enum(["bytedance/seedance-1-0-lite-i2v"]),
+    model: z.literal("bytedance/seedance-1-0-lite-i2v"),
     image_url: z.string().url(),
     prompt: z.string(),
     resolution: ResolutionEnum,
@@ -62,8 +62,8 @@ export const SeedanceLiteI2VSchema = z.object({
 
 
 
-export const SeedanceProI2VSchema = z.object({
-    model: z.enum(["bytedance/seedance-1-0-pro-t2v"]),
+export const SeedanceProT2VSchema = z.object({
+    model: z.literal("bytedance/seedance-1-0-pro-t2v"),
     image_url: ImageURLSchema,
     last_image_url: ImageURLSchema.optional(),
     prompt: z.string(),
@@ -74,8 +74,8 @@ export const SeedanceProI2VSchema = z.object({
     camerafixed: CameraFixedSchema,
 });
 
-export const SeedanceProT2VSchema = z.object({
-    model: z.enum(["bytedance/seedance-1-0-pro-i2v"]),
+export const SeedanceProI2VSchema = z.object({
+    model: z.literal("bytedance/seedance-1-0-pro-i2v"),
     image_url: ImageURLSchema,
     last_image_url: ImageURLSchema.optional(),
     prompt: z.string(),
@@ -89,5 +89,5 @@ export const SeedanceProT2VSchema = z.object({
 
 export type SeedanceLiteT2VRequest = z.infer<typeof SeedanceLiteT2VSchema>
 export type SeedanceLiteI2VRequest = z.infer<typeof SeedanceLiteI2VSchema>
+export type SeedanceProT2VRequest = z.infer<typeof SeedanceProT2VSchema>
 export type SeedanceProI2VRequest = z.infer<typeof SeedanceProI2VSchema>
-export type VideoRequest = z.infer<typeof SeedanceProT2VSchema>

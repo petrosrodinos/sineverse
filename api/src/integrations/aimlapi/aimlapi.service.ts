@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVideoService } from './video/create-video.service';
-import { CreateVideoResponse, VideoStatusResponse } from './core/schemas/video.schema';
+import { CreateVideoResponse, VideoStatusResponse } from './core/schemas';
 
 @Injectable()
 export class AimlApiService {

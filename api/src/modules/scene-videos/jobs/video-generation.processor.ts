@@ -7,8 +7,7 @@ import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { GCPDocumentsService } from '../services/gcp-documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
-import { MODELS_CONFIG } from '@/integrations/aimlapi/core/config/models.config';
-import { GenerationType, VideoModel } from '@/integrations/aimlapi/core/constants';
+import { VideoModel } from '@/integrations/aimlapi/core/constants';
 
 export interface VideoGenerationJobData {
     sceneVideoUuid: string;
@@ -50,7 +49,6 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             const variation = sceneVideo.scene_variation;
             const model = variation.ai_model || VideoModel.KLING_VIDEO_V3_STANDARD;
-            const modelConfig = MODELS_CONFIG[model];
 
             // 1. Prepare payload based on generation type
             this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);

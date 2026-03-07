@@ -1,8 +1,7 @@
 import { Injectable, Inject, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { VIDEO_PROVIDER_TOKEN, AiProvider } from '../core/constants';
 import { VideoGenerationProvider } from '../core/interfaces/video-provider.interface';
-import { CreateVideoSchema, CreateVideoResponse, VideoStatusResponse } from '../core/schemas/video.schema';
-import { getModelConfig } from '../core/config/models.config';
+import { CreateVideoResponse, VideoStatusResponse, CreateVideoSchema } from '../core/schemas';
 
 @Injectable()
 export class CreateVideoService {
@@ -19,7 +18,7 @@ export class CreateVideoService {
     }
 
     async execute(input: unknown): Promise<CreateVideoResponse> {
-        const validation = CreateVideoSchema.safeParse(input);
+        const validation = await CreateVideoSchema.safeParseAsync(input);
 
         if (!validation.success) {
             const errorTrace = validation.error.errors
@@ -35,25 +34,18 @@ export class CreateVideoService {
         }
 
         const request = validation.data;
+        const providerName = this.getProviderForModel(request.model);
+        const provider = this.providerRegistry.get(providerName);
 
-        const modelConfig = getModelConfig(request.model);
-        if (!modelConfig) {
-            throw new HttpException(
-                `Model ${request.model} is not configured.`,
-                HttpStatus.BAD_REQUEST
-            );
-        }
-
-        const provider = this.providerRegistry.get(modelConfig.provider);
         if (!provider) {
-            this.logger.error(`Provider implementation for ${modelConfig.provider} is missing.`);
+            this.logger.error(`Provider implementation for ${providerName} is missing.`);
             throw new HttpException(
-                `Provider ${modelConfig.provider} is temporarily unavailable.`,
+                `Provider ${providerName} is temporarily unavailable.`,
                 HttpStatus.SERVICE_UNAVAILABLE
             );
         }
 
-        this.logger.debug(`Delegating generation for ${request.model} to ${modelConfig.provider}`);
+        this.logger.debug(`Delegating generation for ${request.model} to ${providerName}`);
         return provider.createVideo(request);
     }
 
@@ -61,16 +53,24 @@ export class CreateVideoService {
      * Retrieves status for a specific task and model.
      */
     async getStatus(taskId: string, model: string): Promise<VideoStatusResponse> {
-        const config = getModelConfig(model);
-        if (!config) {
-            throw new HttpException('Invalid model for status check.', HttpStatus.BAD_REQUEST);
-        }
+        const providerName = this.getProviderForModel(model);
+        const provider = this.providerRegistry.get(providerName);
 
-        const provider = this.providerRegistry.get(config.provider);
         if (!provider) {
             throw new HttpException('Provider not found in registry.', HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return provider.getVideoStatus(taskId);
+    }
+
+    private getProviderForModel(model: string): AiProvider {
+        if (model.includes('kling')) return AiProvider.KLING;
+        if (model.includes('veo')) return AiProvider.GOOGLE;
+        if (model.includes('seedance') || model.includes('omnihuman')) return AiProvider.BYTEDANCE;
+        if (model.includes('runway')) return AiProvider.RUNWAY;
+        if (model.includes('wan')) return AiProvider.ALIBABA;
+
+        // Fallback or default
+        return AiProvider.KLING;
     }
 }
