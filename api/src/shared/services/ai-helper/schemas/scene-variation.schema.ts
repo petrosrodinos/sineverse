@@ -20,7 +20,7 @@ export const SceneVariationEnrichSchema = z.object({
     audio_style: z.enum(AUDIO_STYLE_VALUES),
     fps: z.union([z.literal(24), z.literal(25), z.literal(30), z.literal(48), z.literal(60)]),
     duration_sec: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(5), z.literal(6), z.literal(8), z.literal(10), z.literal(15)]),
-    guidance_scale: z.number().min(1).max(20),
+    guidance_scale: z.number().min(0).max(1),
     motion_strength: z.number().min(0).max(1),
     creativity: z.number().min(0).max(1),
 }).strict();

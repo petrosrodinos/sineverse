@@ -63,6 +63,11 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             const payload = transformVariationToModelPayload(variation, model);
 
+            const isImageToVideoModel = model.includes('image-to-video') || model.includes('i2v');
+            if (isImageToVideoModel && variation.prompt_image?.url) {
+                payload.image_url = variation.prompt_image.url;
+            }
+
             const genResponse = await this.aimlApiService.video.create(payload);
 
             if (!genResponse.id) {

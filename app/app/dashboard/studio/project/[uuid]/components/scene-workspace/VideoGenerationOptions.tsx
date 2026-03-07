@@ -138,6 +138,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                         <Input
                             label={<LabelWithTooltip label="Seed" tooltip="Set a specific seed for reproducible results. Leave empty for random results." />}
                             placeholder="Random"
+                            type="number"
                             variant="bordered"
                             labelPlacement="outside"
                             value={sceneVariation?.seed?.toString() || ""}

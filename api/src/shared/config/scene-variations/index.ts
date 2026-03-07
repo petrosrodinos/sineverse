@@ -161,9 +161,7 @@ export const DURATION_VALUES = [
     2, 3, 4, 5, 6, 8, 10, 15,
 ] as const;
 
-export const GUIDANCE_SCALE_VALUES = [
-    3, 5, 7.5, 10, 15,
-] as const;
+
 
 export const MOTION_STRENGTH_VALUES = [
     0.1, 0.25, 0.5, 0.75, 1,
@@ -179,7 +177,6 @@ export type ProjectGenre = typeof PROJECT_GENRE_VALUES[number];
 export const FPS_VALUES = [24, 25, 30, 48, 60] as const;
 export type Creativity = typeof CREATIVITY_VALUES[number];
 export type MotionStrength = typeof MOTION_STRENGTH_VALUES[number];
-export type GuidanceScale = typeof GUIDANCE_SCALE_VALUES[number];
 export type AiModel = typeof AI_MODELS[number];
 export type Duration = typeof DURATION_VALUES[number];
 export type Fps = typeof FPS_VALUES[number];
