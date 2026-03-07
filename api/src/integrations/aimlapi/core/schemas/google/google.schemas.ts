@@ -16,7 +16,12 @@ export const ImageURLSchema = z.string().refine(
 );
 
 export const GoogleVeo3T2VideoSchema = z.object({
-    model: z.literal("google/veo3"),
+    model: z.enum([
+        "google/veo3",
+        "google/veo-3.0-fast",
+        "google/veo-3.1-t2v",
+        "google/veo-3.1-t2v-fast",
+    ]),
     prompt: z.string(),
     negative_prompt: z.string().optional(),
     duration: GoogleVeo3DurationEnum.default(8),

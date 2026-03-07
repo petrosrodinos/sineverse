@@ -9,17 +9,11 @@ import * as SeedanceSchemas from '../schemas/seedance/seedance.schemas';
  */
 export const MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
     // Kling AI
+    [VideoModels.KLING_STANDARD_TEXT_TO_VIDEO]: KlingSchemas.KlingStandardTextToVideoSchema,
     [VideoModels.KLING_VIDEO_V3_STANDARD]: KlingSchemas.KlingVideoV3TextToVideoSchema,
     [VideoModels.KLING_VIDEO_V3_PRO]: KlingSchemas.KlingVideoV3TextToVideoSchema,
-    [VideoModels.KLING_V2_1_STANDARD_IMAGE]: KlingSchemas.KlingStandardImageToVideoSchema,
-    [VideoModels.KLING_V2_1_PRO_IMAGE]: KlingSchemas.KlingStandardImageToVideoSchema,
+    [VideoModels.KLING_STANDARD_IMAGE_TO_VIDEO]: KlingSchemas.KlingStandardImageToVideoSchema,
     [VideoModels.KLING_2_1]: KlingSchemas.KlingV21TextToVideoSchema,
-    [VideoModels.KLING_1_6_STANDARD_8K]: KlingSchemas.KlingStandardTextToVideoSchema,
-    [VideoModels.KLING_1_6_PRO_8K]: KlingSchemas.KlingStandardTextToVideoSchema,
-    [VideoModels.KLING_AI_TEXT_8K]: KlingSchemas.KlingStandardTextToVideoSchema,
-    [VideoModels.KLING_AI_IMAGE_8K]: KlingSchemas.KlingStandardImageToVideoSchema,
-    [VideoModels.KLING_V1_5_PRO_TEXT]: KlingSchemas.KlingStandardTextToVideoSchema,
-    [VideoModels.KLING_V1_5_STANDARD_IMAGE]: KlingSchemas.KlingStandardImageToVideoSchema,
 
     // Google
     [VideoModels.VEO_3]: GoogleSchemas.GoogleVeo3T2VideoSchema,
@@ -45,42 +39,5 @@ export function getModelSchema(model: string): z.ZodTypeAny {
         throw new Error(`No specific schema defined for model: ${model}. Make sure it is mapped in MODEL_SCHEMAS_CONFIG.`);
     }
 
-    // Provider specific schemas expect provider IDs.
-    // We map internal model constants to their corresponding provider model strings here.
-    const providerModelId = getProviderModelId(model);
-
-    if (providerModelId !== model) {
-        return z.preprocess((data: any) => {
-            if (data && typeof data === 'object') {
-                return { ...data, model: providerModelId };
-            }
-            return data;
-        }, activeSchema).transform((data: any) => {
-            // Keep the internal model identifier so providers can use it for lookup
-            return { ...data, model };
-        });
-    }
-
     return activeSchema;
-}
-
-/**
- * Maps the internal model identifier to the provider expected string.
- */
-function getProviderModelId(model: string): string {
-    const mapping: Record<string, string> = {
-        [VideoModels.KLING_VIDEO_V3_STANDARD]: 'klingai/video-v3-standard-text-to-video',
-        [VideoModels.KLING_VIDEO_V3_PRO]: 'klingai/video-v3-pro-text-to-video',
-        [VideoModels.VEO_3]: 'google/veo3',
-        [VideoModels.VEO_3_FAST]: 'google/veo-3.0-fast',
-        [VideoModels.VEO_3_1]: 'google/veo-3.1-t2v',
-        [VideoModels.VEO_3_1_FAST]: 'google/veo-3.1-t2v-fast',
-        [VideoModels.VEO_2_IMAGE]: 'veo2/image-to-video',
-        [VideoModels.SEEDANCE_1_0_PRO]: 'bytedance/seedance-1-0-pro-t2v',
-        [VideoModels.SEEDANCE_1_0_PRO_FAST]: 'bytedance/seedance-1-0-pro-fast',
-        [VideoModels.SEEDANCE_1_0_LITE_TEXT]: 'bytedance/seedance-1-0-lite-t2v',
-        [VideoModels.SEEDANCE_1_0_LITE_IMAGE]: 'bytedance/seedance-1-0-lite-i2v',
-    };
-
-    return mapping[model] || model;
 }

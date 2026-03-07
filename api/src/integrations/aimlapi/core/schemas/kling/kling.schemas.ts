@@ -163,7 +163,10 @@ export const KlingV21TextToVideoSchema = z.object({
 
 export const KlingVideoV3TextToVideoSchema = z
     .object({
-        model: z.literal("klingai/video-v3-standard-text-to-video"),
+        model: z.enum([
+            "klingai/video-v3-standard-text-to-video",
+            "klingai/video-v3-pro-text-to-video",
+        ]),
         aspect_ratio: AspectRatioSchema,
         duration: KlingV3DurationSchema,
         shot_type: ShotTypeSchema,

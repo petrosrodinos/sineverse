@@ -16,6 +16,13 @@ export const transformVariationToModelPayload = (variation: any, model: string):
         if (variation.lighting) parts.push(`lighting: ${variation.lighting}`);
         if (variation.color_grade) parts.push(`color grade: ${variation.color_grade}`);
         if (variation.time_of_day) parts.push(`time: ${variation.time_of_day}`);
+        if (variation.aspect_ratio) parts.push(`aspect ratio: ${variation.aspect_ratio}`);
+        if (variation.resolution) parts.push(`resolution: ${variation.resolution}`);
+        if (variation.fps) parts.push(`fps: ${variation.fps}`);
+        if (variation.guidance_scale) parts.push(`guidance scale: ${variation.guidance_scale}`);
+        if (variation.creativity) parts.push(`creativity: ${variation.creativity}`);
+        if (variation.motion_strength) parts.push(`motion strength: ${variation.motion_strength}`);
+        if (variation.negative_prompt) parts.push(`negative prompt: ${variation.negative_prompt}`);
 
         return parts.filter(p => p.length > 0).join(', ');
     };

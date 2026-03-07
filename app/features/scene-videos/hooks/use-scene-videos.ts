@@ -29,7 +29,7 @@ export const useCreateSceneVideo = () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVideos] });
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
             addToast({
-                title: "Scene video created successfully",
+                title: "Video generation started",
                 severity: "success",
             });
         },

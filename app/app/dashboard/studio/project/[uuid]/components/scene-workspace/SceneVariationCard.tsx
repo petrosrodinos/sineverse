@@ -117,6 +117,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
 
   const executeGeneration = async () => {
     if (!variation?.uuid || !variation?.scene_uuid) return;
+
+    await handleSave();
     
     await createVideoMutation.mutateAsync({
       scene_uuid: variation.scene_uuid,

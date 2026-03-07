@@ -1,6 +1,6 @@
 "use client";
 
-import { Select, SelectItem, SelectSection } from "@heroui/select";
+import { Select, SelectItem } from "@heroui/select";
 import { Autocomplete, AutocompleteItem, AutocompleteSection } from "@heroui/autocomplete";
 import { Slider } from "@heroui/slider";
 import { Tooltip } from "@heroui/tooltip";

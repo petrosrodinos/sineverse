@@ -262,14 +262,14 @@ export const MotionStrengthSliderOptions: SliderConfig = {
 };
 
 export const GuidanceScaleSliderOptions: SliderConfig = {
-    min: 3,
-    max: 15,
-    step: 0.5,
-    defaultValue: 7.5,
+    min: 0,
+    max: 1,
+    step: 0.05,
+    defaultValue: 0.5,
     marks: [
-        { value: 5, label: "Loose" },
-        { value: 7.5, label: "Balanced" },
-        { value: 12, label: "Strict" },
+        { value: 0.1, label: "Loose" },
+        { value: 0.5, label: "Balanced" },
+        { value: 1, label: "Strict" },
     ],
 };
 

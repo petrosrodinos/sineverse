@@ -63,7 +63,10 @@ export const SeedanceLiteI2VSchema = z.object({
 
 
 export const SeedanceProT2VSchema = z.object({
-    model: z.literal("bytedance/seedance-1-0-pro-t2v"),
+    model: z.enum([
+        "bytedance/seedance-1-0-pro-t2v",
+        "bytedance/seedance-1-0-pro-fast",
+    ]),
     image_url: ImageURLSchema,
     last_image_url: ImageURLSchema.optional(),
     prompt: z.string(),
