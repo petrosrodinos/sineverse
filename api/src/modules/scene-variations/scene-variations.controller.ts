@@ -89,4 +89,16 @@ export class SceneVariationsController {
     ) {
         return this.sceneVariationsService.uploadPromptImage(user_uuid, uuid, file);
     }
+
+    @Delete(':uuid/prompt-image')
+    @ApiOperation({ summary: 'Remove a prompt image from a scene variation' })
+    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+    @ApiResponse({ status: 200, description: 'The prompt image has been successfully removed.' })
+    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+    removePromptImage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+    ) {
+        return this.sceneVariationsService.removePromptImage(user_uuid, uuid);
+    }
 }

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage } from "../services/scene-variations.services";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage, deleteSceneVariationPromptImage } from "../services/scene-variations.services";
 import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -136,6 +136,28 @@ export const useUploadSceneVariationPromptImage = () => {
         onError: (error) => {
             addToast({
                 title: "Failed to upload prompt image",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
+export const useDeleteSceneVariationPromptImage = () => {
+    const queryClient = useQueryClient();
+    return useMutation<SceneVariation, Error, string>({
+        mutationFn: deleteSceneVariationPromptImage,
+        onSuccess: (_, uuid) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
+            addToast({
+                title: "Prompt image removed successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to remove prompt image",
                 description: error.message,
                 severity: "danger",
             });

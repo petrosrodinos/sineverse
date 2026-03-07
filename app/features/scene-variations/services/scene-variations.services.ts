@@ -80,4 +80,14 @@ export const uploadSceneVariationPromptImage = async (uuid: string, file: File):
     }
 }
 
+export const deleteSceneVariationPromptImage = async (uuid: string): Promise<SceneVariation> => {
+    try {
+        const response = await axiosInstance.delete<SceneVariation>(ApiRoutes.scene_variations.prompt_image(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to remove prompt image")
+    }
+}
+
+
 

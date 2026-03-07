@@ -241,4 +241,24 @@ export class SceneVariationsService {
       throw new InternalServerErrorException('Failed to upload prompt image', { cause: error });
     }
   }
+
+  async removePromptImage(user_uuid: string, uuid: string) {
+    try {
+      const variation = await this.findOne(user_uuid, uuid);
+
+      if (variation.prompt_image_uuid) {
+        await this.documentsService.deleteDocument(variation.prompt_image_uuid);
+      }
+
+      return await this.prisma.sceneVariation.update({
+        where: { uuid },
+        data: {
+          prompt_image_uuid: null,
+        }
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to remove prompt image', { cause: error });
+    }
+  }
 }

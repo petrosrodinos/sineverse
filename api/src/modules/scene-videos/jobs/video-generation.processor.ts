@@ -49,6 +49,7 @@ export class VideoGenerationProcessor extends WorkerHost {
         }
 
         try {
+
             await this.prisma.sceneVideo.update({
                 where: { uuid: sceneVideoUuid },
                 data: { status: VideoStatus.PROCESSING },

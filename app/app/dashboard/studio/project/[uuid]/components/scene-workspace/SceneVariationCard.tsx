@@ -8,7 +8,7 @@ import { Checkbox } from "@heroui/checkbox";
 import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useUpdateSceneVariation, useUploadSceneVariationPromptImage } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useUpdateSceneVariation, useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage } from "@/features/scene-variations/hooks/use-scene-variations";
 import { useCreateSceneVideo, useSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
 import { VideoStatuses, SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
@@ -17,6 +17,7 @@ import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { useQueryClient } from "@tanstack/react-query";
+import { addToast } from "@heroui/toast";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -30,6 +31,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
   const uploadImageMutation = useUploadSceneVariationPromptImage();
+  const deleteImageMutation = useDeleteSceneVariationPromptImage();
   const createVideoMutation = useCreateSceneVideo();
   const queryClient = useQueryClient();
 
@@ -65,10 +67,34 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     setEditedVariation(prev => ({ ...prev, [field]: value }));
   };
 
+  const isImageToVideoModel = editedVariation.ai_model?.includes("image-to-video") || editedVariation.ai_model?.includes("i2v");
+
+  const validateVariation = () => {
+    if (!editedVariation.ai_model) {
+      addToast({
+        title: "Model Selection Required",
+        description: "Please select an AI model for video generation.",
+        severity: "danger",
+      });
+      return false;
+    }
+
+    if (isImageToVideoModel && !editedVariation.prompt_image?.url && !editedVariation.prompt_image_uuid) {
+      addToast({
+        title: "Image Selection Required",
+        description: "Please upload an image for image-to-video models.",
+        severity: "danger",
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleSave = async () => {
-    if (!variation?.uuid) return;
+    if (!variation?.uuid) return false;
     
- const dto: UpdateSceneVariationDto = {
+    if (!validateVariation()) return false;
+    const dto: UpdateSceneVariationDto = {
         title: editedVariation.title,
         prompt_text: editedVariation.prompt_text,
         negative_prompt: editedVariation.negative_prompt,
@@ -105,11 +131,14 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     if(isEnriched) {
       handleClose?.();
     }
+    return true;
   };
 
   const handleGenerateVideo = async () => {
     if (!variation?.uuid || !variation?.scene_uuid) return;
     
+    if (!validateVariation()) return;
+
     if (variation?.scene_video?.status === VideoStatuses.COMPLETED) {
       setIsConfirmOpen(true);
       return;
@@ -121,7 +150,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const executeGeneration = async () => {
     if (!variation?.uuid || !variation?.scene_uuid) return;
 
-    await handleSave();
+    const saved = await handleSave();
+    if (!saved) return;
     
     await createVideoMutation.mutateAsync({
       scene_uuid: variation.scene_uuid,
@@ -175,22 +205,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       )}
 
       <div className="flex flex-col gap-4">
-        <ImageUpload
-            label="Reference Image"
-            description="Upload an image to guide the style and composition of the video."
-            value={editedVariation.prompt_image?.url}
-            isLoading={uploadImageMutation.isPending}
-            onChange={(file) => {
-              if (variation?.uuid) {
-                uploadImageMutation.mutate({ uuid: variation.uuid, file });
-              }
-            }}
-            onRemove={() => {
-              // Note: Removal logic can be added here if the API supports clearing the prompt_image_uuid
-              handleOptionChange("prompt_image", null);
-              handleOptionChange("prompt_image_uuid", null);
-            }}
-        />
+        
         <Input
             label="Title"
             value={editedVariation.title || ""}
@@ -206,6 +221,24 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
+        {isImageToVideoModel && (
+          <ImageUpload
+              label="Reference Image"
+              description="Upload an image to guide the style and composition of the video."
+              value={editedVariation.prompt_image?.url}
+              isLoading={uploadImageMutation.isPending}
+              onChange={(file) => {
+                if (variation?.uuid) {
+                  uploadImageMutation.mutate({ uuid: variation.uuid, file });
+                }
+              }}
+              onRemove={() => {
+                if (variation?.uuid) {
+                  deleteImageMutation.mutate(variation.uuid);
+                }
+              }}
+          />
+        )}
               <div className="flex items-center px-1">
           <Checkbox
               isSelected={editedVariation.selected ?? false}
