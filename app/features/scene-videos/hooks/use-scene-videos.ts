@@ -6,6 +6,7 @@ import { addToast } from "@heroui/toast";
 const QueryKeys = {
     sceneVideos: 'scene-videos',
     sceneVideo: (uuid: string) => `scene-video-${uuid}`,
+    sceneVariations: 'scene-variations',
 }
 
 export const useSceneVideos = () => {
@@ -26,6 +27,7 @@ export const useCreateSceneVideo = () => {
         mutationFn: createSceneVideo,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVideos] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
             addToast({
                 title: "Scene video created successfully",
                 severity: "success",

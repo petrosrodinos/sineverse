@@ -70,7 +70,7 @@ export class SceneVideosService {
 
   async findOne(user_uuid: string, uuid: string) {
     try {
-      const video = await this.prisma.sceneVideo.findFirst({ where: { uuid, user_uuid } });
+      const video = await this.prisma.sceneVideo.findFirst({ where: { uuid, user_uuid }, include: { video: true } });
       if (!video) throw new NotFoundException('Scene video not found');
       return video;
     } catch (error) {

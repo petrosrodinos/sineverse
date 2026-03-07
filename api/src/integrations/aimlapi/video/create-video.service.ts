@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { VIDEO_PROVIDER_TOKEN, AiProvider } from '../core/constants';
 import { VideoGenerationProvider } from '../core/interfaces/video-provider.interface';
-import { CreateVideoSchema, CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../core/schemas/video.schema';
+import { CreateVideoSchema, CreateVideoResponse, VideoStatusResponse } from '../core/schemas/video.schema';
 import { getModelConfig } from '../core/config/models.config';
 
 @Injectable()
@@ -18,12 +18,7 @@ export class CreateVideoService {
         );
     }
 
-    /**
-     * Orchestrates video generation.
-     * Resolves the correct provider based on the model configuration.
-     */
     async execute(input: unknown): Promise<CreateVideoResponse> {
-        // 1. Validate input payload
         const validation = CreateVideoSchema.safeParse(input);
 
         if (!validation.success) {
@@ -39,10 +34,8 @@ export class CreateVideoService {
             }, HttpStatus.BAD_REQUEST);
         }
 
-        // TypeScript now correctly infers 'request' as the union 'CreateVideoRequest'
         const request = validation.data;
 
-        // 2. Resolve Model Configuration
         const modelConfig = getModelConfig(request.model);
         if (!modelConfig) {
             throw new HttpException(
@@ -51,7 +44,6 @@ export class CreateVideoService {
             );
         }
 
-        // 3. Resolve Provider
         const provider = this.providerRegistry.get(modelConfig.provider);
         if (!provider) {
             this.logger.error(`Provider implementation for ${modelConfig.provider} is missing.`);
@@ -61,7 +53,6 @@ export class CreateVideoService {
             );
         }
 
-        // 4. Delegate to Provider
         this.logger.debug(`Delegating generation for ${request.model} to ${modelConfig.provider}`);
         return provider.createVideo(request);
     }

@@ -38,7 +38,7 @@ export class SceneVariationsService {
         ...(query.scene_uuid && { scene_uuid: query.scene_uuid }),
       };
 
-      return await this.prisma.sceneVariation.findMany({ where, include: { scene_video: true } });
+      return await this.prisma.sceneVariation.findMany({ where, include: { scene_video: { include: { video: true } } } });
 
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
