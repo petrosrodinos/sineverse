@@ -5,10 +5,17 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { SceneVariationQueryDto } from './dto/query-scene-variation.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
+import { DocumentsService } from '../documents/documents.service';
+
 
 @Injectable()
 export class SceneVariationsService {
-  constructor(private readonly prisma: PrismaService, private readonly aiHelperService: AiHelperService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiHelperService: AiHelperService,
+    private readonly documentsService: DocumentsService,
+
+  ) { }
 
   async create(user_uuid: string, createSceneVariationDto: CreateSceneVariationDto) {
     try {
@@ -38,7 +45,13 @@ export class SceneVariationsService {
         ...(query.scene_uuid && { scene_uuid: query.scene_uuid }),
       };
 
-      return await this.prisma.sceneVariation.findMany({ where, include: { scene_video: { include: { video: true } } } });
+      return await this.prisma.sceneVariation.findMany({
+        where,
+        include: {
+          scene_video: { include: { video: true } },
+          prompt_image: true,
+        },
+      });
 
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
@@ -47,7 +60,13 @@ export class SceneVariationsService {
 
   async findOne(user_uuid: string, uuid: string) {
     try {
-      const variation = await this.prisma.sceneVariation.findFirst({ where: { uuid, user_uuid } });
+      const variation = await this.prisma.sceneVariation.findFirst({
+        where: { uuid, user_uuid },
+        include: {
+          scene_video: { include: { video: true } },
+          prompt_image: true,
+        },
+      });
       if (!variation) throw new NotFoundException('Scene variation not found');
       return variation;
     } catch (error) {
@@ -109,7 +128,16 @@ export class SceneVariationsService {
   async duplicate(user_uuid: string, uuid: string) {
     try {
       const variation = await this.findOne(user_uuid, uuid);
-      const { id, uuid: oldUuid, created_at, updated_at, selected, ...dataToCopy } = variation;
+      const {
+        id,
+        uuid: oldUuid,
+        created_at,
+        updated_at,
+        selected,
+        scene_video,
+        prompt_image,
+        ...dataToCopy
+      } = variation;
 
       return await this.prisma.sceneVariation.create({
         data: {
@@ -124,6 +152,7 @@ export class SceneVariationsService {
       throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
     }
   }
+
 
   async enrichSceneVariation(user_uuid: string, uuid: string, enrichSceneVariationDto: EnrichSceneVariationDto) {
 
@@ -175,6 +204,41 @@ export class SceneVariationsService {
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to enrich scene variation', { cause: error });
+    }
+  }
+
+  async uploadPromptImage(user_uuid: string, uuid: string, file: any) {
+
+    try {
+      const variation = await this.findOne(user_uuid, uuid);
+
+      // 1. Delete old prompt image if it exists
+      if (variation.prompt_image_uuid) {
+        await this.documentsService.deleteDocument(variation.prompt_image_uuid);
+      }
+
+      // 2. Upload new image
+      const filename = `prompt-image-${uuid}-${Date.now()}`;
+      const documentUuid = await this.documentsService.saveImageFromBuffer(
+        file.buffer,
+        filename,
+        file.mimetype,
+      );
+
+      // 3. Update variation
+      return await this.prisma.sceneVariation.update({
+        where: { uuid },
+        data: {
+          prompt_image_uuid: documentUuid,
+        },
+        include: {
+          prompt_image: true,
+        },
+      });
+
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to upload prompt image', { cause: error });
     }
   }
 }

@@ -8,13 +8,14 @@ import { Checkbox } from "@heroui/checkbox";
 import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useUpdateSceneVariation, useUploadSceneVariationPromptImage } from "@/features/scene-variations/hooks/use-scene-variations";
 import { useCreateSceneVideo, useSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
 import { VideoStatuses, SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface SceneVariationCardProps {
@@ -28,6 +29,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
+  const uploadImageMutation = useUploadSceneVariationPromptImage();
   const createVideoMutation = useCreateSceneVideo();
   const queryClient = useQueryClient();
 
@@ -89,6 +91,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
         guidance_scale: editedVariation.guidance_scale,
         selected: editedVariation.selected,
         seed: editedVariation.seed,
+        prompt_image_uuid: editedVariation.prompt_image_uuid,
     };
     
     // Clean up undefined properties
@@ -170,8 +173,24 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           </div>
         </div>
       )}
-      
+
       <div className="flex flex-col gap-4">
+        <ImageUpload
+            label="Reference Image"
+            description="Upload an image to guide the style and composition of the video."
+            value={editedVariation.prompt_image?.url}
+            isLoading={uploadImageMutation.isPending}
+            onChange={(file) => {
+              if (variation?.uuid) {
+                uploadImageMutation.mutate({ uuid: variation.uuid, file });
+              }
+            }}
+            onRemove={() => {
+              // Note: Removal logic can be added here if the API supports clearing the prompt_image_uuid
+              handleOptionChange("prompt_image", null);
+              handleOptionChange("prompt_image_uuid", null);
+            }}
+        />
         <Input
             label="Title"
             value={editedVariation.title || ""}

@@ -15,6 +15,7 @@ import { ScenesModule } from './modules/scenes/scenes.module';
 import { SceneVariationsModule } from './modules/scene-variations/scene-variations.module';
 import { SceneVideosModule } from './modules/scene-videos/scene-videos.module';
 import { FinalProjectsModule } from './modules/final-projects/final-projects.module';
+import { DocumentsModule } from './modules/documents/documents.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { FinalProjectsModule } from './modules/final-projects/final-projects.mod
     SceneVariationsModule,
     SceneVideosModule,
     FinalProjectsModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

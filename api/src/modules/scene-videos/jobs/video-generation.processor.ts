@@ -4,7 +4,7 @@ import { Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { VIDEO_GENERATION_QUEUE } from '../queues/video.constants';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
-import { GCPDocumentsService } from '../services/gcp-documents.service';
+import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
@@ -22,7 +22,7 @@ export class VideoGenerationProcessor extends WorkerHost {
     constructor(
         private readonly prisma: PrismaService,
         private readonly aimlApiService: AimlApiService,
-        private readonly gcpService: GCPDocumentsService,
+        private readonly documentsService: DocumentsService,
         private readonly schedulerRegistry: SchedulerRegistry,
     ) {
         super();
@@ -123,7 +123,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
                 try {
                     // Save to GCP
-                    const videoUuid = await this.gcpService.saveVideoFromUrl(
+                    const videoUuid = await this.documentsService.saveVideoFromUrl(
                         statusResponse.video.url,
                         `video_${sceneVideoUuid}.mp4`
                     );

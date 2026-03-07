@@ -75,6 +75,7 @@ export interface CreateSceneVariationDto {
 export interface UpdateSceneVariationDto {
     title?: string;
     prompt_text?: string;
+    prompt_image_uuid?: string | null;
     negative_prompt?: string;
     selected?: boolean;
     style?: Style;

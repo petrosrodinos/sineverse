@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation } from "../services/scene-variations.services";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage } from "../services/scene-variations.services";
 import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -114,6 +114,28 @@ export const useEnrichSceneVariation = (uuid: string) => {
         onError: (error) => {
             addToast({
                 title: "Failed to enrich scene variation",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
+export const useUploadSceneVariationPromptImage = () => {
+    const queryClient = useQueryClient();
+    return useMutation<SceneVariation, Error, { uuid: string, file: File }>({
+        mutationFn: ({ uuid, file }) => uploadSceneVariationPromptImage(uuid, file),
+        onSuccess: (_, { uuid }) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
+            addToast({
+                title: "Prompt image uploaded successfully",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to upload prompt image",
                 description: error.message,
                 severity: "danger",
             });

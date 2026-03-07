@@ -4,11 +4,11 @@ import { SceneVideosController } from './scene-videos.controller';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { BullModule } from '@nestjs/bullmq';
 import { VIDEO_GENERATION_QUEUE } from './queues/video.constants';
-import { GCPDocumentsService } from './services/gcp-documents.service';
 import { VideoGenerationProcessor } from './jobs/video-generation.processor';
 import { GcsIntegrationModule } from '@/integrations/storage/gcs/gcs.module';
 import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { AimlApiModule } from '@/integrations/aimlapi/aimlapi.module';
+import { DocumentsModule } from '../documents/documents.module';
 
 @Module({
   imports: [
@@ -19,11 +19,11 @@ import { AimlApiModule } from '@/integrations/aimlapi/aimlapi.module';
     BullModule.registerQueue({
       name: VIDEO_GENERATION_QUEUE,
     }),
+    DocumentsModule,
   ],
   controllers: [SceneVideosController],
   providers: [
     SceneVideosService,
-    GCPDocumentsService,
     VideoGenerationProcessor,
   ],
   exports: [SceneVideosService],

@@ -65,3 +65,19 @@ export const enrichSceneVariation = async (uuid: string, enrichDto: SceneVariati
     }
 }
 
+export const uploadSceneVariationPromptImage = async (uuid: string, file: File): Promise<SceneVariation> => {
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.prompt_image(uuid), formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to upload prompt image")
+    }
+}
+
+

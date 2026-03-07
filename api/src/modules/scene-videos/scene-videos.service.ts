@@ -6,14 +6,14 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { VIDEO_GENERATION_QUEUE, VIDEO_GENERATION_JOB } from './queues/video.constants';
 import { VideoStatus } from '@/generated/prisma';
-import { GCPDocumentsService } from './services/gcp-documents.service';
+import { DocumentsService } from '../documents/documents.service';
 
 @Injectable()
 export class SceneVideosService {
   constructor(
     private readonly prisma: PrismaService,
     @InjectQueue(VIDEO_GENERATION_QUEUE) private readonly videoQueue: Queue,
-    private readonly gcpDocumentsService: GCPDocumentsService,
+    private readonly documentsService: DocumentsService,
   ) { }
 
   async create(user_uuid: string, createSceneVideoDto: CreateSceneVideoDto) {
@@ -26,8 +26,7 @@ export class SceneVideosService {
       if (!variation) throw new NotFoundException('Scene variation not found');
 
       // Delete existing video and prompt image if they exist
-      await this.gcpDocumentsService.deleteExistingVideoForVariation(variation.uuid);
-      await this.gcpDocumentsService.deleteExistingPromptImageForVariation(variation.uuid);
+      await this.documentsService.deleteExistingVideoForVariation(variation.uuid);
 
       const sceneVideo = await this.prisma.sceneVideo.upsert({
         where: { scene_variation_uuid: variation.uuid },

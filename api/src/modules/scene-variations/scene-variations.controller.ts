@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
@@ -8,6 +8,7 @@ import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Scene Variations')
 @Controller('scene-variations')
@@ -73,5 +74,19 @@ export class SceneVariationsController {
     @ApiResponse({ status: 404, description: 'Scene variation not found.' })
     enrich(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() enrichSceneVariationDto: EnrichSceneVariationDto) {
         return this.sceneVariationsService.enrichSceneVariation(user_uuid, uuid, enrichSceneVariationDto);
+    }
+
+    @Post(':uuid/prompt-image')
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiOperation({ summary: 'Upload a prompt image for a scene variation' })
+    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+    @ApiResponse({ status: 200, description: 'The prompt image has been successfully uploaded.' })
+    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+    uploadPromptImage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @UploadedFile() file: any,
+    ) {
+        return this.sceneVariationsService.uploadPromptImage(user_uuid, uuid, file);
     }
 }
