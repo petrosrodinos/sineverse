@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const GoogleVeo3DurationEnum = z.union([z.literal(4), z.literal(6), z.literal(8)]);
-export const GoogleVeo3AspectRatioEnum = z.enum(["16:9", "9:16", "1:1"]);
+export const GoogleVeo3DurationEnum = z.union([z.literal(4), z.literal(6), z.literal(8)]).default(8);
+export const GoogleVeo3AspectRatioEnum = z.enum(["16:9", "9:16", "1:1"]).default("16:9");
 export const GoogleVeo3ResolutionEnum = z.enum(["720P", "1080P"]);
 
 export const EnhancePromptSchema = z.boolean().default(true);

@@ -35,7 +35,7 @@ const DynamicMaskSchema = z.object({
         .max(77),
 });
 
-const DurationSchema = z.union([z.literal(5), z.literal(10)])
+const DurationSchema = z.union([z.literal(5), z.literal(10)]).default(5)
 
 const AspectRatioSchema = z.enum(["16:9", "9:16", "1:1"]).default("16:9")
 

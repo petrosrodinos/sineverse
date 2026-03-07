@@ -8,6 +8,7 @@ import { GCPDocumentsService } from '../services/gcp-documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
+import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers.config';
 
 export interface VideoGenerationJobData {
     sceneVideoUuid: string;
@@ -33,7 +34,13 @@ export class VideoGenerationProcessor extends WorkerHost {
 
         const sceneVideo = await this.prisma.sceneVideo.findUnique({
             where: { uuid: sceneVideoUuid },
-            include: { scene_variation: true },
+            include: {
+                scene_variation: {
+                    include: {
+                        prompt_image: true
+                    }
+                }
+            },
         });
 
         if (!sceneVideo || !sceneVideo.scene_variation) {
@@ -53,16 +60,9 @@ export class VideoGenerationProcessor extends WorkerHost {
             // 1. Prepare payload based on generation type
             this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);
 
-            const commonParams = {
-                ...variation,
-                model,
-                duration: variation.duration_sec || 5,
-                prompt: variation.prompt_text,
-                seed: variation.seed ? parseInt(variation.seed) : undefined,
-                cfg_scale: variation.guidance_scale,
-            };
+            const payload = transformVariationToModelPayload(variation, model);
 
-            const genResponse = await this.aimlApiService.video.create(commonParams);
+            const genResponse = await this.aimlApiService.video.create(payload);
 
             if (!genResponse.id) {
                 throw new Error('Failed to get a generation ID from AIML API');

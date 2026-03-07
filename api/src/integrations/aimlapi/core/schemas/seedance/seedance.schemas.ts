@@ -8,7 +8,7 @@ const ResolutionSchema = z
 const DurationSchema = z.union([
     z.literal(5),
     z.literal(10),
-])
+]).default(5)
 
 const AspectRatioSchema = z
     .enum([
