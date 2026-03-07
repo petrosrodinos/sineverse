@@ -1,6 +1,6 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateVideoResponse, VideoStatusResponse, CreateVideoSchema } from '../core/schemas';
-import { CreateVideoAdapter } from './providers/kling/create-video-kling.service';
+import { CreateVideoAdapter } from './providers/create-video.adapter';
 
 @Injectable()
 export class CreateVideoService {

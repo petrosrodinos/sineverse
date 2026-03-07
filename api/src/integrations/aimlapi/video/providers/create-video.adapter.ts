@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../../../core/schemas';
+import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../../core/schemas';
 
 @Injectable()
 export class CreateVideoAdapter {

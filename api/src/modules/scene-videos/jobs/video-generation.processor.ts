@@ -7,7 +7,7 @@ import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { GCPDocumentsService } from '../services/gcp-documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
-import { VideoModel } from '@/integrations/aimlapi/core/constants';
+import { VideoModels } from '@/integrations/aimlapi/core/constants';
 
 export interface VideoGenerationJobData {
     sceneVideoUuid: string;
@@ -48,7 +48,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             });
 
             const variation = sceneVideo.scene_variation;
-            const model = variation.ai_model || VideoModel.KLING_VIDEO_V3_STANDARD;
+            const model = variation.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
 
             // 1. Prepare payload based on generation type
             this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);
@@ -82,7 +82,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             this.logger.log(`Starting polling interval for task ${genResponse.id}`);
 
             const interval = setInterval(async () => {
-                await this.pollStatus(genResponse.id, model, sceneVideoUuid, intervalName);
+                await this.pollStatus(genResponse.id, sceneVideoUuid, intervalName);
             }, this.POLL_INTERVAL_MS);
 
             this.schedulerRegistry.addInterval(intervalName, interval);
@@ -110,9 +110,9 @@ export class VideoGenerationProcessor extends WorkerHost {
         }
     }
 
-    private async pollStatus(taskId: string, model: string, sceneVideoUuid: string, intervalName: string) {
+    private async pollStatus(taskId: string, sceneVideoUuid: string, intervalName: string) {
         try {
-            const statusResponse = await this.aimlApiService.video.getStatus(taskId, model);
+            const statusResponse = await this.aimlApiService.video.getStatus(taskId);
             this.logger.debug(`Polling status for ${sceneVideoUuid}: ${statusResponse.status}`);
 
             if (statusResponse.status === 'completed' && statusResponse.video?.url) {
