@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { VideoModels } from '../constants';
-import * as KlingSchemas from '../schemas/kling/kling.schemas';
-import * as GoogleSchemas from '../schemas/google/google.schemas';
-import * as SeedanceSchemas from '../schemas/seedance/seedance.schemas';
+import * as KlingSchemas from '../schemas/kling/kling-video.schemas';
+import * as GoogleSchemas from '../schemas/google/google-video.schemas';
+import * as SeedanceSchemas from '../schemas/seedance/seedance-video.schemas';
 
 /**
  * Maps internal VideoModel identifiers to their specific Zod validation schemas.

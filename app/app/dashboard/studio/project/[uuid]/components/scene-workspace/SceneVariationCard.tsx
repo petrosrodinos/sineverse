@@ -8,14 +8,14 @@ import { Checkbox } from "@heroui/checkbox";
 import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useUpdateSceneVariation, useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { useCreateSceneVideo, useSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
 import { VideoStatuses, SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import { ImageUpload } from "@/components/ui/ImageUpload";
 import { useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
 
@@ -30,8 +30,6 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
-  const uploadImageMutation = useUploadSceneVariationPromptImage();
-  const deleteImageMutation = useDeleteSceneVariationPromptImage();
   const createVideoMutation = useCreateSceneVideo();
   const queryClient = useQueryClient();
 
@@ -221,24 +219,11 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
-        {isImageToVideoModel && (
-          <ImageUpload
-              label="Reference Image"
-              description="Upload an image to guide the style and composition of the video."
-              value={editedVariation.prompt_image?.url}
-              isLoading={uploadImageMutation.isPending}
-              onChange={(file) => {
-                if (variation?.uuid) {
-                  uploadImageMutation.mutate({ uuid: variation.uuid, file });
-                }
-              }}
-              onRemove={() => {
-                if (variation?.uuid) {
-                  deleteImageMutation.mutate(variation.uuid);
-                }
-              }}
-          />
-        )}
+        <SceneVariationImageUpload 
+            variationUuid={variation?.uuid || ""} 
+            promptImageUrl={editedVariation.prompt_image?.url} 
+            isImageToVideoModel={!!isImageToVideoModel} 
+        />
               <div className="flex items-center px-1">
           <Checkbox
               isSelected={editedVariation.selected ?? false}

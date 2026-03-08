@@ -12,6 +12,7 @@ interface ImageUploadProps {
   label?: string;
   description?: string;
   className?: string;
+  height?: string;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -22,6 +23,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   label,
   description,
   className = "",
+  height = "min-h-[160px]",
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
@@ -59,9 +61,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       {description && <p className="text-xs text-default-500">{description}</p>}
 
       <div
-        className={`relative group border-2 border-dashed rounded-xl transition-all duration-200 overflow-hidden min-h-[160px] flex items-center justify-center
+        className={`relative group border-2 border-dashed rounded-xl transition-all duration-200 overflow-hidden flex items-center justify-center
           ${dragActive ? "border-primary bg-primary/5" : "border-default-200 hover:border-primary/50"}
           ${value ? "border-solid" : ""}
+          ${height}
         `}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
