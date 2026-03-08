@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVideoService } from './video/create-video.service';
-import { CreateVideoResponse, VideoStatusResponse } from './core/schemas';
+import { CreateVideoResponse, VideoStatusResponse, ImageGenerationResponse } from './core/schemas';
+import { CreateImageService } from './image/create-image.service';
 
 @Injectable()
 export class AimlApiService {
-    constructor(private readonly videoService: CreateVideoService) { }
+    constructor(private readonly videoService: CreateVideoService, private readonly imageService: CreateImageService) { }
 
     get video() {
         return {
@@ -19,8 +20,8 @@ export class AimlApiService {
 
     get image() {
         return {
-            create: async (request: unknown) => {
-                throw new Error('Image generation not implemented yet.');
+            create: async (request: unknown): Promise<ImageGenerationResponse> => {
+                return this.imageService.execute(request);
             }
         };
     }

@@ -5,7 +5,14 @@ export const CreateVideoResponseSchema = z.object({
     status: z.enum(['queued', 'generating', 'completed', 'error']),
 });
 
-export type CreateVideoResponse = z.infer<typeof CreateVideoResponseSchema>;
+
+export const UsageSchema = z.object({
+    credits_used: z.number(),
+});
+
+export const MetaSchema = z.object({
+    usage: UsageSchema.nullable(),
+});
 
 export const VideoStatusResponseSchema = z.object({
     id: z.string(),
@@ -18,6 +25,20 @@ export const VideoStatusResponseSchema = z.object({
         message: z.string(),
         details: z.any().optional(),
     }).nullable().optional(),
+    meta: MetaSchema.nullable(),
 });
 
+export const ImageDataSchema = z.object({
+    url: z.string().url().nullable(),
+    b64_json: z.string().nullable(),
+});
+
+
+export const ImageGenerationResponseSchema = z.object({
+    data: z.array(ImageDataSchema).nullable(),
+    meta: MetaSchema.nullable(),
+});
+
+export type ImageGenerationResponse = z.infer<typeof ImageGenerationResponseSchema>;
+export type CreateVideoResponse = z.infer<typeof CreateVideoResponseSchema>;
 export type VideoStatusResponse = z.infer<typeof VideoStatusResponseSchema>;

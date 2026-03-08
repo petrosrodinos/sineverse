@@ -2,11 +2,11 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../core/schemas';
+import { CreateImageRequest, ImageGenerationResponse } from '../core/schemas';
 
 @Injectable()
-export class CreateVideoAdapter {
-    private readonly logger = new Logger(CreateVideoAdapter.name);
+export class CreateImageAdapter {
+    private readonly logger = new Logger(CreateImageAdapter.name);
     private readonly baseUrl = 'https://api.aimlapi.com/v1';
 
     constructor(
@@ -14,39 +14,21 @@ export class CreateVideoAdapter {
         private readonly configService: ConfigService,
     ) { }
 
-    async createImage(request: CreateVideoRequest): Promise<CreateVideoResponse> {
+    async createImage(request: CreateImageRequest): Promise<ImageGenerationResponse> {
 
         try {
-            const response = await this.performApiCall<any>('POST', '/images/generations', request);
+            const response = await this.performApiCall<ImageGenerationResponse>('POST', '/images/generations', request);
 
-            if (!response || !response.id) {
+            if (!response || !response?.data) {
                 throw new Error('Invalid response: Missing generation ID');
             }
 
-            return {
-                id: response.id,
-                status: response.status,
-            };
+            return response;
+
         } catch (error) {
-            this.handleProviderError(error, `generation with model ${request.model}`);
+            this.handleError(error, `generation with model ${request.model}`);
         }
     }
-
-    async geImageStatus(taskId: string): Promise<VideoStatusResponse> {
-        try {
-            const response = await this.performApiCall<any>('GET', `/images/generations?generation_id=${taskId}`);
-
-            return {
-                id: response.id,
-                status: response.status,
-                video: response.video ? { url: response.video.url } : null,
-                error: response.error ? { name: response.error.name, message: response.error.message } : null,
-            };
-        } catch (error) {
-            this.handleProviderError(error, 'status retrieval');
-        }
-    }
-
 
     private async performApiCall<T>(method: 'GET' | 'POST', path: string, data?: any): Promise<T> {
         const apiKey = this.configService.get<string>('AIMLAPI_KEY');
@@ -73,7 +55,7 @@ export class CreateVideoAdapter {
         }
     }
 
-    private handleProviderError(error: any, context: string): never {
+    private handleError(error: any, context: string): never {
         const statusCode = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
         const errorMessage = error.response?.data?.error?.message || error.message || 'Unknown error';
 
