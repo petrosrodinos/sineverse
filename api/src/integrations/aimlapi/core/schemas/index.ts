@@ -1,7 +1,7 @@
 export * from './responses.schema';
 
 import { z } from 'zod';
-import { getModelSchema } from '../config/schemas.config';
+import { getVideoModelSchema, getImageModelSchema } from '../config/schemas.config';
 
 /**
  * A dynamic schema that resolves the correct validation based on the 'model' field.
@@ -12,7 +12,7 @@ export const CreateVideoSchema = z.record(z.any()).refine((data) => {
     message: "Model is required",
     path: ["model"]
 }).transform((data, ctx) => {
-    const schema = getModelSchema(data.model);
+    const schema = getVideoModelSchema(data.model);
 
     const result = schema.safeParse(data);
 
@@ -30,7 +30,7 @@ export const CreateImageSchema = z.record(z.any()).refine((data) => {
     message: "Model is required",
     path: ["model"]
 }).transform((data, ctx) => {
-    const schema = getModelSchema(data.model);
+    const schema = getImageModelSchema(data.model);
 
     const result = schema.safeParse(data);
 

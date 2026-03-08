@@ -20,4 +20,20 @@ export const VideoModels = {
     SEEDANCE_1_0_LITE_IMAGE: "bytedance/seedance-1-0-lite-i2v",
 } as const;
 
+
+export const ImageModels = {
+    // Kling AI
+    KLING_IMAGE_O1: "klingai/image-o1",
+
+    // Google
+    IMAGEN_4_FAST: "google/imagen-4.0-fast-generate-001",
+    IMAGEN_4: "google/imagen-4.0-generate-001",
+
+    // OpenAI
+    DALLE_3: "dall-e-3",
+    GPT_IMAGE_1_5: "openai/gpt-image-1-5",
+} as const;
+
+export type ImageModel = typeof ImageModels[keyof typeof ImageModels];
 export type VideoModel = typeof VideoModels[keyof typeof VideoModels];
+
