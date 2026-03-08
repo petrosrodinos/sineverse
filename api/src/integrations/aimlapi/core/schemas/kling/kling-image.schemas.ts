@@ -29,9 +29,10 @@ export const ImageUrlSchema = z
 export const ImageUrlsSchema = z.array(ImageUrlSchema).min(1).max(10);
 
 export const ImageGenerationSchema = z.object({
-    model: z.enum(["klingai/image-o1"]),
+    model: z.enum(["klingai/image-o1"]).default("klingai/image-o1"),
     prompt: z.string().max(4000),
-    image_urls: ImageUrlsSchema,
+    image_urls: ImageUrlsSchema.default([]),
+    n: z.number().int().default(1),
     aspect_ratio: AspectRatioEnum.default("16:9"),
     resolution: ResolutionEnum.default("1K"),
 });

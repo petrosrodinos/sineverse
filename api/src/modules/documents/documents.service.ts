@@ -58,8 +58,20 @@ export class DocumentsService {
     }
   }
 
+  async saveImageFromUrl(url: string, filename: string): Promise<string> {
+
+    try {
+      const response = await axios.get(url, { responseType: 'arraybuffer' });
+      const buffer = Buffer.from(response.data, 'binary');
+      const mimetype = response.headers['content-type'] || 'image/png';
+
+      return await this.saveImageFromBuffer(buffer, filename, mimetype);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async saveImageFromBuffer(buffer: Buffer, filename: string, mimetype: string): Promise<string> {
-    this.logger.log(`Saving image buffer as: ${filename}`);
 
     try {
       // 1. Upload to GCS

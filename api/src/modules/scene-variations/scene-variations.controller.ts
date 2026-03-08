@@ -9,6 +9,8 @@ import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { GenerateImageDto } from './dto/generate-image.dto';
+
 
 @ApiTags('Scene Variations')
 @Controller('scene-variations')
@@ -101,4 +103,20 @@ export class SceneVariationsController {
     ) {
         return this.sceneVariationsService.removePromptImage(user_uuid, uuid);
     }
+
+    @Post(':uuid/create-image')
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiOperation({ summary: 'Generate an image for a scene variation' })
+    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+    @ApiResponse({ status: 200, description: 'The image has been successfully generated.' })
+    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+    createImage(
+        @CurrentUser('uuid') user_uuid: string,
+        @Param('uuid') uuid: string,
+        @Body() generateImageDto: GenerateImageDto,
+        @UploadedFile() file?: any,
+    ) {
+        return this.sceneVariationsService.createImage(user_uuid, uuid, generateImageDto, file);
+    }
+
 }

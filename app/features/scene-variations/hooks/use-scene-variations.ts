@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage, deleteSceneVariationPromptImage } from "../services/scene-variations.services";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage, deleteSceneVariationPromptImage, generateSceneVariationImage } from "../services/scene-variations.services";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto, GenerateSceneVariationImageDto } from "../interfaces/scene-variations.interfaces";
+
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -12,9 +13,10 @@ export const useSceneVariations = (query: SceneVariationsQueryDto) => {
     return useQuery<SceneVariation[]>({ queryKey: [QueryKeys.sceneVariations, query], queryFn: () => getSceneVariations(query) });
 }
 
-export const useSceneVariation = (uuid: string) => {
-    return useQuery<SceneVariation>({ queryKey: [QueryKeys.sceneVariation(uuid)], queryFn: () => getSceneVariation(uuid) });
+export const useSceneVariation = (uuid: string, options?: any) => {
+    return useQuery<SceneVariation>({ queryKey: [QueryKeys.sceneVariation(uuid)], queryFn: () => getSceneVariation(uuid), ...options });
 }
+
 
 export const useCreateSceneVariation = () => {
     const queryClient = useQueryClient();
@@ -164,4 +166,28 @@ export const useDeleteSceneVariationPromptImage = () => {
         }
     });
 }
+
+export const useGenerateSceneVariationImage = () => {
+    const queryClient = useQueryClient();
+    return useMutation<{ status: 'generating' }, Error, { uuid: string, generateDto: GenerateSceneVariationImageDto }>({
+        mutationFn: ({ uuid, generateDto }) => generateSceneVariationImage(uuid, generateDto),
+        onSuccess: (_, { uuid }) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
+            addToast({
+                title: "Image generation started",
+                description: "The AI is working on your image. It will appear shortly.",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to generate image",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
 

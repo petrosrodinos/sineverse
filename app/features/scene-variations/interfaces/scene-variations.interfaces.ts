@@ -40,6 +40,8 @@ export interface SceneVariation {
     prompt_image?: Document;
     scene_video?: SceneVideo;
     scene?: Scene;
+    image_generation_status?: string;
+    image_generation_error?: string;
 }
 
 export interface CreateSceneVariationDto {
@@ -112,6 +114,26 @@ export interface SceneVariationEnrichDto {
     include_negative_prompt: boolean;
     include_video_generation_options: boolean;
 }
+
+export interface GenerateSceneVariationImageDto {
+    model: string;
+    prompt: string;
+    aspect_ratio?: string;
+    resolution?: string;
+    size?: string;
+    image?: File;
+    quality?: string;
+    style?: string;
+    enhance_prompt?: boolean;
+}
+
+export const MediaStatuses = {
+    PENDING: "PENDING",
+    PROCESSING: "PROCESSING",
+    COMPLETED: "COMPLETED",
+    FAILED: "FAILED",
+} as const;
+
 
 export const Styles = {
     cinematic: "cinematic",
@@ -296,3 +318,5 @@ export type Lighting = keyof typeof Lightings;
 export type ColorGrade = keyof typeof ColorGrades;
 export type AiModel = keyof typeof AiModels;
 export type AudioStyle = keyof typeof AudioStyles;
+export type MediaStatus = keyof typeof MediaStatuses;
+

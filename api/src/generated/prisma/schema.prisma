@@ -30,6 +30,13 @@ enum VideoStatus {
   FAILED
 }
 
+enum MediaStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 enum DocumentType {
   VIDEO
   IMAGE
@@ -150,6 +157,10 @@ model SceneVariation {
   // Audio style (future proof)
   audio_style   String? // orchestral, ambient, cinematic trailer
   include_sound Boolean @default(false)
+
+  // AI generation status
+  image_generation_status MediaStatus? @default(PENDING)
+  image_generation_error  String?      @db.Text
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

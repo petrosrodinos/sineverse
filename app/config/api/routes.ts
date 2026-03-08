@@ -32,6 +32,8 @@ export const ApiRoutes = {
         duplicate: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/duplicate`,
         enrich: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/enrich`,
         prompt_image: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/prompt-image`,
+        create_image: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/create-image`,
+
     },
     scene_videos: {
         prefix: "/scene-videos",

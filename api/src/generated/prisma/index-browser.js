@@ -191,6 +191,8 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   guidance_scale: 'guidance_scale',
   audio_style: 'audio_style',
   include_sound: 'include_sound',
+  image_generation_status: 'image_generation_status',
+  image_generation_error: 'image_generation_error',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -275,6 +277,13 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   PROMPTS_GENERATED: 'PROMPTS_GENERATED',
   VIDEOS_GENERATING: 'VIDEOS_GENERATING',
   COMPLETED: 'COMPLETED'
+};
+
+exports.MediaStatus = exports.$Enums.MediaStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
 };
 
 exports.VideoStatus = exports.$Enums.VideoStatus = {

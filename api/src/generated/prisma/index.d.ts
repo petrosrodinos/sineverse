@@ -85,6 +85,16 @@ export const VideoStatus: {
 export type VideoStatus = (typeof VideoStatus)[keyof typeof VideoStatus]
 
 
+export const MediaStatus: {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type MediaStatus = (typeof MediaStatus)[keyof typeof MediaStatus]
+
+
 export const DocumentType: {
   VIDEO: 'VIDEO',
   IMAGE: 'IMAGE',
@@ -108,6 +118,10 @@ export const ProjectStatus: typeof $Enums.ProjectStatus
 export type VideoStatus = $Enums.VideoStatus
 
 export const VideoStatus: typeof $Enums.VideoStatus
+
+export type MediaStatus = $Enums.MediaStatus
+
+export const MediaStatus: typeof $Enums.MediaStatus
 
 export type DocumentType = $Enums.DocumentType
 
@@ -5441,6 +5455,8 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean | null
+    image_generation_status: $Enums.MediaStatus | null
+    image_generation_error: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5478,6 +5494,8 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean | null
+    image_generation_status: $Enums.MediaStatus | null
+    image_generation_error: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -5515,6 +5533,8 @@ export namespace Prisma {
     guidance_scale: number
     audio_style: number
     include_sound: number
+    image_generation_status: number
+    image_generation_error: number
     created_at: number
     updated_at: number
     _all: number
@@ -5572,6 +5592,8 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
+    image_generation_status?: true
+    image_generation_error?: true
     created_at?: true
     updated_at?: true
   }
@@ -5609,6 +5631,8 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
+    image_generation_status?: true
+    image_generation_error?: true
     created_at?: true
     updated_at?: true
   }
@@ -5646,6 +5670,8 @@ export namespace Prisma {
     guidance_scale?: true
     audio_style?: true
     include_sound?: true
+    image_generation_status?: true
+    image_generation_error?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -5770,6 +5796,8 @@ export namespace Prisma {
     guidance_scale: number | null
     audio_style: string | null
     include_sound: boolean
+    image_generation_status: $Enums.MediaStatus | null
+    image_generation_error: string | null
     created_at: Date
     updated_at: Date
     _count: SceneVariationCountAggregateOutputType | null
@@ -5826,6 +5854,8 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
+    image_generation_status?: boolean
+    image_generation_error?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5867,6 +5897,8 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
+    image_generation_status?: boolean
+    image_generation_error?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5907,6 +5939,8 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
+    image_generation_status?: boolean
+    image_generation_error?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5947,11 +5981,13 @@ export namespace Prisma {
     guidance_scale?: boolean
     audio_style?: boolean
     include_sound?: boolean
+    image_generation_status?: boolean
+    image_generation_error?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "selected" | "ai_generated" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
+  export type SceneVariationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "scene_uuid" | "title" | "prompt_text" | "negative_prompt" | "prompt_image_uuid" | "selected" | "ai_generated" | "style" | "tone" | "genre" | "camera_style" | "shot_type" | "camera_movement" | "lens_type" | "depth_of_field" | "lighting" | "color_grade" | "time_of_day" | "aspect_ratio" | "resolution" | "fps" | "duration_sec" | "ai_model" | "seed" | "creativity" | "motion_strength" | "guidance_scale" | "audio_style" | "include_sound" | "image_generation_status" | "image_generation_error" | "created_at" | "updated_at", ExtArgs["result"]["sceneVariation"]>
   export type SceneVariationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     scene?: boolean | SceneDefaultArgs<ExtArgs>
@@ -6010,6 +6046,8 @@ export namespace Prisma {
       guidance_scale: number | null
       audio_style: string | null
       include_sound: boolean
+      image_generation_status: $Enums.MediaStatus | null
+      image_generation_error: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["sceneVariation"]>
@@ -6471,6 +6509,8 @@ export namespace Prisma {
     readonly guidance_scale: FieldRef<"SceneVariation", 'Float'>
     readonly audio_style: FieldRef<"SceneVariation", 'String'>
     readonly include_sound: FieldRef<"SceneVariation", 'Boolean'>
+    readonly image_generation_status: FieldRef<"SceneVariation", 'MediaStatus'>
+    readonly image_generation_error: FieldRef<"SceneVariation", 'String'>
     readonly created_at: FieldRef<"SceneVariation", 'DateTime'>
     readonly updated_at: FieldRef<"SceneVariation", 'DateTime'>
   }
@@ -10748,6 +10788,8 @@ export namespace Prisma {
     guidance_scale: 'guidance_scale',
     audio_style: 'audio_style',
     include_sound: 'include_sound',
+    image_generation_status: 'image_generation_status',
+    image_generation_error: 'image_generation_error',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -10953,6 +10995,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MediaStatus'
+   */
+  export type EnumMediaStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'MediaStatus[]'
+   */
+  export type ListEnumMediaStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MediaStatus[]'>
     
 
 
@@ -11292,6 +11348,8 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
+    image_generation_status?: EnumMediaStatusNullableFilter<"SceneVariation"> | $Enums.MediaStatus | null
+    image_generation_error?: StringNullableFilter<"SceneVariation"> | string | null
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11333,6 +11391,8 @@ export namespace Prisma {
     guidance_scale?: SortOrderInput | SortOrder
     audio_style?: SortOrderInput | SortOrder
     include_sound?: SortOrder
+    image_generation_status?: SortOrderInput | SortOrder
+    image_generation_error?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -11377,6 +11437,8 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
+    image_generation_status?: EnumMediaStatusNullableFilter<"SceneVariation"> | $Enums.MediaStatus | null
+    image_generation_error?: StringNullableFilter<"SceneVariation"> | string | null
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11418,6 +11480,8 @@ export namespace Prisma {
     guidance_scale?: SortOrderInput | SortOrder
     audio_style?: SortOrderInput | SortOrder
     include_sound?: SortOrder
+    image_generation_status?: SortOrderInput | SortOrder
+    image_generation_error?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: SceneVariationCountOrderByAggregateInput
@@ -11463,6 +11527,8 @@ export namespace Prisma {
     guidance_scale?: FloatNullableWithAggregatesFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     include_sound?: BoolWithAggregatesFilter<"SceneVariation"> | boolean
+    image_generation_status?: EnumMediaStatusNullableWithAggregatesFilter<"SceneVariation"> | $Enums.MediaStatus | null
+    image_generation_error?: StringNullableWithAggregatesFilter<"SceneVariation"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"SceneVariation"> | Date | string
   }
@@ -12069,6 +12135,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
@@ -12110,6 +12178,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
@@ -12144,6 +12214,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -12185,6 +12257,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
@@ -12223,6 +12297,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -12256,6 +12332,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12293,6 +12371,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13017,6 +13097,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type EnumMediaStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaStatus | EnumMediaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMediaStatusNullableFilter<$PrismaModel> | $Enums.MediaStatus | null
+  }
+
   export type SceneScalarRelationFilter = {
     is?: SceneWhereInput
     isNot?: SceneWhereInput
@@ -13065,6 +13152,8 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
+    image_generation_status?: SortOrder
+    image_generation_error?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13111,6 +13200,8 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
+    image_generation_status?: SortOrder
+    image_generation_error?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13148,6 +13239,8 @@ export namespace Prisma {
     guidance_scale?: SortOrder
     audio_style?: SortOrder
     include_sound?: SortOrder
+    image_generation_status?: SortOrder
+    image_generation_error?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -13199,6 +13292,16 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type EnumMediaStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaStatus | EnumMediaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMediaStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MediaStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMediaStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumMediaStatusNullableFilter<$PrismaModel>
   }
 
   export type EnumVideoStatusFilter<$PrismaModel = never> = {
@@ -13891,6 +13994,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableEnumMediaStatusFieldUpdateOperationsInput = {
+    set?: $Enums.MediaStatus | null
+  }
+
   export type UserUpdateOneRequiredWithoutScene_variationsNestedInput = {
     create?: XOR<UserCreateWithoutScene_variationsInput, UserUncheckedCreateWithoutScene_variationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutScene_variationsInput
@@ -14442,6 +14549,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumMediaStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaStatus | EnumMediaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMediaStatusNullableFilter<$PrismaModel> | $Enums.MediaStatus | null
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -14480,6 +14594,16 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMediaStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaStatus | EnumMediaStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.MediaStatus[] | ListEnumMediaStatusFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumMediaStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.MediaStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMediaStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumMediaStatusNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumVideoStatusFilter<$PrismaModel = never> = {
@@ -14619,6 +14743,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene: SceneCreateNestedOneWithoutScene_variationsInput
@@ -14658,6 +14784,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
@@ -14857,6 +14985,8 @@ export namespace Prisma {
     guidance_scale?: FloatNullableFilter<"SceneVariation"> | number | null
     audio_style?: StringNullableFilter<"SceneVariation"> | string | null
     include_sound?: BoolFilter<"SceneVariation"> | boolean
+    image_generation_status?: EnumMediaStatusNullableFilter<"SceneVariation"> | $Enums.MediaStatus | null
+    image_generation_error?: StringNullableFilter<"SceneVariation"> | string | null
     created_at?: DateTimeFilter<"SceneVariation"> | Date | string
     updated_at?: DateTimeFilter<"SceneVariation"> | Date | string
   }
@@ -15203,6 +15333,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
@@ -15242,6 +15374,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
@@ -15793,6 +15927,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
@@ -15833,6 +15969,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -15998,6 +16136,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -16038,6 +16178,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16466,6 +16608,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutScene_variationsInput
@@ -16505,6 +16649,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     scene_video?: SceneVideoUncheckedCreateNestedOneWithoutScene_variationInput
@@ -16706,6 +16852,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -16842,6 +16990,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene?: SceneUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -16881,6 +17031,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
@@ -16918,6 +17070,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17121,6 +17275,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17167,6 +17323,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -17206,6 +17364,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
@@ -17243,6 +17403,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17330,6 +17492,8 @@ export namespace Prisma {
     guidance_scale?: number | null
     audio_style?: string | null
     include_sound?: boolean
+    image_generation_status?: $Enums.MediaStatus | null
+    image_generation_error?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -17425,6 +17589,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutScene_variationsNestedInput
@@ -17464,6 +17630,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scene_video?: SceneVideoUncheckedUpdateOneWithoutScene_variationNestedInput
@@ -17501,6 +17669,8 @@ export namespace Prisma {
     guidance_scale?: NullableFloatFieldUpdateOperationsInput | number | null
     audio_style?: NullableStringFieldUpdateOperationsInput | string | null
     include_sound?: BoolFieldUpdateOperationsInput | boolean
+    image_generation_status?: NullableEnumMediaStatusFieldUpdateOperationsInput | $Enums.MediaStatus | null
+    image_generation_error?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

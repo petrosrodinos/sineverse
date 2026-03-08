@@ -1,6 +1,7 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto, GenerateSceneVariationImageDto } from "../interfaces/scene-variations.interfaces";
+
 
 export const getSceneVariations = async (query: SceneVariationsQueryDto): Promise<SceneVariation[]> => {
     try {
@@ -88,6 +89,38 @@ export const deleteSceneVariationPromptImage = async (uuid: string): Promise<Sce
         throw new Error(error?.response?.data?.message || "Failed to remove prompt image")
     }
 }
+
+export const generateSceneVariationImage = async (uuid: string, generateDto: GenerateSceneVariationImageDto): Promise<{ status: 'generating' }> => {
+    try {
+        const formData = new FormData();
+
+        // Add all fields from DTO to FormData
+        Object.entries(generateDto).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                if (key === 'image' && value instanceof File) {
+                    formData.append('file', value);
+                } else {
+                    formData.append(key, String(value));
+                }
+            }
+        });
+
+        const response = await axiosInstance.post<{ status: 'generating' }>(
+            ApiRoutes.scene_variations.create_image(uuid),
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to generate image")
+    }
+}
+
+
 
 
 

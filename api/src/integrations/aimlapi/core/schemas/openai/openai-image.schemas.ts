@@ -39,7 +39,7 @@ export const GptImageResponseFormatEnum = z.enum([
 ]);
 
 export const Dalle3ImageGenerationSchema = z.object({
-    model: z.enum(["dall-e-3"]),
+    model: z.enum(["dall-e-3"]).default("dall-e-3"),
     prompt: z
         .string()
         .max(4000, "Prompt must be at most 4000 characters"),
@@ -55,7 +55,7 @@ export const Dalle3ImageGenerationSchema = z.object({
 });
 
 export const GptImageSchema = z.object({
-    model: z.enum(["openai/gpt-image-1-5"]),
+    model: z.enum(["openai/gpt-image-1-5"]).default("openai/gpt-image-1-5"),
     prompt: z.string().max(32000),
     quality: GptImageQualityEnum.default("medium"),
     size: GptImageSizeEnum.default("1024x1024"),
