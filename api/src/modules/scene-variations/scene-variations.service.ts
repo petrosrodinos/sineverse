@@ -7,10 +7,10 @@ import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 import { DocumentsService } from '../documents/documents.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
-import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers.config';
 import { GenerateImageDto } from './dto/generate-image.dto';
 import { MediaStatus } from '@/generated/prisma';
-import { ensureMinDimensions } from '@/shared/utils/image-processor.util';
+import { ensureMinDimensions } from '@/shared/utils/images/image-processor.util';
+import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers/image-mapping.config';
 
 @Injectable()
 export class SceneVariationsService {
@@ -266,7 +266,7 @@ export class SceneVariationsService {
 
   async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateImageDto, file?: any) {
     try {
-      await this.findOne(user_uuid, uuid);
+      const variation = await this.findOne(user_uuid, uuid);
 
       await this.removePromptImage(user_uuid, uuid);
 
@@ -291,6 +291,12 @@ export class SceneVariationsService {
         }
       }
 
+      // Merge existing variation settings with generation DTO to ensure style consistency
+      const generationParams = {
+        ...variation,
+        ...generateImageDto,
+      };
+
       // Set variation status to PROCESSING
       await this.prisma.sceneVariation.update({
         where: { uuid },
@@ -302,7 +308,7 @@ export class SceneVariationsService {
 
       // Start the generation process in background
       setImmediate(() => {
-        this.generateAndSaveImageBackground(uuid, generateImageDto, temporaryImageUuid).catch((err) => {
+        this.generateAndSaveImageBackground(uuid, generationParams, temporaryImageUuid).catch((err) => {
           this.logger.error(`Background image generation failed for variation ${uuid}: ${err.message}`);
         });
       });
@@ -319,7 +325,6 @@ export class SceneVariationsService {
       const payload = transformVariationToImageModelPayload(generateImageDto, generateImageDto.model);
       const response = await this.aimlApiService.image.create(payload);
 
-      // Cleanup temporary reference image if it exists
       if (temporaryImageUuid) {
         await this.documentsService.deleteDocument(temporaryImageUuid).catch(err =>
           this.logger.error(`Failed to delete temporary reference image ${temporaryImageUuid}: ${err.message}`)
@@ -358,7 +363,6 @@ export class SceneVariationsService {
 
       this.logger.error(`Background image processing error: ${errorMessage}`);
 
-      // Attempt cleanup even on error if it wasn't done
       if (temporaryImageUuid) {
         await this.documentsService.deleteDocument(temporaryImageUuid).catch(() => { });
       }

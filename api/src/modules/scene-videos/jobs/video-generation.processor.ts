@@ -8,7 +8,7 @@ import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoStatus } from '@/generated/prisma';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
-import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers.config';
+import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 
 export interface VideoGenerationJobData {
     sceneVideoUuid: string;

@@ -1,12 +1,8 @@
 import { z } from "zod";
 
-/**
- * Enums
- */
 export const ImageModelEnum = z.enum(["dall-e-3"]);
 
 export const ImageCountEnum = z.enum(["1"]).transform(Number);
-// API only allows 1
 
 export const ImageQualityEnum = z.enum(["standard", "hd"]);
 
@@ -52,7 +48,7 @@ export const Dalle3ImageGenerationSchema = z.object({
     size: ImageSizeEnum.default("1024x1024"),
     style: ImageStyleEnum.default("vivid"),
     response_format: ImageResponseFormatEnum.default("url"),
-});
+}).passthrough();
 
 export const GptImageSchema = z.object({
     model: z.enum(["openai/gpt-image-1-5"]).default("openai/gpt-image-1-5"),
@@ -60,7 +56,7 @@ export const GptImageSchema = z.object({
     quality: GptImageQualityEnum.default("medium"),
     size: GptImageSizeEnum.default("1024x1024"),
     response_format: GptImageResponseFormatEnum.default("url"),
-});
+}).passthrough();
 
 export type GptImageInput = z.infer<typeof GptImageSchema>;
 
