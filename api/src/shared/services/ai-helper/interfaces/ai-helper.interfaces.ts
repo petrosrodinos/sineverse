@@ -31,6 +31,11 @@ export interface GenerateAiScenesConfig extends EnrichProjectConceptConfig {
     }[];
 }
 
+export interface EnrichImagePromptConfig {
+    prompt_text: string;
+    ai_model: string;
+}
+
 
 export interface AiPromptResponse {
     system: string;

@@ -219,12 +219,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
-        <SceneVariationImageUpload 
-            variationUuid={variation?.uuid || ""} 
-            promptImageUrl={editedVariation.prompt_image?.url} 
-            isImageToVideoModel={!!isImageToVideoModel} 
-        />
-              <div className="flex items-center px-1">
+             <div className="flex items-center px-1">
           <Checkbox
               isSelected={editedVariation.selected ?? false}
               onValueChange={(val) => handleOptionChange("selected", val)}
@@ -242,6 +237,12 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
               </div>
           </Checkbox>
       </div>
+        <SceneVariationImageUpload 
+            variationUuid={variation?.uuid || ""} 
+            promptImageUrl={editedVariation.prompt_image?.url} 
+            isImageToVideoModel={!!isImageToVideoModel} 
+        />
+         
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
           <AccordionItem key="negative" aria-label="Negative prompt" title={<span className="text-sm font-medium">Negative Prompt</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
             <Textarea 

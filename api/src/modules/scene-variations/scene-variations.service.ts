@@ -265,8 +265,8 @@ export class SceneVariationsService {
   }
 
   async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateImageDto, file?: any) {
+
     try {
-      const variation = await this.findOne(user_uuid, uuid);
 
       await this.removePromptImage(user_uuid, uuid);
 
@@ -275,7 +275,6 @@ export class SceneVariationsService {
       if (file) {
         const filename = `temp-ref-image-${uuid}-${Date.now()}`;
 
-        // Ensure minimum dimensions for providers like Kling
         const processedBuffer = await ensureMinDimensions(file.buffer);
 
         temporaryImageUuid = await this.documentsService.saveImageFromBuffer(
@@ -291,13 +290,7 @@ export class SceneVariationsService {
         }
       }
 
-      // Merge existing variation settings with generation DTO to ensure style consistency
-      const generationParams = {
-        ...variation,
-        ...generateImageDto,
-      };
 
-      // Set variation status to PROCESSING
       await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
@@ -308,7 +301,7 @@ export class SceneVariationsService {
 
       // Start the generation process in background
       setImmediate(() => {
-        this.generateAndSaveImageBackground(uuid, generationParams, temporaryImageUuid).catch((err) => {
+        this.generateAndSaveImageBackground(uuid, generateImageDto, temporaryImageUuid).catch((err) => {
           this.logger.error(`Background image generation failed for variation ${uuid}: ${err.message}`);
         });
       });
@@ -322,7 +315,19 @@ export class SceneVariationsService {
 
   private async generateAndSaveImageBackground(uuid: string, generateImageDto: GenerateImageDto, temporaryImageUuid?: string) {
     try {
-      const payload = transformVariationToImageModelPayload(generateImageDto, generateImageDto.model);
+
+      if (generateImageDto.enrich_prompt) {
+        const enrichedPrompt = await this.aiHelperService.enrichImagePrompt({
+          prompt_text: generateImageDto.prompt_text,
+          ai_model: generateImageDto.ai_model,
+
+        });
+
+        generateImageDto.prompt_text = enrichedPrompt.response;
+      }
+
+      const payload = transformVariationToImageModelPayload(generateImageDto, generateImageDto.ai_model);
+
       const response = await this.aimlApiService.image.create(payload);
 
       if (temporaryImageUuid) {
@@ -351,6 +356,7 @@ export class SceneVariationsService {
           ai_generated: true,
         }
       });
+
     } catch (err) {
       // Extract detailed error message if it's an HttpException
       let errorMessage = err.message || 'Unknown error occurred during generation';

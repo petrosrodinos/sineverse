@@ -116,15 +116,10 @@ export interface SceneVariationEnrichDto {
 }
 
 export interface GenerateSceneVariationImageDto {
-    model: string;
-    prompt: string;
-    aspect_ratio?: string;
-    resolution?: string;
-    size?: string;
+    ai_model: string;
+    prompt_text: string;
     image?: File;
-    quality?: string;
-    style?: string;
-    enhance_prompt?: boolean;
+    enrich_prompt?: boolean;
 }
 
 export const MediaStatuses = {

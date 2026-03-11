@@ -11,12 +11,12 @@ export const transformVariationToImageModelPayload = (variation: any, model: str
     const basePayload: any = {
         model,
         prompt: buildPrompt(),
-        enhance_prompt: variation.enhance_prompt || undefined,
+        enhance_prompt: Boolean(variation.enrich_prompt || false),
     };
 
     // Kling Image Mappings
     if (model.includes('kling')) {
-        const urls = variation.image_urls || (variation.prompt_image?.url ? [variation.prompt_image.url] : []);
+        const urls = variation.image_urls || [];
         const payload = { ...basePayload };
         if (urls.length > 0) {
             payload.image_urls = urls;

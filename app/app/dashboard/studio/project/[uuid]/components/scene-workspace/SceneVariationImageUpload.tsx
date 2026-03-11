@@ -8,6 +8,7 @@ import { Tabs, Tab } from "@heroui/tabs";
 import { Select, SelectItem, SelectSection } from "@heroui/select";
 import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
+import { Checkbox } from "@heroui/checkbox";
 import { ImageModels } from "@/config/dropdowns/project/image.options";
 import { useState, useEffect } from "react";
 import { Wand2, Upload, Sparkles } from "lucide-react";
@@ -28,6 +29,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
+  const [enrichPrompt, setEnrichPrompt] = useState(true);
   const [isPolling, setIsPolling] = useState(false);
   
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -63,9 +65,10 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
     generateImageMutation.mutate({
       uuid: variationUuid,
       generateDto: {
-        model: selectedModel,
-        prompt: prompt,
+        ai_model: selectedModel, 
+        prompt_text: prompt,
         image: referenceImage || undefined,
+        enrich_prompt: enrichPrompt,
       }
     }, {
       onSuccess: () => {
@@ -160,6 +163,17 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                           </SelectSection>
                         ))}
                       </Select>
+                      
+                      <div className="flex items-center px-1">
+                        <Checkbox 
+                          isSelected={enrichPrompt} 
+                          onValueChange={setEnrichPrompt}
+                          size="sm"
+                          classNames={{ label: "text-xs font-medium text-default-600" }}
+                        >
+                          Enrich Prompt
+                        </Checkbox>
+                      </div>
 
                       {supportsImageToImage && (
                         <div className="flex flex-col gap-2">
