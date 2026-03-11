@@ -82,6 +82,8 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
 
   const providers = Array.from(new Set(ImageModels.map(m => m.provider)));
   const isGenerating = generateImageMutation.isPending || isPolling;
+  const selectedModelConfig = ImageModels.find(m => m.name === selectedModel);
+  const supportsImageToImage = (selectedModelConfig as any)?.image_to_image === true;
 
   return (
     <>
@@ -131,24 +133,21 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                         classNames={{ inputWrapper: "rounded-xl" }}
                       />
                       
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-medium text-default-600">Guidance Image (Optional)</label>
-                        <ImageUpload
-                            height="min-h-[100px]"
-                            description="Optional image to guide the generation."
-                            value={referenceImage ? URL.createObjectURL(referenceImage) : undefined}
-                            onChange={(file: File) => setReferenceImage(file)}
-                            onRemove={() => setReferenceImage(null)}
-                        />
-                      </div>
-
                       <Select
                         label="AI Model"
                         placeholder="Select a model"
                         variant="bordered"
                         isRequired
                         selectedKeys={selectedModel ? [selectedModel] : []}
-                        onSelectionChange={(keys) => setSelectedModel(Array.from(keys)[0] as string)}
+                        onSelectionChange={(keys) => {
+                          const newModel = Array.from(keys)[0] as string;
+                          setSelectedModel(newModel);
+                          // Clear reference image if new model doesn't support it
+                          const config = ImageModels.find(m => m.name === newModel);
+                          if (!(config as any)?.image_to_image) {
+                            setReferenceImage(null);
+                          }
+                        }}
                         classNames={{ trigger: "rounded-xl" }}
                       >
                         {providers.map((provider) => (
@@ -161,6 +160,19 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                           </SelectSection>
                         ))}
                       </Select>
+
+                      {supportsImageToImage && (
+                        <div className="flex flex-col gap-2">
+                          <label className="text-xs font-medium text-default-600">Guidance Image (Optional)</label>
+                          <ImageUpload
+                              height="min-h-[100px]"
+                              description="Optional image to guide the generation."
+                              value={referenceImage ? URL.createObjectURL(referenceImage) : undefined}
+                              onChange={(file: File) => setReferenceImage(file)}
+                              onRemove={() => setReferenceImage(null)}
+                          />
+                        </div>
+                      )}
                       
                       <Button 
                         color="primary" 
