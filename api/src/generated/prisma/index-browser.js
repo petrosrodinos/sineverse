@@ -141,7 +141,6 @@ exports.Prisma.ProjectScalarFieldEnum = {
   enriched_concept: 'enriched_concept',
   genres: 'genres',
   tones: 'tones',
-  status: 'status',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -191,21 +190,21 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   guidance_scale: 'guidance_scale',
   audio_style: 'audio_style',
   include_sound: 'include_sound',
-  image_generation_status: 'image_generation_status',
-  image_generation_error: 'image_generation_error',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
 
-exports.Prisma.SceneVideoScalarFieldEnum = {
+exports.Prisma.ProjectAssetScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
   user_uuid: 'user_uuid',
+  project_uuid: 'project_uuid',
   scene_uuid: 'scene_uuid',
   scene_variation_uuid: 'scene_variation_uuid',
   provider_job_id: 'provider_job_id',
-  video_uuid: 'video_uuid',
+  document_uuid: 'document_uuid',
   status: 'status',
+  type: 'type',
   error_message: 'error_message',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -270,23 +269,7 @@ exports.AuthRole = exports.$Enums.AuthRole = {
   SUPPORT: 'SUPPORT'
 };
 
-exports.ProjectStatus = exports.$Enums.ProjectStatus = {
-  DRAFT: 'DRAFT',
-  ENRICHED: 'ENRICHED',
-  SCENES_GENERATED: 'SCENES_GENERATED',
-  PROMPTS_GENERATED: 'PROMPTS_GENERATED',
-  VIDEOS_GENERATING: 'VIDEOS_GENERATING',
-  COMPLETED: 'COMPLETED'
-};
-
-exports.MediaStatus = exports.$Enums.MediaStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
-exports.VideoStatus = exports.$Enums.VideoStatus = {
+exports.AssetStatus = exports.$Enums.AssetStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
   COMPLETED: 'COMPLETED',
@@ -297,8 +280,11 @@ exports.DocumentType = exports.$Enums.DocumentType = {
   VIDEO: 'VIDEO',
   IMAGE: 'IMAGE',
   AUDIO: 'AUDIO',
-  DOCUMENT: 'DOCUMENT',
-  THUMBNAIL: 'THUMBNAIL'
+  THUMBNAIL: 'THUMBNAIL',
+  CAPTION: 'CAPTION',
+  VOICEOVER: 'VOICEOVER',
+  MUSIC: 'MUSIC',
+  DOCUMENT: 'DOCUMENT'
 };
 
 exports.Prisma.ModelName = {
@@ -306,7 +292,7 @@ exports.Prisma.ModelName = {
   Project: 'Project',
   Scene: 'Scene',
   SceneVariation: 'SceneVariation',
-  SceneVideo: 'SceneVideo',
+  ProjectAsset: 'ProjectAsset',
   FinalProject: 'FinalProject',
   Document: 'Document'
 };

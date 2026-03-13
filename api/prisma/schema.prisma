@@ -14,23 +14,8 @@ enum AuthRole {
   SUPPORT
 }
 
-enum ProjectStatus {
-  DRAFT
-  ENRICHED
-  SCENES_GENERATED
-  PROMPTS_GENERATED
-  VIDEOS_GENERATING
-  COMPLETED
-}
 
-enum VideoStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum MediaStatus{
+enum AssetStatus {
   PENDING
   PROCESSING
   COMPLETED
@@ -42,8 +27,11 @@ enum DocumentType {
   VIDEO
   IMAGE
   AUDIO
-  DOCUMENT
   THUMBNAIL
+  CAPTION
+  VOICEOVER
+  MUSIC
+  DOCUMENT
 }
 
 model User {
@@ -60,7 +48,7 @@ model User {
   projects         Project[]
   scenes           Scene[]
   scene_variations SceneVariation[]
-  scene_videos     SceneVideo[]
+  project_assets   ProjectAsset[]
   final_projects   FinalProject[]
 
   @@index([email])
@@ -78,12 +66,12 @@ model Project {
   enriched_concept String?       @db.Text
   genres           Json?
   tones            Json?
-  status           ProjectStatus @default(DRAFT)
   created_at       DateTime      @default(now())
   updated_at       DateTime      @updatedAt
 
   user           User           @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   scenes         Scene[]
+  project_assets   ProjectAsset[]
   final_projects FinalProject[]
 
   @@index([uuid])
@@ -105,7 +93,7 @@ model Scene {
   user             User             @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   project          Project          @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
   scene_variations SceneVariation[]
-  scene_videos     SceneVideo[]
+  project_assets   ProjectAsset[]
 
   @@unique([project_uuid, order])
   @@index([uuid])
@@ -159,43 +147,44 @@ model SceneVariation {
   audio_style   String? // orchestral, ambient, cinematic trailer
   include_sound Boolean @default(false)
 
-  // AI generation status
-  image_generation_status MediaStatus?   @default(PENDING)
-  image_generation_error  String?   @db.Text
-
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   user         User        @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   scene        Scene       @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
-  prompt_image Document?   @relation("SceneVariationImage", fields: [prompt_image_uuid], references: [uuid], onDelete: SetNull)
-  scene_video  SceneVideo?
+  prompt_image ProjectAsset? @relation("SceneVariationPromptImage", fields: [prompt_image_uuid], references: [uuid])
+  video        ProjectAsset? @relation("SceneVariationVideo")
 
   @@index([uuid])
   @@index([scene_uuid])
   @@map("scene_variations")
 }
 
-model SceneVideo {
+
+model ProjectAsset {
   id                   Int         @id @default(autoincrement())
   uuid                 String      @unique @default(uuid())
   user_uuid            String
-  scene_uuid           String
-  scene_variation_uuid String      @unique
+  project_uuid         String
+  scene_uuid           String?
+  scene_variation_uuid String?     @unique
   provider_job_id      String?
-  video_uuid           String?
-  status               VideoStatus @default(PENDING)
+  document_uuid        String? 
+  status               AssetStatus @default(PENDING)
+  type           DocumentType @default(VIDEO)
   error_message        String?     @db.Text
   created_at           DateTime    @default(now())
   updated_at           DateTime    @updatedAt
 
   user            User            @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
-  scene           Scene           @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
-  scene_variation SceneVariation? @relation(fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
-  video           Document?       @relation("SceneVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
+  project         Project         @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
+  scene           Scene?           @relation(fields: [scene_uuid], references: [uuid], onDelete: Cascade)
+  scene_variation_video  SceneVariation? @relation("SceneVariationVideo", fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
+  scene_variation_prompt_image SceneVariation[] @relation("SceneVariationPromptImage")
+  document        Document?       @relation("ProjectAsset", fields: [document_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([uuid])
-  @@map("scene_videos")
+  @@map("project_assets")
 }
 
 model FinalProject {
@@ -233,10 +222,9 @@ model Document {
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
 
-  scene_videos             SceneVideo[]     @relation("SceneVideo")
-  prompt_images            SceneVariation[] @relation("SceneVariationImage")
   final_project_videos     FinalProject[]   @relation("FinalProjectVideo")
   final_project_thumbnails FinalProject[]   @relation("FinalProjectThumbnail")
+  project_assets           ProjectAsset[]   @relation("ProjectAsset")
 
   @@index([uuid])
   @@index([type])

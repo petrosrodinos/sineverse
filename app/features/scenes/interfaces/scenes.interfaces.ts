@@ -1,3 +1,4 @@
+import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 
@@ -13,6 +14,7 @@ export interface Scene {
     updated_at: string;
     scene_variations?: SceneVariation[];
     scene_videos?: SceneVideo[];
+    project_assets?: ProjectAsset[];
 
 }
 

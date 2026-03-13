@@ -14,7 +14,6 @@ export class DocumentsService {
   ) { }
 
   async saveVideoFromUrl(url: string, filename: string): Promise<string> {
-    this.logger.log(`Saving video from URL: ${url}`);
 
     try {
       // 1. Download video from provider URL
@@ -29,7 +28,6 @@ export class DocumentsService {
   }
 
   async saveVideoFromBuffer(buffer: Buffer, filename: string): Promise<string> {
-    this.logger.log(`Saving video buffer as: ${filename}`);
 
     try {
       // 1. Upload to GCS
@@ -129,13 +127,13 @@ export class DocumentsService {
 
   async deleteExistingVideoForVariation(variationUuid: string): Promise<void> {
     try {
-      const sceneVideo = await this.prisma.sceneVideo.findUnique({
-        where: { scene_variation_uuid: variationUuid },
+      const variation = await this.prisma.sceneVariation.findUnique({
+        where: { uuid: variationUuid },
         include: { video: true }
       });
 
-      if (sceneVideo?.video_uuid) {
-        await this.deleteDocument(sceneVideo.video_uuid);
+      if (variation?.video?.document_uuid) {
+        await this.deleteDocument(variation.video.document_uuid);
       }
     } catch (error) {
       throw error;
@@ -146,17 +144,20 @@ export class DocumentsService {
     try {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid: variationUuid },
-        include: { scene_video: true }
+        include: {
+          prompt_image: true,
+          video: true
+        }
       });
 
       if (!variation) return;
 
-      if (variation.prompt_image_uuid) {
-        await this.deleteDocument(variation.prompt_image_uuid);
+      if (variation.prompt_image?.document_uuid) {
+        await this.deleteDocument(variation.prompt_image.document_uuid);
       }
 
-      if (variation.scene_video?.video_uuid) {
-        await this.deleteDocument(variation.scene_video.video_uuid);
+      if (variation.video?.document_uuid) {
+        await this.deleteDocument(variation.video.document_uuid);
       }
     } catch (error) {
       this.logger.error(`Error deleting documents for variation ${variationUuid}: ${error.message}`);

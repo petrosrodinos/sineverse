@@ -1,4 +1,5 @@
 import { Document } from "@/features/documents/interfaces/document.interfaces";
+import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectTone, ProjectGenre } from "@/features/projects/interfaces/projects.interfaces";
 import { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
@@ -37,9 +38,11 @@ export interface SceneVariation {
     include_sound?: boolean;
     created_at: string;
     updated_at: string;
+    scene?: Scene;
     prompt_image?: Document;
     scene_video?: SceneVideo;
-    scene?: Scene;
+    video?: ProjectAsset;
+    // prompt_image?: ProjectAsset;
     image_generation_status?: string;
     image_generation_error?: string;
 }

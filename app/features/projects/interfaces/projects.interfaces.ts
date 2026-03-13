@@ -1,3 +1,7 @@
+import { FinalProject } from "@/features/final-projects/interfaces/final-projects.interfaces";
+import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
+
 export interface Project {
     id: string;
     uuid: string;
@@ -7,6 +11,9 @@ export interface Project {
     genres?: ProjectGenre[];
     tones?: ProjectTone[];
     status: ProjectStatus;
+    scenes?: Scene[];
+    project_assets?: ProjectAsset[];
+    final_projects?: FinalProject[];
     created_at: string;
     updated_at: string;
 }

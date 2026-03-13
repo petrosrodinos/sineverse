@@ -8,7 +8,7 @@ import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 import { DocumentsService } from '../documents/documents.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { GenerateImageDto } from './dto/generate-image.dto';
-import { MediaStatus } from '@/generated/prisma';
+import { AssetStatus, DocumentType } from '@/generated/prisma';
 import { ensureMinDimensions } from '@/shared/utils/images/image-processor.util';
 import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers/image-mapping.config';
 
@@ -52,8 +52,8 @@ export class SceneVariationsService {
       return await this.prisma.sceneVariation.findMany({
         where,
         include: {
-          scene_video: { include: { video: true } },
-          prompt_image: true,
+          video: { include: { document: true } },
+          prompt_image: { include: { document: true } },
         },
       });
     } catch (error) {
@@ -66,8 +66,9 @@ export class SceneVariationsService {
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid, user_uuid },
         include: {
-          scene_video: { include: { video: true } },
-          prompt_image: true,
+          video: { include: { document: true } },
+          prompt_image: { include: { document: true } },
+          scene: true,
         },
       });
       if (!variation) throw new NotFoundException('Scene variation not found');
@@ -113,7 +114,6 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
-      console.log(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to update scene variation', { cause: error });
     }
@@ -138,8 +138,9 @@ export class SceneVariationsService {
         created_at,
         updated_at,
         selected,
-        scene_video,
+        video,
         prompt_image,
+        scene,
         ...dataToCopy
       } = variation;
 
@@ -151,7 +152,6 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
-      console.log(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
     }
@@ -209,12 +209,16 @@ export class SceneVariationsService {
 
   async uploadPromptImage(user_uuid: string, uuid: string, file: any) {
     try {
-      const variation = await this.findOne(user_uuid, uuid);
+      const variation = await this.prisma.sceneVariation.findFirst({
+        where: { uuid, user_uuid },
+        include: {
+          prompt_image: true,
+          scene: true,
+        },
+      });
 
       // 1. Delete old prompt image if it exists
-      if (variation.prompt_image_uuid) {
-        await this.documentsService.deleteDocument(variation.prompt_image_uuid);
-      }
+      await this.removePromptImage(user_uuid, uuid);
 
       // 2. Upload new image
       const filename = `prompt-image-${uuid}-${Date.now()}`;
@@ -228,14 +232,26 @@ export class SceneVariationsService {
         file.mimetype,
       );
 
-      // 3. Update variation
+      // 3. Create ProjectAsset
+      const asset = await this.prisma.projectAsset.create({
+        data: {
+          user_uuid,
+          project_uuid: variation.scene.project_uuid,
+          scene_uuid: variation.scene_uuid,
+          type: DocumentType.IMAGE,
+          status: AssetStatus.COMPLETED,
+          document_uuid: documentUuid,
+        }
+      });
+
+      // 4. Update variation
       return await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
-          prompt_image_uuid: documentUuid,
+          prompt_image_uuid: asset.uuid,
         },
         include: {
-          prompt_image: true,
+          prompt_image: { include: { document: true } },
         },
       });
     } catch (error) {
@@ -246,10 +262,20 @@ export class SceneVariationsService {
 
   async removePromptImage(user_uuid: string, uuid: string) {
     try {
-      const variation = await this.findOne(user_uuid, uuid);
+      const variation = await this.prisma.sceneVariation.findFirst({
+        where: { uuid, user_uuid },
+        include: { prompt_image: true }
+      });
 
-      if (variation.prompt_image_uuid) {
-        await this.documentsService.deleteDocument(variation.prompt_image_uuid);
+      if (!variation) throw new NotFoundException('Scene variation not found');
+
+      if (variation.prompt_image) {
+        if (variation.prompt_image.document_uuid) {
+          await this.documentsService.deleteDocument(variation.prompt_image.document_uuid);
+        }
+        await this.prisma.projectAsset.delete({
+          where: { uuid: variation.prompt_image.uuid }
+        });
       }
 
       return await this.prisma.sceneVariation.update({
@@ -265,8 +291,13 @@ export class SceneVariationsService {
   }
 
   async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateImageDto, file?: any) {
-
     try {
+      const variation = await this.prisma.sceneVariation.findUnique({
+        where: { uuid },
+        include: { scene: true }
+      });
+
+      if (!variation) throw new NotFoundException('Scene variation not found');
 
       await this.removePromptImage(user_uuid, uuid);
 
@@ -290,12 +321,22 @@ export class SceneVariationsService {
         }
       }
 
+      // Create ProjectAsset for generation
+      const asset = await this.prisma.projectAsset.create({
+        data: {
+          user_uuid,
+          project_uuid: variation.scene.project_uuid,
+          scene_uuid: variation.scene_uuid,
+          type: DocumentType.IMAGE,
+          status: AssetStatus.PROCESSING,
+        }
+      });
+
 
       await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
-          image_generation_status: MediaStatus.PROCESSING,
-          image_generation_error: null
+          prompt_image_uuid: asset.uuid,
         }
       });
 
@@ -348,11 +389,24 @@ export class SceneVariationsService {
       const filename = `generated-image-${uuid}-${Date.now()}.png`;
       const documentUuid = await this.documentsService.saveImageFromUrl(imageUrl, filename);
 
+      const variation = await this.prisma.sceneVariation.findUnique({
+        where: { uuid },
+        select: { prompt_image_uuid: true }
+      });
+
+      if (variation?.prompt_image_uuid) {
+        await this.prisma.projectAsset.update({
+          where: { uuid: variation.prompt_image_uuid },
+          data: {
+            document_uuid: documentUuid,
+            status: AssetStatus.COMPLETED,
+          }
+        });
+      }
+
       await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
-          prompt_image_uuid: documentUuid,
-          image_generation_status: MediaStatus.COMPLETED,
           ai_generated: true,
         }
       });
@@ -373,13 +427,21 @@ export class SceneVariationsService {
         await this.documentsService.deleteDocument(temporaryImageUuid).catch(() => { });
       }
 
-      await this.prisma.sceneVariation.update({
+      const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid },
-        data: {
-          image_generation_status: MediaStatus.FAILED,
-          image_generation_error: errorMessage,
-        }
+        select: { prompt_image_uuid: true }
       });
+
+      if (variation?.prompt_image_uuid) {
+        await this.prisma.projectAsset.update({
+          where: { uuid: variation.prompt_image_uuid },
+          data: {
+            status: AssetStatus.FAILED,
+            error_message: errorMessage,
+          }
+        });
+      }
+
     }
   }
 }

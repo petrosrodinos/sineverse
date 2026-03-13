@@ -13,9 +13,9 @@ import { ConfigModule } from './shared/config/env/env.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { ScenesModule } from './modules/scenes/scenes.module';
 import { SceneVariationsModule } from './modules/scene-variations/scene-variations.module';
-import { SceneVideosModule } from './modules/scene-videos/scene-videos.module';
 import { FinalProjectsModule } from './modules/final-projects/final-projects.module';
 import { DocumentsModule } from './modules/documents/documents.module';
+import { ProjectAssetsModule } from './modules/project-assets/project-assets.module';
 
 @Module({
   imports: [
@@ -32,9 +32,9 @@ import { DocumentsModule } from './modules/documents/documents.module';
     ProjectsModule,
     ScenesModule,
     SceneVariationsModule,
-    SceneVideosModule,
     FinalProjectsModule,
     DocumentsModule,
+    ProjectAssetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

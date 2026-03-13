@@ -6,12 +6,12 @@ import { VIDEO_GENERATION_QUEUE } from '../queues/video.constants';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { VideoStatus } from '@/generated/prisma';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
+import { AssetStatus } from '@/generated/prisma';
 
 export interface VideoGenerationJobData {
-    sceneVideoUuid: string;
+    projectAssetUuid: string;
 }
 
 @Processor(VIDEO_GENERATION_QUEUE)
@@ -29,43 +29,43 @@ export class VideoGenerationProcessor extends WorkerHost {
     }
 
     async process(job: Job<VideoGenerationJobData>): Promise<any> {
-        const { sceneVideoUuid } = job.data;
-        this.logger.log(`Processing video generation job for SceneVideo: ${sceneVideoUuid}`);
+        const { projectAssetUuid } = job.data;
 
-        const sceneVideo = await this.prisma.sceneVideo.findUnique({
-            where: { uuid: sceneVideoUuid },
+        const projectAsset = await this.prisma.projectAsset.findUnique({
+            where: { uuid: projectAssetUuid },
             include: {
-                scene_variation: {
+                scene_variation_video: {
                     include: {
-                        prompt_image: true
+                        prompt_image: {
+                            include: {
+                                document: true
+                            }
+                        }
                     }
                 }
             },
         });
 
-        if (!sceneVideo || !sceneVideo.scene_variation) {
-            this.logger.error(`SceneVideo or variation not found: ${sceneVideoUuid}`);
+        if (!projectAsset || !projectAsset.scene_variation_video) {
+            this.logger.error(`projectAsset or variation not found: ${projectAssetUuid}`);
             return;
         }
 
         try {
 
-            await this.prisma.sceneVideo.update({
-                where: { uuid: sceneVideoUuid },
-                data: { status: VideoStatus.PROCESSING },
+            await this.prisma.projectAsset.update({
+                where: { uuid: projectAssetUuid },
+                data: { status: AssetStatus.PROCESSING },
             });
 
-            const variation = sceneVideo.scene_variation;
+            const variation = projectAsset.scene_variation_video;
             const model = variation.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
-
-            // 1. Prepare payload based on generation type
-            this.logger.log(`Triggering AIML API video generation for ${sceneVideoUuid} using ${model}`);
 
             const payload = transformVariationToModelPayload(variation, model);
 
             const isImageToVideoModel = model.includes('image-to-video') || model.includes('i2v');
-            if (isImageToVideoModel && variation.prompt_image?.url) {
-                payload.image_url = variation.prompt_image.url;
+            if (isImageToVideoModel && variation.prompt_image?.document?.url) {
+                payload.image_url = variation.prompt_image.document?.url;
             }
 
             const genResponse = await this.aimlApiService.video.create(payload);
@@ -75,20 +75,19 @@ export class VideoGenerationProcessor extends WorkerHost {
             }
 
             // 2. Clear existing polling if any (defensive)
-            const intervalName = `poll_video_${sceneVideoUuid}`;
+            const intervalName = `poll_video_${projectAssetUuid}`;
             this.stopPolling(intervalName);
 
             // 3. Update job ID in DB
-            await this.prisma.sceneVideo.update({
-                where: { uuid: sceneVideoUuid },
+            await this.prisma.projectAsset.update({
+                where: { uuid: projectAssetUuid },
                 data: { provider_job_id: genResponse.id },
             });
 
             // 4. Start polling cron job (Interval)
-            this.logger.log(`Starting polling interval for task ${genResponse.id}`);
 
             const interval = setInterval(async () => {
-                await this.pollStatus(genResponse.id, sceneVideoUuid, intervalName);
+                await this.pollStatus(genResponse.id, projectAssetUuid, intervalName);
             }, this.POLL_INTERVAL_MS);
 
             this.schedulerRegistry.addInterval(intervalName, interval);
@@ -104,10 +103,10 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             this.logger.error(`Failed to initiate video generation: ${details}`, error.stack);
 
-            await this.prisma.sceneVideo.update({
-                where: { uuid: sceneVideoUuid },
+            await this.prisma.projectAsset.update({
+                where: { uuid: projectAssetUuid },
                 data: {
-                    status: VideoStatus.FAILED,
+                    status: AssetStatus.FAILED,
                     error_message: details,
                 },
             });
@@ -116,13 +115,11 @@ export class VideoGenerationProcessor extends WorkerHost {
         }
     }
 
-    private async pollStatus(taskId: string, sceneVideoUuid: string, intervalName: string) {
+    private async pollStatus(taskId: string, projectAssetUuid: string, intervalName: string) {
         try {
             const statusResponse = await this.aimlApiService.video.getStatus(taskId);
-            this.logger.debug(`Polling status for ${sceneVideoUuid}: ${statusResponse.status}`);
 
             if (statusResponse.status === 'completed' && statusResponse.video?.url) {
-                this.logger.log(`Video generation COMPLETED for ${sceneVideoUuid}. Saving...`);
 
                 // Stop polling
                 this.stopPolling(intervalName);
@@ -131,23 +128,23 @@ export class VideoGenerationProcessor extends WorkerHost {
                     // Save to GCP
                     const videoUuid = await this.documentsService.saveVideoFromUrl(
                         statusResponse.video.url,
-                        `video_${sceneVideoUuid}.mp4`
+                        `video_${projectAssetUuid}.mp4`
                     );
 
                     // Update final status
-                    await this.prisma.sceneVideo.update({
-                        where: { uuid: sceneVideoUuid },
+                    await this.prisma.projectAsset.update({
+                        where: { uuid: projectAssetUuid },
                         data: {
-                            status: VideoStatus.COMPLETED,
-                            video_uuid: videoUuid,
+                            status: AssetStatus.COMPLETED,
+                            document_uuid: videoUuid,
                         },
                     });
                 } catch (saveError) {
                     this.logger.error(`Failed to save video to storage: ${saveError.message}`);
-                    await this.prisma.sceneVideo.update({
-                        where: { uuid: sceneVideoUuid },
+                    await this.prisma.projectAsset.update({
+                        where: { uuid: projectAssetUuid },
                         data: {
-                            status: VideoStatus.FAILED,
+                            status: AssetStatus.FAILED,
                             error_message: `Storage Error: ${saveError.message}`,
                         },
                     });
@@ -155,20 +152,20 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             } else if (statusResponse.status === 'error') {
                 const errorMsg = statusResponse.error?.message || 'Unknown provider error';
-                this.logger.error(`Video generation FAILED for ${sceneVideoUuid}: ${errorMsg}`);
+                this.logger.error(`Video generation FAILED for ${projectAssetUuid}: ${errorMsg}`);
 
                 this.stopPolling(intervalName);
 
-                await this.prisma.sceneVideo.update({
-                    where: { uuid: sceneVideoUuid },
+                await this.prisma.projectAsset.update({
+                    where: { uuid: projectAssetUuid },
                     data: {
-                        status: VideoStatus.FAILED,
+                        status: AssetStatus.FAILED,
                         error_message: errorMsg,
                     },
                 });
             }
         } catch (error) {
-            this.logger.error(`Error during status polling for ${sceneVideoUuid}: ${error.message}`);
+            this.logger.error(`Error during status polling for ${projectAssetUuid}: ${error.message}`);
             // We keep polling unless it's a critical fatal error or multiple failures
         }
     }
@@ -177,7 +174,6 @@ export class VideoGenerationProcessor extends WorkerHost {
         try {
             this.schedulerRegistry.getInterval(name);
             this.schedulerRegistry.deleteInterval(name);
-            this.logger.log(`Stopped polling interval: ${name}`);
         } catch (e) {
             // Interval not found, ignore
         }
