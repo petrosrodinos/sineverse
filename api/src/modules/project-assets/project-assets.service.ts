@@ -197,7 +197,7 @@ export class ProjectAssetsService {
       });
 
       // 1. Delete old prompt image if it exists
-      await this.removePromptImage(user_uuid, uuid);
+      // await this.removePromptImage(user_uuid, uuid);
 
       // 2. Upload new image
       const filename = `prompt-image-${uuid}-${Date.now()}`;
@@ -217,6 +217,7 @@ export class ProjectAssetsService {
           user_uuid,
           project_uuid: variation.scene.project_uuid,
           scene_uuid: variation.scene_uuid,
+          scene_variation_uuid: variation.uuid,
           type: DocumentType.IMAGE,
           status: AssetStatus.COMPLETED,
           document_uuid: documentUuid,
@@ -278,7 +279,7 @@ export class ProjectAssetsService {
 
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      await this.removePromptImage(user_uuid, uuid);
+      // await this.removePromptImage(user_uuid, uuid);
 
       let temporaryImageUuid: string | undefined;
 
@@ -306,6 +307,7 @@ export class ProjectAssetsService {
           user_uuid,
           project_uuid: variation.scene.project_uuid,
           scene_uuid: variation.scene_uuid,
+          scene_variation_uuid: variation.uuid,
           type: DocumentType.IMAGE,
           status: AssetStatus.PROCESSING,
         }
@@ -350,11 +352,11 @@ export class ProjectAssetsService {
 
       const response = await this.aimlApiService.image.create(payload);
 
-      if (temporaryImageUuid) {
-        await this.documentsService.deleteDocument(temporaryImageUuid).catch(err =>
-          this.logger.error(`Failed to delete temporary reference image ${temporaryImageUuid}: ${err.message}`)
-        );
-      }
+      // if (temporaryImageUuid) {
+      //   await this.documentsService.deleteDocument(temporaryImageUuid).catch(err =>
+      //     this.logger.error(`Failed to delete temporary reference image ${temporaryImageUuid}: ${err.message}`)
+      //   );
+      // }
 
       if (!response.data || response.data.length === 0) {
         throw new Error('No image data returned from AIML API');
