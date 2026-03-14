@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, InternalServerErrorException, Logger, HttpException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -6,11 +6,6 @@ import { SceneVariationQueryDto } from './dto/query-scene-variation.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 import { DocumentsService } from '../documents/documents.service';
-import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
-import { GenerateImageDto } from './dto/generate-image.dto';
-import { AssetStatus, DocumentType } from '@/generated/prisma';
-import { ensureMinDimensions } from '@/shared/utils/images/image-processor.util';
-import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers/image-mapping.config';
 
 @Injectable()
 export class SceneVariationsService {
@@ -20,7 +15,6 @@ export class SceneVariationsService {
     private readonly prisma: PrismaService,
     private readonly aiHelperService: AiHelperService,
     private readonly documentsService: DocumentsService,
-    private readonly aimlApiService: AimlApiService,
   ) { }
 
   async create(user_uuid: string, createSceneVariationDto: CreateSceneVariationDto) {
@@ -37,6 +31,7 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to create scene variation', { cause: error });
     }
@@ -57,6 +52,7 @@ export class SceneVariationsService {
         },
       });
     } catch (error) {
+      this.logger.error(error);
       throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
     }
   }
@@ -74,6 +70,7 @@ export class SceneVariationsService {
       if (!variation) throw new NotFoundException('Scene variation not found');
       return variation;
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to retrieve scene variation', { cause: error });
     }
@@ -114,6 +111,7 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to update scene variation', { cause: error });
     }
@@ -152,6 +150,7 @@ export class SceneVariationsService {
         }
       });
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
     }
@@ -202,246 +201,11 @@ export class SceneVariationsService {
 
       return newVariation;
     } catch (error) {
+      this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to enrich scene variation', { cause: error });
     }
   }
 
-  async uploadPromptImage(user_uuid: string, uuid: string, file: any) {
-    try {
-      const variation = await this.prisma.sceneVariation.findFirst({
-        where: { uuid, user_uuid },
-        include: {
-          prompt_image: true,
-          scene: true,
-        },
-      });
 
-      // 1. Delete old prompt image if it exists
-      await this.removePromptImage(user_uuid, uuid);
-
-      // 2. Upload new image
-      const filename = `prompt-image-${uuid}-${Date.now()}`;
-
-      // Ensure minimum dimensions for providers like Kling
-      const processedBuffer = await ensureMinDimensions(file.buffer);
-
-      const documentUuid = await this.documentsService.saveImageFromBuffer(
-        processedBuffer,
-        filename,
-        file.mimetype,
-      );
-
-      // 3. Create ProjectAsset
-      const asset = await this.prisma.projectAsset.create({
-        data: {
-          user_uuid,
-          project_uuid: variation.scene.project_uuid,
-          scene_uuid: variation.scene_uuid,
-          type: DocumentType.IMAGE,
-          status: AssetStatus.COMPLETED,
-          document_uuid: documentUuid,
-        }
-      });
-
-      // 4. Update variation
-      return await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: asset.uuid,
-        },
-        include: {
-          prompt_image: { include: { document: true } },
-        },
-      });
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to upload prompt image', { cause: error });
-    }
-  }
-
-  async removePromptImage(user_uuid: string, uuid: string) {
-    try {
-      const variation = await this.prisma.sceneVariation.findFirst({
-        where: { uuid, user_uuid },
-        include: { prompt_image: true }
-      });
-
-      if (!variation) throw new NotFoundException('Scene variation not found');
-
-      if (variation.prompt_image) {
-        if (variation.prompt_image.document_uuid) {
-          await this.documentsService.deleteDocument(variation.prompt_image.document_uuid);
-        }
-        await this.prisma.projectAsset.delete({
-          where: { uuid: variation.prompt_image.uuid }
-        });
-      }
-
-      return await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: null,
-        }
-      });
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to remove prompt image', { cause: error });
-    }
-  }
-
-  async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateImageDto, file?: any) {
-    try {
-      const variation = await this.prisma.sceneVariation.findUnique({
-        where: { uuid },
-        include: { scene: true }
-      });
-
-      if (!variation) throw new NotFoundException('Scene variation not found');
-
-      await this.removePromptImage(user_uuid, uuid);
-
-      let temporaryImageUuid: string | undefined;
-
-      if (file) {
-        const filename = `temp-ref-image-${uuid}-${Date.now()}`;
-
-        const processedBuffer = await ensureMinDimensions(file.buffer);
-
-        temporaryImageUuid = await this.documentsService.saveImageFromBuffer(
-          processedBuffer,
-          filename,
-          file.mimetype,
-        );
-
-        const tempDoc = await this.prisma.document.findUnique({ where: { uuid: temporaryImageUuid } });
-        if (tempDoc) {
-          if (!generateImageDto.image_urls) generateImageDto.image_urls = [];
-          generateImageDto.image_urls.push(tempDoc.url);
-        }
-      }
-
-      // Create ProjectAsset for generation
-      const asset = await this.prisma.projectAsset.create({
-        data: {
-          user_uuid,
-          project_uuid: variation.scene.project_uuid,
-          scene_uuid: variation.scene_uuid,
-          type: DocumentType.IMAGE,
-          status: AssetStatus.PROCESSING,
-        }
-      });
-
-
-      await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: asset.uuid,
-        }
-      });
-
-      // Start the generation process in background
-      setImmediate(() => {
-        this.generateAndSaveImageBackground(uuid, generateImageDto, temporaryImageUuid).catch((err) => {
-          this.logger.error(`Background image generation failed for variation ${uuid}: ${err.message}`);
-        });
-      });
-
-      return { status: 'generating' };
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to initiate image generation', { cause: error });
-    }
-  }
-
-  private async generateAndSaveImageBackground(uuid: string, generateImageDto: GenerateImageDto, temporaryImageUuid?: string) {
-    try {
-
-      if (generateImageDto.enrich_prompt) {
-        const enrichedPrompt = await this.aiHelperService.enrichImagePrompt({
-          prompt_text: generateImageDto.prompt_text,
-          ai_model: generateImageDto.ai_model,
-
-        });
-
-        generateImageDto.prompt_text = enrichedPrompt.response;
-      }
-
-      const payload = transformVariationToImageModelPayload(generateImageDto, generateImageDto.ai_model);
-
-      const response = await this.aimlApiService.image.create(payload);
-
-      if (temporaryImageUuid) {
-        await this.documentsService.deleteDocument(temporaryImageUuid).catch(err =>
-          this.logger.error(`Failed to delete temporary reference image ${temporaryImageUuid}: ${err.message}`)
-        );
-      }
-
-      if (!response.data || response.data.length === 0) {
-        throw new Error('No image data returned from AIML API');
-      }
-
-      const imageUrl = response.data[0].url;
-      if (!imageUrl) {
-        throw new Error('Image URL is missing in the response');
-      }
-
-      const filename = `generated-image-${uuid}-${Date.now()}.png`;
-      const documentUuid = await this.documentsService.saveImageFromUrl(imageUrl, filename);
-
-      const variation = await this.prisma.sceneVariation.findUnique({
-        where: { uuid },
-        select: { prompt_image_uuid: true }
-      });
-
-      if (variation?.prompt_image_uuid) {
-        await this.prisma.projectAsset.update({
-          where: { uuid: variation.prompt_image_uuid },
-          data: {
-            document_uuid: documentUuid,
-            status: AssetStatus.COMPLETED,
-          }
-        });
-      }
-
-      await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          ai_generated: true,
-        }
-      });
-
-    } catch (err) {
-      // Extract detailed error message if it's an HttpException
-      let errorMessage = err.message || 'Unknown error occurred during generation';
-      if (err instanceof HttpException) {
-        const response = err.getResponse();
-        if (typeof response === 'object' && response !== null) {
-          errorMessage = (response as any).details || (response as any).message || errorMessage;
-        }
-      }
-
-      this.logger.error(`Background image processing error: ${errorMessage}`);
-
-      if (temporaryImageUuid) {
-        await this.documentsService.deleteDocument(temporaryImageUuid).catch(() => { });
-      }
-
-      const variation = await this.prisma.sceneVariation.findUnique({
-        where: { uuid },
-        select: { prompt_image_uuid: true }
-      });
-
-      if (variation?.prompt_image_uuid) {
-        await this.prisma.projectAsset.update({
-          where: { uuid: variation.prompt_image_uuid },
-          data: {
-            status: AssetStatus.FAILED,
-            error_message: errorMessage,
-          }
-        });
-      }
-
-    }
-  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
 import { CreateProjectAssetDto } from './dto/create-project-asset.dto';
@@ -6,6 +6,8 @@ import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { GenerateImageDto } from './dto/generate-image.dto';
 
 @ApiTags('Project Assets')
 @Controller('project-assets')
@@ -56,5 +58,46 @@ export class ProjectAssetsController {
   @ApiResponse({ status: 404, description: 'Project asset not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectAssetsService.remove(user_uuid, uuid);
+  }
+
+  @Post('scene-variations/:uuid/prompt-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Upload a prompt image for a scene variation' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({ status: 200, description: 'The prompt image has been successfully uploaded.' })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  uploadPromptImage(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @UploadedFile() file: any,
+  ) {
+    return this.projectAssetsService.uploadPromptImage(user_uuid, uuid, file);
+  }
+
+  @Delete('scene-variations/:uuid/prompt-image')
+  @ApiOperation({ summary: 'Remove a prompt image from a scene variation' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({ status: 200, description: 'The prompt image has been successfully removed.' })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  removePromptImage(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
+    return this.projectAssetsService.removePromptImage(user_uuid, uuid);
+  }
+
+  @Post('scene-variations/:uuid/create-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiOperation({ summary: 'Generate an image for a scene variation' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({ status: 200, description: 'The image has been successfully generated.' })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  createImage(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Body() generateImageDto: GenerateImageDto,
+    @UploadedFile() file?: any,
+  ) {
+    return this.projectAssetsService.createImage(user_uuid, uuid, generateImageDto, file);
   }
 }
