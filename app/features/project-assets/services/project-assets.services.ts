@@ -72,7 +72,7 @@ export const deleteSceneVariationPromptImage = async (uuid: string): Promise<Pro
     }
 }
 
-export const generateSceneVariationImage = async (uuid: string, payload: GenerateSceneVariationImageDto): Promise<{ status: 'generating' }> => {
+export const createSceneVariationImage = async (uuid: string, payload: GenerateSceneVariationImageDto): Promise<{ status: 'generating' }> => {
     try {
         const formData = new FormData();
 

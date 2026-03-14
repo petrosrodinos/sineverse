@@ -173,11 +173,7 @@ export class ProjectAssetsService {
         removeOnComplete: true,
       });
 
-      return {
-        status: 'started',
-        provider_job_id: projectAsset.uuid,
-        data: projectAsset,
-      };
+      return projectAsset;
 
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
@@ -224,7 +220,7 @@ export class ProjectAssetsService {
       });
 
       // 4. Update variation
-      return await this.prisma.sceneVariation.update({
+      await this.prisma.sceneVariation.update({
         where: { uuid },
         data: {
           prompt_image_uuid: asset.uuid,
@@ -233,6 +229,9 @@ export class ProjectAssetsService {
           prompt_image: { include: { document: true } },
         },
       });
+
+      return asset;
+
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to upload prompt image', { cause: error });

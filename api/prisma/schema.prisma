@@ -156,6 +156,7 @@ model SceneVariation {
   video        ProjectAsset? @relation("SceneVariationVideo")
 
   @@index([uuid])
+  @@index([user_uuid])
   @@index([scene_uuid])
   @@map("scene_variations")
 }
@@ -185,6 +186,10 @@ model ProjectAsset {
   document        Document?       @relation("ProjectAsset", fields: [document_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([uuid])
+  @@index([user_uuid])
+  @@index([project_uuid])
+  @@index([scene_uuid])
+  @@index([scene_variation_uuid])
   @@map("project_assets")
 }
 
@@ -206,6 +211,7 @@ model FinalProject {
   thumbnail Document? @relation("FinalProjectThumbnail", fields: [thumbnail_uuid], references: [uuid], onDelete: Cascade)
 
   @@index([uuid])
+  @@index([user_uuid])
   @@index([project_uuid])
   @@map("final_projects")
 }
@@ -218,7 +224,6 @@ model Document {
   size       Int
   url        String
   path       String
-  type       DocumentType @default(DOCUMENT)
   order      Int          @default(0)
   created_at DateTime     @default(now())
   updated_at DateTime     @updatedAt
@@ -228,7 +233,6 @@ model Document {
   project_assets           ProjectAsset[]   @relation("ProjectAsset")
 
   @@index([uuid])
-  @@index([type])
   @@index([order])
   @@map("documents")
 }

@@ -39,12 +39,8 @@ export interface SceneVariation {
     created_at: string;
     updated_at: string;
     scene?: Scene;
-    prompt_image?: Document;
-    scene_video?: SceneVideo;
     video?: ProjectAsset;
-    // prompt_image?: ProjectAsset;
-    image_generation_status?: string;
-    image_generation_error?: string;
+    prompt_image?: ProjectAsset;
 }
 
 export interface CreateSceneVariationDto {

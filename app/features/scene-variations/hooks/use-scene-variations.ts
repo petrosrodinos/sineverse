@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation, uploadSceneVariationPromptImage, deleteSceneVariationPromptImage, generateSceneVariationImage } from "../services/scene-variations.services";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto, GenerateSceneVariationImageDto } from "../interfaces/scene-variations.interfaces";
+import { getSceneVariations, getSceneVariation, createSceneVariation, updateSceneVariation, deleteSceneVariation, duplicateSceneVariation, enrichSceneVariation } from "../services/scene-variations.services";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
 
 import { addToast } from "@heroui/toast";
 
@@ -122,72 +122,4 @@ export const useEnrichSceneVariation = (uuid: string) => {
         }
     });
 }
-
-export const useUploadSceneVariationPromptImage = () => {
-    const queryClient = useQueryClient();
-    return useMutation<SceneVariation, Error, { uuid: string, file: File }>({
-        mutationFn: ({ uuid, file }) => uploadSceneVariationPromptImage(uuid, file),
-        onSuccess: (_, { uuid }) => {
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
-            addToast({
-                title: "Prompt image uploaded successfully",
-                severity: "success",
-            });
-        },
-        onError: (error) => {
-            addToast({
-                title: "Failed to upload prompt image",
-                description: error.message,
-                severity: "danger",
-            });
-        }
-    });
-}
-
-export const useDeleteSceneVariationPromptImage = () => {
-    const queryClient = useQueryClient();
-    return useMutation<SceneVariation, Error, string>({
-        mutationFn: deleteSceneVariationPromptImage,
-        onSuccess: (_, uuid) => {
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
-            addToast({
-                title: "Prompt image removed successfully",
-                severity: "success",
-            });
-        },
-        onError: (error) => {
-            addToast({
-                title: "Failed to remove prompt image",
-                description: error.message,
-                severity: "danger",
-            });
-        }
-    });
-}
-
-export const useGenerateSceneVariationImage = () => {
-    const queryClient = useQueryClient();
-    return useMutation<{ status: 'generating' }, Error, { uuid: string, generateDto: GenerateSceneVariationImageDto }>({
-        mutationFn: ({ uuid, generateDto }) => generateSceneVariationImage(uuid, generateDto),
-        onSuccess: (_, { uuid }) => {
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
-            queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariation(uuid)] });
-            addToast({
-                title: "Image generation started",
-                description: "The AI is working on your image. It will appear shortly.",
-                severity: "success",
-            });
-        },
-        onError: (error) => {
-            addToast({
-                title: "Failed to generate image",
-                description: error.message,
-                severity: "danger",
-            });
-        }
-    });
-}
-
 

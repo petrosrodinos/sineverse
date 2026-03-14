@@ -1,4 +1,7 @@
 import { Document } from "@/features/documents/interfaces/document.interfaces";
+import { Project } from "@/features/projects/interfaces/projects.interfaces";
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 export interface ProjectAsset {
     id: string;
@@ -15,6 +18,10 @@ export interface ProjectAsset {
     created_at: string;
     updated_at: string;
     document: Document;
+    project: Project;
+    scene: Scene;
+    scene_variation_video: SceneVariation;
+    scene_variation_prompt_image: SceneVariation[];
 }
 
 export interface CreateProjectAssetDto {

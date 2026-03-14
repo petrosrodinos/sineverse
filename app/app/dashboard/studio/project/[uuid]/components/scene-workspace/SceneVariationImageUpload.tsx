@@ -1,7 +1,8 @@
 "use client";
 
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import { useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage, useGenerateSceneVariationImage, useSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage, useCreateSceneVariationImage } from "@/features/project-assets/hooks/use-project-assets";
 import { useQueryClient } from "@tanstack/react-query";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Tabs, Tab } from "@heroui/tabs";
@@ -16,7 +17,7 @@ import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { Alert } from "@heroui/alert";
 import { XCircle } from "lucide-react";
-import { ProjectAssetStatuses } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 interface SceneVariationImageUploadProps {
   variationUuid: string;
@@ -36,25 +37,25 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   
   const uploadImageMutation = useUploadSceneVariationPromptImage();
   const deleteImageMutation = useDeleteSceneVariationPromptImage();
-  const generateImageMutation = useGenerateSceneVariationImage();
+  const createImageMutation = useCreateSceneVariationImage();
 
   const queryClient = useQueryClient();
 
   const { data: latestVariation } = useSceneVariation(variationUuid, {
     enabled: isPolling,
-    refetchInterval: (data: any) => (data?.prompt_image?.url ? false : 3000),
+    refetchInterval: (data: any) => (data?.prompt_image?.status === ProjectAssetStatuses.COMPLETED ? false : 3000),
   });
 
   useEffect(() => {
     if (isPolling) {
-      if (latestVariation?.prompt_image?.url) {
+      if (latestVariation?.prompt_image?.status === ProjectAssetStatuses.COMPLETED) {
         setIsPolling(false);
         queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
-      } else if (latestVariation?.image_generation_status === ProjectAssetStatuses.FAILED) {
+      } else if (latestVariation?.prompt_image?.status === ProjectAssetStatuses.FAILED) {
         setIsPolling(false);
       }
     }
-  }, [latestVariation?.prompt_image?.url, latestVariation?.image_generation_status, isPolling, queryClient]);
+  }, [latestVariation?.prompt_image?.status, isPolling, queryClient]);
 
 
   if (!isImageToVideoModel) return null;
@@ -62,9 +63,9 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   const handleGenerateImage = () => {
     if (!selectedModel || !prompt.trim()) return;
     
-    generateImageMutation.mutate({
+    createImageMutation.mutate({
       uuid: variationUuid,
-      generateDto: {
+      payload: {
         ai_model: selectedModel, 
         prompt_text: prompt,
         image: referenceImage || undefined,
@@ -84,7 +85,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   };
 
   const providers = Array.from(new Set(ImageModels.map(m => m.provider)));
-  const isGenerating = generateImageMutation.isPending || isPolling;
+  const isGenerating = createImageMutation.isPending || isPolling;
   const selectedModelConfig = ImageModels.find(m => m.name === selectedModel);
   const supportsImageToImage = (selectedModelConfig as any)?.image_to_image === true;
 
@@ -193,7 +194,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                         variant="flat" 
                         startContent={<Sparkles className="size-4" />}
                         isDisabled={!selectedModel || !prompt.trim() || isGenerating}
-                        isLoading={generateImageMutation.isPending}
+                        isLoading={createImageMutation.isPending}
                         onPress={handleGenerateImage}
                         className="rounded-xl w-full"
                       >
@@ -202,12 +203,12 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                   </>
                 )}
 
-                {latestVariation?.image_generation_status === ProjectAssetStatuses.FAILED && !isPolling && (
+                {latestVariation?.prompt_image?.status === ProjectAssetStatuses.FAILED && !isPolling && (
                   <Alert
                     color="danger"
                     variant="flat"
                     title="Generation Failed"
-                    description={latestVariation.image_generation_error || "An unexpected error occurred during image generation."}
+                    description={latestVariation.prompt_image.error_message || "An unexpected error occurred during image generation."}
                     startContent={<XCircle className="size-4" />}
                     className="mt-2 rounded-xl"
                   />
