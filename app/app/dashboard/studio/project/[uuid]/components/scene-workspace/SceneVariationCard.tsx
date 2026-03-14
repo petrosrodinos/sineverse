@@ -9,8 +9,8 @@ import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useCreateSceneVideo, useSceneVideo } from "@/features/scene-videos/hooks/use-scene-videos";
-import { VideoStatuses, SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { useCreateSceneVideo, useProjectAssetByUuid } from "@/features/project-assets/hooks/use-project-assets";
+import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
@@ -33,27 +33,19 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const createVideoMutation = useCreateSceneVideo();
   const queryClient = useQueryClient();
 
-  const videoUuid = variation?.scene_video?.uuid;
-  const isProcessing = variation?.scene_video?.status === VideoStatuses.PROCESSING;
+  const videoUuid = variation?.video?.uuid;
+  const isProcessing = variation?.video?.status === ProjectAssetStatuses.PROCESSING;
 
-  const { data: polledVideo } = useSceneVideo(videoUuid || "", {
-    enabled: !!videoUuid && isProcessing,
-    refetchInterval: (data: SceneVideo | undefined) => {
-      if (data?.status === VideoStatuses.COMPLETED || data?.status === VideoStatuses.FAILED) {
-        return false;
-      }
-      return 3000;
-    },
-  });
+  const { data: polledVideo } = useProjectAssetByUuid(videoUuid || "");
 
   useEffect(() => {
-    if (polledVideo?.status === VideoStatuses.COMPLETED || polledVideo?.status === VideoStatuses.FAILED) {
+    if (polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED) {
       queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
     }
   }, [polledVideo?.status, queryClient]);
 
-  const displayVideoStatus = polledVideo?.status || variation?.scene_video?.status;
-  const displayVideo = polledVideo || variation?.scene_video;
+  const displayVideoStatus = polledVideo?.status || variation?.video?.status;
+  const displayVideo = polledVideo || variation?.video;
 
   useEffect(() => {
     if (variation) {
@@ -77,7 +69,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       return false;
     }
 
-    if (isImageToVideoModel && !editedVariation.prompt_image?.url && !editedVariation.prompt_image_uuid) {
+    if (isImageToVideoModel && !editedVariation.prompt_image?.document?.url && !editedVariation.prompt_image_uuid) {
       addToast({
         title: "Image Selection Required",
         description: "Please upload an image for image-to-video models.",
@@ -137,7 +129,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     
     if (!validateVariation()) return;
 
-    if (variation?.scene_video?.status === VideoStatuses.COMPLETED) {
+    if (variation?.video?.status === ProjectAssetStatuses.COMPLETED) {
       setIsConfirmOpen(true);
       return;
     }
@@ -171,7 +163,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       </div>
 
       {/* Video Display */}
-      {displayVideoStatus === VideoStatuses.PROCESSING && (
+      {displayVideoStatus === ProjectAssetStatuses.PROCESSING && (
         <div className="w-full aspect-video rounded-xl bg-default-100 dark:bg-default-50 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-default-200">
           <Spinner size="lg" color="primary" />
           <div className="text-center">
@@ -181,18 +173,18 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
         </div>
       )}
 
-      {displayVideoStatus === VideoStatuses.COMPLETED && displayVideo?.video?.url && (
+      {displayVideoStatus === ProjectAssetStatuses.COMPLETED && displayVideo?.document?.url && (
         <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 ring-default-200">
           <video 
-            src={displayVideo.video.url} 
+            src={displayVideo.document.url} 
             controls 
             className="w-full h-full object-contain"
-            poster={displayVideo?.video?.url ? undefined : variation?.prompt_image?.url}
+            poster={displayVideo?.document?.url ? undefined : variation?.prompt_image?.document?.url}
           />
         </div>
       )}
 
-      {displayVideoStatus === VideoStatuses.FAILED && (
+      {displayVideoStatus === ProjectAssetStatuses.FAILED && (
         <div className="w-full p-4 rounded-xl bg-danger-50 dark:bg-danger-900/10 border border-danger-200 flex items-start gap-3">
           <AlertCircle className="size-5 text-danger" />
           <div>
@@ -239,7 +231,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       </div>
         <SceneVariationImageUpload 
             variationUuid={variation?.uuid || ""} 
-            promptImageUrl={editedVariation.prompt_image?.url} 
+            promptImageUrl={editedVariation.prompt_image?.document?.url} 
             isImageToVideoModel={!!isImageToVideoModel} 
         />
          
@@ -281,10 +273,10 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             startContent={<Video className="size-4" />}
             onPress={handleGenerateVideo}
             isLoading={createVideoMutation.isPending}
-            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || displayVideoStatus === VideoStatuses.PROCESSING}
+            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
             className="mr-2"
         >
-            {displayVideoStatus === VideoStatuses.COMPLETED ? "Regenerate Video" : "Generate Video"}
+            {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate Video" : "Generate Video"}
         </Button>
         <Button 
             color="primary" 
