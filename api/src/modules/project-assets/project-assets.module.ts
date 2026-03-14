@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AiHelperModule } from '@/shared/services/ai-helper/ai-helper.module';
 import { ProjectAssetsService } from './project-assets.service';
 import { ProjectAssetsController } from './project-assets.controller';
 import { PrismaModule } from '@/core/databases/prisma/prisma.module';
@@ -20,6 +21,7 @@ import { BullModule } from '@nestjs/bullmq';
       name: VIDEO_GENERATION_QUEUE,
     }),
     DocumentsModule,
+    AiHelperModule,
   ],
   controllers: [ProjectAssetsController],
   providers: [ProjectAssetsService, VideoGenerationProcessor],

@@ -44,20 +44,38 @@ export class ProjectAssetsService {
 
   async findAll(user_uuid: string, query: ProjectAssetQueryDto) {
     try {
+      const { page = 1, limit = 10, ...filterQuery } = query;
+
       const where: any = {
         user_uuid,
-        ...query,
+        ...filterQuery,
       };
 
-      return await this.prisma.projectAsset.findMany({
-        where,
-        include: {
-          document: true,
+      const skip = (page - 1) * limit;
+
+      const [data, total] = await Promise.all([
+        this.prisma.projectAsset.findMany({
+          where,
+          include: {
+            document: true,
+          },
+          orderBy: {
+            created_at: 'desc',
+          },
+          skip,
+          take: limit,
+        }),
+        this.prisma.projectAsset.count({ where }),
+      ]);
+
+      return {
+        data,
+        pagination: {
+          total,
+          page,
+          limit,
         },
-        orderBy: {
-          created_at: 'desc',
-        },
-      });
+      };
     } catch (error) {
       this.logger.error(`Failed to retrieve project assets: ${error.message}`);
       throw new InternalServerErrorException('Failed to retrieve project assets', { cause: error });

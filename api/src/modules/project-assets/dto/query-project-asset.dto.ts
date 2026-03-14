@@ -1,4 +1,5 @@
-import { IsEnum, IsOptional, IsUUID } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AssetStatus, DocumentType } from '@/generated/prisma';
 
@@ -27,4 +28,18 @@ export class ProjectAssetQueryDto {
     @IsEnum(AssetStatus)
     @IsOptional()
     status?: AssetStatus;
+
+    @ApiPropertyOptional({ description: 'Page number for pagination', default: 1 })
+    @IsInt()
+    @Min(1)
+    @Type(() => Number)
+    @IsOptional()
+    page?: number;
+
+    @ApiPropertyOptional({ description: 'Number of items per page', default: 10 })
+    @IsInt()
+    @Min(1)
+    @Type(() => Number)
+    @IsOptional()
+    limit?: number;
 }
