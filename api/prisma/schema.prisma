@@ -173,6 +173,7 @@ model ProjectAsset {
   status               AssetStatus @default(PENDING)
   type           DocumentType @default(VIDEO)
   error_message        String?     @db.Text
+  metadata             Json? 
   created_at           DateTime    @default(now())
   updated_at           DateTime    @updatedAt
 

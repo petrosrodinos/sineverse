@@ -31,12 +31,11 @@ export class ProjectAssetsService {
   async create(user_uuid: string, createProjectAssetDto: CreateProjectAssetDto) {
     try {
 
-      return await this.prisma.projectAsset.create({
-        data: {
-          ...createProjectAssetDto,
-          user_uuid,
-        }
-      });
+      return {
+        status: 'created',
+        data: createProjectAssetDto,
+      }
+
     } catch (error) {
       this.logger.error(`Failed to create project asset: ${error.message}`);
       throw new InternalServerErrorException('Failed to create project asset', { cause: error });
@@ -86,24 +85,6 @@ export class ProjectAssetsService {
       if (error instanceof NotFoundException) throw error;
       this.logger.error(`Failed to retrieve project asset: ${error.message}`);
       throw new InternalServerErrorException('Failed to retrieve project asset', { cause: error });
-    }
-  }
-
-  async update(user_uuid: string, uuid: string, updateProjectAssetDto: UpdateProjectAssetDto) {
-    try {
-      await this.findOne(user_uuid, uuid);
-
-      return await this.prisma.projectAsset.update({
-        where: { uuid },
-        data: updateProjectAssetDto,
-        include: {
-          document: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      this.logger.error(`Failed to update project asset: ${error.message}`);
-      throw new InternalServerErrorException('Failed to update project asset', { cause: error });
     }
   }
 

@@ -16,7 +16,7 @@ import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { Alert } from "@heroui/alert";
 import { XCircle } from "lucide-react";
-import { MediaStatuses } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { ProjectAssetStatuses } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 
 interface SceneVariationImageUploadProps {
   variationUuid: string;
@@ -50,7 +50,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
       if (latestVariation?.prompt_image?.url) {
         setIsPolling(false);
         queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
-      } else if (latestVariation?.image_generation_status === MediaStatuses.FAILED) {
+      } else if (latestVariation?.image_generation_status === ProjectAssetStatuses.FAILED) {
         setIsPolling(false);
       }
     }
@@ -202,7 +202,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                   </>
                 )}
 
-                {latestVariation?.image_generation_status === MediaStatuses.FAILED && !isPolling && (
+                {latestVariation?.image_generation_status === ProjectAssetStatuses.FAILED && !isPolling && (
                   <Alert
                     color="danger"
                     variant="flat"

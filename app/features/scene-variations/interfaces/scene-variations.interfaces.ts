@@ -118,20 +118,6 @@ export interface SceneVariationEnrichDto {
     include_video_generation_options: boolean;
 }
 
-export interface GenerateSceneVariationImageDto {
-    ai_model: string;
-    prompt_text: string;
-    image?: File;
-    enrich_prompt?: boolean;
-}
-
-export const MediaStatuses = {
-    PENDING: "PENDING",
-    PROCESSING: "PROCESSING",
-    COMPLETED: "COMPLETED",
-    FAILED: "FAILED",
-} as const;
-
 
 export const Styles = {
     cinematic: "cinematic",
@@ -316,5 +302,4 @@ export type Lighting = keyof typeof Lightings;
 export type ColorGrade = keyof typeof ColorGrades;
 export type AiModel = keyof typeof AiModels;
 export type AudioStyle = keyof typeof AudioStyles;
-export type MediaStatus = keyof typeof MediaStatuses;
 

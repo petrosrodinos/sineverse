@@ -1,7 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import { SceneVideo, CreateSceneVideoDto } from "../interfaces/scene-videos.interfaces";
-import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 
 export const getSceneVideos = async (): Promise<SceneVideo[]> => {
     try {

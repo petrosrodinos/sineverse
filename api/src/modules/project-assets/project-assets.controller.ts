@@ -38,18 +38,6 @@ export class ProjectAssetsController {
     return this.projectAssetsService.findOne(user_uuid, uuid);
   }
 
-  @Patch(':uuid')
-  @ApiOperation({ summary: 'Update a project asset by UUID' })
-  @ApiParam({ name: 'uuid', description: 'The UUID of the project asset' })
-  @ApiResponse({ status: 200, description: 'The project asset has been successfully updated.' })
-  @ApiResponse({ status: 404, description: 'Project asset not found.' })
-  update(
-    @CurrentUser('uuid') user_uuid: string,
-    @Param('uuid') uuid: string,
-    @Body() updateProjectAssetDto: UpdateProjectAssetDto,
-  ) {
-    return this.projectAssetsService.update(user_uuid, uuid, updateProjectAssetDto);
-  }
 
   @Delete(':uuid')
   @ApiOperation({ summary: 'Delete a project asset by UUID' })
@@ -58,6 +46,18 @@ export class ProjectAssetsController {
   @ApiResponse({ status: 404, description: 'Project asset not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectAssetsService.remove(user_uuid, uuid);
+  }
+
+  @Post('scene-variations/:uuid/create-video')
+  @ApiOperation({ summary: 'Create a video for a scene variation' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({ status: 200, description: 'The video has been successfully created.' })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  createVideo(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
+    return this.projectAssetsService.createVideo(user_uuid, uuid);
   }
 
   @Post('scene-variations/:uuid/prompt-image')
@@ -73,6 +73,7 @@ export class ProjectAssetsController {
   ) {
     return this.projectAssetsService.uploadPromptImage(user_uuid, uuid, file);
   }
+
 
   @Delete('scene-variations/:uuid/prompt-image')
   @ApiOperation({ summary: 'Remove a prompt image from a scene variation' })

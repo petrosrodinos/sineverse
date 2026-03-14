@@ -24,6 +24,37 @@ export interface CreateProjectAssetDto {
     type: ProjectAssetType;
 }
 
+export interface ProjectAssetsResponse {
+    data: ProjectAsset[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+    };
+}
+
+export interface ProjectAssetsQueryDto {
+    project_uuid?: string;
+    scene_uuid?: string;
+    scene_variation_uuid?: string;
+    type?: ProjectAssetType;
+    status?: ProjectAssetStatus;
+    page?: number;
+    limit?: number;
+}
+
+export interface CreateSceneVideoDto {
+    scene_uuid: string;
+    scene_variation_uuid: string;
+}
+
+export interface GenerateSceneVariationImageDto {
+    ai_model: string;
+    prompt_text: string;
+    image?: File;
+    enrich_prompt?: boolean;
+}
+
 
 export const ProjectAssetTypes = {
     VIDEO: 'VIDEO',
