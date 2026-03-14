@@ -163,33 +163,8 @@ exports.Prisma.SceneVariationScalarFieldEnum = {
   user_uuid: 'user_uuid',
   scene_uuid: 'scene_uuid',
   title: 'title',
-  prompt_text: 'prompt_text',
-  negative_prompt: 'negative_prompt',
-  prompt_image_uuid: 'prompt_image_uuid',
   selected: 'selected',
   ai_generated: 'ai_generated',
-  style: 'style',
-  tone: 'tone',
-  genre: 'genre',
-  camera_style: 'camera_style',
-  shot_type: 'shot_type',
-  camera_movement: 'camera_movement',
-  lens_type: 'lens_type',
-  depth_of_field: 'depth_of_field',
-  lighting: 'lighting',
-  color_grade: 'color_grade',
-  time_of_day: 'time_of_day',
-  aspect_ratio: 'aspect_ratio',
-  resolution: 'resolution',
-  fps: 'fps',
-  duration_sec: 'duration_sec',
-  ai_model: 'ai_model',
-  seed: 'seed',
-  creativity: 'creativity',
-  motion_strength: 'motion_strength',
-  guidance_scale: 'guidance_scale',
-  audio_style: 'audio_style',
-  include_sound: 'include_sound',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -203,9 +178,12 @@ exports.Prisma.ProjectAssetScalarFieldEnum = {
   scene_variation_uuid: 'scene_variation_uuid',
   provider_job_id: 'provider_job_id',
   document_uuid: 'document_uuid',
+  selected: 'selected',
   status: 'status',
   type: 'type',
+  role: 'role',
   error_message: 'error_message',
+  metadata: 'metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -231,7 +209,6 @@ exports.Prisma.DocumentScalarFieldEnum = {
   size: 'size',
   url: 'url',
   path: 'path',
-  type: 'type',
   order: 'order',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -285,6 +262,17 @@ exports.DocumentType = exports.$Enums.DocumentType = {
   VOICEOVER: 'VOICEOVER',
   MUSIC: 'MUSIC',
   DOCUMENT: 'DOCUMENT'
+};
+
+exports.AssetRole = exports.$Enums.AssetRole = {
+  PROMPT_IMAGE: 'PROMPT_IMAGE',
+  GENERATED_IMAGE: 'GENERATED_IMAGE',
+  GENERATED_VIDEO: 'GENERATED_VIDEO',
+  UPSCALED_VIDEO: 'UPSCALED_VIDEO',
+  GENERATED_THUMBNAIL: 'GENERATED_THUMBNAIL',
+  GENERATED_VOICEOVER: 'GENERATED_VOICEOVER',
+  GENERATED_MUSIC: 'GENERATED_MUSIC',
+  GENERATED_CAPTION: 'GENERATED_CAPTION'
 };
 
 exports.Prisma.ModelName = {

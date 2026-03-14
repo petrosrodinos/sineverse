@@ -1,7 +1,5 @@
-import { Document } from "@/features/documents/interfaces/document.interfaces";
 import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectTone, ProjectGenre } from "@/features/projects/interfaces/projects.interfaces";
-import { SceneVideo } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
 import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 export interface SceneVariation {

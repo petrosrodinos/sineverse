@@ -1,10 +1,10 @@
-import { VideoStatuses } from "@/features/scene-videos/interfaces/scene-videos.interfaces";
+import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 export const VideoStatusLabels = {
-    [VideoStatuses.PENDING]: "Pending",
-    [VideoStatuses.PROCESSING]: "Processing",
-    [VideoStatuses.COMPLETED]: "Completed",
-    [VideoStatuses.FAILED]: "Failed",
+    [ProjectAssetStatuses.PENDING]: "Pending",
+    [ProjectAssetStatuses.PROCESSING]: "Processing",
+    [ProjectAssetStatuses.COMPLETED]: "Completed",
+    [ProjectAssetStatuses.FAILED]: "Failed",
 }
 
 export const KlingVideoModels = [

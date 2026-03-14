@@ -35,9 +35,9 @@ export const ApiRoutes = {
     project_assets: {
         prefix: "/project-assets",
         project_asset: (project_asset_uuid: string) => `/project-assets/${project_asset_uuid}`,
-        create_video: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/create-video`,
-        prompt_image: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/prompt-image`,
-        create_image: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/create-image`,
+        create_video: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/create-video`,
+        prompt_image: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/prompt-image`,
+        create_image: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/create-image`,
     },
     scene_videos: {
         prefix: "/scene-videos",

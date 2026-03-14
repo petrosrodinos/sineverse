@@ -328,6 +328,7 @@ export class ProjectAssetsService {
 
       return { status: 'generating' };
     } catch (error) {
+      this.logger.error(`Failed to initiate image generation for variation ${uuid}: ${error.message}`);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to initiate image generation', { cause: error });
     }
