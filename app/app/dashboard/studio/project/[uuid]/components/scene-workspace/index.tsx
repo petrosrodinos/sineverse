@@ -6,10 +6,13 @@ import { SceneLoading } from "./states/SceneLoading";
 import { SceneNotFound } from "./states/SceneNotFound";
 import { NoVariations } from "./states/NoVariations";
 import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Trash2, Copy } from "lucide-react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
+import { Switch } from "@heroui/switch";
+import { Trash2, Copy, MoreVertical, Edit2 } from "lucide-react";
 import { SceneVariationCard } from "./SceneVariationCard";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
+import { EditVariationTitleModal } from "./EditVariationTitleModal";
+import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation, useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { Style } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.interfaces";
@@ -24,8 +27,10 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
   const { data: scene_variations, isLoading } = useSceneVariations({scene_uuid: sceneUuid || ""});
   const [variationToDelete, setVariationToDelete] = useState<SceneVariation | null>(null);
   const [variationToDuplicate, setVariationToDuplicate] = useState<SceneVariation | null>(null);
+  const [variationToEdit, setVariationToEdit] = useState<SceneVariation | null>(null);
   const deleteMutation = useDeleteSceneVariation();
   const duplicateMutation = useDuplicateSceneVariation();
+  const updateMutation = useUpdateSceneVariation();
   const [selectedKeys, setSelectedKeys] = useState<any>(new Set([]));
 
   const handleDelete = async () => {
@@ -38,6 +43,14 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
     if (!variationToDuplicate?.uuid) return;
     await duplicateMutation.mutateAsync(variationToDuplicate.uuid);
     setVariationToDuplicate(null);
+  };
+
+  const handleToggleSelected = async (variation: SceneVariation, isSelected: boolean) => {
+    if (!variation.uuid) return;
+    await updateMutation.mutateAsync({
+      uuid: variation.uuid,
+      sceneVariation: { selected: isSelected }
+    });
   };
 
   if (!sceneUuid) {
@@ -77,33 +90,56 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
                 trigger: "relative"
               }}
               title={
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 pr-8">
                   <span className="font-semibold truncate">{variation.title}</span>
-                  <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex items-center gap-1">
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      className="p-2 text-default-500 hover:text-primary hover:bg-primary/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
-                      onClick={(e: any) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setVariationToDuplicate(variation);
-                      }}
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex items-center gap-3">
+                    <Switch 
+                      size="sm" 
+                      isSelected={variation.selected} 
+                      onValueChange={(isSelected) => handleToggleSelected(variation, isSelected)}
                     >
-                      <Copy className="size-4" />
-                    </span>
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      className="p-2 text-danger hover:bg-danger/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
-                      onClick={(e: any) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setVariationToDelete(variation);
-                      }}
-                    >
-                      <Trash2 className="size-4" />
-                    </span>
+                      Selected
+                    </Switch>
+                    <Dropdown placement="bottom-end">
+                      <DropdownTrigger>
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          className="p-2 text-default-500 hover:text-primary hover:bg-primary/20 rounded-medium transition-colors cursor-pointer flex items-center justify-center"
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                          }}
+                        >
+                          <MoreVertical className="size-4" />
+                        </span>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Variation Actions" onAction={() => {}}>
+                        <DropdownItem 
+                          key="edit" 
+                          startContent={<Edit2 className="size-4" />}
+                          onPress={() => setVariationToEdit(variation)}
+                        >
+                          Edit Title
+                        </DropdownItem>
+                        <DropdownItem 
+                          key="duplicate" 
+                          startContent={<Copy className="size-4" />}
+                          onPress={() => setVariationToDuplicate(variation)}
+                        >
+                          Duplicate
+                        </DropdownItem>
+                        <DropdownItem 
+                          key="delete" 
+                          className="text-danger" 
+                          color="danger" 
+                          startContent={<Trash2 className="size-4" />}
+                          onPress={() => setVariationToDelete(variation)}
+                        >
+                          Delete
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </div>
                 </div>
               }
@@ -136,6 +172,11 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
         confirmText="Duplicate"
         confirmColor="primary"
         isLoading={duplicateMutation.isPending}
+      />
+
+      <EditVariationTitleModal 
+        variation={variationToEdit} 
+        onClose={() => setVariationToEdit(null)} 
       />
     </div>
   );

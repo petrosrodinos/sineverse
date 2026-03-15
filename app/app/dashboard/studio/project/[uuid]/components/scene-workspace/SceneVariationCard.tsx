@@ -46,7 +46,6 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
   const promptImageAsset = assets.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
   const videoUuid = videoAsset?.uuid;
-  const isProcessing = videoAsset?.status === ProjectAssetStatuses.PROCESSING;
 
   const { data: polledVideo } = useProjectAssetByUuid(videoUuid || "");
 
@@ -113,10 +112,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
     if (!variation?.uuid) return false;
     
     if (!validateVariation()) return false;
-    const dto: UpdateSceneVariationDto = {
-        title: editedVariation.title,
-        selected: editedVariation.selected,
-    };
+    const dto: UpdateSceneVariationDto = {};
     
     // Clean up undefined properties
     Object.keys(dto).forEach(key => dto[key as keyof UpdateSceneVariationDto] === undefined && delete dto[key as keyof UpdateSceneVariationDto]);
@@ -205,13 +201,6 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
 
       <div className="flex flex-col gap-4">
         
-        <Input
-            label="Title"
-            value={editedVariation.title || ""}
-            onValueChange={(val) => handleOptionChange("title", val)}
-            variant="bordered"
-            classNames={{ inputWrapper: "rounded-xl" }}
-        />
         <ExpandableTextarea 
             label="Prompt" 
             variant="bordered" 
@@ -220,24 +209,6 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
-             <div className="flex items-center px-1">
-          <Checkbox
-              isSelected={editedVariation.selected ?? false}
-              onValueChange={(val) => handleOptionChange("selected", val)}
-              classNames={{
-                  label: "w-full"
-              }}
-          >
-              <div className="flex items-center gap-1.5 pointer-events-none">
-                  <span className="pointer-events-auto text-sm font-medium">Selected</span>
-                  <Tooltip content="Mark this variation as the selected one for the scene." placement="top" className="max-w-[250px]" delay={0} closeDelay={0}>
-                      <span className="pointer-events-auto flex items-center">
-                          <Info className="w-3.5 h-3.5 text-default-400 cursor-help" />
-                      </span>
-                  </Tooltip>
-              </div>
-          </Checkbox>
-      </div>
         <SceneVariationImageUpload 
             variationUuid={variation?.uuid || ""} 
             promptImageUrl={promptImageAsset?.document?.url} 
