@@ -9,8 +9,9 @@ import { Tooltip } from "@heroui/tooltip";
 import { Save, Info, Video, AlertCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useCreateSceneVideo, useProjectAssetByUuid } from "@/features/project-assets/hooks/use-project-assets";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { useCreateSceneVideo, useProjectAssetByUuid, useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
+import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
 import { EnrichVariationPopover } from "./EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
@@ -23,9 +24,10 @@ interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
   isEnriched?: boolean;
   handleClose?: () => void;
+  isExpanded?: boolean;
 }
 
-export function SceneVariationCard({ variation, isEnriched, handleClose }: SceneVariationCardProps) {
+export function SceneVariationCard({ variation, isEnriched, handleClose, isExpanded }: SceneVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
@@ -33,8 +35,18 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
   const createVideoMutation = useCreateSceneVideo();
   const queryClient = useQueryClient();
 
-  const videoUuid = variation?.video?.uuid;
-  const isProcessing = variation?.video?.status === ProjectAssetStatuses.PROCESSING;
+  const { data: projectAssetsResponse } = useProjectAssets(
+    { scene_variation_uuid: variation?.uuid },
+    { enabled: !!variation?.uuid && !!isExpanded }
+  );
+
+  const assets = projectAssetsResponse?.data || variation?.project_assets || [];
+
+  const videoAsset = assets.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO);
+  const promptImageAsset = assets.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
+
+  const videoUuid = videoAsset?.uuid;
+  const isProcessing = videoAsset?.status === ProjectAssetStatuses.PROCESSING;
 
   const { data: polledVideo } = useProjectAssetByUuid(videoUuid || "");
 
@@ -44,8 +56,21 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     }
   }, [polledVideo?.status, queryClient]);
 
-  const displayVideoStatus = polledVideo?.status || variation?.video?.status;
-  const displayVideo = polledVideo || variation?.video;
+  const displayVideoStatus = polledVideo?.status || videoAsset?.status;
+  const displayVideo = polledVideo || videoAsset;
+
+  const [editedConfig, setEditedConfig] = useState<Partial<VideoGenerationConfig>>(() => {
+    return variation?.project_assets?.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO)?.metadata || {};
+  });
+
+  useEffect(() => {
+    if (projectAssetsResponse?.data) {
+      const va = projectAssetsResponse.data.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO);
+      if (va?.metadata) {
+         setEditedConfig(prev => ({ ...va.metadata, ...prev }));
+      }
+    }
+  }, [projectAssetsResponse?.data]);
 
   useEffect(() => {
     if (variation) {
@@ -57,10 +82,14 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     setEditedVariation(prev => ({ ...prev, [field]: value }));
   };
 
-  const isImageToVideoModel = editedVariation.ai_model?.includes("image-to-video") || editedVariation.ai_model?.includes("i2v");
+  const handleConfigChange = (field: string, value: any) => {
+    setEditedConfig(prev => ({ ...prev, [field]: value }));
+  };
+
+  const isImageToVideoModel = editedConfig.ai_model?.includes("image-to-video") || editedConfig.ai_model?.includes("i2v");
 
   const validateVariation = () => {
-    if (!editedVariation.ai_model) {
+    if (!editedConfig.ai_model) {
       addToast({
         title: "Model Selection Required",
         description: "Please select an AI model for video generation.",
@@ -69,7 +98,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       return false;
     }
 
-    if (isImageToVideoModel && !editedVariation.prompt_image?.document?.url && !editedVariation.prompt_image_uuid) {
+    if (isImageToVideoModel && !promptImageAsset?.document?.url) {
       addToast({
         title: "Image Selection Required",
         description: "Please upload an image for image-to-video models.",
@@ -86,28 +115,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     if (!validateVariation()) return false;
     const dto: UpdateSceneVariationDto = {
         title: editedVariation.title,
-        prompt_text: editedVariation.prompt_text,
-        negative_prompt: editedVariation.negative_prompt,
-        style: editedVariation.style,
-        camera_style: editedVariation.camera_style,
-        shot_type: editedVariation.shot_type,
-        camera_movement: editedVariation.camera_movement,
-        lens_type: editedVariation.lens_type,
-        depth_of_field: editedVariation.depth_of_field,
-        lighting: editedVariation.lighting,
-        color_grade: editedVariation.color_grade,
-        time_of_day: editedVariation.time_of_day,
-        aspect_ratio: editedVariation.aspect_ratio,
-        resolution: editedVariation.resolution,
-        fps: editedVariation.fps,
-        duration_sec: editedVariation.duration_sec,
-        ai_model: editedVariation.ai_model,
-        creativity: editedVariation.creativity,
-        motion_strength: editedVariation.motion_strength,
-        guidance_scale: editedVariation.guidance_scale,
         selected: editedVariation.selected,
-        seed: editedVariation.seed,
-        prompt_image_uuid: editedVariation.prompt_image_uuid,
     };
     
     // Clean up undefined properties
@@ -129,7 +137,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     
     if (!validateVariation()) return;
 
-    if (variation?.video?.status === ProjectAssetStatuses.COMPLETED) {
+    if (displayVideoStatus === ProjectAssetStatuses.COMPLETED) {
       setIsConfirmOpen(true);
       return;
     }
@@ -146,7 +154,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
     await createVideoMutation.mutateAsync({
       scene_uuid: variation.scene_uuid,
       scene_variation_uuid: variation.uuid,
-    });
+      ...editedConfig,
+    } as any);
     setIsConfirmOpen(false);
   };
 
@@ -179,7 +188,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             src={displayVideo.document.url} 
             controls 
             className="w-full h-full object-contain"
-            poster={displayVideo?.document?.url ? undefined : variation?.prompt_image?.document?.url}
+            poster={displayVideo?.document?.url ? undefined : promptImageAsset?.document?.url}
           />
         </div>
       )}
@@ -206,8 +215,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
         <ExpandableTextarea 
             label="Prompt" 
             variant="bordered" 
-            value={editedVariation.prompt_text || ""}
-            onValueChange={(val: string) => handleOptionChange("prompt_text", val)}
+            value={editedConfig.prompt_text || ""}
+            onValueChange={(val: string) => handleConfigChange("prompt_text", val)}
             classNames={{ input: "min-h-[80px]", inputWrapper: "rounded-xl" }} 
             minRows={3} 
         />
@@ -231,7 +240,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       </div>
         <SceneVariationImageUpload 
             variationUuid={variation?.uuid || ""} 
-            promptImageUrl={editedVariation.prompt_image?.document?.url} 
+            promptImageUrl={promptImageAsset?.document?.url} 
             isImageToVideoModel={!!isImageToVideoModel} 
         />
          
@@ -239,8 +248,8 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
           <AccordionItem key="negative" aria-label="Negative prompt" title={<span className="text-sm font-medium">Negative Prompt</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
             <Textarea 
                 variant="bordered" 
-                value={editedVariation.negative_prompt || ""}
-                onValueChange={(val) => handleOptionChange("negative_prompt", val)}
+                value={editedConfig.negative_prompt || ""}
+                onValueChange={(val) => handleConfigChange("negative_prompt", val)}
                 classNames={{ inputWrapper: "rounded-xl" }} 
                 minRows={2} 
                 placeholder="Terms you want to avoid..." 
@@ -254,7 +263,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
       <div className="dark:border-default-100/10">
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden">
           <AccordionItem key="video-options" aria-label="Video Generation Options" title={<span className="text-sm font-medium">Video Generation Options</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
-            <VideoGenerationOptions sceneVariation={editedVariation} onChange={handleOptionChange} />
+            <VideoGenerationOptions config={editedConfig} onChange={handleConfigChange} />
           </AccordionItem>
         </Accordion>
       </div>
@@ -273,7 +282,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose }: Scene
             startContent={<Video className="size-4" />}
             onPress={handleGenerateVideo}
             isLoading={createVideoMutation.isPending}
-            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedVariation.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
+            isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
             className="mr-2"
         >
             {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate Video" : "Generate Video"}

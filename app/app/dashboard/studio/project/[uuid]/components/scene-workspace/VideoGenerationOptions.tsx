@@ -8,7 +8,7 @@ import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Info } from "lucide-react";
 import { useMemo } from "react";
-import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { VideoGenerationConfig, AspectRatio, Resolution, Style, CameraMovement, LensType, CameraStyle, ShotType, DepthOfField, Lighting, ColorGrade, TimeOfDay } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import {
     StylesOptions,
     CameraMovementOptions,
@@ -30,7 +30,7 @@ import {
 import { VideoModels } from "@/config/dropdowns/project/video.options";
 
 interface VideoGenerationOptionsProps {
-    sceneVariation?: Partial<SceneVariation>;
+    config?: Partial<VideoGenerationConfig>;
     onChange?: (field: string, value: any) => void;
 }
 
@@ -52,7 +52,7 @@ const formatPrice = (price: { perSecond?: number; perGeneration?: number; perMil
     return "";
 };
 
-export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenerationOptionsProps) {
+export function VideoGenerationOptions({ config, onChange }: VideoGenerationOptionsProps) {
     const groupedModels = useMemo(() => {
         const groups: Record<string, typeof VideoModels> = {};
         VideoModels.forEach(model => {
@@ -79,7 +79,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
                         <Autocomplete
                             label={<LabelWithTooltip label="AI Model" tooltip="Select the underlying AI model used for video generation." />}
-                            defaultSelectedKey={sceneVariation?.ai_model}
+                            defaultSelectedKey={config?.ai_model}
                             onSelectionChange={(key) => handleValueChange("ai_model", key)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -111,7 +111,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Aspect Ratio" tooltip="The framing format for the final video." />}
-                            defaultSelectedKeys={sceneVariation?.aspect_ratio ? [sceneVariation.aspect_ratio] : undefined}
+                            defaultSelectedKeys={config?.aspect_ratio ? [config.aspect_ratio] : undefined}
                             onChange={(e) => handleValueChange("aspect_ratio", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -124,7 +124,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Resolution" tooltip="The output quality and pixel dimensions." />}
-                            defaultSelectedKeys={sceneVariation?.resolution ? [sceneVariation.resolution] : undefined}
+                            defaultSelectedKeys={config?.resolution ? [config.resolution] : undefined}
                             onChange={(e) => handleValueChange("resolution", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -141,7 +141,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             type="number"
                             variant="bordered"
                             labelPlacement="outside"
-                            value={sceneVariation?.seed?.toString() || ""}
+                            value={config?.seed?.toString() || ""}
                             onChange={(e) => handleValueChange("seed", e.target.value)}
                             className="max-w-full w-full"
                         />
@@ -156,7 +156,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
                         <Select
                             label={<LabelWithTooltip label="Camera Movement" tooltip="How the camera_style physically moves through the scene." />}
-                            defaultSelectedKeys={sceneVariation?.camera_movement ? [sceneVariation.camera_movement] : undefined}
+                            defaultSelectedKeys={config?.camera_movement ? [config.camera_movement] : undefined}
                             onChange={(e) => handleValueChange("camera_movement", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -169,7 +169,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Lens Type" tooltip="The physical characteristics of the simulated camera_style lens." />}
-                            defaultSelectedKeys={sceneVariation?.lens_type ? [sceneVariation.lens_type] : undefined}
+                            defaultSelectedKeys={config?.lens_type ? [config.lens_type] : undefined}
                             onChange={(e) => handleValueChange("lens_type", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -182,7 +182,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Camera Style" tooltip="The mounting or handling style of the camera_style." />}
-                            defaultSelectedKeys={sceneVariation?.camera_style ? [sceneVariation.camera_style] : undefined}
+                            defaultSelectedKeys={config?.camera_style ? [config.camera_style] : undefined}
                             onChange={(e) => handleValueChange("camera_style", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -195,7 +195,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Shot Type" tooltip="The scale and framing of the subject." />}
-                            defaultSelectedKeys={sceneVariation?.shot_type ? [sceneVariation.shot_type] : undefined}
+                            defaultSelectedKeys={config?.shot_type ? [config.shot_type] : undefined}
                             onChange={(e) => handleValueChange("shot_type", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -208,7 +208,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Depth of Field" tooltip="The range of distance that appears acceptably sharp." />}
-                            defaultSelectedKeys={sceneVariation?.depth_of_field ? [sceneVariation.depth_of_field] : undefined}
+                            defaultSelectedKeys={config?.depth_of_field ? [config.depth_of_field] : undefined}
                             onChange={(e) => handleValueChange("depth_of_field", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -229,7 +229,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
                         <Select
                             label={<LabelWithTooltip label="Style" tooltip="The core artistic or visual style of the generation." />}
-                            defaultSelectedKeys={sceneVariation?.style ? [sceneVariation.style] : undefined}
+                            defaultSelectedKeys={config?.style ? [config.style] : undefined}
                             onChange={(e) => handleValueChange("style", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -242,7 +242,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Lighting" tooltip="The artificial or natural lighting setup." />}
-                            defaultSelectedKeys={sceneVariation?.lighting ? [sceneVariation.lighting] : undefined}
+                            defaultSelectedKeys={config?.lighting ? [config.lighting] : undefined}
                             onChange={(e) => handleValueChange("lighting", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -255,7 +255,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Color Grade" tooltip="The post-processing color treatment." />}
-                            defaultSelectedKeys={sceneVariation?.color_grade ? [sceneVariation.color_grade] : undefined}
+                            defaultSelectedKeys={config?.color_grade ? [config.color_grade] : undefined}
                             onChange={(e) => handleValueChange("color_grade", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -268,7 +268,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
 
                         <Select
                             label={<LabelWithTooltip label="Time of Day" tooltip="The simulated time of day affecting natural light." />}
-                            defaultSelectedKeys={sceneVariation?.time_of_day ? [sceneVariation.time_of_day] : undefined}
+                            defaultSelectedKeys={config?.time_of_day ? [config.time_of_day] : undefined}
                             onChange={(e) => handleValueChange("time_of_day", e.target.value)}
                             variant="bordered"
                             labelPlacement="outside"
@@ -292,7 +292,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             step={MotionStrengthSliderOptions.step}
                             maxValue={MotionStrengthSliderOptions.max}
                             minValue={MotionStrengthSliderOptions.min}
-                            defaultValue={sceneVariation?.motion_strength ?? (typeof MotionStrengthSliderOptions.defaultValue === "number" ? MotionStrengthSliderOptions.defaultValue : 0.5)}
+                            defaultValue={config?.motion_strength ?? (typeof MotionStrengthSliderOptions.defaultValue === "number" ? MotionStrengthSliderOptions.defaultValue : 0.5)}
                             marks={MotionStrengthSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("motion_strength", val)}
                             className="max-w-full w-full"
@@ -303,7 +303,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             step={GuidanceScaleSliderOptions.step}
                             maxValue={GuidanceScaleSliderOptions.max}
                             minValue={GuidanceScaleSliderOptions.min}
-                            defaultValue={sceneVariation?.guidance_scale ?? (typeof GuidanceScaleSliderOptions.defaultValue === "number" ? GuidanceScaleSliderOptions.defaultValue : 7.5)}
+                            defaultValue={config?.guidance_scale ?? (typeof GuidanceScaleSliderOptions.defaultValue === "number" ? GuidanceScaleSliderOptions.defaultValue : 7.5)}
                             marks={GuidanceScaleSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("guidance_scale", val)}
                             className="max-w-full w-full"
@@ -314,7 +314,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             step={CreativitySliderOptions.step}
                             maxValue={CreativitySliderOptions.max}
                             minValue={CreativitySliderOptions.min}
-                            defaultValue={sceneVariation?.creativity ?? (typeof CreativitySliderOptions.defaultValue === "number" ? CreativitySliderOptions.defaultValue : 0.5)}
+                            defaultValue={config?.creativity ?? (typeof CreativitySliderOptions.defaultValue === "number" ? CreativitySliderOptions.defaultValue : 0.5)}
                             marks={CreativitySliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("creativity", val)}
                             className="max-w-full w-full"
@@ -325,7 +325,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             step={DurationSliderOptions.step}
                             maxValue={DurationSliderOptions.max}
                             minValue={DurationSliderOptions.min}
-                            defaultValue={sceneVariation?.duration_sec ?? (typeof DurationSliderOptions.defaultValue === "number" ? DurationSliderOptions.defaultValue : 5)}
+                            defaultValue={config?.duration_sec ?? (typeof DurationSliderOptions.defaultValue === "number" ? DurationSliderOptions.defaultValue : 5)}
                             marks={DurationSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("duration_sec", val)}
                             className="max-w-full w-full"
@@ -336,7 +336,7 @@ export function VideoGenerationOptions({ sceneVariation, onChange }: VideoGenera
                             step={FpsSliderOptions.step}
                             maxValue={FpsSliderOptions.max}
                             minValue={FpsSliderOptions.min}
-                            defaultValue={sceneVariation?.fps ?? (typeof FpsSliderOptions.defaultValue === "number" ? FpsSliderOptions.defaultValue : 24)}
+                            defaultValue={config?.fps ?? (typeof FpsSliderOptions.defaultValue === "number" ? FpsSliderOptions.defaultValue : 24)}
                             marks={FpsSliderOptions.marks}
                             onChangeEnd={(val) => handleValueChange("fps", val)}
                             className="max-w-full w-full"

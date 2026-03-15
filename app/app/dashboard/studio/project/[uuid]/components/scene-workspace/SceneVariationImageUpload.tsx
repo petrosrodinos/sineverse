@@ -1,8 +1,7 @@
 "use client";
 
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import { useSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage, useCreateSceneVariationImage } from "@/features/project-assets/hooks/use-project-assets";
+import { useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage, useCreateSceneVariationImage, useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
 import { useQueryClient } from "@tanstack/react-query";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Tabs, Tab } from "@heroui/tabs";
@@ -17,7 +16,7 @@ import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { Alert } from "@heroui/alert";
 import { XCircle } from "lucide-react";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 interface SceneVariationImageUploadProps {
   variationUuid: string;
@@ -41,21 +40,29 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
 
   const queryClient = useQueryClient();
 
-  const { data: latestVariation } = useSceneVariation(variationUuid, {
-    enabled: isPolling,
-    refetchInterval: (data: any) => (data?.prompt_image?.status === ProjectAssetStatuses.COMPLETED ? false : 3000),
-  });
+  const { data: assetsResponse } = useProjectAssets(
+    { scene_variation_uuid: variationUuid },
+    {
+      enabled: isPolling,
+      refetchInterval: (query: any) => {
+        const asset = query.state?.data?.data?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE) || query?.data?.data?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
+        return asset?.status === ProjectAssetStatuses.COMPLETED ? false : 3000;
+      },
+    }
+  );
+
+  const promptImageAsset = assetsResponse?.data?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
   useEffect(() => {
     if (isPolling) {
-      if (latestVariation?.prompt_image?.status === ProjectAssetStatuses.COMPLETED) {
+      if (promptImageAsset?.status === ProjectAssetStatuses.COMPLETED) {
         setIsPolling(false);
         queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
-      } else if (latestVariation?.prompt_image?.status === ProjectAssetStatuses.FAILED) {
+      } else if (promptImageAsset?.status === ProjectAssetStatuses.FAILED) {
         setIsPolling(false);
       }
     }
-  }, [latestVariation?.prompt_image?.status, isPolling, queryClient]);
+  }, [promptImageAsset?.status, isPolling, queryClient]);
 
 
   if (!isImageToVideoModel) return null;
@@ -203,12 +210,12 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                   </>
                 )}
 
-                {latestVariation?.prompt_image?.status === ProjectAssetStatuses.FAILED && !isPolling && (
+                {promptImageAsset?.status === ProjectAssetStatuses.FAILED && !isPolling && (
                   <Alert
                     color="danger"
                     variant="flat"
                     title="Generation Failed"
-                    description={latestVariation.prompt_image.error_message || "An unexpected error occurred during image generation."}
+                    description={promptImageAsset.error_message || "An unexpected error occurred during image generation."}
                     startContent={<XCircle className="size-4" />}
                     className="mt-2 rounded-xl"
                   />

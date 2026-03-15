@@ -10,7 +10,9 @@ import { Trash2, Copy } from "lucide-react";
 import { SceneVariationCard } from "./SceneVariationCard";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { SceneVariation, Style } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { Style } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
+import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { CreateVariationPopover } from "./CreateVariationPopover";
 import { StylesOptionsLabels } from "@/config/dropdowns/project/scene-variations.options";
 
@@ -24,6 +26,7 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
   const [variationToDuplicate, setVariationToDuplicate] = useState<SceneVariation | null>(null);
   const deleteMutation = useDeleteSceneVariation();
   const duplicateMutation = useDuplicateSceneVariation();
+  const [selectedKeys, setSelectedKeys] = useState<any>(new Set([]));
 
   const handleDelete = async () => {
     if (!variationToDelete?.uuid) return;
@@ -65,11 +68,11 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
         <CreateVariationPopover sceneUuid={sceneUuid} />
       </div>
       
-      <Accordion variant="splitted" className="px-0 gap-4">
+      <Accordion variant="splitted" className="px-0 gap-4" selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys}>
         {[
           ...(scene_variations || []).map((variation: SceneVariation, index: number) => (
             <AccordionItem
-              key={variation.id || index}
+              key={`variation-${variation.uuid}`}
               classNames={{
                 trigger: "relative"
               }}
@@ -104,10 +107,10 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
                   </div>
                 </div>
               }
-              subtitle={<span className="text-xs text-default-400">{StylesOptionsLabels[variation.style as Style] || "No Style Selected"}</span>}
+              subtitle={<span className="text-xs text-default-400">{StylesOptionsLabels[variation.project_assets?.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO)?.metadata?.style as Style] || "No Style Selected"}</span>}
               aria-label={variation.title}
             >
-              <SceneVariationCard variation={variation} />
+              <SceneVariationCard variation={variation} isExpanded={selectedKeys === "all" || selectedKeys.has(`variation-${variation.uuid}`)} />
             </AccordionItem>
           ))
         ]}

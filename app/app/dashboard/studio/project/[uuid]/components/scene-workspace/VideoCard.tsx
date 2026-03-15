@@ -22,7 +22,7 @@ export function VideoCard({ video, onSelectFinal, onRegenerate, isDisabled }: Vi
         overflow-hidden rounded-2xl border border-default-200 bg-default-100
         transition-all duration-200 hover:scale-[1.02] hover:shadow-lg
         dark:border-default-100/20 dark:bg-default-100/5
-        ${video.scene_variation_video?.selected ? "ring-2 ring-primary shadow-lg shadow-primary/20" : ""}
+        ${video.scene_variation?.selected ? "ring-2 ring-primary shadow-lg shadow-primary/20" : ""}
       `}
     >
       <div className="aspect-video w-full bg-default-200 flex items-center justify-center dark:bg-default-100/10">
@@ -42,14 +42,14 @@ export function VideoCard({ video, onSelectFinal, onRegenerate, isDisabled }: Vi
         <div className="flex gap-2">
           <Button
             size="sm"
-            variant={video.scene_variation_video?.selected ? "solid" : "flat"}
+            variant={video.scene_variation?.selected ? "solid" : "flat"}
             color="primary"
             onPress={onSelectFinal}
             isDisabled={isDisabled || isProcessing}
-            startContent={video.scene_variation_video?.selected ? <Check className="size-4" /> : undefined}
+            startContent={video.scene_variation?.selected ? <Check className="size-4" /> : undefined}
             className="flex-1"
           >
-            {video.scene_variation_video?.selected ? "Selected" : "Select as Final"}
+            {video.scene_variation?.selected ? "Selected" : "Select as Final"}
           </Button>
           <Button size="sm" variant="flat" onPress={onRegenerate} isDisabled={isDisabled || isProcessing} isIconOnly aria-label="Regenerate">
             <RefreshCw className="size-4" />

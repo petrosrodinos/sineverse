@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
-import { CreateProjectAssetDto, GenerateProjectAssetImageDto } from './dto/create-project-asset.dto';
+import { CreateProjectAssetDto, GenerateProjectAssetImageDto, CreateProjectAssetVideoDto } from './dto/create-project-asset.dto';
 import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
@@ -55,8 +55,9 @@ export class ProjectAssetsController {
   createVideo(
     @CurrentUser('uuid') user_uuid: string,
     @Param('uuid') uuid: string,
+    @Body() dto: CreateProjectAssetVideoDto,
   ) {
-    return this.projectAssetsService.createVideo(user_uuid, uuid);
+    return this.projectAssetsService.createVideo(user_uuid, uuid, dto);
   }
 
   @Post('scene-variations/:uuid/prompt-image')

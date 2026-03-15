@@ -1,4 +1,4 @@
-import { Styles, CameraMovements, LensTypes, DepthOfFields, TimeOfDays, CameraStyles, ShotTypes, AspectRatios, Resolutions, Lightings, ColorGrades, AiModels, AudioStyles, Style, CameraMovement, LensType, DepthOfField, TimeOfDay, CameraStyle, ShotType, AspectRatio, Resolution, Lighting, ColorGrade, AiModel, AudioStyle } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { Styles, CameraMovements, LensTypes, DepthOfFields, TimeOfDays, CameraStyles, ShotTypes, AspectRatios, Resolutions, Lightings, ColorGrades, AiModels, AudioStyles, Style, CameraMovement, LensType, DepthOfField, TimeOfDay, CameraStyle, ShotType, AspectRatio, Resolution, Lighting, ColorGrade, AiModel, AudioStyle } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SliderConfig, DropdownOption } from "@/interfaces/scene-variations-options.interfaces";
 
 export const StylesOptions: DropdownOption<Style>[] = [

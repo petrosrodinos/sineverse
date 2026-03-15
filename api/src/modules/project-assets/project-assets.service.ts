@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, InternalServerErrorException, Logger, BadRequestException, HttpException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { CreateProjectAssetDto, GenerateProjectAssetImageDto } from './dto/create-project-asset.dto';
+import { CreateProjectAssetDto, CreateProjectAssetVideoDto, GenerateProjectAssetImageDto } from './dto/create-project-asset.dto';
 import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { DocumentsService } from '../documents/documents.service';
@@ -133,7 +133,7 @@ export class ProjectAssetsService {
     }
   }
 
-  async createVideo(user_uuid: string, scene_variation_uuid: string) {
+  async createVideo(user_uuid: string, scene_variation_uuid: string, dto: CreateProjectAssetVideoDto) {
     try {
       if (!scene_variation_uuid) {
         throw new BadRequestException('Scene variation uuid is required');
@@ -157,6 +157,7 @@ export class ProjectAssetsService {
           status: AssetStatus.PENDING,
           type: DocumentType.VIDEO,
           role: AssetRole.GENERATED_VIDEO,
+          metadata: dto as any,
         }
       });
 

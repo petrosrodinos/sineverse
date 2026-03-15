@@ -1,11 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import { ProjectAsset, ProjectAssetsQueryDto, CreateProjectAssetDto, CreateSceneVideoDto, GenerateSceneVariationImageDto, ProjectAssetsResponse } from "../interfaces/project-assets.interfaces";
 import { getProjectAssets, getProjectAsset, createSceneVideo, createProjectAsset, createSceneVariationImage, deleteProjectAsset, deleteSceneVariationPromptImage, uploadSceneVariationPromptImage } from "../services/project-assets.services";
 
-export const useProjectAssets = (query: ProjectAssetsQueryDto) => {
+export const useProjectAssets = (query: ProjectAssetsQueryDto, options?: Omit<UseQueryOptions<ProjectAssetsResponse, Error, ProjectAssetsResponse, any>, 'queryKey' | 'queryFn'>) => {
     return useQuery<ProjectAssetsResponse>({
         queryKey: ['project-assets', query],
-        queryFn: () => getProjectAssets(query)
+        queryFn: () => getProjectAssets(query),
+        ...options
     });
 }
 

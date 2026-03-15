@@ -20,7 +20,7 @@ export const useSceneVariation = (uuid: string, options?: any) => {
 
 export const useCreateSceneVariation = () => {
     const queryClient = useQueryClient();
-    return useMutation<SceneVariation, Error, CreateSceneVariationDto>({
+    return useMutation({
         mutationFn: createSceneVariation,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.sceneVariations] });
