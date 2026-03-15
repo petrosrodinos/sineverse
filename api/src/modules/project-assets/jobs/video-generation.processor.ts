@@ -8,7 +8,7 @@ import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
-import { AssetStatus } from '@/generated/prisma';
+import { AssetRole, AssetStatus } from '@/generated/prisma';
 
 export interface VideoGenerationJobData {
     projectAssetUuid: string;
@@ -34,19 +34,18 @@ export class VideoGenerationProcessor extends WorkerHost {
         const projectAsset = await this.prisma.projectAsset.findUnique({
             where: { uuid: projectAssetUuid },
             include: {
-                scene_variation_video: {
+                scene_variation: {
                     include: {
-                        prompt_image: {
-                            include: {
-                                document: true
-                            }
+                        project_assets: {
+                            where: { role: AssetRole.PROMPT_IMAGE },
+                            include: { document: true }
                         }
                     }
                 }
             },
         });
 
-        if (!projectAsset || !projectAsset.scene_variation_video) {
+        if (!projectAsset || !projectAsset.scene_variation) {
             this.logger.error(`projectAsset or variation not found: ${projectAssetUuid}`);
             return;
         }
@@ -58,15 +57,19 @@ export class VideoGenerationProcessor extends WorkerHost {
                 data: { status: AssetStatus.PROCESSING },
             });
 
-            const variation = projectAsset.scene_variation_video;
-            const model = variation.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
+            const variation = projectAsset.scene_variation;
+            const metadata = (projectAsset.metadata || {}) as any;
+            const promptImageAsset = variation.project_assets?.[0];
 
-            const payload = transformVariationToModelPayload(variation, model);
+            const configForMapping = {
+                ...variation,
+                ...metadata,
+                prompt_image: promptImageAsset || null,
+            };
 
-            const isImageToVideoModel = model.includes('image-to-video') || model.includes('i2v');
-            if (isImageToVideoModel && variation.prompt_image?.document?.url) {
-                payload.image_url = variation.prompt_image.document?.url;
-            }
+            const model = metadata.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
+
+            const payload = transformVariationToModelPayload(configForMapping, model);
 
             const genResponse = await this.aimlApiService.video.create(payload);
 

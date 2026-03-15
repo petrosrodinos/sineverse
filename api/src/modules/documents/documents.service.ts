@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { GcsService } from '@/integrations/storage/gcs/services/gcs.service';
-import { DocumentType } from '@/generated/prisma';
+import { AssetRole } from '@/generated/prisma';
 import axios from 'axios';
 
 @Injectable()
@@ -45,7 +45,6 @@ export class DocumentsService {
           size: buffer.length,
           url: uploadResponse.url,
           path: uploadResponse.path,
-          type: DocumentType.VIDEO,
         },
       });
 
@@ -87,7 +86,6 @@ export class DocumentsService {
           size: buffer.length,
           url: uploadResponse.url,
           path: uploadResponse.path,
-          type: DocumentType.IMAGE,
         },
       });
 
@@ -129,11 +127,12 @@ export class DocumentsService {
     try {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid: variationUuid },
-        include: { video: true }
+        include: { project_assets: { where: { role: AssetRole.GENERATED_VIDEO } } }
       });
 
-      if (variation?.video?.document_uuid) {
-        await this.deleteDocument(variation.video.document_uuid);
+      const videoAsset = variation?.project_assets?.[0];
+      if (videoAsset?.document_uuid) {
+        await this.deleteDocument(videoAsset.document_uuid);
       }
     } catch (error) {
       throw error;
@@ -145,19 +144,16 @@ export class DocumentsService {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid: variationUuid },
         include: {
-          prompt_image: true,
-          video: true
+          project_assets: true
         }
       });
 
       if (!variation) return;
 
-      if (variation.prompt_image?.document_uuid) {
-        await this.deleteDocument(variation.prompt_image.document_uuid);
-      }
-
-      if (variation.video?.document_uuid) {
-        await this.deleteDocument(variation.video.document_uuid);
+      for (const asset of variation.project_assets) {
+        if (asset.document_uuid) {
+          await this.deleteDocument(asset.document_uuid);
+        }
       }
     } catch (error) {
       this.logger.error(`Error deleting documents for variation ${variationUuid}: ${error.message}`);

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, InternalServerErrorException, Logger, BadRequestException, HttpException } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { CreateProjectAssetDto } from './dto/create-project-asset.dto';
+import { CreateProjectAssetDto, GenerateProjectAssetImageDto } from './dto/create-project-asset.dto';
 import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { DocumentsService } from '../documents/documents.service';
@@ -8,10 +8,9 @@ import { VideoGenerationJobData } from './jobs/video-generation.processor';
 import { InjectQueue } from '@nestjs/bullmq';
 import { VIDEO_GENERATION_JOB, VIDEO_GENERATION_QUEUE } from './queues/video.constants';
 import { Queue } from 'bullmq';
-import { AssetStatus, DocumentType } from '@/generated/prisma';
+import { AssetStatus, DocumentType, AssetRole } from '@/generated/prisma';
 import { ensureMinDimensions } from '@/shared/utils/images/image-processor.util';
 import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers/image-mapping.config';
-import { GenerateImageDto } from './dto/generate-image.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 
@@ -30,12 +29,10 @@ export class ProjectAssetsService {
 
   async create(user_uuid: string, createProjectAssetDto: CreateProjectAssetDto) {
     try {
-
       return {
         status: 'created',
         data: createProjectAssetDto,
       }
-
     } catch (error) {
       this.logger.error(`Failed to create project asset: ${error.message}`);
       throw new InternalServerErrorException('Failed to create project asset', { cause: error });
@@ -44,12 +41,24 @@ export class ProjectAssetsService {
 
   async findAll(user_uuid: string, query: ProjectAssetQueryDto) {
     try {
-      const { page = 1, limit = 10, ...filterQuery } = query;
+      const { page = 1, limit = 10, type, role, selected, ...filterQuery } = query;
 
       const where: any = {
         user_uuid,
         ...filterQuery,
       };
+
+      if (type) {
+        where.type = { in: type.split(',').map((t) => t.trim()) };
+      }
+
+      if (role) {
+        where.role = { in: role.split(',').map((r) => r.trim()) };
+      }
+
+      if (selected !== undefined) {
+        where.scene_variation = { selected };
+      }
 
       const skip = (page - 1) * limit;
 
@@ -90,7 +99,7 @@ export class ProjectAssetsService {
           document: true,
           project: true,
           scene: true,
-          scene_variation_video: true,
+          scene_variation: true,
         },
       });
 
@@ -110,11 +119,9 @@ export class ProjectAssetsService {
     try {
       const asset = await this.findOne(user_uuid, uuid);
 
-      if (!asset.document_uuid) {
-        throw new BadRequestException('Document uuid is required');
+      if (asset.document_uuid) {
+        await this.documentsService.deleteDocument(asset.document_uuid);
       }
-
-      await this.documentsService.deleteDocument(asset.document_uuid);
 
       return await this.prisma.projectAsset.delete({
         where: { uuid },
@@ -128,7 +135,6 @@ export class ProjectAssetsService {
 
   async createVideo(user_uuid: string, scene_variation_uuid: string) {
     try {
-
       if (!scene_variation_uuid) {
         throw new BadRequestException('Scene variation uuid is required');
       }
@@ -142,23 +148,15 @@ export class ProjectAssetsService {
 
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      // await this.documentsService.deleteExistingVideoForVariation(variation.uuid);
-
-      const projectAsset = await this.prisma.projectAsset.upsert({
-        where: { scene_variation_uuid: variation.uuid },
-        update: {
-          status: AssetStatus.PENDING,
-          error_message: null,
-          provider_job_id: null,
-          document_uuid: null,
-        },
-        create: {
+      const projectAsset = await this.prisma.projectAsset.create({
+        data: {
           user_uuid,
           project_uuid: variation.scene.project_uuid,
           scene_uuid: variation.scene_uuid,
           scene_variation_uuid: variation.uuid,
           status: AssetStatus.PENDING,
           type: DocumentType.VIDEO,
+          role: AssetRole.GENERATED_VIDEO,
         }
       });
 
@@ -185,53 +183,50 @@ export class ProjectAssetsService {
     try {
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid, user_uuid },
-        include: {
-          prompt_image: true,
-          scene: true,
-        },
+        include: { scene: true },
       });
 
-      // 1. Delete old prompt image if it exists
-      // await this.removePromptImage(user_uuid, uuid);
+      if (!variation) throw new NotFoundException('Scene variation not found');
 
-      // 2. Upload new image
       const filename = `prompt-image-${uuid}-${Date.now()}`;
-
-      // Ensure minimum dimensions for providers like Kling
       const processedBuffer = await ensureMinDimensions(file.buffer);
-
       const documentUuid = await this.documentsService.saveImageFromBuffer(
         processedBuffer,
         filename,
         file.mimetype,
       );
 
-      // 3. Create ProjectAsset
-      const asset = await this.prisma.projectAsset.create({
-        data: {
-          user_uuid,
-          project_uuid: variation.scene.project_uuid,
-          scene_uuid: variation.scene_uuid,
-          scene_variation_uuid: variation.uuid,
-          type: DocumentType.IMAGE,
-          status: AssetStatus.COMPLETED,
-          document_uuid: documentUuid,
-        }
+      let asset = await this.prisma.projectAsset.findFirst({
+        where: { scene_variation_uuid: variation.uuid, role: AssetRole.PROMPT_IMAGE }
       });
 
-      // 4. Update variation
-      await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: asset.uuid,
-        },
-        include: {
-          prompt_image: { include: { document: true } },
-        },
-      });
+      if (asset) {
+        if (asset.document_uuid) {
+          await this.documentsService.deleteDocument(asset.document_uuid).catch(() => { });
+        }
+        asset = await this.prisma.projectAsset.update({
+          where: { uuid: asset.uuid },
+          data: {
+            document_uuid: documentUuid,
+            status: AssetStatus.COMPLETED,
+          }
+        });
+      } else {
+        asset = await this.prisma.projectAsset.create({
+          data: {
+            user_uuid,
+            project_uuid: variation.scene.project_uuid,
+            scene_uuid: variation.scene_uuid,
+            scene_variation_uuid: variation.uuid,
+            type: DocumentType.IMAGE,
+            role: AssetRole.PROMPT_IMAGE,
+            status: AssetStatus.COMPLETED,
+            document_uuid: documentUuid,
+          }
+        });
+      }
 
       return asset;
-
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to upload prompt image', { cause: error });
@@ -242,33 +237,30 @@ export class ProjectAssetsService {
     try {
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid, user_uuid },
-        include: { prompt_image: true }
+        include: { project_assets: { where: { role: AssetRole.PROMPT_IMAGE } } }
       });
 
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      if (variation.prompt_image) {
-        if (variation.prompt_image.document_uuid) {
-          await this.documentsService.deleteDocument(variation.prompt_image.document_uuid);
+      const promptImage = variation.project_assets[0];
+
+      if (promptImage) {
+        if (promptImage.document_uuid) {
+          await this.documentsService.deleteDocument(promptImage.document_uuid);
         }
         await this.prisma.projectAsset.delete({
-          where: { uuid: variation.prompt_image.uuid }
+          where: { uuid: promptImage.uuid }
         });
       }
 
-      return await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: null,
-        }
-      });
+      return variation;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to remove prompt image', { cause: error });
     }
   }
 
-  async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateImageDto, file?: any) {
+  async createImage(user_uuid: string, uuid: string, generateImageDto: GenerateProjectAssetImageDto, file?: any) {
     try {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid },
@@ -277,13 +269,10 @@ export class ProjectAssetsService {
 
       if (!variation) throw new NotFoundException('Scene variation not found');
 
-      // await this.removePromptImage(user_uuid, uuid);
-
       let temporaryImageUuid: string | undefined;
 
       if (file) {
         const filename = `temp-ref-image-${uuid}-${Date.now()}`;
-
         const processedBuffer = await ensureMinDimensions(file.buffer);
 
         temporaryImageUuid = await this.documentsService.saveImageFromBuffer(
@@ -299,29 +288,38 @@ export class ProjectAssetsService {
         }
       }
 
-      // Create ProjectAsset for generation
-      const asset = await this.prisma.projectAsset.create({
-        data: {
-          user_uuid,
-          project_uuid: variation.scene.project_uuid,
-          scene_uuid: variation.scene_uuid,
-          scene_variation_uuid: variation.uuid,
-          type: DocumentType.IMAGE,
-          status: AssetStatus.PROCESSING,
-        }
+      let asset = await this.prisma.projectAsset.findFirst({
+        where: { scene_variation_uuid: variation.uuid, role: AssetRole.PROMPT_IMAGE }
       });
 
-
-      await this.prisma.sceneVariation.update({
-        where: { uuid },
-        data: {
-          prompt_image_uuid: asset.uuid,
+      if (asset) {
+        if (asset.document_uuid) {
+          await this.documentsService.deleteDocument(asset.document_uuid).catch(() => { });
         }
-      });
+        asset = await this.prisma.projectAsset.update({
+          where: { uuid: asset.uuid },
+          data: {
+            status: AssetStatus.PROCESSING,
+            error_message: null,
+            document_uuid: null,
+          }
+        });
+      } else {
+        asset = await this.prisma.projectAsset.create({
+          data: {
+            user_uuid,
+            project_uuid: variation.scene.project_uuid,
+            scene_uuid: variation.scene_uuid,
+            scene_variation_uuid: variation.uuid,
+            type: DocumentType.IMAGE,
+            role: AssetRole.PROMPT_IMAGE,
+            status: AssetStatus.PROCESSING,
+          }
+        });
+      }
 
-      // Start the generation process in background
       setImmediate(() => {
-        this.generateAndSaveImageBackground(uuid, generateImageDto, temporaryImageUuid).catch((err) => {
+        this.generateAndSaveImageBackground(uuid, generateImageDto, asset.uuid, temporaryImageUuid).catch((err) => {
           this.logger.error(`Background image generation failed for variation ${uuid}: ${err.message}`);
         });
       });
@@ -334,14 +332,12 @@ export class ProjectAssetsService {
     }
   }
 
-  private async generateAndSaveImageBackground(uuid: string, generateImageDto: GenerateImageDto, temporaryImageUuid?: string) {
+  private async generateAndSaveImageBackground(uuid: string, generateImageDto: GenerateProjectAssetImageDto, assetUuid: string, temporaryImageUuid?: string) {
     try {
-
       if (generateImageDto.enrich_prompt) {
         const enrichedPrompt = await this.aiHelperService.enrichImagePrompt({
           prompt_text: generateImageDto.prompt_text,
           ai_model: generateImageDto.ai_model,
-
         });
 
         generateImageDto.prompt_text = enrichedPrompt.response;
@@ -350,12 +346,6 @@ export class ProjectAssetsService {
       const payload = transformVariationToImageModelPayload(generateImageDto, generateImageDto.ai_model);
 
       const response = await this.aimlApiService.image.create(payload);
-
-      // if (temporaryImageUuid) {
-      //   await this.documentsService.deleteDocument(temporaryImageUuid).catch(err =>
-      //     this.logger.error(`Failed to delete temporary reference image ${temporaryImageUuid}: ${err.message}`)
-      //   );
-      // }
 
       if (!response.data || response.data.length === 0) {
         throw new Error('No image data returned from AIML API');
@@ -369,20 +359,13 @@ export class ProjectAssetsService {
       const filename = `generated-image-${uuid}-${Date.now()}.png`;
       const documentUuid = await this.documentsService.saveImageFromUrl(imageUrl, filename);
 
-      const variation = await this.prisma.sceneVariation.findUnique({
-        where: { uuid },
-        select: { prompt_image_uuid: true }
+      await this.prisma.projectAsset.update({
+        where: { uuid: assetUuid },
+        data: {
+          document_uuid: documentUuid,
+          status: AssetStatus.COMPLETED,
+        }
       });
-
-      if (variation?.prompt_image_uuid) {
-        await this.prisma.projectAsset.update({
-          where: { uuid: variation.prompt_image_uuid },
-          data: {
-            document_uuid: documentUuid,
-            status: AssetStatus.COMPLETED,
-          }
-        });
-      }
 
       await this.prisma.sceneVariation.update({
         where: { uuid },
@@ -392,7 +375,6 @@ export class ProjectAssetsService {
       });
 
     } catch (err) {
-      // Extract detailed error message if it's an HttpException
       let errorMessage = err.message || 'Unknown error occurred during generation';
       if (err instanceof HttpException) {
         const response = err.getResponse();
@@ -407,21 +389,13 @@ export class ProjectAssetsService {
         await this.documentsService.deleteDocument(temporaryImageUuid).catch(() => { });
       }
 
-      const variation = await this.prisma.sceneVariation.findUnique({
-        where: { uuid },
-        select: { prompt_image_uuid: true }
+      await this.prisma.projectAsset.update({
+        where: { uuid: assetUuid },
+        data: {
+          status: AssetStatus.FAILED,
+          error_message: errorMessage,
+        }
       });
-
-      if (variation?.prompt_image_uuid) {
-        await this.prisma.projectAsset.update({
-          where: { uuid: variation.prompt_image_uuid },
-          data: {
-            status: AssetStatus.FAILED,
-            error_message: errorMessage,
-          }
-        });
-      }
-
     }
   }
 }

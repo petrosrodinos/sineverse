@@ -46,8 +46,8 @@ export const transformVariationToModelPayload = (variation: any, model: string):
             cfg_scale: variation.guidance_scale || undefined,
         };
 
-        if (isImage && variation.prompt_image?.url) {
-            klingPayload.image_url = variation.prompt_image.url;
+        if (isImage && variation.prompt_image?.document?.url) {
+            klingPayload.image_url = variation.prompt_image.document.url;
         }
 
         if (isV3) {
@@ -67,8 +67,8 @@ export const transformVariationToModelPayload = (variation: any, model: string):
             generate_audio: variation.include_sound !== null ? variation.include_sound : undefined,
         };
 
-        if (model.includes('i2v') && variation.prompt_image?.url) {
-            googlePayload.image_url = variation.prompt_image.url;
+        if (model.includes('i2v') && variation.prompt_image?.document?.url) {
+            googlePayload.image_url = variation.prompt_image.document.url;
         }
 
         return googlePayload;
@@ -81,8 +81,8 @@ export const transformVariationToModelPayload = (variation: any, model: string):
             resolution: variation.resolution || undefined,
         };
 
-        if (model.includes('i2v') && variation.prompt_image?.url) {
-            seedancePayload.image_url = variation.prompt_image.url;
+        if (model.includes('i2v') && variation.prompt_image?.document?.url) {
+            seedancePayload.image_url = variation.prompt_image.document.url;
         }
 
         return seedancePayload;
@@ -91,6 +91,6 @@ export const transformVariationToModelPayload = (variation: any, model: string):
     // Default fallback
     return {
         ...basePayload,
-        image_url: variation.prompt_image?.url || undefined,
+        image_url: variation.prompt_image?.document?.url || undefined,
     };
 };

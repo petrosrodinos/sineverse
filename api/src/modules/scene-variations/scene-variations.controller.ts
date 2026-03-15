@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
@@ -8,8 +8,6 @@ import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
 import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { GenerateImageDto } from '../project-assets/dto/generate-image.dto';
 
 
 @ApiTags('Scene Variations')

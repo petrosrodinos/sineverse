@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AssetStatus, DocumentType } from '@/generated/prisma';
@@ -19,10 +19,21 @@ export class ProjectAssetQueryDto {
     @IsOptional()
     scene_variation_uuid?: string;
 
-    @ApiPropertyOptional({ enum: DocumentType, description: 'Filter by type' })
-    @IsEnum(DocumentType)
+    @ApiPropertyOptional({ description: 'Filter by types (comma separated)', type: String })
+    @IsString()
     @IsOptional()
-    type?: DocumentType;
+    type?: string;
+
+    @ApiPropertyOptional({ description: 'Filter by selected variation state', type: Boolean })
+    @IsBoolean()
+    @Type(() => Boolean)
+    @IsOptional()
+    selected?: boolean;
+
+    @ApiPropertyOptional({ description: 'Filter by roles (comma separated)', type: String })
+    @IsString()
+    @IsOptional()
+    role?: string;
 
     @ApiPropertyOptional({ enum: AssetStatus, description: 'Filter by status' })
     @IsEnum(AssetStatus)

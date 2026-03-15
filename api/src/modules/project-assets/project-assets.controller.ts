@@ -1,13 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
-import { CreateProjectAssetDto } from './dto/create-project-asset.dto';
+import { CreateProjectAssetDto, GenerateProjectAssetImageDto } from './dto/create-project-asset.dto';
 import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GenerateImageDto } from './dto/generate-image.dto';
 
 @ApiTags('Project Assets')
 @Controller('project-assets')
@@ -96,7 +95,7 @@ export class ProjectAssetsController {
   createImage(
     @CurrentUser('uuid') user_uuid: string,
     @Param('uuid') uuid: string,
-    @Body() generateImageDto: GenerateImageDto,
+    @Body() generateImageDto: GenerateProjectAssetImageDto,
     @UploadedFile() file?: any,
   ) {
     return this.projectAssetsService.createImage(user_uuid, uuid, generateImageDto, file);
