@@ -7,12 +7,12 @@ import { Input } from "@heroui/input";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 
-interface EditVariationTitleModalProps {
+interface EditVariationModalProps {
   variation: SceneVariation | null;
   onClose: () => void;
 }
 
-export function EditVariationTitleModal({ variation, onClose }: EditVariationTitleModalProps) {
+export function EditVariationModal({ variation, onClose }: EditVariationModalProps) {
   const [title, setTitle] = useState("");
   const updateMutation = useUpdateSceneVariation();
 

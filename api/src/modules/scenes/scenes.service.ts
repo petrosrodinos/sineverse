@@ -8,6 +8,7 @@ import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
 import { GenerateAiScenesSchemaType } from '@/shared/services/ai-helper/schemas/scene-variation.schema';
 import { ReorderScenesDto } from './dto/reorder-scenes.dto';
 import { DocumentsService } from '../documents/documents.service';
+import { AssetRole, AssetStatus, DocumentType } from '@/generated/prisma';
 
 @Injectable()
 export class ScenesService {
@@ -135,6 +136,11 @@ export class ScenesService {
         }))
       }
 
+      if (config.enrich_concept) {
+        const enrichedConcept = await this.aiHelperService.enrichProjectConcept(config);
+        config.enriched_concept = enrichedConcept.response;
+      }
+
       const generatedAiScenes: GenerateAiScenesSchemaType = await this.aiHelperService.generateAiScenes(config);
 
       if (!generatedAiScenes?.scenes?.length) {
@@ -151,10 +157,19 @@ export class ScenesService {
               title: scene.title,
               description: scene.description,
               scene_variations: {
-                create: scene.scene_variations.map(({ title, ...variation }) => ({
-                  ...variation,
-                  title,
+                create: scene.scene_variations.map((variation) => ({
+                  title: variation.title,
                   user: { connect: { uuid: user_uuid } },
+                  project_assets: {
+                    create: {
+                      user_uuid,
+                      project_uuid,
+                      type: DocumentType.VIDEO,
+                      role: AssetRole.GENERATED_VIDEO,
+                      status: AssetStatus.PENDING,
+                      metadata: variation.project_asset_video as any,
+                    }
+                  }
                 })),
               },
             },
@@ -162,9 +177,17 @@ export class ScenesService {
         ),
       );
 
+      if (config.enrich_concept) {
+        await this.prisma.project.update({
+          where: { uuid: project_uuid },
+          data: { enriched_concept: config.enriched_concept },
+        });
+      }
+
       return newScenes;
 
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Failed to generate ai scenes', { cause: error });
     }
   }

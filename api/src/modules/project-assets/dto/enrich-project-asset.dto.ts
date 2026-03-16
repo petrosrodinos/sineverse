@@ -1,10 +1,10 @@
 import { IsString, IsOptional, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class EnrichSceneVariationDto {
+export class EnrichProjectAssetVideoDto {
     @ApiPropertyOptional({
-        description: 'Directions for the scene variation',
-        example: 'Add more details to the scene variation'
+        description: 'Directions for the project asset',
+        example: 'Add more details to the project asset'
     })
     @IsString()
     @IsOptional()

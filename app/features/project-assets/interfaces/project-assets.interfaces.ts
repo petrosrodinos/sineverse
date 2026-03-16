@@ -70,6 +70,14 @@ export interface GenerateSceneVariationImageDto {
 }
 
 
+export interface ProjectAssetVideoEnrichDto {
+    directions?: string;
+    include_prompt: boolean;
+    include_negative_prompt: boolean;
+    include_video_generation_options: boolean;
+}
+
+
 export const ProjectAssetTypes = {
     VIDEO: 'VIDEO',
     IMAGE: 'IMAGE',

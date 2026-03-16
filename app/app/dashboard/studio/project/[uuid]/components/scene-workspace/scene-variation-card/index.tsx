@@ -3,17 +3,15 @@ import type { SceneVariation, UpdateSceneVariationDto } from "@/features/scene-v
 import { useState, useEffect } from "react";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Button } from "@heroui/button";
-import { Input, Textarea } from "@heroui/input";
-import { Checkbox } from "@heroui/checkbox";
-import { Tooltip } from "@heroui/tooltip";
-import { Save, Info, Video, AlertCircle } from "lucide-react";
-import { VideoGenerationOptions } from "./VideoGenerationOptions";
+import {Textarea } from "@heroui/input";
+import { Save, Info, Video, AlertCircle, CheckCircle } from "lucide-react";
+import { VideoGenerationOptions } from "../VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useCreateSceneVideo, useProjectAssetByUuid, useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
-import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { useCreateSceneVideo, useProjectAssetByUuid, useProjectAssets, useSelectProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
+import { AssetRoles, ProjectAssetStatuses, ProjectAssetTypes } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
-import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
-import { EnrichVariationPopover } from "./EnrichVariationPopover";
+import { SceneVariationImageUpload } from "../SceneVariationImageUpload";
+import { EnrichVariationPopover } from "../EnrichVariationPopover";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
@@ -30,56 +28,49 @@ interface SceneVariationCardProps {
 export function SceneVariationCard({ variation, isEnriched, handleClose, isExpanded }: SceneVariationCardProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [editedVariation, setEditedVariation] = useState<Partial<SceneVariation>>(variation || {});
   const updateMutation = useUpdateSceneVariation();
   const createVideoMutation = useCreateSceneVideo();
+  const selectVideoMutation = useSelectProjectAsset();
   const queryClient = useQueryClient();
 
-  const { data: projectAssetsResponse } = useProjectAssets(
-    { scene_variation_uuid: variation?.uuid },
+  const { data: videoAssetsResponse } = useProjectAssets(
+    { scene_variation_uuid: variation?.uuid, type: ProjectAssetTypes.VIDEO },
     { enabled: !!variation?.uuid && !!isExpanded }
   );
 
-  const assets = projectAssetsResponse?.data || variation?.project_assets || [];
+  const videoAssets = videoAssetsResponse?.data || [];
+  
+  const pendingVideo = videoAssets.find((a: any) => a.status === ProjectAssetStatuses.PROCESSING || a.status === ProjectAssetStatuses.PENDING);
+  const activeVideoAsset = pendingVideo || videoAssets.find((a: any) => a.selected) || videoAssets[0];
+  const promptImageAsset = variation?.project_assets?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
-  const videoAsset = assets.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO);
-  const promptImageAsset = assets.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
-
-  const videoUuid = videoAsset?.uuid;
+  const videoUuid = activeVideoAsset?.uuid;
 
   const { data: polledVideo } = useProjectAssetByUuid(videoUuid || "");
 
   useEffect(() => {
     if (polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED) {
       queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
+      queryClient.invalidateQueries({ queryKey: ["project-assets"] });
     }
   }, [polledVideo?.status, queryClient]);
 
-  const displayVideoStatus = polledVideo?.status || videoAsset?.status;
-  const displayVideo = polledVideo || videoAsset;
+  const displayVideoStatus = polledVideo?.status || activeVideoAsset?.status;
+  const displayVideo = polledVideo || activeVideoAsset;
 
   const [editedConfig, setEditedConfig] = useState<Partial<VideoGenerationConfig>>(() => {
     return variation?.project_assets?.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO)?.metadata || {};
   });
 
   useEffect(() => {
-    if (projectAssetsResponse?.data) {
-      const va = projectAssetsResponse.data.find((a: any) => a.role === AssetRoles.GENERATED_VIDEO);
+    if (videoAssetsResponse?.data) {
+      const va = activeVideoAsset;
       if (va?.metadata) {
          setEditedConfig(prev => ({ ...va.metadata, ...prev }));
       }
     }
-  }, [projectAssetsResponse?.data]);
+  }, [videoAssetsResponse?.data, activeVideoAsset]);
 
-  useEffect(() => {
-    if (variation) {
-      setEditedVariation(variation);
-    }
-  }, [variation]);
-
-  const handleOptionChange = (field: string, value: any) => {
-    setEditedVariation(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleConfigChange = (field: string, value: any) => {
     setEditedConfig(prev => ({ ...prev, [field]: value }));
@@ -133,7 +124,7 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
     
     if (!validateVariation()) return;
 
-    if (displayVideoStatus === ProjectAssetStatuses.COMPLETED) {
+    if (activeVideoAsset && activeVideoAsset.status === ProjectAssetStatuses.COMPLETED) {
       setIsConfirmOpen(true);
       return;
     }
@@ -195,6 +186,52 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
           <div>
             <p className="text-sm font-semibold text-danger">Generation Failed</p>
             <p className="text-xs text-danger-500">{displayVideo?.error_message || "An unexpected error occurred during generation."}</p>
+          </div>
+        </div>
+      )}
+
+      {videoAssets.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h5 className="text-sm font-medium">Video Iterations</h5>
+          <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+            {videoAssets.map((asset: any, index: number) => {
+               const isSelected = activeVideoAsset?.uuid === asset.uuid;
+               const isCompleted = asset.status === ProjectAssetStatuses.COMPLETED;
+               
+               return (
+                 <div 
+                   key={asset.uuid} 
+                   onClick={() => {
+                      if(isCompleted) selectVideoMutation.mutate(asset.uuid);
+                   }}
+                   className={`relative flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200 ${isSelected ? 'border-primary ring-2 ring-primary/20 scale-[1.02]' : 'border-transparent hover:border-default-300'} ${!isCompleted ? 'opacity-60 cursor-not-allowed' : ''}`}
+                 >
+                    {isCompleted && asset.document?.url ? (
+                       <video src={asset.document.url} className="w-full h-full object-cover" />
+                    ) : (
+                       <div className="w-full h-full bg-default-100 flex items-center justify-center">
+                          {asset.status === ProjectAssetStatuses.PROCESSING || asset.status === ProjectAssetStatuses.PENDING ? (
+                             <Spinner size="sm" />
+                          ) : (
+                             <Video className="size-4 text-default-400" />
+                          )}
+                       </div>
+                    )}
+                    
+                    {isSelected && (
+                      <div className="absolute top-1 right-1 bg-primary text-primary-foreground rounded-full p-0.5 shadow-sm">
+                        <CheckCircle className="size-3" />
+                      </div>
+                    )}
+                    
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-1 backdrop-blur-sm">
+                      <p className="text-[10px] text-white font-medium truncate text-center">
+                        Iteration {videoAssets.length - index}
+                      </p>
+                    </div>
+                 </div>
+               );
+            })}
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto, SceneVariationEnrichDto } from "../interfaces/scene-variations.interfaces";
+import { SceneVariation, CreateSceneVariationDto, UpdateSceneVariationDto, SceneVariationsQueryDto } from "../interfaces/scene-variations.interfaces";
 
 
 export const getSceneVariations = async (query: SceneVariationsQueryDto): Promise<SceneVariation[]> => {
@@ -57,14 +57,7 @@ export const duplicateSceneVariation = async (uuid: string): Promise<SceneVariat
     }
 }
 
-export const enrichSceneVariation = async (uuid: string, enrichDto: SceneVariationEnrichDto): Promise<SceneVariation> => {
-    try {
-        const response = await axiosInstance.post<SceneVariation>(ApiRoutes.scene_variations.enrich(uuid), enrichDto);
-        return response.data;
-    } catch (error: any) {
-        throw new Error(error?.response?.data?.message || "Failed to enrich scene variation")
-    }
-}
+
 
 
 

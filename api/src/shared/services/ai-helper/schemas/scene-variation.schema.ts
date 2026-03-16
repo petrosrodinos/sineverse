@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { STYLE_VALUES, CAMERA_STYLE_VALUES, SHOT_TYPE_VALUES, CAMERA_MOVEMENT_VALUES, LENS_TYPE_VALUES, DEPTH_OF_FIELD_VALUES, LIGHTING_VALUES, COLOR_GRADE_VALUES, TIME_OF_DAY_VALUES, ASPECT_RATIO_VALUES, RESOLUTION_VALUES, AUDIO_STYLE_VALUES, PROJECT_TONE_VALUES, PROJECT_GENRE_VALUES } from "@/shared/config/scene-variations";
 
-export const SceneVariationEnrichSchema = z.object({
+export const ProjectAssetVideoSchema = z.object({
     prompt_text: z.string().trim().min(1),
     negative_prompt: z.string().trim(),
     style: z.enum(STYLE_VALUES),
@@ -31,12 +31,13 @@ export const GenerateAiScenesSchema = z.object({
         description: z.string().trim().min(1),
         order: z.number().min(1),
         scene_variations: z.array(
-            SceneVariationEnrichSchema.extend({
+            z.object({
                 title: z.string().trim().min(1),
+                project_asset_video: ProjectAssetVideoSchema,
             })
         ),
     })),
 });
 
-export type SceneVariationEnrichSchemaType = z.infer<typeof SceneVariationEnrichSchema>;
+export type ProjectAssetVideoSchemaType = z.infer<typeof ProjectAssetVideoSchema>;
 export type GenerateAiScenesSchemaType = z.infer<typeof GenerateAiScenesSchema>;

@@ -2,11 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Us
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
 import { CreateProjectAssetDto, GenerateProjectAssetImageDto, CreateProjectAssetVideoDto } from './dto/create-project-asset.dto';
-import { UpdateProjectAssetDto } from './dto/update-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
 
 @ApiTags('Project Assets')
 @Controller('project-assets')
@@ -45,6 +45,15 @@ export class ProjectAssetsController {
   @ApiResponse({ status: 404, description: 'Project asset not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.projectAssetsService.remove(user_uuid, uuid);
+  }
+
+  @Patch(':uuid/select')
+  @ApiOperation({ summary: 'Select a project asset' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the project asset' })
+  @ApiResponse({ status: 200, description: 'The project asset has been successfully selected.' })
+  @ApiResponse({ status: 404, description: 'Project asset not found.' })
+  select(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.projectAssetsService.select(user_uuid, uuid);
   }
 
   @Post('scene-variations/:uuid/create-video')
@@ -100,5 +109,14 @@ export class ProjectAssetsController {
     @UploadedFile() file?: any,
   ) {
     return this.projectAssetsService.createImage(user_uuid, uuid, generateImageDto, file);
+  }
+
+  @Post(':uuid/enrich-video')
+  @ApiOperation({ summary: 'Enrich a project asset by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the project asset' })
+  @ApiResponse({ status: 200, description: 'The project asset has been successfully enriched.' })
+  @ApiResponse({ status: 404, description: 'Project asset not found.' })
+  enrich(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() enrichProjectAssetVideoDto: EnrichProjectAssetVideoDto) {
+    return this.projectAssetsService.enrichProjectAssetVideo(user_uuid, uuid, enrichProjectAssetVideoDto);
   }
 }

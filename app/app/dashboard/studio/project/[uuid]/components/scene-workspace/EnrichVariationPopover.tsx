@@ -9,10 +9,10 @@ import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
 import { Textarea } from "@heroui/input";
 import { Checkbox } from "@heroui/checkbox";
 import { Sparkles } from "lucide-react";
-import { useEnrichSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { SceneVariationEnrichDto, SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import { useEnrichProjectAssetVideo } from "@/features/project-assets/hooks/use-project-assets";
+import { ProjectAssetVideoEnrichDto } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Modal } from "@/components/ui/modal";
-import { SceneVariationCard } from "./SceneVariationCard";
+import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 
 const enrichSchema = z.object({
   directions: z.string().optional(),
@@ -30,8 +30,8 @@ interface EnrichVariationPopoverProps {
 export function EnrichVariationPopover({ sceneVariationUuid }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [enrichedVariation, setEnrichedVariation] = useState<SceneVariation | null>(null);
-  const {mutate, isPending} = useEnrichSceneVariation(sceneVariationUuid);
+  const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
+  const {mutate, isPending} = useEnrichProjectAssetVideo(sceneVariationUuid);
 
   const {
     register,
@@ -53,7 +53,7 @@ export function EnrichVariationPopover({ sceneVariationUuid }: EnrichVariationPo
   const onSubmit = async (data: EnrichFormValues) => {
     mutate({
       uuid: sceneVariationUuid,
-      enrichDto: data as SceneVariationEnrichDto,
+      enrichDto: data as ProjectAssetVideoEnrichDto,
     }, {
       onSuccess: (data) => {
         setEnrichedVariation(data);
@@ -143,7 +143,7 @@ export function EnrichVariationPopover({ sceneVariationUuid }: EnrichVariationPo
       scrollBehavior="inside"
     >
       <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
-        {enrichedVariation && <SceneVariationCard variation={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)}/>}
+        {/* {enrichedVariation && <SceneVariationCard variation={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)}/>} */}
       </div>
     </Modal>
     </>

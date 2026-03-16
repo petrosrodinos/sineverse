@@ -9,15 +9,15 @@ import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { Switch } from "@heroui/switch";
 import { Trash2, Copy, MoreVertical, Edit2 } from "lucide-react";
-import { SceneVariationCard } from "./SceneVariationCard";
+import { SceneVariationCard } from "./scene-variation-card";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import { EditVariationTitleModal } from "./EditVariationTitleModal";
 import { useDeleteSceneVariation, useSceneVariations, useDuplicateSceneVariation, useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { Style } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { CreateVariationPopover } from "./CreateVariationPopover";
 import { StylesOptionsLabels } from "@/config/dropdowns/project/scene-variations.options";
+import { EditVariationModal } from "./EditVariationModal";
 
 interface SceneWorkspaceProps {}
 
@@ -120,7 +120,7 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
                           startContent={<Edit2 className="size-4" />}
                           onPress={() => setVariationToEdit(variation)}
                         >
-                          Edit Title
+                          Edit
                         </DropdownItem>
                         <DropdownItem 
                           key="duplicate" 
@@ -174,7 +174,7 @@ export function SceneWorkspace({}: SceneWorkspaceProps) {
         isLoading={duplicateMutation.isPending}
       />
 
-      <EditVariationTitleModal 
+      <EditVariationModal 
         variation={variationToEdit} 
         onClose={() => setVariationToEdit(null)} 
       />

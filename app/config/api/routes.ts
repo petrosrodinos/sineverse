@@ -30,14 +30,15 @@ export const ApiRoutes = {
         prefix: "/scene-variations",
         scene_variation: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}`,
         duplicate: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/duplicate`,
-        enrich: (scene_variation_uuid: string) => `/scene-variations/${scene_variation_uuid}/enrich`,
     },
     project_assets: {
         prefix: "/project-assets",
         project_asset: (project_asset_uuid: string) => `/project-assets/${project_asset_uuid}`,
+        select_project_asset: (project_asset_uuid: string) => `/project-assets/${project_asset_uuid}/select`,
         create_video: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/create-video`,
         prompt_image: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/prompt-image`,
         create_image: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/create-image`,
+        enrich_video: (project_asset_uuid: string) => `/project-assets/${project_asset_uuid}/enrich-video`,
     },
     scene_videos: {
         prefix: "/scene-videos",

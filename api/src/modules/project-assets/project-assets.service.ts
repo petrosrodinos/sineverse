@@ -13,6 +13,7 @@ import { ensureMinDimensions } from '@/shared/utils/images/image-processor.util'
 import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/core/config/mappers/image-mapping.config';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
+import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
 
 
 @Injectable()
@@ -97,9 +98,6 @@ export class ProjectAssetsService {
         where: { uuid, user_uuid },
         include: {
           document: true,
-          project: true,
-          scene: true,
-          scene_variation: true,
         },
       });
 
@@ -130,6 +128,39 @@ export class ProjectAssetsService {
       if (error instanceof NotFoundException) throw error;
       this.logger.error(`Failed to delete project asset: ${error.message}`);
       throw new InternalServerErrorException('Failed to delete project asset', { cause: error });
+    }
+  }
+
+  async select(user_uuid: string, uuid: string) {
+    try {
+      const asset = await this.prisma.projectAsset.findFirst({
+        where: { uuid, user_uuid },
+      });
+
+      if (!asset) {
+        throw new NotFoundException(`Project asset with uuid ${uuid} not found`);
+      }
+
+      if (asset.scene_variation_uuid) {
+        await this.prisma.projectAsset.updateMany({
+          where: {
+            scene_variation_uuid: asset.scene_variation_uuid,
+            type: asset.type,
+            role: asset.role,
+            uuid: { not: uuid },
+          },
+          data: { selected: false },
+        });
+      }
+
+      return await this.prisma.projectAsset.update({
+        where: { uuid },
+        data: { selected: true },
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      this.logger.error(`Failed to select project asset: ${error.message}`);
+      throw new InternalServerErrorException('Failed to select project asset', { cause: error });
     }
   }
 
@@ -330,6 +361,59 @@ export class ProjectAssetsService {
       this.logger.error(`Failed to initiate image generation for variation ${uuid}: ${error.message}`);
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to initiate image generation', { cause: error });
+    }
+  }
+
+  async enrichProjectAssetVideo(user_uuid: string, uuid: string, enrichProjectAssetDto: EnrichProjectAssetVideoDto) {
+    try {
+      const { directions, include_prompt, include_negative_prompt, include_video_generation_options } = enrichProjectAssetDto;
+
+      const projectAsset = await this.prisma.projectAsset.findFirst({
+        where: { uuid, user_uuid },
+        include: {
+          project: true,
+          scene_variation: true,
+          scene: true,
+        }
+      });
+
+      if (!projectAsset) throw new NotFoundException('Project asset not found');
+
+      const scene = projectAsset.scene;
+      const project = projectAsset.project;
+      const variation = projectAsset.scene_variation;
+
+      const metadata: any = projectAsset.metadata || {};
+
+      const enrichedData = await this.aiHelperService.enrichSceneVariation({
+        original_concept: project.original_concept,
+        enriched_concept: project.enriched_concept,
+        genres: project.genres as string[],
+        tones: project.tones as string[],
+        prompt_text: metadata.prompt_text,
+        negative_prompt: metadata.negative_prompt,
+        project_title: project.title,
+        scene_title: scene.title,
+        scene_description: scene.description,
+        scene_variation_title: variation.title,
+        ai_model: metadata.ai_model,
+        directions: directions,
+        include_prompt,
+        include_negative_prompt,
+        include_video_generation_options,
+      });
+
+      const newProjectAsset = {
+        ...metadata,
+        ...enrichedData,
+      };
+
+      return newProjectAsset;
+
+    } catch (error) {
+      this.logger.error(error);
+      if (error instanceof NotFoundException) throw error;
+      throw new InternalServerErrorException('Failed to enrich scene variation', { cause: error });
     }
   }
 

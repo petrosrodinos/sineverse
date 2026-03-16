@@ -1,6 +1,7 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { ProjectAsset, GenerateSceneVariationImageDto, ProjectAssetsQueryDto, CreateSceneVideoDto, CreateProjectAssetDto, ProjectAssetsResponse } from "../interfaces/project-assets.interfaces";
+import { ProjectAsset, GenerateSceneVariationImageDto, ProjectAssetsQueryDto, CreateSceneVideoDto, CreateProjectAssetDto, ProjectAssetsResponse, ProjectAssetVideoEnrichDto } from "../interfaces/project-assets.interfaces";
+import { VideoGenerationConfig } from "../interfaces/project-assets-metadata.interfaces";
 
 export const createProjectAsset = async (payload: CreateProjectAssetDto): Promise<ProjectAsset> => {
     try {
@@ -35,6 +36,15 @@ export const deleteProjectAsset = async (uuid: string): Promise<ProjectAsset> =>
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to delete project asset")
+    }
+}
+
+export const selectProjectAsset = async (uuid: string): Promise<ProjectAsset> => {
+    try {
+        const response = await axiosInstance.patch<ProjectAsset>(ApiRoutes.project_assets.select_project_asset(uuid));
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to select project asset")
     }
 }
 
@@ -99,5 +109,14 @@ export const createSceneVariationImage = async (uuid: string, payload: GenerateS
         return response.data;
     } catch (error: any) {
         throw new Error(error?.response?.data?.message || "Failed to generate image")
+    }
+}
+
+export const enrichProjectAssetVideo = async (uuid: string, enrichDto: ProjectAssetVideoEnrichDto): Promise<VideoGenerationConfig> => {
+    try {
+        const response = await axiosInstance.post<VideoGenerationConfig>(ApiRoutes.project_assets.enrich_video(uuid), enrichDto);
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error?.response?.data?.message || "Failed to enrich scene variation")
     }
 }

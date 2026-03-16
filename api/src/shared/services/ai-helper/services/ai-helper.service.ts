@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { generateEnrichProjectConceptPrompt } from '../utils/project-prompts.utils';
 import { generateEnrichSceneVariationPrompt } from '../utils/scene-variation-prompts.utils';
 import { EnrichImagePromptConfig, EnrichProjectConceptConfig, EnrichSceneVariationConfig, GenerateAiScenesConfig } from '../interfaces/ai-helper.interfaces';
-import { GenerateAiScenesSchema, GenerateAiScenesSchemaType, SceneVariationEnrichSchema, SceneVariationEnrichSchemaType } from '../schemas/scene-variation.schema';
+import { GenerateAiScenesSchema, GenerateAiScenesSchemaType, ProjectAssetVideoSchema, ProjectAssetVideoSchemaType } from '../schemas/scene-variation.schema';
 import { generateScenePrompt } from '../utils/generate-scene-prompts.utils';
 import { generateEnrichImagePrompt } from '../utils/enrich-image-prompts.utils';
 import { AIGenerateTextResponse } from '@/integrations/ai/interfaces/ai.interface';
@@ -33,7 +33,7 @@ export class AiHelperService {
         }
     }
 
-    async enrichSceneVariation(config: EnrichSceneVariationConfig): Promise<SceneVariationEnrichSchemaType> {
+    async enrichSceneVariation(config: EnrichSceneVariationConfig): Promise<ProjectAssetVideoSchemaType> {
 
         try {
 
@@ -42,7 +42,7 @@ export class AiHelperService {
             const response = await this.aiService.generateTextWithSchema({
                 system: generatedPrompt.system,
                 prompt: generatedPrompt.prompt,
-                schema: SceneVariationEnrichSchema
+                schema: ProjectAssetVideoSchema
             });
 
             if (!response.response) throw new Error('Failed to enrich scene variation');
@@ -58,11 +58,6 @@ export class AiHelperService {
 
         try {
 
-            if (config.enrich_concept) {
-                const enrichedConcept = await this.enrichProjectConcept(config);
-                config.enriched_concept = enrichedConcept.response;
-            }
-
             const generatedPrompt = generateScenePrompt(config);
 
             const response = await this.aiService.generateTextWithSchema({
@@ -76,6 +71,7 @@ export class AiHelperService {
             return response.response;
 
         } catch (error) {
+            console.log(error);
             throw new Error('Failed to generate AI scenes');
         }
 

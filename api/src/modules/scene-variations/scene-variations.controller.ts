@@ -7,7 +7,6 @@ import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
-import { EnrichSceneVariationDto } from './dto/enrich-scene-variation.dto';
 
 
 @ApiTags('Scene Variations')
@@ -67,13 +66,6 @@ export class SceneVariationsController {
         return this.sceneVariationsService.duplicate(user_uuid, uuid);
     }
 
-    @Post(':uuid/enrich')
-    @ApiOperation({ summary: 'Enrich a scene variation by UUID' })
-    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
-    @ApiResponse({ status: 200, description: 'The scene variation has been successfully enriched.' })
-    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
-    enrich(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() enrichSceneVariationDto: EnrichSceneVariationDto) {
-        return this.sceneVariationsService.enrichSceneVariation(user_uuid, uuid, enrichSceneVariationDto);
-    }
+
 
 }
