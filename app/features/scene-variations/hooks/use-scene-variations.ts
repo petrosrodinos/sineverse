@@ -9,8 +9,8 @@ const QueryKeys = {
     sceneVariation: (uuid: string) => `scene-variation-${uuid}`,
 }
 
-export const useSceneVariations = (query: SceneVariationsQueryDto) => {
-    return useQuery<SceneVariation[]>({ queryKey: [QueryKeys.sceneVariations, query], queryFn: () => getSceneVariations(query) });
+export const useSceneVariations = (query: SceneVariationsQueryDto, options?: any) => {
+    return useQuery<SceneVariation[]>({ queryKey: [QueryKeys.sceneVariations, query], queryFn: () => getSceneVariations(query), ...options });
 }
 
 export const useSceneVariation = (uuid: string, options?: any) => {

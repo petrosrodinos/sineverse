@@ -24,7 +24,7 @@ interface SceneWorkspaceProps {}
 export function SceneWorkspace({}: SceneWorkspaceProps) {
   const searchParams = useSearchParams();
   const sceneUuid = searchParams.get("scene_uuid");
-  const { data: scene_variations, isLoading } = useSceneVariations({scene_uuid: sceneUuid || ""});
+  const { data: scene_variations, isLoading } = useSceneVariations({scene_uuid: sceneUuid || ""}, {enabled: !!sceneUuid});
   const [variationToDelete, setVariationToDelete] = useState<SceneVariation | null>(null);
   const [variationToDuplicate, setVariationToDuplicate] = useState<SceneVariation | null>(null);
   const [variationToEdit, setVariationToEdit] = useState<SceneVariation | null>(null);

@@ -18,7 +18,7 @@ export const useProjectAssets = (query: ProjectAssetsQueryDto, options?: Omit<Us
     });
 }
 
-export const useProjectAssetByUuid = (uuid: string) => {
+export const useProjectAsset = (uuid: string) => {
     return useQuery<ProjectAsset>({
         queryKey: [QueryKeys.projectAsset(uuid)],
         queryFn: () => getProjectAsset(uuid),

@@ -7,7 +7,7 @@ import {Textarea } from "@heroui/input";
 import { Save, Info, Video, AlertCircle, CheckCircle } from "lucide-react";
 import { VideoGenerationOptions } from "../VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
-import { useCreateSceneVideo, useProjectAssetByUuid, useProjectAssets, useSelectProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
+import { useCreateSceneVideo, useProjectAsset, useProjectAssets, useSelectProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { AssetRoles, ProjectAssetStatuses, ProjectAssetTypes } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "../SceneVariationImageUpload";
@@ -40,13 +40,13 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
 
   const videoAssets = videoAssetsResponse?.data || [];
   
-  const pendingVideo = videoAssets.find((a: any) => a.status === ProjectAssetStatuses.PROCESSING || a.status === ProjectAssetStatuses.PENDING);
+  const pendingVideo = videoAssets.find((a: any) => a.status === ProjectAssetStatuses.PROCESSING);
   const activeVideoAsset = pendingVideo || videoAssets.find((a: any) => a.selected) || videoAssets[0];
   const promptImageAsset = variation?.project_assets?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
   const videoUuid = activeVideoAsset?.uuid;
 
-  const { data: polledVideo } = useProjectAssetByUuid(videoUuid || "");
+  const { data: polledVideo } = useProjectAsset(videoUuid || "");
 
   useEffect(() => {
     if (polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED) {
