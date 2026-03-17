@@ -8,7 +8,7 @@ import { Save, Video, AlertCircle, CheckCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
-import { AssetRoles, ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import {ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
@@ -16,18 +16,21 @@ import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
+import { EnrichProjectAssetVideoPopover } from "./EnrichProjectAssetVideoPopover";
 
 interface ProjectAssetVideoIterationProps {
-  asset: ProjectAsset;
+  asset?: Partial<ProjectAsset>;
   variation: Partial<SceneVariation>;
   promptImageAsset?: ProjectAsset;
+  config?: VideoGenerationConfig;
+  isEnriched?: boolean;
+  handleClose?: () => void;
 }
 
-export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset }: ProjectAssetVideoIterationProps) {
+export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset, config, isEnriched, handleClose }: ProjectAssetVideoIterationProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   
-  const updateMutation = useUpdateSceneVariation();
   const createVideoMutation = useCreateSceneVideo();
   const selectVideoMutation = useSelectProjectAsset();
   const queryClient = useQueryClient();
@@ -45,7 +48,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
   const displayVideo = polledVideo || asset;
 
   const [editedConfig, setEditedConfig] = useState<Partial<VideoGenerationConfig>>(() => {
-    return asset?.metadata || {};
+    return config || asset?.metadata || {};
   });
 
   const handleConfigChange = (field: string, value: any) => {
@@ -76,18 +79,15 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
   };
 
   const handleSave = async () => {
-    if (!variation?.uuid) return false;
+    if (!variation?.uuid || !variation?.scene_uuid) return false;
     
     if (!validateVariation()) return false;
-    const dto: UpdateSceneVariationDto = {};
-    
-    // Clean up undefined properties
-    Object.keys(dto).forEach(key => dto[key as keyof UpdateSceneVariationDto] === undefined && delete dto[key as keyof UpdateSceneVariationDto]);
 
-    await updateMutation.mutateAsync({
-      uuid: variation.uuid,
-      sceneVariation: dto,
-    });
+    await createVideoMutation.mutateAsync({
+      scene_uuid: variation.scene_uuid,
+      scene_variation_uuid: variation.uuid,
+      ...editedConfig,
+    } as any);
 
     return true;
   };
@@ -108,14 +108,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
   const executeGeneration = async () => {
     if (!variation?.uuid || !variation?.scene_uuid) return;
 
-    const saved = await handleSave();
-    if (!saved) return;
-    
-    await createVideoMutation.mutateAsync({
-      scene_uuid: variation.scene_uuid,
-      scene_variation_uuid: variation.uuid,
-      ...editedConfig,
-    } as any);
+    await handleSave();
     setIsConfirmOpen(false);
   };
 
@@ -124,7 +117,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
   return (
     <div className="flex flex-col gap-6 w-full pb-4">
       {/* Video Display */}
-      {displayVideoStatus === ProjectAssetStatuses.PROCESSING && (
+      {!isEnriched && displayVideoStatus === ProjectAssetStatuses.PROCESSING && (
         <div className="w-full aspect-video rounded-xl bg-default-100 dark:bg-default-50 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-default-200">
           <Spinner size="lg" color="primary" />
           <div className="text-center">
@@ -134,7 +127,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
         </div>
       )}
 
-      {displayVideoStatus === ProjectAssetStatuses.COMPLETED && displayVideo?.document?.url && (
+      {!isEnriched && displayVideoStatus === ProjectAssetStatuses.COMPLETED && displayVideo?.document?.url && (
         <div className={`w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 transition-all ${isSelected ? 'ring-primary border border-primary/50' : 'ring-default-200'}`}>
           <video 
             src={displayVideo.document.url} 
@@ -145,7 +138,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
         </div>
       )}
 
-      {displayVideoStatus === ProjectAssetStatuses.FAILED && (
+      {!isEnriched && displayVideoStatus === ProjectAssetStatuses.FAILED && (
         <div className="w-full p-4 rounded-xl bg-danger-50 dark:bg-danger-900/10 border border-danger-200 flex items-start gap-3">
           <AlertCircle className="size-5 text-danger" />
           <div>
@@ -194,12 +187,12 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
       
       <div className="flex justify-between items-center pt-2 border-t border-default-200 dark:border-default-100/10">
         <div>
-           {displayVideoStatus === ProjectAssetStatuses.COMPLETED && (
+           {!isEnriched && displayVideoStatus === ProjectAssetStatuses.COMPLETED && asset?.uuid && (
               <Button 
                 variant={isSelected ? "solid" : "flat"} 
                 color={isSelected ? "success" : "default"} 
                 startContent={<CheckCircle className="size-4" />} 
-                onPress={() => selectVideoMutation.mutate(asset.uuid)}
+                onPress={() => selectVideoMutation.mutate(asset.uuid as string)}
                 isLoading={selectVideoMutation.isPending}
                 isDisabled={isSelected}
               >
@@ -208,24 +201,48 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset 
            )}
         </div>
         <div className="flex gap-2">
-            <Button 
-                variant="flat"
-                color="primary"
-                startContent={<Video className="size-4" />}
-                onPress={handleGenerateVideo}
-                isLoading={createVideoMutation.isPending}
-                isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
-            >
-                {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate" : "Generate"}
-            </Button>
-            <Button 
-                color="primary" 
-                startContent={<Save className="size-4" />} 
-                onPress={handleSave}
-                isLoading={updateMutation.isPending}
-            >
-                Save
-            </Button>
+            {!isEnriched && variation?.uuid && asset?.uuid && <EnrichProjectAssetVideoPopover project_asset_uuid={asset.uuid} asset={asset as ProjectAsset} variation={variation} promptImageAsset={promptImageAsset} />}
+            {isEnriched ? (
+                <>
+                    {handleClose && <Button variant="flat" onPress={handleClose}>Cancel</Button>}
+                    <Button 
+                        color="primary" 
+                        startContent={<Save className="size-4" />} 
+                        onPress={async () => {
+                            const success = await handleSave();
+                            if (success && handleClose) handleClose();
+                        }}
+                        isLoading={createVideoMutation.isPending}
+                    >
+                        Apply Changes
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button 
+                        variant="flat"
+                        color="primary"
+                        startContent={<Video className="size-4" />}
+                        onPress={handleGenerateVideo}
+                        isLoading={createVideoMutation.isPending}
+                        isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
+                    >
+                        {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate" : "Generate"}
+                    </Button>
+                    <Button 
+                        color="primary" 
+                        startContent={<Save className="size-4" />} 
+                        onPress={async () => {
+                            const success = await handleSave();
+                            if (success && handleClose) handleClose();
+                        }}
+                        isLoading={createVideoMutation.isPending}
+                        isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
+                    >
+                        Save
+                    </Button>
+                </>
+            )}
         </div>
       </div>
       <ConfirmationModal

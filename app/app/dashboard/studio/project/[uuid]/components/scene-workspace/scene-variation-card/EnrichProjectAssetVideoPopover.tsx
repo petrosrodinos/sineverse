@@ -13,6 +13,9 @@ import { useEnrichProjectAssetVideo } from "@/features/project-assets/hooks/use-
 import { ProjectAssetVideoEnrichDto } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Modal } from "@/components/ui/modal";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
+import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { ProjectAssetVideoIteration } from "./ProjectAssetVideoIteration";
 
 const enrichSchema = z.object({
   directions: z.string().optional(),
@@ -24,14 +27,17 @@ const enrichSchema = z.object({
 type EnrichFormValues = z.infer<typeof enrichSchema>;
 
 interface EnrichVariationPopoverProps {
-  sceneVariationUuid: string;
+  project_asset_uuid: string;
+  asset: ProjectAsset;
+  variation: Partial<SceneVariation>;
+  promptImageAsset?: ProjectAsset;
 }
 
-export function EnrichProjectAssetVideoPopover({ sceneVariationUuid }: EnrichVariationPopoverProps) {
+export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, variation, promptImageAsset }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
-  const {mutate, isPending} = useEnrichProjectAssetVideo(sceneVariationUuid);
+  const {mutate, isPending} = useEnrichProjectAssetVideo(project_asset_uuid);
 
   const {
     register,
@@ -52,7 +58,7 @@ export function EnrichProjectAssetVideoPopover({ sceneVariationUuid }: EnrichVar
 
   const onSubmit = async (data: EnrichFormValues) => {
     mutate({
-      uuid: sceneVariationUuid,
+      uuid: project_asset_uuid,
       enrichDto: data as ProjectAssetVideoEnrichDto,
     }, {
       onSuccess: (data) => {
@@ -143,7 +149,7 @@ export function EnrichProjectAssetVideoPopover({ sceneVariationUuid }: EnrichVar
       scrollBehavior="inside"
     >
       <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
-        {/* {enrichedVariation && <SceneVariationCard variation={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)}/>} */}
+        {enrichedVariation && <ProjectAssetVideoIteration asset={asset} variation={variation} promptImageAsset={promptImageAsset} config={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)} />}
       </div>
     </Modal>
     </>

@@ -1,19 +1,21 @@
+import { useState } from "react";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
 import { AssetRoles, ProjectAssetTypes } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { EnrichProjectAssetVideoPopover } from "./EnrichProjectAssetVideoPopover";
 import { ProjectAssetVideoIteration } from "./ProjectAssetVideoIteration";
-import { Video } from "lucide-react";
+import { Video, Plus } from "lucide-react";
+import { Button } from "@heroui/button";
+import { Modal } from "@/components/ui/modal";
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
-  isEnriched?: boolean;
-  handleClose?: () => void;
   isExpanded?: boolean;
 }
 
-export function SceneVariationCard({ variation, isEnriched, handleClose, isExpanded }: SceneVariationCardProps) {
+export function SceneVariationCard({ variation, isExpanded }: SceneVariationCardProps) {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   const { data: videoAssetsResponse } = useProjectAssets(
     { scene_variation_uuid: variation?.uuid, type: ProjectAssetTypes.VIDEO },
     { enabled: !!variation?.uuid && !!isExpanded }
@@ -31,9 +33,11 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
           <h4 className="text-base font-medium">Prompt & Configuration</h4>
           <p className="text-xs text-default-500">Edit prompt and generation settings.</p>
         </div>
-        {!isEnriched && <div className="flex items-center gap-2">
-          {variation?.uuid && <EnrichProjectAssetVideoPopover sceneVariationUuid={variation.uuid} />}
-        </div>}
+        <div>
+           <Button color="primary" variant="flat" size="sm" startContent={<Plus className="size-4" />} onPress={() => setIsCreateModalOpen(true)}>
+             Create Video
+           </Button>
+        </div>
       </div>
 
       {videoAssets.length > 0 ? (
@@ -61,10 +65,28 @@ export function SceneVariationCard({ variation, isEnriched, handleClose, isExpan
             ))}
         </Accordion>
        ) : (
-          <div className="flex items-center justify-center p-8 bg-default-100 dark:bg-default-50 rounded-xl border border-dashed border-default-200">
+           <div className="flex items-center justify-center p-8 bg-default-100 dark:bg-default-50 rounded-xl border border-dashed border-default-200">
              <p className="text-sm text-default-500">No video iterations generated yet.</p>
           </div>
        )}
+
+      <Modal
+        isOpen={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
+        title={<h3 className="text-lg font-semibold">Create Video Iteration</h3>}
+        size="2xl"
+        scrollBehavior="inside"
+      >
+        <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
+          <ProjectAssetVideoIteration 
+              variation={variation as any} 
+              promptImageAsset={promptImageAsset as any}
+              isEnriched={true}
+              handleClose={() => setIsCreateModalOpen(false)}
+          />
+        </div>
+      </Modal>
+
     </div>
   );
 }
