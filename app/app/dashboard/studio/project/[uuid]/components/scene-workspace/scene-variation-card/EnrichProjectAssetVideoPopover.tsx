@@ -27,7 +27,7 @@ interface EnrichVariationPopoverProps {
   sceneVariationUuid: string;
 }
 
-export function EnrichVariationPopover({ sceneVariationUuid }: EnrichVariationPopoverProps) {
+export function EnrichProjectAssetVideoPopover({ sceneVariationUuid }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
