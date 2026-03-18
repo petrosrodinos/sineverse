@@ -1,10 +1,10 @@
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Button } from "@heroui/button";
-import { Project, ProjectStatuses } from "@/features/projects/interfaces/projects.interfaces";
+import { Project } from "@/features/projects/interfaces/projects.interfaces";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { ProjectStatusesLabels, GenreOptionsLabels } from "@/config/dropdowns/project/project.options";
+import { GenreOptionsLabels } from "@/config/dropdowns/project/project.options";
 
 interface ProjectCardProps {
     project: Project;
@@ -22,9 +22,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
                         {new Date(project.created_at).toLocaleDateString()}
                     </p>
                 </div>
-                <Chip size="sm" color={project.status === ProjectStatuses.COMPLETED ? "success" : "primary"} variant="flat">
-                    {ProjectStatusesLabels[project.status]}
-                </Chip>
             </CardHeader>
             <CardBody>
                 {project.genres && project.genres.length > 0 && (
