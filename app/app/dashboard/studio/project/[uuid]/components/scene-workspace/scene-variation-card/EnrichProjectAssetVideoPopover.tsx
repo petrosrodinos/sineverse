@@ -11,11 +11,9 @@ import { Checkbox } from "@heroui/checkbox";
 import { Sparkles } from "lucide-react";
 import { useEnrichProjectAssetVideo } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetVideoEnrichDto } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { Modal } from "@/components/ui/modal";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { ProjectAssetVideoIteration } from "./ProjectAssetVideoIteration";
 
 const enrichSchema = z.object({
   directions: z.string().optional(),
@@ -31,12 +29,11 @@ interface EnrichVariationPopoverProps {
   asset: ProjectAsset;
   variation: Partial<SceneVariation>;
   promptImageAsset?: ProjectAsset;
+  onEnriched: (data: VideoGenerationConfig) => void;
 }
 
-export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, variation, promptImageAsset }: EnrichVariationPopoverProps) {
+export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, variation, promptImageAsset, onEnriched }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
   const {mutate, isPending} = useEnrichProjectAssetVideo(project_asset_uuid);
 
   const {
@@ -62,10 +59,9 @@ export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, vari
       enrichDto: data as ProjectAssetVideoEnrichDto,
     }, {
       onSuccess: (data) => {
-        setEnrichedVariation(data);
+        onEnriched(data);
         setIsOpen(false);
         reset();
-        setIsModalOpen(true);
       },
     })
     
@@ -140,18 +136,6 @@ export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, vari
         </form>
       </PopoverContent>
     </Popover>
-
-    <Modal
-      isOpen={isModalOpen}
-      onOpenChange={setIsModalOpen}
-      title={<h3 className="text-lg font-semibold">Review Enriched Variation</h3>}
-      size="2xl"
-      scrollBehavior="inside"
-    >
-      <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
-        {enrichedVariation && <ProjectAssetVideoIteration asset={asset} variation={variation} promptImageAsset={promptImageAsset} config={enrichedVariation} isEnriched handleClose={() => setIsModalOpen(false)} />}
-      </div>
-    </Modal>
     </>
   );
 }

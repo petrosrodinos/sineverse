@@ -1,24 +1,21 @@
 "use client";
-import type { SceneVariation, UpdateSceneVariationDto } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
+import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { useState, useEffect } from "react";
-import { Accordion, AccordionItem } from "@heroui/accordion";
-import { Button } from "@heroui/button";
-import { Textarea } from "@heroui/input";
+import { Accordion, AccordionItem, Button, Textarea, Spinner } from "@heroui/react";
 import { Save, Video, AlertCircle, CheckCircle } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useUpdateSceneVariation } from "@/features/scene-variations/hooks/use-scene-variations";
 import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
-import {ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
 import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
-import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
 import { EnrichProjectAssetVideoPopover } from "./EnrichProjectAssetVideoPopover";
+import { Modal } from "@/components/ui/modal";
 
-interface ProjectAssetVideoIterationProps {
+interface ProjectAssetVideoProps {
   asset?: Partial<ProjectAsset>;
   variation: Partial<SceneVariation>;
   promptImageAsset?: ProjectAsset;
@@ -27,9 +24,11 @@ interface ProjectAssetVideoIterationProps {
   handleClose?: () => void;
 }
 
-export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset, config, isEnriched, handleClose }: ProjectAssetVideoIterationProps) {
+export default function ProjectAssetVideo({ asset, variation, promptImageAsset, config, isEnriched, handleClose }: ProjectAssetVideoProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
+  const [isEnrichModalOpen, setIsEnrichModalOpen] = useState(false);
   
   const createVideoMutation = useCreateSceneVideo();
   const selectVideoMutation = useSelectProjectAsset();
@@ -201,7 +200,18 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset,
            )}
         </div>
         <div className="flex gap-2">
-            {!isEnriched && variation?.uuid && asset?.uuid && <EnrichProjectAssetVideoPopover project_asset_uuid={asset.uuid} asset={asset as ProjectAsset} variation={variation} promptImageAsset={promptImageAsset} />}
+            {!isEnriched && variation?.uuid && asset?.uuid && (
+              <EnrichProjectAssetVideoPopover 
+                project_asset_uuid={asset.uuid} 
+                asset={asset as ProjectAsset} 
+                variation={variation} 
+                promptImageAsset={promptImageAsset} 
+                onEnriched={(data) => {
+                  setEnrichedVariation(data);
+                  setIsEnrichModalOpen(true);
+                }}
+              />
+            )}
             {isEnriched ? (
                 <>
                     {handleClose && <Button variant="flat" onPress={handleClose}>Cancel</Button>}
@@ -245,6 +255,7 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset,
             )}
         </div>
       </div>
+
       <ConfirmationModal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -255,6 +266,27 @@ export function ProjectAssetVideoIteration({ asset, variation, promptImageAsset,
         confirmColor="primary"
         isLoading={createVideoMutation.isPending}
       />
+
+      <Modal
+        isOpen={isEnrichModalOpen}
+        onOpenChange={setIsEnrichModalOpen}
+        title={<h3 className="text-lg font-semibold">Review Enriched Variation</h3>}
+        size="2xl"
+        scrollBehavior="inside"
+      >
+        <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
+          {enrichedVariation && (
+            <ProjectAssetVideo 
+              asset={asset} 
+              variation={variation} 
+              promptImageAsset={promptImageAsset} 
+              config={enrichedVariation} 
+              isEnriched 
+              handleClose={() => setIsEnrichModalOpen(false)} 
+            />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }

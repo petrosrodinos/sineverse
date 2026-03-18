@@ -1,12 +1,17 @@
+"use client";
 import { useState } from "react";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Accordion, AccordionItem, Button, Chip, Spinner } from "@heroui/react";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
-import { AssetRoles, ProjectAssetTypes } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { ProjectAssetVideoIteration } from "./ProjectAssetVideoIteration";
+import { AssetRoles, ProjectAssetTypes, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Video, Plus } from "lucide-react";
-import { Button } from "@heroui/button";
 import { Modal } from "@/components/ui/modal";
+import dynamic from 'next/dynamic';
+
+const ProjectAssetVideo = dynamic(() => import("./ProjectAssetVideo"), {
+  loading: () => <div className="p-12 text-center text-default-400">Loading component...</div>,
+  ssr: false
+});
 
 interface SceneVariationCardProps {
   variation?: Partial<SceneVariation>;
@@ -47,15 +52,38 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
                 key={asset.uuid} 
                 value={asset.uuid} 
                 title={
-                    <div className="flex items-center gap-2">
-                        <Video className="size-4" />
-                        <span className="text-sm font-medium">Iteration {videoAssets.length - index}</span>
-                        {asset.selected && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">Selected</span>}
+                    <div className="flex items-center justify-between w-full pr-4">
+                        <div className="flex items-center gap-2">
+                            <Video className="size-4 text-default-500" />
+                            <span className="text-sm font-semibold">Iteration {videoAssets.length - index}</span>
+                            {asset.selected && (
+                                <Chip size="sm" color="primary" variant="flat" className="h-5 px-1 text-[10px]">
+                                    Selected
+                                </Chip>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {asset.status === ProjectAssetStatuses.PROCESSING && (
+                                <Chip size="sm" variant="dot" color="primary" className="h-5 border-none bg-transparent">
+                                    Processing
+                                </Chip>
+                            )}
+                            {asset.status === ProjectAssetStatuses.FAILED && (
+                                <Chip size="sm" variant="flat" color="danger" className="h-5 px-2">
+                                    Failed
+                                </Chip>
+                            )}
+                            {asset.status === ProjectAssetStatuses.COMPLETED && (
+                                <Chip size="sm" variant="flat" color="success" className="h-5 px-2 shadow-sm">
+                                    Ready
+                                </Chip>
+                            )}
+                        </div>
                     </div>
                 }
             >
                 <div className="py-2">
-                    <ProjectAssetVideoIteration 
+                    <ProjectAssetVideo 
                         asset={asset} 
                         variation={variation as any} 
                         promptImageAsset={promptImageAsset as any} 
@@ -65,20 +93,37 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
             ))}
         </Accordion>
        ) : (
-           <div className="flex items-center justify-center p-8 bg-default-100 dark:bg-default-50 rounded-xl border border-dashed border-default-200">
-             <p className="text-sm text-default-500">No video iterations generated yet.</p>
-          </div>
+           <div className="flex flex-col items-center justify-center p-12 bg-default-50/50 dark:bg-default-100/10 rounded-3xl border-2 border-dashed border-default-200/50 gap-4 text-center">
+             <div className="p-4 bg-primary/10 rounded-full">
+               <Video className="size-8 text-primary animate-pulse" />
+             </div>
+             <div className="space-y-1">
+               <h5 className="text-base font-semibold">No videos yet</h5>
+               <p className="text-sm text-default-500 max-w-[240px]">
+                 Start by creating your first video for this scene.
+               </p>
+             </div>
+             <Button 
+               color="primary" 
+               variant="shadow" 
+               startContent={<Plus className="size-4" />} 
+               onPress={() => setIsCreateModalOpen(true)}
+               className="mt-2"
+             >
+               Create Video
+             </Button>
+           </div>
        )}
 
       <Modal
         isOpen={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
-        title={<h3 className="text-lg font-semibold">Create Video Iteration</h3>}
+        title={<h3 className="text-lg font-semibold">Create Video</h3>}
         size="2xl"
         scrollBehavior="inside"
       >
         <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
-          <ProjectAssetVideoIteration 
+          <ProjectAssetVideo 
               variation={variation as any} 
               promptImageAsset={promptImageAsset as any}
               isEnriched={true}
