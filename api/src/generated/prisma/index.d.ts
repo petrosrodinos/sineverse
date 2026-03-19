@@ -1660,6 +1660,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ProjectAssetCountOutputType
+   */
+
+  export type ProjectAssetCountOutputType = {
+    prompt_images: number
+    video_assets: number
+  }
+
+  export type ProjectAssetCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prompt_images?: boolean | ProjectAssetCountOutputTypeCountPrompt_imagesArgs
+    video_assets?: boolean | ProjectAssetCountOutputTypeCountVideo_assetsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProjectAssetCountOutputType without action
+   */
+  export type ProjectAssetCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectAssetCountOutputType
+     */
+    select?: ProjectAssetCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProjectAssetCountOutputType without action
+   */
+  export type ProjectAssetCountOutputTypeCountPrompt_imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectAssetWhereInput
+  }
+
+  /**
+   * ProjectAssetCountOutputType without action
+   */
+  export type ProjectAssetCountOutputTypeCountVideo_assetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProjectAssetWhereInput
+  }
+
+
+  /**
    * Count Type DocumentCountOutputType
    */
 
@@ -6898,6 +6938,9 @@ export namespace Prisma {
     scene?: boolean | ProjectAsset$sceneArgs<ExtArgs>
     scene_variation?: boolean | ProjectAsset$scene_variationArgs<ExtArgs>
     document?: boolean | ProjectAsset$documentArgs<ExtArgs>
+    prompt_images?: boolean | ProjectAsset$prompt_imagesArgs<ExtArgs>
+    video_assets?: boolean | ProjectAsset$video_assetsArgs<ExtArgs>
+    _count?: boolean | ProjectAssetCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["projectAsset"]>
 
   export type ProjectAssetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6974,6 +7017,9 @@ export namespace Prisma {
     scene?: boolean | ProjectAsset$sceneArgs<ExtArgs>
     scene_variation?: boolean | ProjectAsset$scene_variationArgs<ExtArgs>
     document?: boolean | ProjectAsset$documentArgs<ExtArgs>
+    prompt_images?: boolean | ProjectAsset$prompt_imagesArgs<ExtArgs>
+    video_assets?: boolean | ProjectAsset$video_assetsArgs<ExtArgs>
+    _count?: boolean | ProjectAssetCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectAssetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6998,6 +7044,8 @@ export namespace Prisma {
       scene: Prisma.$ScenePayload<ExtArgs> | null
       scene_variation: Prisma.$SceneVariationPayload<ExtArgs> | null
       document: Prisma.$DocumentPayload<ExtArgs> | null
+      prompt_images: Prisma.$ProjectAssetPayload<ExtArgs>[]
+      video_assets: Prisma.$ProjectAssetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7415,6 +7463,8 @@ export namespace Prisma {
     scene<T extends ProjectAsset$sceneArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAsset$sceneArgs<ExtArgs>>): Prisma__SceneClient<$Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     scene_variation<T extends ProjectAsset$scene_variationArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAsset$scene_variationArgs<ExtArgs>>): Prisma__SceneVariationClient<$Result.GetResult<Prisma.$SceneVariationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     document<T extends ProjectAsset$documentArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAsset$documentArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    prompt_images<T extends ProjectAsset$prompt_imagesArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAsset$prompt_imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    video_assets<T extends ProjectAsset$video_assetsArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAsset$video_assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7910,6 +7960,54 @@ export namespace Prisma {
      */
     include?: DocumentInclude<ExtArgs> | null
     where?: DocumentWhereInput
+  }
+
+  /**
+   * ProjectAsset.prompt_images
+   */
+  export type ProjectAsset$prompt_imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectAsset
+     */
+    select?: ProjectAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectAsset
+     */
+    omit?: ProjectAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectAssetInclude<ExtArgs> | null
+    where?: ProjectAssetWhereInput
+    orderBy?: ProjectAssetOrderByWithRelationInput | ProjectAssetOrderByWithRelationInput[]
+    cursor?: ProjectAssetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectAssetScalarFieldEnum | ProjectAssetScalarFieldEnum[]
+  }
+
+  /**
+   * ProjectAsset.video_assets
+   */
+  export type ProjectAsset$video_assetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProjectAsset
+     */
+    select?: ProjectAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProjectAsset
+     */
+    omit?: ProjectAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProjectAssetInclude<ExtArgs> | null
+    where?: ProjectAssetWhereInput
+    orderBy?: ProjectAssetOrderByWithRelationInput | ProjectAssetOrderByWithRelationInput[]
+    cursor?: ProjectAssetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProjectAssetScalarFieldEnum | ProjectAssetScalarFieldEnum[]
   }
 
   /**
@@ -11073,6 +11171,8 @@ export namespace Prisma {
     scene?: XOR<SceneNullableScalarRelationFilter, SceneWhereInput> | null
     scene_variation?: XOR<SceneVariationNullableScalarRelationFilter, SceneVariationWhereInput> | null
     document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
+    prompt_images?: ProjectAssetListRelationFilter
+    video_assets?: ProjectAssetListRelationFilter
   }
 
   export type ProjectAssetOrderByWithRelationInput = {
@@ -11097,6 +11197,8 @@ export namespace Prisma {
     scene?: SceneOrderByWithRelationInput
     scene_variation?: SceneVariationOrderByWithRelationInput
     document?: DocumentOrderByWithRelationInput
+    prompt_images?: ProjectAssetOrderByRelationAggregateInput
+    video_assets?: ProjectAssetOrderByRelationAggregateInput
   }
 
   export type ProjectAssetWhereUniqueInput = Prisma.AtLeast<{
@@ -11124,6 +11226,8 @@ export namespace Prisma {
     scene?: XOR<SceneNullableScalarRelationFilter, SceneWhereInput> | null
     scene_variation?: XOR<SceneVariationNullableScalarRelationFilter, SceneVariationWhereInput> | null
     document?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
+    prompt_images?: ProjectAssetListRelationFilter
+    video_assets?: ProjectAssetListRelationFilter
   }, "id" | "uuid">
 
   export type ProjectAssetOrderByWithAggregationInput = {
@@ -11737,6 +11841,8 @@ export namespace Prisma {
     scene?: SceneCreateNestedOneWithoutProject_assetsInput
     scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
     document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateInput = {
@@ -11756,6 +11862,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUpdateInput = {
@@ -11774,6 +11882,8 @@ export namespace Prisma {
     scene?: SceneUpdateOneWithoutProject_assetsNestedInput
     scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
     document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateInput = {
@@ -11793,6 +11903,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetCreateManyInput = {
@@ -13325,6 +13437,30 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput
   }
 
+  export type ProjectAssetCreateNestedManyWithoutVideo_assetsInput = {
+    create?: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput> | ProjectAssetCreateWithoutVideo_assetsInput[] | ProjectAssetUncheckedCreateWithoutVideo_assetsInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutVideo_assetsInput | ProjectAssetCreateOrConnectWithoutVideo_assetsInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+  }
+
+  export type ProjectAssetCreateNestedManyWithoutPrompt_imagesInput = {
+    create?: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput> | ProjectAssetCreateWithoutPrompt_imagesInput[] | ProjectAssetUncheckedCreateWithoutPrompt_imagesInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutPrompt_imagesInput | ProjectAssetCreateOrConnectWithoutPrompt_imagesInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+  }
+
+  export type ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput = {
+    create?: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput> | ProjectAssetCreateWithoutVideo_assetsInput[] | ProjectAssetUncheckedCreateWithoutVideo_assetsInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutVideo_assetsInput | ProjectAssetCreateOrConnectWithoutVideo_assetsInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+  }
+
+  export type ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput = {
+    create?: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput> | ProjectAssetCreateWithoutPrompt_imagesInput[] | ProjectAssetUncheckedCreateWithoutPrompt_imagesInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutPrompt_imagesInput | ProjectAssetCreateOrConnectWithoutPrompt_imagesInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+  }
+
   export type EnumAssetStatusFieldUpdateOperationsInput = {
     set?: $Enums.AssetStatus
   }
@@ -13381,6 +13517,58 @@ export namespace Prisma {
     delete?: DocumentWhereInput | boolean
     connect?: DocumentWhereUniqueInput
     update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutProject_assetsInput, DocumentUpdateWithoutProject_assetsInput>, DocumentUncheckedUpdateWithoutProject_assetsInput>
+  }
+
+  export type ProjectAssetUpdateManyWithoutVideo_assetsNestedInput = {
+    create?: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput> | ProjectAssetCreateWithoutVideo_assetsInput[] | ProjectAssetUncheckedCreateWithoutVideo_assetsInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutVideo_assetsInput | ProjectAssetCreateOrConnectWithoutVideo_assetsInput[]
+    upsert?: ProjectAssetUpsertWithWhereUniqueWithoutVideo_assetsInput | ProjectAssetUpsertWithWhereUniqueWithoutVideo_assetsInput[]
+    set?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    disconnect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    delete?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    update?: ProjectAssetUpdateWithWhereUniqueWithoutVideo_assetsInput | ProjectAssetUpdateWithWhereUniqueWithoutVideo_assetsInput[]
+    updateMany?: ProjectAssetUpdateManyWithWhereWithoutVideo_assetsInput | ProjectAssetUpdateManyWithWhereWithoutVideo_assetsInput[]
+    deleteMany?: ProjectAssetScalarWhereInput | ProjectAssetScalarWhereInput[]
+  }
+
+  export type ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput = {
+    create?: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput> | ProjectAssetCreateWithoutPrompt_imagesInput[] | ProjectAssetUncheckedCreateWithoutPrompt_imagesInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutPrompt_imagesInput | ProjectAssetCreateOrConnectWithoutPrompt_imagesInput[]
+    upsert?: ProjectAssetUpsertWithWhereUniqueWithoutPrompt_imagesInput | ProjectAssetUpsertWithWhereUniqueWithoutPrompt_imagesInput[]
+    set?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    disconnect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    delete?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    update?: ProjectAssetUpdateWithWhereUniqueWithoutPrompt_imagesInput | ProjectAssetUpdateWithWhereUniqueWithoutPrompt_imagesInput[]
+    updateMany?: ProjectAssetUpdateManyWithWhereWithoutPrompt_imagesInput | ProjectAssetUpdateManyWithWhereWithoutPrompt_imagesInput[]
+    deleteMany?: ProjectAssetScalarWhereInput | ProjectAssetScalarWhereInput[]
+  }
+
+  export type ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput = {
+    create?: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput> | ProjectAssetCreateWithoutVideo_assetsInput[] | ProjectAssetUncheckedCreateWithoutVideo_assetsInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutVideo_assetsInput | ProjectAssetCreateOrConnectWithoutVideo_assetsInput[]
+    upsert?: ProjectAssetUpsertWithWhereUniqueWithoutVideo_assetsInput | ProjectAssetUpsertWithWhereUniqueWithoutVideo_assetsInput[]
+    set?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    disconnect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    delete?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    update?: ProjectAssetUpdateWithWhereUniqueWithoutVideo_assetsInput | ProjectAssetUpdateWithWhereUniqueWithoutVideo_assetsInput[]
+    updateMany?: ProjectAssetUpdateManyWithWhereWithoutVideo_assetsInput | ProjectAssetUpdateManyWithWhereWithoutVideo_assetsInput[]
+    deleteMany?: ProjectAssetScalarWhereInput | ProjectAssetScalarWhereInput[]
+  }
+
+  export type ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput = {
+    create?: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput> | ProjectAssetCreateWithoutPrompt_imagesInput[] | ProjectAssetUncheckedCreateWithoutPrompt_imagesInput[]
+    connectOrCreate?: ProjectAssetCreateOrConnectWithoutPrompt_imagesInput | ProjectAssetCreateOrConnectWithoutPrompt_imagesInput[]
+    upsert?: ProjectAssetUpsertWithWhereUniqueWithoutPrompt_imagesInput | ProjectAssetUpsertWithWhereUniqueWithoutPrompt_imagesInput[]
+    set?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    disconnect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    delete?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    connect?: ProjectAssetWhereUniqueInput | ProjectAssetWhereUniqueInput[]
+    update?: ProjectAssetUpdateWithWhereUniqueWithoutPrompt_imagesInput | ProjectAssetUpdateWithWhereUniqueWithoutPrompt_imagesInput[]
+    updateMany?: ProjectAssetUpdateManyWithWhereWithoutPrompt_imagesInput | ProjectAssetUpdateManyWithWhereWithoutPrompt_imagesInput[]
+    deleteMany?: ProjectAssetScalarWhereInput | ProjectAssetScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutFinal_projectsInput = {
@@ -13966,6 +14154,8 @@ export namespace Prisma {
     scene?: SceneCreateNestedOneWithoutProject_assetsInput
     scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
     document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateWithoutUserInput = {
@@ -13984,6 +14174,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetCreateOrConnectWithoutUserInput = {
@@ -14279,6 +14471,8 @@ export namespace Prisma {
     scene?: SceneCreateNestedOneWithoutProject_assetsInput
     scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
     document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateWithoutProjectInput = {
@@ -14297,6 +14491,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetCreateOrConnectWithoutProjectInput = {
@@ -14550,6 +14746,8 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutProject_assetsInput
     scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
     document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateWithoutSceneInput = {
@@ -14568,6 +14766,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetCreateOrConnectWithoutSceneInput = {
@@ -14775,6 +14975,8 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutProject_assetsInput
     scene?: SceneCreateNestedOneWithoutProject_assetsInput
     document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateWithoutScene_variationInput = {
@@ -14793,6 +14995,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetCreateOrConnectWithoutScene_variationInput = {
@@ -15061,6 +15265,94 @@ export namespace Prisma {
     create: XOR<DocumentCreateWithoutProject_assetsInput, DocumentUncheckedCreateWithoutProject_assetsInput>
   }
 
+  export type ProjectAssetCreateWithoutVideo_assetsInput = {
+    uuid?: string
+    provider_job_id?: string | null
+    selected?: boolean
+    status?: $Enums.AssetStatus
+    type?: $Enums.DocumentType
+    role?: $Enums.AssetRole
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutProject_assetsInput
+    project: ProjectCreateNestedOneWithoutProject_assetsInput
+    scene?: SceneCreateNestedOneWithoutProject_assetsInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
+    document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+  }
+
+  export type ProjectAssetUncheckedCreateWithoutVideo_assetsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    project_uuid: string
+    scene_uuid?: string | null
+    scene_variation_uuid?: string | null
+    provider_job_id?: string | null
+    document_uuid?: string | null
+    selected?: boolean
+    status?: $Enums.AssetStatus
+    type?: $Enums.DocumentType
+    role?: $Enums.AssetRole
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+  }
+
+  export type ProjectAssetCreateOrConnectWithoutVideo_assetsInput = {
+    where: ProjectAssetWhereUniqueInput
+    create: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput>
+  }
+
+  export type ProjectAssetCreateWithoutPrompt_imagesInput = {
+    uuid?: string
+    provider_job_id?: string | null
+    selected?: boolean
+    status?: $Enums.AssetStatus
+    type?: $Enums.DocumentType
+    role?: $Enums.AssetRole
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutProject_assetsInput
+    project: ProjectCreateNestedOneWithoutProject_assetsInput
+    scene?: SceneCreateNestedOneWithoutProject_assetsInput
+    scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
+    document?: DocumentCreateNestedOneWithoutProject_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
+  }
+
+  export type ProjectAssetUncheckedCreateWithoutPrompt_imagesInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    project_uuid: string
+    scene_uuid?: string | null
+    scene_variation_uuid?: string | null
+    provider_job_id?: string | null
+    document_uuid?: string | null
+    selected?: boolean
+    status?: $Enums.AssetStatus
+    type?: $Enums.DocumentType
+    role?: $Enums.AssetRole
+    error_message?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
+  }
+
+  export type ProjectAssetCreateOrConnectWithoutPrompt_imagesInput = {
+    where: ProjectAssetWhereUniqueInput
+    create: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput>
+  }
+
   export type UserUpsertWithoutProject_assetsInput = {
     update: XOR<UserUpdateWithoutProject_assetsInput, UserUncheckedUpdateWithoutProject_assetsInput>
     create: XOR<UserCreateWithoutProject_assetsInput, UserUncheckedCreateWithoutProject_assetsInput>
@@ -15251,6 +15543,38 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     final_project_videos?: FinalProjectUncheckedUpdateManyWithoutVideoNestedInput
     final_project_thumbnails?: FinalProjectUncheckedUpdateManyWithoutThumbnailNestedInput
+  }
+
+  export type ProjectAssetUpsertWithWhereUniqueWithoutVideo_assetsInput = {
+    where: ProjectAssetWhereUniqueInput
+    update: XOR<ProjectAssetUpdateWithoutVideo_assetsInput, ProjectAssetUncheckedUpdateWithoutVideo_assetsInput>
+    create: XOR<ProjectAssetCreateWithoutVideo_assetsInput, ProjectAssetUncheckedCreateWithoutVideo_assetsInput>
+  }
+
+  export type ProjectAssetUpdateWithWhereUniqueWithoutVideo_assetsInput = {
+    where: ProjectAssetWhereUniqueInput
+    data: XOR<ProjectAssetUpdateWithoutVideo_assetsInput, ProjectAssetUncheckedUpdateWithoutVideo_assetsInput>
+  }
+
+  export type ProjectAssetUpdateManyWithWhereWithoutVideo_assetsInput = {
+    where: ProjectAssetScalarWhereInput
+    data: XOR<ProjectAssetUpdateManyMutationInput, ProjectAssetUncheckedUpdateManyWithoutVideo_assetsInput>
+  }
+
+  export type ProjectAssetUpsertWithWhereUniqueWithoutPrompt_imagesInput = {
+    where: ProjectAssetWhereUniqueInput
+    update: XOR<ProjectAssetUpdateWithoutPrompt_imagesInput, ProjectAssetUncheckedUpdateWithoutPrompt_imagesInput>
+    create: XOR<ProjectAssetCreateWithoutPrompt_imagesInput, ProjectAssetUncheckedCreateWithoutPrompt_imagesInput>
+  }
+
+  export type ProjectAssetUpdateWithWhereUniqueWithoutPrompt_imagesInput = {
+    where: ProjectAssetWhereUniqueInput
+    data: XOR<ProjectAssetUpdateWithoutPrompt_imagesInput, ProjectAssetUncheckedUpdateWithoutPrompt_imagesInput>
+  }
+
+  export type ProjectAssetUpdateManyWithWhereWithoutPrompt_imagesInput = {
+    where: ProjectAssetScalarWhereInput
+    data: XOR<ProjectAssetUpdateManyMutationInput, ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesInput>
   }
 
   export type UserCreateWithoutFinal_projectsInput = {
@@ -15634,6 +15958,8 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutProject_assetsInput
     scene?: SceneCreateNestedOneWithoutProject_assetsInput
     scene_variation?: SceneVariationCreateNestedOneWithoutProject_assetsInput
+    prompt_images?: ProjectAssetCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetUncheckedCreateWithoutDocumentInput = {
@@ -15652,6 +15978,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
+    prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
+    video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
   }
 
   export type ProjectAssetCreateOrConnectWithoutDocumentInput = {
@@ -15902,6 +16230,8 @@ export namespace Prisma {
     scene?: SceneUpdateOneWithoutProject_assetsNestedInput
     scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
     document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateWithoutUserInput = {
@@ -15920,6 +16250,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutUserInput = {
@@ -16067,6 +16399,8 @@ export namespace Prisma {
     scene?: SceneUpdateOneWithoutProject_assetsNestedInput
     scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
     document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateWithoutProjectInput = {
@@ -16085,6 +16419,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutProjectInput = {
@@ -16218,6 +16554,8 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
     scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
     document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateWithoutSceneInput = {
@@ -16236,6 +16574,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutSceneInput = {
@@ -16289,6 +16629,8 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
     scene?: SceneUpdateOneWithoutProject_assetsNestedInput
     document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateWithoutScene_variationInput = {
@@ -16307,6 +16649,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutScene_variationInput = {
@@ -16315,6 +16659,122 @@ export namespace Prisma {
     user_uuid?: StringFieldUpdateOperationsInput | string
     project_uuid?: StringFieldUpdateOperationsInput | string
     scene_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    document_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectAssetUpdateWithoutVideo_assetsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
+    scene?: SceneUpdateOneWithoutProject_assetsNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
+    document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+  }
+
+  export type ProjectAssetUncheckedUpdateWithoutVideo_assetsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    scene_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scene_variation_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    document_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+  }
+
+  export type ProjectAssetUncheckedUpdateManyWithoutVideo_assetsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    scene_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scene_variation_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    document_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectAssetUpdateWithoutPrompt_imagesInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
+    scene?: SceneUpdateOneWithoutProject_assetsNestedInput
+    scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
+    document?: DocumentUpdateOneWithoutProject_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
+  }
+
+  export type ProjectAssetUncheckedUpdateWithoutPrompt_imagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    scene_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scene_variation_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    document_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    selected?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+    type?: EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType
+    role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
+    error_message?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
+  }
+
+  export type ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    scene_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    scene_variation_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     provider_job_id?: NullableStringFieldUpdateOperationsInput | string | null
     document_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     selected?: BoolFieldUpdateOperationsInput | boolean
@@ -16454,6 +16914,8 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
     scene?: SceneUpdateOneWithoutProject_assetsNestedInput
     scene_variation?: SceneVariationUpdateOneWithoutProject_assetsNestedInput
+    prompt_images?: ProjectAssetUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateWithoutDocumentInput = {
@@ -16472,6 +16934,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
+    video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
   }
 
   export type ProjectAssetUncheckedUpdateManyWithoutDocumentInput = {

@@ -147,6 +147,10 @@ export class CreateProjectAssetVideoDto extends CreateProjectAssetDto {
     @IsOptional()
     include_sound?: boolean;
 
+    @ApiPropertyOptional({ description: 'UUIDs of prompt images to associate with this video' })
+    @IsOptional()
+    prompt_image_uuids?: string[];
+
 }
 
 export class GenerateProjectAssetImageDto {

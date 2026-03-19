@@ -155,6 +155,9 @@ model ProjectAsset {
   scene_variation SceneVariation? @relation(fields: [scene_variation_uuid], references: [uuid], onDelete: Cascade)
   document        Document?       @relation("ProjectAsset", fields: [document_uuid], references: [uuid], onDelete: Cascade)
 
+  prompt_images ProjectAsset[] @relation("ProjectAssetPromptImages")
+  video_assets  ProjectAsset[] @relation("ProjectAssetPromptImages")
+
   @@index([uuid])
   @@index([user_uuid])
   @@index([project_uuid])

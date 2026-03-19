@@ -25,6 +25,7 @@ export interface ProjectAsset {
     scene: Scene;
     scene_variation: SceneVariation;
     document: Document;
+    prompt_images?: ProjectAsset[];
 }
 
 export interface CreateProjectAssetDto {
@@ -57,9 +58,10 @@ export interface ProjectAssetsQueryDto {
     limit?: number;
 }
 
-export interface CreateSceneVideoDto {
+export interface CreateSceneVideoDto extends Partial<VideoGenerationConfig> {
     scene_uuid: string;
     scene_variation_uuid: string;
+    prompt_image_uuids?: string[];
 }
 
 export interface GenerateSceneVariationImageDto {

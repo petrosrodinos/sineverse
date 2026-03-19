@@ -18,13 +18,13 @@ import { Modal } from "@/components/ui/modal";
 interface ProjectAssetVideoProps {
   asset?: Partial<ProjectAsset>;
   variation: Partial<SceneVariation>;
-  promptImageAsset?: ProjectAsset;
+  promptImageAssets?: ProjectAsset[];
   config?: VideoGenerationConfig;
   isEnriched?: boolean;
   handleClose?: () => void;
 }
 
-export default function ProjectAssetVideo({ asset, variation, promptImageAsset, config, isEnriched, handleClose }: ProjectAssetVideoProps) {
+export default function ProjectAssetVideo({ asset, variation, promptImageAssets, config, isEnriched, handleClose }: ProjectAssetVideoProps) {
   const [negativeOpen, setNegativeOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
@@ -58,6 +58,8 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
 
   const isImageToVideoModel = editedConfig.ai_model?.includes("image-to-video") || editedConfig.ai_model?.includes("i2v");
 
+  const latestPromptImageUuid = promptImageAssets && promptImageAssets.length > 0 ? promptImageAssets[0].uuid : undefined;
+
   const validateVariation = () => {
     if (!editedConfig.ai_model) {
       addToast({
@@ -68,10 +70,10 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
       return false;
     }
 
-    if (isImageToVideoModel && !promptImageAsset?.document?.url) {
+    if (isImageToVideoModel && (!promptImageAssets || promptImageAssets.length === 0)) {
       addToast({
         title: "Image Selection Required",
-        description: "Please upload an image for image-to-video models.",
+        description: "Please upload at least one image for image-to-video models.",
         severity: "danger",
       });
       return false;
@@ -87,6 +89,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
     await createVideoMutation.mutateAsync({
       scene_uuid: variation.scene_uuid,
       scene_variation_uuid: variation.uuid,
+      prompt_image_uuids: latestPromptImageUuid ? [latestPromptImageUuid] : [],
       ...editedConfig,
     } as any);
 
@@ -137,13 +140,27 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
       )}
 
       {!isEnriched && displayVideoStatus === ProjectAssetStatuses.COMPLETED && displayVideo?.document?.url && (
-        <div className={`w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 transition-all ${isSelected ? 'ring-primary border border-primary/50' : 'ring-default-200'}`}>
-          <video 
-            src={displayVideo.document.url} 
-            controls 
-            className="w-full h-full object-contain"
-            poster={displayVideo?.document?.url ? undefined : promptImageAsset?.document?.url}
-          />
+        <div className="flex flex-col gap-3">
+          <div className={`w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg ring-1 transition-all ${isSelected ? 'ring-primary border border-primary/50' : 'ring-default-200'}`}>
+            <video 
+              src={displayVideo.document.url} 
+              controls 
+              className="w-full h-full object-contain"
+              poster={displayVideo?.document?.url ? undefined : (displayVideo as any).prompt_images?.[0]?.document?.url || promptImageAssets?.[0]?.document?.url}
+            />
+          </div>
+          {(displayVideo as any).prompt_images?.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <p className="text-xs font-medium text-default-500">Prompt Images Used:</p>
+              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                {(displayVideo as any).prompt_images.map((imgAsset: any) => (
+                  <div key={imgAsset.uuid} className="size-16 rounded-lg overflow-hidden flex-shrink-0 border border-default-200">
+                    <img src={imgAsset.document.url} className="w-full h-full object-cover" alt="Prompt reference" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -168,7 +185,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
         />
         <SceneVariationImageUpload 
             variationUuid={variation?.uuid || ""} 
-            promptImageUrl={promptImageAsset?.document?.url} 
+            promptImageAssets={promptImageAssets} 
             isImageToVideoModel={!!isImageToVideoModel} 
         />
          
@@ -293,7 +310,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
             <ProjectAssetVideo 
               asset={asset} 
               variation={variation} 
-              promptImageAsset={promptImageAsset} 
+              promptImageAssets={promptImageAssets} 
               config={enrichedVariation} 
               isEnriched 
               handleClose={() => setIsEnrichModalOpen(false)} 

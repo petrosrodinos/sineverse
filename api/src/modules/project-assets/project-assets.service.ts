@@ -68,6 +68,11 @@ export class ProjectAssetsService {
           where,
           include: {
             document: true,
+            prompt_images: {
+              include: {
+                document: true,
+              }
+            }
           },
           orderBy: {
             created_at: 'desc',
@@ -98,6 +103,11 @@ export class ProjectAssetsService {
         where: { uuid, user_uuid },
         include: {
           document: true,
+          prompt_images: {
+            include: {
+              document: true,
+            }
+          }
         },
       });
 
@@ -180,6 +190,7 @@ export class ProjectAssetsService {
 
       if (!variation) throw new NotFoundException('Scene variation not found');
 
+      const { prompt_image_uuids, ...metadata } = dto;
       const projectAsset = await this.prisma.projectAsset.create({
         data: {
           user_uuid,
@@ -189,7 +200,10 @@ export class ProjectAssetsService {
           status: AssetStatus.PENDING,
           type: DocumentType.VIDEO,
           role: AssetRole.GENERATED_VIDEO,
-          metadata: dto as any,
+          metadata: metadata as any,
+          prompt_images: prompt_image_uuids ? {
+            connect: prompt_image_uuids.map(uuid => ({ uuid }))
+          } : undefined
         }
       });
 
@@ -229,35 +243,18 @@ export class ProjectAssetsService {
         file.mimetype,
       );
 
-      let asset = await this.prisma.projectAsset.findFirst({
-        where: { scene_variation_uuid: variation.uuid, role: AssetRole.PROMPT_IMAGE }
-      });
-
-      if (asset) {
-        if (asset.document_uuid) {
-          await this.documentsService.deleteDocument(asset.document_uuid).catch(() => { });
+      const asset = await this.prisma.projectAsset.create({
+        data: {
+          user_uuid,
+          project_uuid: variation.scene.project_uuid,
+          scene_uuid: variation.scene_uuid,
+          scene_variation_uuid: variation.uuid,
+          type: DocumentType.IMAGE,
+          role: AssetRole.PROMPT_IMAGE,
+          status: AssetStatus.COMPLETED,
+          document_uuid: documentUuid,
         }
-        asset = await this.prisma.projectAsset.update({
-          where: { uuid: asset.uuid },
-          data: {
-            document_uuid: documentUuid,
-            status: AssetStatus.COMPLETED,
-          }
-        });
-      } else {
-        asset = await this.prisma.projectAsset.create({
-          data: {
-            user_uuid,
-            project_uuid: variation.scene.project_uuid,
-            scene_uuid: variation.scene_uuid,
-            scene_variation_uuid: variation.uuid,
-            type: DocumentType.IMAGE,
-            role: AssetRole.PROMPT_IMAGE,
-            status: AssetStatus.COMPLETED,
-            document_uuid: documentUuid,
-          }
-        });
-      }
+      });
 
       return asset;
     } catch (error) {
@@ -321,35 +318,17 @@ export class ProjectAssetsService {
         }
       }
 
-      let asset = await this.prisma.projectAsset.findFirst({
-        where: { scene_variation_uuid: variation.uuid, role: AssetRole.PROMPT_IMAGE }
-      });
-
-      if (asset) {
-        if (asset.document_uuid) {
-          await this.documentsService.deleteDocument(asset.document_uuid).catch(() => { });
+      const asset = await this.prisma.projectAsset.create({
+        data: {
+          user_uuid,
+          project_uuid: variation.scene.project_uuid,
+          scene_uuid: variation.scene_uuid,
+          scene_variation_uuid: variation.uuid,
+          type: DocumentType.IMAGE,
+          role: AssetRole.PROMPT_IMAGE,
+          status: AssetStatus.PROCESSING,
         }
-        asset = await this.prisma.projectAsset.update({
-          where: { uuid: asset.uuid },
-          data: {
-            status: AssetStatus.PROCESSING,
-            error_message: null,
-            document_uuid: null,
-          }
-        });
-      } else {
-        asset = await this.prisma.projectAsset.create({
-          data: {
-            user_uuid,
-            project_uuid: variation.scene.project_uuid,
-            scene_uuid: variation.scene_uuid,
-            scene_variation_uuid: variation.uuid,
-            type: DocumentType.IMAGE,
-            role: AssetRole.PROMPT_IMAGE,
-            status: AssetStatus.PROCESSING,
-          }
-        });
-      }
+      });
 
       setImmediate(() => {
         this.generateAndSaveImageBackground(uuid, generateImageDto, asset.uuid, temporaryImageUuid).catch((err) => {

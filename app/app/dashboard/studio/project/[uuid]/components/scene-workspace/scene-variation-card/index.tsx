@@ -1,15 +1,32 @@
 "use client";
 import { useState } from "react";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import { Accordion, AccordionItem, Button, Chip, Spinner } from "@heroui/react";
+import { Accordion, AccordionItem, Button, Chip, Spinner, Skeleton } from "@heroui/react";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
-import { AssetRoles, ProjectAssetTypes, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { ProjectAssetTypes, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Video, Plus } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import dynamic from 'next/dynamic';
 
 const ProjectAssetVideo = dynamic(() => import("./ProjectAssetVideo"), {
-  loading: () => <div className="p-12 text-center text-default-400">Loading component...</div>,
+  loading: () => (
+    <div className="flex flex-col gap-6 w-full animate-pulse">
+        <Skeleton className="w-full aspect-video rounded-xl" />
+        <div className="flex flex-col gap-4">
+            <Skeleton className="h-24 w-full rounded-xl" />
+            <Skeleton className="h-11 w-full rounded-xl" />
+            <Skeleton className="h-11 w-full rounded-xl" />
+        </div>
+        <div className="flex justify-between items-center pt-2 border-t border-default-200 dark:border-default-100/10">
+            <div className="flex gap-2">
+                <Skeleton className="h-10 w-28 rounded-xl" />
+            </div>
+            <div className="flex gap-2">
+                <Skeleton className="h-10 w-28 rounded-xl" />
+            </div>
+        </div>
+    </div>
+  ),
   ssr: false
 });
 
@@ -27,7 +44,6 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
   );
 
   const videoAssets = videoAssetsResponse?.data || [];
-  const promptImageAsset = variation?.project_assets?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
   const defaultKey = (videoAssets.find((a: any) => a.selected) || videoAssets[0])?.uuid;
 
@@ -86,7 +102,6 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
                     <ProjectAssetVideo 
                         asset={asset} 
                         variation={variation as any} 
-                        promptImageAsset={promptImageAsset as any} 
                     />
                 </div>
             </AccordionItem>
@@ -125,7 +140,6 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
         <div className="max-h-[70vh] overflow-y-auto no-scrollbar pb-6 px-1">
           <ProjectAssetVideo 
               variation={variation as any} 
-              promptImageAsset={promptImageAsset as any}
               isEnriched={true}
               handleClose={() => setIsCreateModalOpen(false)}
           />

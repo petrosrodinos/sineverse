@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import { useUploadSceneVariationPromptImage, useDeleteSceneVariationPromptImage, useCreateSceneVariationImage, useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
+import { useUploadSceneVariationPromptImage, useDeleteProjectAsset, useCreateSceneVariationImage, useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
 import { useQueryClient } from "@tanstack/react-query";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Tabs, Tab } from "@heroui/tabs";
@@ -18,13 +18,15 @@ import { Alert } from "@heroui/alert";
 import { XCircle } from "lucide-react";
 import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
+import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+
 interface SceneVariationImageUploadProps {
   variationUuid: string;
-  promptImageUrl?: string;
+  promptImageAssets?: ProjectAsset[];
   isImageToVideoModel: boolean;
 }
 
-export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isImageToVideoModel }: SceneVariationImageUploadProps) {
+export function SceneVariationImageUpload({ variationUuid, promptImageAssets: initialPromptImageAssets, isImageToVideoModel }: SceneVariationImageUploadProps) {
   const [activeTab, setActiveTab] = useState<string>("create");
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
@@ -32,10 +34,11 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   const [enrichPrompt, setEnrichPrompt] = useState(true);
   const [isPolling, setIsPolling] = useState(false);
   
+  const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   
   const uploadImageMutation = useUploadSceneVariationPromptImage();
-  const deleteImageMutation = useDeleteSceneVariationPromptImage();
+  const deleteImageMutation = useDeleteProjectAsset(); // Use generic delete instead
   const createImageMutation = useCreateSceneVariationImage();
 
   const queryClient = useQueryClient();
@@ -51,18 +54,20 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
     }
   );
 
-  const promptImageAsset = assetsResponse?.data?.find((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
+  const promptImageAssets = assetsResponse?.data?.filter((a: any) => a.role === AssetRoles.PROMPT_IMAGE) || initialPromptImageAssets || [];
+
+  const latestPromptImage = promptImageAssets && promptImageAssets.length > 0 ? promptImageAssets[0] : null;
 
   useEffect(() => {
     if (isPolling) {
-      if (promptImageAsset?.status === ProjectAssetStatuses.COMPLETED) {
+      if (latestPromptImage?.status === ProjectAssetStatuses.COMPLETED) {
         setIsPolling(false);
         queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
-      } else if (promptImageAsset?.status === ProjectAssetStatuses.FAILED) {
+      } else if (latestPromptImage?.status === ProjectAssetStatuses.FAILED) {
         setIsPolling(false);
       }
     }
-  }, [promptImageAsset?.status, isPolling, queryClient]);
+  }, [latestPromptImage?.status, isPolling, queryClient]);
 
 
   if (!isImageToVideoModel) return null;
@@ -87,7 +92,9 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
   };
 
   const handleDeleteImage = async () => {
-    await deleteImageMutation.mutateAsync(variationUuid);
+    if (latestPromptImage?.uuid) {
+      await deleteImageMutation.mutateAsync(latestPromptImage.uuid);
+    }
     setIsDeleteModalOpen(false);
   };
 
@@ -210,22 +217,22 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                   </>
                 )}
 
-                {promptImageAsset?.status === ProjectAssetStatuses.FAILED && !isPolling && (
+                {latestPromptImage?.status === ProjectAssetStatuses.FAILED && !isPolling && (
                   <Alert
                     color="danger"
                     variant="flat"
                     title="Generation Failed"
-                    description={promptImageAsset.error_message || "An unexpected error occurred during image generation."}
+                    description={latestPromptImage.error_message || "An unexpected error occurred during image generation."}
                     startContent={<XCircle className="size-4" />}
                     className="mt-2 rounded-xl"
                   />
                 )}
 
-                {promptImageUrl && !isPolling && (
+                {latestPromptImage?.document?.url && !isPolling && (
                     <div className="mt-4 pt-4 border-t border-default-100 text-center">
-                      <p className="text-xs text-default-400 mb-2 italic">Current Variation Image</p>
+                      <p className="text-xs text-default-400 mb-2 italic">Current Reference Image</p>
                       <ImageUpload
-                          value={promptImageUrl}
+                          value={latestPromptImage.document.url}
                           height="min-h-[100px]"
                           onRemove={() => setIsDeleteModalOpen(true)}
                       />
@@ -243,7 +250,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
                   <ImageUpload
                       label=""
                       description="Upload an image to guide the style and composition of the video."
-                      value={promptImageUrl}
+                      value={latestPromptImage?.document?.url}
                       isLoading={uploadImageMutation.isPending}
                       height="min-h-[120px]"
                       onChange={(file: File) => {
@@ -262,7 +269,10 @@ export function SceneVariationImageUpload({ variationUuid, promptImageUrl, isIma
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setAssetToDelete(null);
+        }}
         onConfirm={handleDeleteImage}
         title="Remove Reference Image"
         description="Are you sure you want to remove the reference image? This action cannot be undone."
