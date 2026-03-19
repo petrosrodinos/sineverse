@@ -12,8 +12,6 @@ import { Sparkles } from "lucide-react";
 import { useEnrichProjectAssetVideo } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetVideoEnrichDto } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
-import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
-import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 const enrichSchema = z.object({
   directions: z.string().optional(),
@@ -26,13 +24,11 @@ type EnrichFormValues = z.infer<typeof enrichSchema>;
 
 interface EnrichVariationPopoverProps {
   project_asset_uuid: string;
-  asset: ProjectAsset;
-  variation: Partial<SceneVariation>;
-  promptImageAsset?: ProjectAsset;
   onEnriched: (data: VideoGenerationConfig) => void;
+  className?: string;
 }
 
-export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, variation, promptImageAsset, onEnriched }: EnrichVariationPopoverProps) {
+export function EnrichProjectAssetVideoPopover({ project_asset_uuid, onEnriched, className }: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
   const {mutate, isPending} = useEnrichProjectAssetVideo(project_asset_uuid);
 
@@ -76,7 +72,7 @@ export function EnrichProjectAssetVideoPopover({ project_asset_uuid, asset, vari
           isDisabled={isPending}
           isLoading={isPending}
           startContent={!isPending ? <Sparkles className="size-4" /> : undefined}
-          className="rounded-xl font-medium"
+          className={`rounded-xl font-medium ${className || ""}`}
         >
           Enrich
         </Button>

@@ -2,9 +2,9 @@
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { useState, useEffect } from "react";
 import { Accordion, AccordionItem, Button, Textarea, Spinner } from "@heroui/react";
-import { Save, Video, AlertCircle, CheckCircle } from "lucide-react";
+import { Save, Video, AlertCircle, CheckCircle, Trash2 } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
+import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset, useDeleteProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
@@ -29,9 +29,11 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
   const [isEnrichModalOpen, setIsEnrichModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   
   const createVideoMutation = useCreateSceneVideo();
   const selectVideoMutation = useSelectProjectAsset();
+  const deleteAssetMutation = useDeleteProjectAsset();
   const queryClient = useQueryClient();
 
   const { data: polledVideo } = useProjectAsset(asset?.uuid || "");
@@ -88,6 +90,8 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
       ...editedConfig,
     } as any);
 
+    handleClose?.();
+
     return true;
   };
 
@@ -109,6 +113,12 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
 
     await handleSave();
     setIsConfirmOpen(false);
+  };
+
+  const handleDeleteAsset = async () => {
+    if (!asset?.uuid) return;
+    await deleteAssetMutation.mutateAsync(asset.uuid);
+    setIsDeleteConfirmOpen(false);
   };
 
   const isSelected = displayVideo?.selected;
@@ -185,7 +195,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
       </div>
       
       <div className="flex justify-between items-center pt-2 border-t border-default-200 dark:border-default-100/10">
-        <div>
+        <div className="flex gap-2">
            {!isEnriched && displayVideoStatus === ProjectAssetStatuses.COMPLETED && asset?.uuid && (
               <Button 
                 variant={isSelected ? "solid" : "flat"} 
@@ -198,14 +208,22 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
                   {isSelected ? "Selected" : "Select Video"}
               </Button>
            )}
+           {!isEnriched && asset?.uuid && (
+              <Button 
+                isIconOnly 
+                variant="flat" 
+                color="danger" 
+                className="rounded-xl"
+                onPress={() => setIsDeleteConfirmOpen(true)}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+           )}
         </div>
         <div className="flex gap-2">
             {!isEnriched && variation?.uuid && asset?.uuid && (
               <EnrichProjectAssetVideoPopover 
                 project_asset_uuid={asset.uuid} 
-                asset={asset as ProjectAsset} 
-                variation={variation} 
-                promptImageAsset={promptImageAsset} 
                 onEnriched={(data) => {
                   setEnrichedVariation(data);
                   setIsEnrichModalOpen(true);
@@ -218,13 +236,10 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
                     <Button 
                         color="primary" 
                         startContent={<Save className="size-4" />} 
-                        onPress={async () => {
-                            const success = await handleSave();
-                            if (success && handleClose) handleClose();
-                        }}
+                        onPress={handleSave}
                         isLoading={createVideoMutation.isPending}
                     >
-                        Apply Changes
+                        Create
                     </Button>
                 </>
             ) : (
@@ -238,18 +253,6 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
                         isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
                     >
                         {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate" : "Generate"}
-                    </Button>
-                    <Button 
-                        color="primary" 
-                        startContent={<Save className="size-4" />} 
-                        onPress={async () => {
-                            const success = await handleSave();
-                            if (success && handleClose) handleClose();
-                        }}
-                        isLoading={createVideoMutation.isPending}
-                        isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
-                    >
-                        Save
                     </Button>
                 </>
             )}
@@ -267,10 +270,21 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAsset, 
         isLoading={createVideoMutation.isPending}
       />
 
+      <ConfirmationModal
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        onConfirm={handleDeleteAsset}
+        title="Delete Video"
+        description="Are you sure you want to delete this video? This action cannot be undone."
+        confirmText="Delete"
+        confirmColor="danger"
+        isLoading={deleteAssetMutation.isPending}
+      />
+
       <Modal
         isOpen={isEnrichModalOpen}
         onOpenChange={setIsEnrichModalOpen}
-        title={<h3 className="text-lg font-semibold">Review Enriched Variation</h3>}
+        title={<h3 className="text-lg font-semibold">Review</h3>}
         size="2xl"
         scrollBehavior="inside"
       >
