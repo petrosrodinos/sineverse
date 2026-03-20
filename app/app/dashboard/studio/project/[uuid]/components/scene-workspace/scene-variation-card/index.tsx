@@ -40,7 +40,15 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
 
   const { data: videoAssetsResponse } = useProjectAssets(
     { scene_variation_uuid: variation?.uuid, type: ProjectAssetTypes.VIDEO },
-    { enabled: !!variation?.uuid && !!isExpanded }
+    { 
+      enabled: !!variation?.uuid && !!isExpanded,
+      refetchInterval: (query: any) => {
+        const hasProcessing = query.state?.data?.data?.some((a: any) => 
+          a.status === ProjectAssetStatuses.PROCESSING || a.status === ProjectAssetStatuses.PENDING
+        );
+        return hasProcessing ? 3000 : false;
+      }
+    }
   );
 
   const videoAssets = videoAssetsResponse?.data || [];
@@ -79,7 +87,7 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
                             )}
                         </div>
                         <div className="flex items-center gap-2">
-                            {asset.status === ProjectAssetStatuses.PROCESSING && (
+                            {(asset.status === ProjectAssetStatuses.PROCESSING || asset.status === ProjectAssetStatuses.PENDING) && (
                                 <Chip size="sm" variant="dot" color="primary" className="h-5 border-none bg-transparent">
                                     Processing
                                 </Chip>

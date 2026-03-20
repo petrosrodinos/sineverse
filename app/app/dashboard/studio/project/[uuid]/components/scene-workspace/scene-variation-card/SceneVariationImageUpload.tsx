@@ -11,11 +11,10 @@ import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { ImageModels } from "@/config/dropdowns/project/image.options";
 import { useState, useEffect } from "react";
-import { Wand2, Upload, Sparkles } from "lucide-react";
+import { Wand2, Upload, Sparkles, CheckCircle, XCircle } from "lucide-react";
 import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { Alert } from "@heroui/alert";
-import { XCircle } from "lucide-react";
 import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
@@ -24,14 +23,28 @@ interface SceneVariationImageUploadProps {
   variationUuid: string;
   promptImageAssets?: ProjectAsset[];
   isImageToVideoModel: boolean;
+  mode?: "immediate" | "deferred";
+  onPendingFileChange?: (file: File | null) => void;
+  onPendingConfigChange?: (config: any | null) => void;
+  pendingFile?: File | null;
+  pendingConfig?: any | null;
 }
 
-export function SceneVariationImageUpload({ variationUuid, promptImageAssets: initialPromptImageAssets, isImageToVideoModel }: SceneVariationImageUploadProps) {
+export function SceneVariationImageUpload({ 
+  variationUuid, 
+  promptImageAssets: initialPromptImageAssets, 
+  isImageToVideoModel,
+  mode = "immediate",
+  onPendingFileChange,
+  onPendingConfigChange,
+  pendingFile,
+  pendingConfig
+}: SceneVariationImageUploadProps) {
   const [activeTab, setActiveTab] = useState<string>("create");
-  const [prompt, setPrompt] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
-  const [referenceImage, setReferenceImage] = useState<File | null>(null);
-  const [enrichPrompt, setEnrichPrompt] = useState(true);
+  const [prompt, setPrompt] = useState(pendingConfig?.prompt_text || "");
+  const [selectedModel, setSelectedModel] = useState(pendingConfig?.ai_model || "");
+  const [referenceImage, setReferenceImage] = useState<File | null>(pendingConfig?.image || null);
+  const [enrichPrompt, setEnrichPrompt] = useState(pendingConfig?.enrich_prompt ?? true);
   const [isPolling, setIsPolling] = useState(false);
   
   const [assetToDelete, setAssetToDelete] = useState<string | null>(null);
@@ -75,6 +88,17 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
   const handleGenerateImage = () => {
     if (!selectedModel || !prompt.trim()) return;
     
+    if (mode === "deferred") {
+      onPendingConfigChange?.({
+        ai_model: selectedModel, 
+        prompt_text: prompt,
+        image: referenceImage || undefined,
+        enrich_prompt: enrichPrompt,
+      });
+      onPendingFileChange?.(null); // Clear pending upload if generating
+      return;
+    }
+
     createImageMutation.mutate({
       uuid: variationUuid,
       payload: {
@@ -103,13 +127,15 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
   const selectedModelConfig = ImageModels.find(m => m.name === selectedModel);
   const supportsImageToImage = (selectedModelConfig as any)?.image_to_image === true;
 
+  const currentDisplayImage = pendingFile ? URL.createObjectURL(pendingFile) : latestPromptImage?.document?.url;
+
   return (
     <>
       <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden">
         <AccordionItem 
           key="image-upload" 
           aria-label="Reference Image" 
-          title={<span className="text-sm font-medium">Reference Image</span>} 
+          title={<span className="text-sm font-medium">Reference Image { (pendingFile || pendingConfig) && <span className="text-primary text-[10px] ml-2">(Pending Action)</span> } </span>} 
           classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}
         >
           <div className="flex flex-col gap-4">
@@ -141,6 +167,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
                     </div>
                   ) : (
                     <>
+                      {pendingConfig && <Alert color="primary" variant="flat" description="Image will be generated when video is created." className="rounded-xl mb-1 py-1 px-2 text-xs" />}
                       <Textarea
                         label="Generation Prompt"
                         placeholder="Describe the image you want to create..."
@@ -204,15 +231,15 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
                       )}
                       
                       <Button 
-                        color="primary" 
+                        color={pendingConfig ? "success" : "primary"} 
                         variant="flat" 
-                        startContent={<Sparkles className="size-4" />}
+                        startContent={pendingConfig ? <CheckCircle className="size-4" /> : <Sparkles className="size-4" />}
                         isDisabled={!selectedModel || !prompt.trim() || isGenerating}
                         isLoading={createImageMutation.isPending}
                         onPress={handleGenerateImage}
                         className="rounded-xl w-full"
                       >
-                        Generate Image
+                        {mode === "deferred" ? (pendingConfig ? "Configured" : "Generate Image (Deferred)") : "Generate Image"}
                       </Button>
                   </>
                 )}
@@ -228,7 +255,7 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
                   />
                 )}
 
-                {latestPromptImage?.document?.url && !isPolling && (
+                {latestPromptImage?.document?.url && !isPolling && !pendingConfig && !pendingFile && (
                     <div className="mt-4 pt-4 border-t border-default-100 text-center">
                       <p className="text-xs text-default-400 mb-2 italic">Current Reference Image</p>
                       <ImageUpload
@@ -249,15 +276,24 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
                 <div className="pt-2">
                   <ImageUpload
                       label=""
-                      description="Upload an image to guide the style and composition of the video."
-                      value={latestPromptImage?.document?.url}
+                      description={pendingFile ? "New image will be uploaded with the video." : "Upload an image to guide the style and composition of the video."}
+                      value={currentDisplayImage}
                       isLoading={uploadImageMutation.isPending}
                       height="min-h-[120px]"
                       onChange={(file: File) => {
-                        uploadImageMutation.mutate({ uuid: variationUuid, file });
+                        if (mode === "deferred") {
+                          onPendingFileChange?.(file);
+                          onPendingConfigChange?.(null);
+                        } else {
+                          uploadImageMutation.mutate({ uuid: variationUuid, file });
+                        }
                       }}
                       onRemove={() => {
-                        setIsDeleteModalOpen(true);
+                        if (mode === "deferred" && pendingFile) {
+                          onPendingFileChange?.(null);
+                        } else {
+                          setIsDeleteModalOpen(true);
+                        }
                       }}
                   />
                 </div>
@@ -284,8 +320,3 @@ export function SceneVariationImageUpload({ variationUuid, promptImageAssets: in
   );
 
 }
-
-
-
-
-

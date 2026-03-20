@@ -336,7 +336,7 @@ export class ProjectAssetsService {
         });
       });
 
-      return { status: 'generating' };
+      return { status: 'generating', asset };
     } catch (error) {
       this.logger.error(`Failed to initiate image generation for variation ${uuid}: ${error.message}`);
       if (error instanceof NotFoundException) throw error;

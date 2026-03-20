@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Accordion, AccordionItem, Button, Textarea, Spinner } from "@heroui/react";
 import { Save, Video, AlertCircle, CheckCircle, Trash2 } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
-import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset, useDeleteProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
+import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset, useDeleteProjectAsset, useUploadSceneVariationPromptImage, useCreateSceneVariationImage } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
 import { SceneVariationImageUpload } from "./SceneVariationImageUpload";
@@ -31,12 +31,22 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
   const [isEnrichModalOpen, setIsEnrichModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   
+  const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
+  const [pendingGenerateConfig, setPendingGenerateConfig] = useState<any | null>(null);
+
   const createVideoMutation = useCreateSceneVideo();
   const selectVideoMutation = useSelectProjectAsset();
   const deleteAssetMutation = useDeleteProjectAsset();
+  const uploadImageMutation = useUploadSceneVariationPromptImage();
+  const createImageMutation = useCreateSceneVariationImage();
   const queryClient = useQueryClient();
 
-  const { data: polledVideo } = useProjectAsset(asset?.uuid || "");
+  const { data: polledVideo } = useProjectAsset(asset?.uuid || "", {
+    refetchInterval: (query: any) => {
+      const status = query.state?.data?.status || (asset as any)?.status;
+      return (status === ProjectAssetStatuses.PROCESSING || status === ProjectAssetStatuses.PENDING) ? 3000 : false;
+    }
+  });
 
   useEffect(() => {
     if (polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED) {
@@ -70,10 +80,10 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
       return false;
     }
 
-    if (isImageToVideoModel && (!promptImageAssets || promptImageAssets.length === 0)) {
+    if (isImageToVideoModel && (!promptImageAssets || promptImageAssets.length === 0) && !pendingUploadFile && !pendingGenerateConfig) {
       addToast({
         title: "Image Selection Required",
-        description: "Please upload at least one image for image-to-video models.",
+        description: "Please upload or configure an image for image-to-video models.",
         severity: "danger",
       });
       return false;
@@ -86,16 +96,39 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
     
     if (!validateVariation()) return false;
 
-    await createVideoMutation.mutateAsync({
-      scene_uuid: variation.scene_uuid,
-      scene_variation_uuid: variation.uuid,
-      prompt_image_uuids: latestPromptImageUuid ? [latestPromptImageUuid] : [],
-      ...editedConfig,
-    } as any);
+    let finalPromptImageUuids: string[] = latestPromptImageUuid ? [latestPromptImageUuid] : [];
 
-    handleClose?.();
+    try {
+      if (isEnriched) {
+        // Execute deferred image actions if in modal create mode
+        if (pendingUploadFile) {
+          const asset = await uploadImageMutation.mutateAsync({ uuid: variation.uuid, file: pendingUploadFile });
+          finalPromptImageUuids = [asset.uuid];
+        } else if (pendingGenerateConfig) {
+          const result = await createImageMutation.mutateAsync({ uuid: variation.uuid, payload: pendingGenerateConfig }) as any;
+          if (result?.asset?.uuid) {
+            finalPromptImageUuids = [result.asset.uuid];
+          }
+        }
+      }
 
-    return true;
+      await createVideoMutation.mutateAsync({
+        scene_uuid: variation.scene_uuid,
+        scene_variation_uuid: variation.uuid,
+        prompt_image_uuids: finalPromptImageUuids,
+        ...editedConfig,
+      } as any);
+
+      handleClose?.();
+      return true;
+    } catch (error: any) {
+      addToast({
+        title: "Creation Failed",
+        description: error.message || "An error occurred while creating the video iteration.",
+        severity: "danger",
+      });
+      return false;
+    }
   };
 
   const handleGenerateVideo = async () => {
@@ -129,7 +162,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
   return (
     <div className="flex flex-col gap-6 w-full pb-4">
       {/* Video Display */}
-      {!isEnriched && displayVideoStatus === ProjectAssetStatuses.PROCESSING && (
+      {!isEnriched && (displayVideoStatus === ProjectAssetStatuses.PROCESSING || displayVideoStatus === ProjectAssetStatuses.PENDING) && (
         <div className="w-full aspect-video rounded-xl bg-default-100 dark:bg-default-50 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-default-200">
           <Spinner size="lg" color="primary" />
           <div className="text-center">
@@ -186,7 +219,12 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
         <SceneVariationImageUpload 
             variationUuid={variation?.uuid || ""} 
             promptImageAssets={promptImageAssets} 
-            isImageToVideoModel={!!isImageToVideoModel} 
+            isImageToVideoModel={!!isImageToVideoModel}
+            mode={isEnriched ? "deferred" : "immediate"}
+            onPendingFileChange={setPendingUploadFile}
+            onPendingConfigChange={setPendingGenerateConfig}
+            pendingFile={pendingUploadFile}
+            pendingConfig={pendingGenerateConfig}
         />
          
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
@@ -254,7 +292,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
                         color="primary" 
                         startContent={<Save className="size-4" />} 
                         onPress={handleSave}
-                        isLoading={createVideoMutation.isPending}
+                        isLoading={createVideoMutation.isPending || uploadImageMutation.isPending || createImageMutation.isPending}
                     >
                         Create
                     </Button>
@@ -267,7 +305,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
                         startContent={<Video className="size-4" />}
                         onPress={handleGenerateVideo}
                         isLoading={createVideoMutation.isPending}
-                        isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING}
+                        isDisabled={!variation?.uuid || !variation?.scene_uuid || !editedConfig.ai_model || displayVideoStatus === ProjectAssetStatuses.PROCESSING || displayVideoStatus === ProjectAssetStatuses.PENDING}
                     >
                         {displayVideoStatus === ProjectAssetStatuses.COMPLETED ? "Regenerate" : "Generate"}
                     </Button>
