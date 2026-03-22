@@ -15,7 +15,7 @@ export const generateEnrichImagePrompt = (config: EnrichImagePromptConfig) => {
         - Do not add any additional information that is not related to the original prompt.
         - Do not add comments or emojis to the enriched prompt.
         - Generate text only response.
-        - Make it max 400 characters.
+        - Make it max 300 characters.
         
         Please provide the enriched prompt:
         `,

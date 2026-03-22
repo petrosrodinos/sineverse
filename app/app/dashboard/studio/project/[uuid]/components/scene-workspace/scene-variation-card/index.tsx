@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { Accordion, AccordionItem, Button, Chip, Spinner, Skeleton } from "@heroui/react";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
@@ -38,8 +38,13 @@ interface SceneVariationCardProps {
 export function SceneVariationCard({ variation, isExpanded }: SceneVariationCardProps) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+  const projectAssetsQuery = useMemo(() => ({ 
+    scene_variation_uuid: variation?.uuid, 
+    type: ProjectAssetTypes.VIDEO 
+  }), [variation?.uuid]);
+
   const { data: videoAssetsResponse } = useProjectAssets(
-    { scene_variation_uuid: variation?.uuid, type: ProjectAssetTypes.VIDEO },
+    projectAssetsQuery,
     { 
       enabled: !!variation?.uuid && !!isExpanded,
       refetchInterval: (query: any) => {

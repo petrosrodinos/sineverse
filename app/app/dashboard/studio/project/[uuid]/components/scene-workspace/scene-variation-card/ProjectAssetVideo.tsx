@@ -2,7 +2,7 @@
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { useState, useEffect } from "react";
 import { Accordion, AccordionItem, Button, Textarea, Spinner } from "@heroui/react";
-import { Save, Video, AlertCircle, CheckCircle, Trash2 } from "lucide-react";
+import { Save, Video, AlertCircle, CheckCircle, Trash2, Maximize2 } from "lucide-react";
 import { VideoGenerationOptions } from "./VideoGenerationOptions";
 import { useCreateSceneVideo, useSelectProjectAsset, useProjectAsset, useDeleteProjectAsset, useUploadSceneVariationPromptImage, useCreateSceneVariationImage } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetStatuses, ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
@@ -30,6 +30,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
   const [isEnrichModalOpen, setIsEnrichModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   
   const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
   const [pendingGenerateConfig, setPendingGenerateConfig] = useState<any | null>(null);
@@ -49,11 +50,14 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
   });
 
   useEffect(() => {
-    if (polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED) {
+    const wasProcessing = asset?.status === ProjectAssetStatuses.PROCESSING || asset?.status === ProjectAssetStatuses.PENDING;
+    const isNowDone = polledVideo?.status === ProjectAssetStatuses.COMPLETED || polledVideo?.status === ProjectAssetStatuses.FAILED;
+
+    if (wasProcessing && isNowDone) {
       queryClient.invalidateQueries({ queryKey: ["scene-variations"] });
       queryClient.invalidateQueries({ queryKey: ["project-assets"] });
     }
-  }, [polledVideo?.status, queryClient]);
+  }, [polledVideo?.status, asset?.status, queryClient]);
 
   const displayVideoStatus = polledVideo?.status || asset?.status;
   const displayVideo = polledVideo || asset;
@@ -185,10 +189,17 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
           {(displayVideo as any).prompt_images?.length > 0 && (
             <div className="flex flex-col gap-2">
               <p className="text-xs font-medium text-default-500">Prompt Images Used:</p>
-              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+              <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
                 {(displayVideo as any).prompt_images.map((imgAsset: any) => (
-                  <div key={imgAsset.uuid} className="size-16 rounded-lg overflow-hidden flex-shrink-0 border border-default-200">
-                    <img src={imgAsset.document.url} className="w-full h-full object-cover" alt="Prompt reference" />
+                  <div 
+                    key={imgAsset.uuid} 
+                    className="group relative size-24 rounded-xl overflow-hidden flex-shrink-0 border-2 border-default-200 hover:border-primary transition-all cursor-pointer shadow-sm active:scale-95"
+                    onClick={() => setPreviewImage(imgAsset.document.url)}
+                  >
+                    <img src={imgAsset.document.url} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="Prompt reference" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                       <Maximize2 className="size-5 text-white" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -337,7 +348,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
       />
 
       <Modal
-        isOpen={isEnrichModalOpen}
+        isOpen={!!isEnrichModalOpen}
         onOpenChange={setIsEnrichModalOpen}
         title={<h3 className="text-lg font-semibold">Review</h3>}
         size="2xl"
@@ -354,6 +365,23 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
               handleClose={() => setIsEnrichModalOpen(false)} 
             />
           )}
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={!!previewImage}
+        onOpenChange={(open) => !open && setPreviewImage(null)}
+        title="Image Preview"
+        size="4xl"
+      >
+        <div className="flex items-center justify-center w-full p-2">
+           {previewImage && (
+             <img 
+               src={previewImage} 
+               alt="Prompt Preview" 
+               className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl border border-default-200/50" 
+             />
+           )}
         </div>
       </Modal>
     </div>

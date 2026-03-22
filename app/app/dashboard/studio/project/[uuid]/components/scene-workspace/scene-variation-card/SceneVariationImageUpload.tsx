@@ -10,7 +10,7 @@ import { Textarea } from "@heroui/input";
 import { Button } from "@heroui/button";
 import { Checkbox } from "@heroui/checkbox";
 import { ImageModels } from "@/config/dropdowns/project/image.options";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Wand2, Upload, Sparkles, CheckCircle, XCircle } from "lucide-react";
 import { Spinner } from "@heroui/spinner";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
@@ -56,8 +56,9 @@ export function SceneVariationImageUpload({
 
   const queryClient = useQueryClient();
 
+  const projectAssetsQuery = useMemo(() => ({ scene_variation_uuid: variationUuid }), [variationUuid]);
   const { data: assetsResponse } = useProjectAssets(
-    { scene_variation_uuid: variationUuid },
+    projectAssetsQuery,
     {
       enabled: isPolling,
       refetchInterval: (query: any) => {
