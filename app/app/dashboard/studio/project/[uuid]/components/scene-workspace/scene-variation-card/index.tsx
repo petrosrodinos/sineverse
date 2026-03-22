@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import type { SceneVariation } from "@/features/scene-variations/interfaces/scene-variations.interfaces";
 import { Accordion, AccordionItem, Button, Chip, Spinner, Skeleton } from "@heroui/react";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
-import { ProjectAssetTypes, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { ProjectAssetTypes, ProjectAssetStatuses, AssetRoles } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Video, Plus } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
 import dynamic from 'next/dynamic';
@@ -39,11 +39,10 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const projectAssetsQuery = useMemo(() => ({ 
-    scene_variation_uuid: variation?.uuid, 
-    type: ProjectAssetTypes.VIDEO 
+    scene_variation_uuid: variation?.uuid,
   }), [variation?.uuid]);
 
-  const { data: videoAssetsResponse } = useProjectAssets(
+  const { data: allAssetsResponse } = useProjectAssets(
     projectAssetsQuery,
     { 
       enabled: !!variation?.uuid && !!isExpanded,
@@ -56,7 +55,9 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
     }
   );
 
-  const videoAssets = videoAssetsResponse?.data || [];
+  const allAssets = allAssetsResponse?.data || [];
+  const videoAssets = allAssets.filter((a: any) => a.type === ProjectAssetTypes.VIDEO);
+  const promptImageAssets = allAssets.filter((a: any) => a.role === AssetRoles.PROMPT_IMAGE);
 
   const defaultKey = (videoAssets.find((a: any) => a.selected) || videoAssets[0])?.uuid;
 
@@ -115,6 +116,7 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
                     <ProjectAssetVideo 
                         asset={asset} 
                         variation={variation as any} 
+                        promptImageAssets={promptImageAssets}
                     />
                 </div>
             </AccordionItem>
@@ -154,6 +156,7 @@ export function SceneVariationCard({ variation, isExpanded }: SceneVariationCard
           <ProjectAssetVideo 
               variation={variation as any} 
               isEnriched={true}
+              promptImageAssets={promptImageAssets}
               handleClose={() => setIsCreateModalOpen(false)}
           />
         </div>

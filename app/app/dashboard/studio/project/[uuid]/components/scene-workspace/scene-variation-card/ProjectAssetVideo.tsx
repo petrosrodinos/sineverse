@@ -14,6 +14,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
 import { EnrichProjectAssetVideoPopover } from "./EnrichProjectAssetVideoPopover";
 import { Modal } from "@/components/ui/modal";
+import { ProjectAssetImageDetailsModal } from "./ProjectAssetImageDetailsModal";
 
 interface ProjectAssetVideoProps {
   asset?: Partial<ProjectAsset>;
@@ -30,7 +31,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
   const [enrichedVariation, setEnrichedVariation] = useState<VideoGenerationConfig | null>(null);
   const [isEnrichModalOpen, setIsEnrichModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewAsset, setPreviewAsset] = useState<ProjectAsset | null>(null);
   
   const [pendingUploadFile, setPendingUploadFile] = useState<File | null>(null);
   const [pendingGenerateConfig, setPendingGenerateConfig] = useState<any | null>(null);
@@ -194,7 +195,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
                   <div 
                     key={imgAsset.uuid} 
                     className="group relative size-24 rounded-xl overflow-hidden flex-shrink-0 border-2 border-default-200 hover:border-primary transition-all cursor-pointer shadow-sm active:scale-95"
-                    onClick={() => setPreviewImage(imgAsset.document.url)}
+                    onClick={() => setPreviewAsset(imgAsset)}
                   >
                     <img src={imgAsset.document.url} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="Prompt reference" />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -236,6 +237,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
             onPendingConfigChange={setPendingGenerateConfig}
             pendingFile={pendingUploadFile}
             pendingConfig={pendingGenerateConfig}
+            isLocked={displayVideoStatus === ProjectAssetStatuses.COMPLETED}
         />
          
         <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden" selectedKeys={negativeOpen ? ["negative"] : []} onSelectionChange={(k) => setNegativeOpen(Array.from(k).includes("negative"))}>
@@ -368,22 +370,11 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
         </div>
       </Modal>
 
-      <Modal
-        isOpen={!!previewImage}
-        onOpenChange={(open) => !open && setPreviewImage(null)}
-        title="Image Preview"
-        size="4xl"
-      >
-        <div className="flex items-center justify-center w-full p-2">
-           {previewImage && (
-             <img 
-               src={previewImage} 
-               alt="Prompt Preview" 
-               className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-2xl border border-default-200/50" 
-             />
-           )}
-        </div>
-      </Modal>
+      <ProjectAssetImageDetailsModal 
+        asset={previewAsset} 
+        isOpen={!!previewAsset} 
+        onClose={() => setPreviewAsset(null)} 
+      />
     </div>
   );
 }

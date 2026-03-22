@@ -10,7 +10,7 @@ export const ImagenAspectRatioEnum = z.enum([
 
 export const Imagen4FastSchema = z.object({
     model: z.enum(["google/imagen-4.0-fast-generate-001"]).default("google/imagen-4.0-fast-generate-001"),
-    prompt: z.string().max(400),
+    prompt: z.string().max(4000),
     n: z.number().int().default(1),
     convert_base64_to_url: z.boolean().default(true),
     enhance_prompt: z.boolean().default(true),
@@ -20,7 +20,7 @@ export const Imagen4FastSchema = z.object({
 
 export const Imagen4Schema = z.object({
     model: z.enum(["google/imagen-4.0-generate-001"]).default("google/imagen-4.0-generate-001"),
-    prompt: z.string().max(400),
+    prompt: z.string().max(4000),
     n: z.number().int().default(1),
     convert_base64_to_url: z.boolean().default(true),
     enhance_prompt: z.boolean().default(true),

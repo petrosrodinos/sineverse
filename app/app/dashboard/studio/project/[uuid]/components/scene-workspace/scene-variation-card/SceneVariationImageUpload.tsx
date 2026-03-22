@@ -28,6 +28,7 @@ interface SceneVariationImageUploadProps {
   onPendingConfigChange?: (config: any | null) => void;
   pendingFile?: File | null;
   pendingConfig?: any | null;
+  isLocked?: boolean;
 }
 
 export function SceneVariationImageUpload({ 
@@ -38,7 +39,8 @@ export function SceneVariationImageUpload({
   onPendingFileChange,
   onPendingConfigChange,
   pendingFile,
-  pendingConfig
+  pendingConfig,
+  isLocked
 }: SceneVariationImageUploadProps) {
   const [activeTab, setActiveTab] = useState<string>("create");
   const [prompt, setPrompt] = useState(pendingConfig?.prompt_text || "");
@@ -139,7 +141,46 @@ export function SceneVariationImageUpload({
           title={<span className="text-sm font-medium">Reference Image { (pendingFile || pendingConfig) && <span className="text-primary text-[10px] ml-2">(Pending Action)</span> } </span>} 
           classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}
         >
-          <div className="flex flex-col gap-4">
+          {isLocked ? (
+            <div className="flex flex-col gap-4 pt-1">
+              <Alert 
+                color="primary" 
+                variant="faded" 
+                title="Iteration Locked"
+                description="This reference image is part of a completed video iteration. To use a different image or prompt, please start a new iteration using the 'Regenerate' or 'Create Video' button."
+                className="rounded-xl border-primary/20 bg-primary/5 dark:bg-primary/10"
+              />
+              
+              {latestPromptImage?.document?.url && (
+                <div className="flex flex-col gap-2 items-center">
+                  <p className="text-[10px] font-bold text-default-400 uppercase tracking-widest self-start">Used Reference</p>
+                  <div 
+                    className="relative group w-full aspect-video rounded-xl overflow-hidden border-2 border-default-200 cursor-pointer hover:border-primary transition-all"
+                    onClick={() => {
+                        // We need a way to open the modal from here too if possible, 
+                        // or just show the image
+                    }}
+                  >
+                    <img 
+                      src={latestPromptImage.document.url} 
+                      className="w-full h-full object-cover"
+                      alt="Reference used"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                         <Sparkles className="size-5 text-white" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {!latestPromptImage && (
+                <div className="p-6 border-2 border-dashed border-default-200 rounded-xl text-center">
+                   <p className="text-xs text-default-400">No reference image was used for this iteration.</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
             <Tabs 
               selectedKey={activeTab} 
               onSelectionChange={(key) => setActiveTab(key as string)}
@@ -300,7 +341,8 @@ export function SceneVariationImageUpload({
                 </div>
               </Tab>
             </Tabs>
-          </div>
+            </div>
+          )}
         </AccordionItem>
       </Accordion>
 

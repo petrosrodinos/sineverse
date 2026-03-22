@@ -327,6 +327,7 @@ export class ProjectAssetsService {
           type: DocumentType.IMAGE,
           role: AssetRole.PROMPT_IMAGE,
           status: AssetStatus.PROCESSING,
+          metadata: generateImageDto as any,
         }
       });
 
@@ -429,6 +430,7 @@ export class ProjectAssetsService {
         data: {
           document_uuid: documentUuid,
           status: AssetStatus.COMPLETED,
+          metadata: generateImageDto as any,
         }
       });
 
