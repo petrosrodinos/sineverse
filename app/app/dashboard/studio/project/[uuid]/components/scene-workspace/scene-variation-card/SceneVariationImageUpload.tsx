@@ -297,7 +297,7 @@ export function SceneVariationImageUpload({
                   />
                 )}
 
-                {latestPromptImage?.document?.url && !isPolling && !pendingConfig && !pendingFile && (
+                {latestPromptImage?.document?.url && !isPolling && !pendingConfig && !pendingFile && mode !== "deferred" && (
                     <div className="mt-4 pt-4 border-t border-default-100 text-center">
                       <p className="text-xs text-default-400 mb-2 italic">Current Reference Image</p>
                       <ImageUpload

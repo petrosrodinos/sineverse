@@ -101,7 +101,10 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
     
     if (!validateVariation()) return false;
 
-    let finalPromptImageUuids: string[] = latestPromptImageUuid ? [latestPromptImageUuid] : [];
+    const currentAssetImages = (asset as any)?.prompt_images || [];
+    let finalPromptImageUuids: string[] = currentAssetImages.length > 0 
+      ? currentAssetImages.map((img: any) => img.uuid)
+      : (!isEnriched && latestPromptImageUuid ? [latestPromptImageUuid] : []);
 
     try {
       if (isEnriched) {
