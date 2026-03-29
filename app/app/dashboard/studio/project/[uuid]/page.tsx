@@ -1,8 +1,21 @@
 "use client";
 import { use } from "react";
-import { StudioLayout } from "@/app/dashboard/studio/project/[uuid]/components/StudioLayout";
-import { ProjectHeader } from "@/app/dashboard/studio/project/[uuid]/components/ProjectHeader";
+import { StudioLayout } from "@/app/dashboard/studio/project/[uuid]/components/film/StudioLayout";
+import { EstateLift } from "@/app/dashboard/studio/project/[uuid]/components/estate";
+import { ProjectPageContentSkeleton } from "@/app/dashboard/studio/project/[uuid]/components/ProjectPageContentSkeleton";
+import { ProjectHeader } from "@/app/dashboard/studio/project/[uuid]/components/film/ProjectHeader";
 import { useProject } from "@/features/projects/hooks/use-projects";
+import { Project, ProjectTypes } from "@/features/projects/interfaces/projects.interfaces";
+
+function ProjectMainContent({ isLoading, project }: { isLoading: boolean; project?: Project }) {
+  if (isLoading) {
+    return <ProjectPageContentSkeleton />;
+  }
+  if (project?.type === ProjectTypes.ESTATE) {
+    return <EstateLift />;
+  }
+  return <StudioLayout />;
+}
 
 export default function ProjectPage({ params }: { params: Promise<{ uuid: string }> }) {
   const { uuid } = use(params);
@@ -14,7 +27,7 @@ export default function ProjectPage({ params }: { params: Promise<{ uuid: string
         <ProjectHeader project={project} isLoading={isLoading} />
       </div>
       <div className="flex-1 min-h-0">
-        <StudioLayout />
+        <ProjectMainContent isLoading={isLoading} project={project} />
       </div>
     </div>
   );

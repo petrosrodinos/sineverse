@@ -9,7 +9,7 @@ import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { useDeleteProject } from "@/features/projects/hooks/use-projects";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { CreateProjectModal } from "../../../components/create-project-modal/CreateProjectModal";
+import { CreateProjectModal } from "../../../../components/create-project-modal/CreateProjectModal";
 
 interface ProjectHeaderProps {
   project?: Project;
@@ -56,15 +56,17 @@ export function ProjectHeader({ project, isLoading }: ProjectHeaderProps) {
         {project?.original_concept && <p className="col-start-1 col-span-2 sm:col-start-2 sm:col-span-1 row-start-2 text-sm sm:text-base text-default-500 line-clamp-2 sm:line-clamp-3 break-words">{project.original_concept}</p>}
       </div>
       <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
-        <Button isIconOnly variant="flat" onPress={onEditOpen}>
+        <Button isIconOnly variant="flat" onPress={onEditOpen} isDisabled={!project}>
           <Pencil className="w-4 h-4" />
         </Button>
-        <Button isIconOnly variant="flat" color="danger" onPress={onDeleteOpen}>
+        <Button isIconOnly variant="flat" color="danger" onPress={onDeleteOpen} isDisabled={!project}>
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>
 
-      <CreateProjectModal isOpen={isEditOpen} onOpenChange={onEditOpenChange} onClose={onEditClose} project={project} />
+      {project && (
+        <CreateProjectModal key={`${project.uuid}-${project.type}`} isOpen={isEditOpen} onOpenChange={onEditOpenChange} onClose={onEditClose} project={project} />
+      )}
 
       <ConfirmationModal isOpen={isDeleteOpen} onClose={onDeleteClose} onConfirm={handleDelete} title="Delete Project" description="Are you sure you want to delete this project? This action cannot be undone." confirmText="Delete" isLoading={isDeleting} />
     </div>
