@@ -12,23 +12,25 @@ type LandingNavLinkProps = {
 
 export function LandingNavLink({ href, className, children }: LandingNavLinkProps) {
   const pathname = usePathname();
-  const isLandingHash = href.startsWith("/#") && href.length > 2;
-  const hash = isLandingHash ? href.slice(2) : "";
+  const pathHashMatch = href.match(/^([^#]+)#(.+)$/);
 
-  const scrollToId = () => {
-    const el = document.getElementById(hash);
-    el?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.replaceState(null, "", `#${hash}`);
-  };
+  if (pathHashMatch) {
+    const targetPath = pathHashMatch[1];
+    const hash = pathHashMatch[2];
 
-  if (isLandingHash) {
+    const scrollToId = () => {
+      const el = document.getElementById(hash);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.replaceState(null, "", `${targetPath}#${hash}`);
+    };
+
     return (
       <NextLink
         href={href}
         className={className}
-        scroll={pathname !== "/"}
+        scroll={pathname !== targetPath}
         onClick={(e) => {
-          if (pathname === "/") {
+          if (pathname === targetPath) {
             e.preventDefault();
             scrollToId();
           }

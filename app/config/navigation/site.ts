@@ -1,44 +1,30 @@
 export type SiteConfig = typeof siteConfig;
 
+export type NavItem =
+  | { readonly label: string; readonly href: string }
+  | { readonly label: string; readonly section: "features" | "about" };
+
 export const siteConfig = {
   name: "SineVerse",
   description: "Make beautiful websites regardless of your design experience.",
+  navHome: {
+    label: "Home",
+    href: "/",
+  },
   navItems: [
     {
-      label: "Home",
-      href: "/",
-    },
-    {
       label: "Pricing",
       href: "/#pricing",
     },
     {
       label: "Features",
-      href: "/#features",
+      section: "features",
     },
     {
       label: "About",
-      href: "/#about",
+      section: "about",
     },
-  ],
-  navMenuItems: [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Pricing",
-      href: "/#pricing",
-    },
-    {
-      label: "Features",
-      href: "/#features",
-    },
-    {
-      label: "About",
-      href: "/#about",
-    },
-  ],
+  ] as const satisfies readonly NavItem[],
   links: {
     github: "https://github.com/heroui-inc/heroui",
     twitter: "https://twitter.com/hero_ui",

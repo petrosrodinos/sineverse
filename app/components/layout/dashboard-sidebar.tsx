@@ -53,9 +53,12 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
     <nav className="flex h-full w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-50 dark:shadow-black/10">
         <div className={clsx("flex items-center border-b border-default-200/60 dark:border-default-100/20 pb-3 mb-2", collapsed ? "justify-center px-0" : "justify-between px-4")}>
           {!collapsed && (
-            <p className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate">
+            <NextLink
+              href="/"
+              className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate hover:text-primary transition-colors min-w-0"
+            >
               {siteConfig.name}
-            </p>
+            </NextLink>
           )}
           <div className="hidden md:block">
             <Tooltip content={collapsed ? "Expand sidebar" : "Collapse sidebar"} placement="right">
