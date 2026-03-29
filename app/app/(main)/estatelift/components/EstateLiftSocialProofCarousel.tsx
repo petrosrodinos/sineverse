@@ -7,7 +7,9 @@ import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import clsx from "clsx";
 import type { LucideIcon } from "lucide-react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Building2, ChevronLeft, ChevronRight, Home, Quote, Star } from "lucide-react";
+
+export type SocialProofIconId = "quote" | "home" | "building2";
 
 export type SocialProofCarouselItem = {
   id: string;
@@ -17,7 +19,13 @@ export type SocialProofCarouselItem = {
   role: string;
   context: string;
   highlight?: string;
-  icon: LucideIcon;
+  icon: SocialProofIconId;
+};
+
+const socialProofIcons: Record<SocialProofIconId, LucideIcon> = {
+  quote: Quote,
+  home: Home,
+  building2: Building2,
 };
 
 const starIndices = [1, 2, 3, 4, 5] as const;
@@ -136,7 +144,7 @@ export function EstateLiftSocialProofCarousel({ items }: EstateLiftSocialProofCa
         <div className="overflow-hidden px-1 sm:px-2 lg:px-12" ref={emblaRef}>
           <div className="flex touch-pan-y gap-3">
             {items.map((item) => {
-              const Icon = item.icon;
+              const Icon = socialProofIcons[item.icon];
               return (
                 <div
                   key={item.id}

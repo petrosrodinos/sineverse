@@ -1,12 +1,11 @@
-"use client";
-
 import NextLink from "next/link";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { EstateLiftSocialProofCarousel, type SocialProofCarouselItem } from "@/app/(main)/estatelift/components/EstateLiftSocialProofCarousel";
-import { ArrowRight, Building2, Captions, Check, Home, ImageIcon, Layers, Music, Quote, Smartphone, Sparkles, Star, TrendingUp, Video, Zap } from "lucide-react";
+import type { SocialProofIconId } from "@/app/(main)/estatelift/components/EstateLiftSocialProofCarousel";
+import { ArrowRight, Captions, Check, ImageIcon, Layers, Music, Smartphone, Sparkles, Star, TrendingUp, Video, Zap } from "lucide-react";
 import { Routes } from "@/config/routes";
-import { useLandingHashScroll } from "@/hooks/use-landing-hash-scroll";
+import { LandingHashScroll } from "./LandingHashScroll";
 
 const openingAngles = [
   {
@@ -63,57 +62,63 @@ function socialProofItemId(name: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-const socialProofTestimonials = [
+const socialProofTestimonials: readonly {
+  quote: string;
+  name: string;
+  role: string;
+  context: string;
+  icon: SocialProofIconId;
+}[] = [
   {
     quote: "Our cabin in the Highlands finally feels as warm on the listing as it does in person. The vertical cut goes straight to Instagram without a second export.",
     name: "James Reid",
     role: "Host",
     context: "Scottish Highlands",
-    icon: Home,
+    icon: "home",
   },
   {
     quote: "I attach a tour link before every viewing. Sellers see motion and depth; buyers show up already sold on the flow of the space.",
     name: "Elena Vásquez",
     role: "Broker associate",
     context: "Madrid",
-    icon: Building2,
+    icon: "building2",
   },
   {
     quote: "Three furnished units refreshed before lunch—no crew, no scheduling. Property managers live or die on turnaround; this is the first tool that actually keeps up.",
     name: "Priya Shah",
     role: "Property manager",
     context: "Berlin · 28 units",
-    icon: Building2,
+    icon: "building2",
   },
   {
     quote: "Guests reference the video in messages now. Fewer repetitive questions about layout and stairs, which means faster confirmations.",
     name: "Daniel Olsen",
     role: "Host",
     context: "Copenhagen",
-    icon: Home,
+    icon: "home",
   },
   {
     quote: "Scene order felt intentional—living room, kitchen, sleep spaces—without me touching a timeline. That is the bar for AI in our pitch decks.",
     name: "Sofia Lopes",
     role: "Short-term rental owner",
     context: "Porto",
-    icon: Home,
+    icon: "home",
   },
   {
     quote: "We ran the same floor plan with and without video on our listing microsite. Time on page tripled and callback requests followed within days.",
     name: "Amélie Bernard",
     role: "Marketing lead",
     context: "Regional brokerage · France",
-    icon: Building2,
+    icon: "building2",
   },
   {
     quote: "Twelve keys across two buildings used to mean twelve separate shoots. Now refresh season is one upload batch and consistent branding across every tour.",
     name: "Marcus Chen",
     role: "Portfolio operator",
     context: "Vancouver · 12 units",
-    icon: Home,
+    icon: "home",
   },
-] as const;
+];
 
 const socialProofCarouselItems: SocialProofCarouselItem[] = [
   {
@@ -124,7 +129,7 @@ const socialProofCarouselItems: SocialProofCarouselItem[] = [
     role: socialProofFeatured.role,
     context: socialProofFeatured.context,
     highlight: socialProofFeatured.highlight,
-    icon: Quote,
+    icon: "quote",
   },
   ...socialProofTestimonials.map((t) => ({
     id: socialProofItemId(t.name),
@@ -150,9 +155,8 @@ function SocialProofStars({ className }: { className?: string }) {
 }
 
 export function EstateLiftLandingPage() {
-  useLandingHashScroll("/estatelift");
-
   return (
+    <LandingHashScroll pathnameMatch="/estatelift">
     <div className="min-h-screen bg-background">
       <section className="relative overflow-hidden border-b border-divider/40">
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,hsl(var(--heroui-primary-500)/0.22),transparent_55%),radial-gradient(ellipse_50%_40%_at_100%_20%,hsl(var(--heroui-primary-600)/0.12),transparent_50%),radial-gradient(ellipse_40%_35%_at_0%_30%,hsl(var(--heroui-primary-400)/0.08),transparent_45%)]" />
@@ -293,5 +297,6 @@ export function EstateLiftLandingPage() {
         </div>
       </section>
     </div>
+    </LandingHashScroll>
   );
 }

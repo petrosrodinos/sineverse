@@ -1,12 +1,10 @@
-"use client";
-
 import NextLink from "next/link";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Clapperboard, Film, Layers, Sparkles, Share2, Play, ArrowRight } from "lucide-react";
 import { Routes } from "@/config/routes";
 import { environments } from "@/config/environments";
-import { useLandingHashScroll } from "@/hooks/use-landing-hash-scroll";
+import { LandingHashScroll } from "./components/LandingHashScroll";
 
 const steps = [
   { title: "Describe your idea", body: "One sentence is enough. We expand it into a structured story." },
@@ -39,9 +37,8 @@ const features = [
 ] as const;
 
 export function SineversePage() {
-  useLandingHashScroll("/sineverse");
-
   return (
+    <LandingHashScroll pathnameMatch="/sineverse">
     <div className="min-h-screen bg-background">
       <section className="relative overflow-hidden border-b border-divider/40">
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,hsl(var(--heroui-primary-500)/0.22),transparent_55%),radial-gradient(ellipse_50%_40%_at_100%_20%,hsl(var(--heroui-primary-600)/0.12),transparent_50%),radial-gradient(ellipse_40%_35%_at_0%_30%,hsl(var(--heroui-primary-400)/0.08),transparent_45%)]" />
@@ -140,5 +137,6 @@ export function SineversePage() {
         </div>
       </section>
     </div>
+    </LandingHashScroll>
   );
 }
