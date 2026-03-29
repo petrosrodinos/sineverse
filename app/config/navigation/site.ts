@@ -10,15 +10,15 @@ export const siteConfig = {
     },
     {
       label: "Pricing",
-      href: "/pricing",
+      href: "/#pricing",
     },
     {
       label: "Features",
-      href: "/features",
+      href: "/#features",
     },
     {
       label: "About",
-      href: "/about",
+      href: "/#about",
     },
   ],
   navMenuItems: [
@@ -28,15 +28,15 @@ export const siteConfig = {
     },
     {
       label: "Pricing",
-      href: "/pricing",
+      href: "/#pricing",
     },
     {
       label: "Features",
-      href: "/features",
+      href: "/#features",
     },
     {
       label: "About",
-      href: "/about",
+      href: "/#about",
     },
   ],
   links: {

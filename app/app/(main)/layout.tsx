@@ -4,7 +4,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Navbar />
-      <main className="container flex-grow py-4">{children}</main>
+      <main className="flex-grow w-full">{children}</main>
     </>
   );
 }
