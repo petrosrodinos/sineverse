@@ -79,7 +79,7 @@ model Project {
   user_uuid        String
   title            String
   type             ProjectType   @default(FILM)
-  original_concept String        @db.Text
+  original_concept String?       @db.Text
   enriched_concept String?       @db.Text
   genres           Json?
   tones            Json?

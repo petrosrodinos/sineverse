@@ -131,7 +131,7 @@ Project Title:
 ${project_title}
 
 Original Concept:
-${original_concept}
+${original_concept ?? ""}
 
 ${enriched_concept ? `Existing Enriched Concept:\n${enriched_concept}\n` : ""}
 
