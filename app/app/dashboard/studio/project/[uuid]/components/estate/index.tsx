@@ -1,3 +1,1 @@
-export function EstateLift() {
-  return <div>EstateLift</div>;
-}
+export { EstateProjectPage as EstateLift } from "./EstateProjectPage";

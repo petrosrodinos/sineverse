@@ -110,15 +110,6 @@ export const AudioStyleOptions: DropdownOption<AudioStyle>[] = [
     { label: "Country", value: AudioStyles.country },
     { label: "Folk", value: AudioStyles.folk },
     { label: "Classical", value: AudioStyles.classical },
-    { label: "Electronic", value: AudioStyles.electronic },
-    { label: "Rock", value: AudioStyles.rock },
-    { label: "Jazz", value: AudioStyles.jazz },
-    { label: "Blues", value: AudioStyles.blues },
-    { label: "Hip Hop", value: AudioStyles.hip_hop },
-    { label: "Pop", value: AudioStyles.pop },
-    { label: "Country", value: AudioStyles.country },
-    { label: "Folk", value: AudioStyles.folk },
-    { label: "Classical", value: AudioStyles.classical },
 ];
 
 export const AiModelOptions: DropdownOption<AiModel>[] = [
