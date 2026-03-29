@@ -12,9 +12,10 @@ export class CreateProjectDto {
   @IsEnum(ProjectType)
   type: ProjectType;
 
-  @ApiProperty({ description: 'Original concept of the project' })
+  @ApiPropertyOptional({ description: 'Original concept of the project' })
   @IsString()
-  original_concept: string;
+  @IsOptional()
+  original_concept?: string;
 
   @ApiPropertyOptional({ description: 'Enriched concept of the project (typically AI generated)' })
   @IsString()

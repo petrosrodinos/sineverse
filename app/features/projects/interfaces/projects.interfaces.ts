@@ -9,7 +9,7 @@ export interface Project {
     uuid: string;
     title: string;
     type: ProjectType;
-    original_concept: string;
+    original_concept?: string | null;
     enriched_concept?: string;
     genres?: ProjectGenre[];
     tones?: ProjectTone[];
@@ -29,7 +29,7 @@ export interface EnrichProjectDto {
 export interface CreateProjectDto {
     title: string;
     type: ProjectType;
-    original_concept: string;
+    original_concept?: string;
     enriched_concept?: string;
     genres?: ProjectGenre[];
     tones?: ProjectTone[];
@@ -38,7 +38,7 @@ export interface CreateProjectDto {
 export interface UpdateProjectDto {
     title?: string;
     type?: ProjectType;
-    original_concept?: string;
+    original_concept?: string | null;
     enriched_concept?: string;
     genres?: ProjectGenre[];
     tones?: ProjectTone[];

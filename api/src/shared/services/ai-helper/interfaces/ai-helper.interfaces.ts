@@ -1,6 +1,6 @@
 export interface EnrichProjectConceptConfig {
     project_title: string;
-    original_concept: string;
+    original_concept?: string | null;
     enriched_concept?: string;
     genres?: string[];
     tones?: string[];

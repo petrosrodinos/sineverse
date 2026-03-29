@@ -36,9 +36,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
                         ))}
                     </div>
                 )}
-                <p className="text-default-600 line-clamp-3">
-                    {project.original_concept}
-                </p>
+                {project.original_concept ? (
+                    <p className="text-default-600 line-clamp-3">{project.original_concept}</p>
+                ) : null}
             </CardBody>
             <CardFooter>
                 <Button 
