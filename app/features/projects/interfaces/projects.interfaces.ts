@@ -2,10 +2,13 @@ import { FinalProject } from "@/features/final-projects/interfaces/final-project
 import { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
+
+
 export interface Project {
     id: string;
     uuid: string;
     title: string;
+    type: ProjectType;
     original_concept: string;
     enriched_concept?: string;
     genres?: ProjectGenre[];
@@ -25,6 +28,7 @@ export interface EnrichProjectDto {
 
 export interface CreateProjectDto {
     title: string;
+    type: ProjectType;
     original_concept: string;
     enriched_concept?: string;
     genres?: ProjectGenre[];
@@ -33,10 +37,15 @@ export interface CreateProjectDto {
 
 export interface UpdateProjectDto {
     title?: string;
+    type?: ProjectType;
     original_concept?: string;
     enriched_concept?: string;
     genres?: ProjectGenre[];
     tones?: ProjectTone[];
+}
+
+export interface ProjectsListQuery {
+    type?: ProjectType;
 }
 
 export const ProjectGenres = {
@@ -86,6 +95,13 @@ export const ProjectStatuses = {
     VIDEOS_GENERATING: 'VIDEOS_GENERATING',
     COMPLETED: 'COMPLETED',
 } as const;
+
+export const ProjectTypes = {
+    FILM: "FILM",
+    ESTATE: "ESTATE",
+} as const;
+
+export type ProjectType = typeof ProjectTypes[keyof typeof ProjectTypes];
 
 export type ProjectStatus = typeof ProjectStatuses[keyof typeof ProjectStatuses];
 export type ProjectTone = typeof ProjectTones[keyof typeof ProjectTones];

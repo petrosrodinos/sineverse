@@ -45,6 +45,11 @@ enum AssetRole {
   GENERATED_CAPTION
 }
 
+enum ProjectType {
+  FILM
+  ESTATE
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   uuid       String   @unique @default(uuid())
@@ -73,6 +78,7 @@ model Project {
   uuid             String        @unique @default(uuid())
   user_uuid        String
   title            String
+  type             ProjectType   @default(FILM)
   original_concept String        @db.Text
   enriched_concept String?       @db.Text
   genres           Json?

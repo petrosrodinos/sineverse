@@ -5,8 +5,8 @@ import { Select, SelectItem } from "@heroui/select";
 import { useCreateProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { Project, ProjectGenre, ProjectTone } from "@/features/projects/interfaces/projects.interfaces";
-import { GenreOptions, ToneOptions } from "@/config/dropdowns/project/project.options";
+import { Project, ProjectGenre, ProjectTone, ProjectTypes } from "@/features/projects/interfaces/projects.interfaces";
+import { GenreOptions, ToneOptions, TypeOptions } from "@/config/dropdowns/project/project.options";
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,7 @@ import { z } from "zod";
 const createProjectSchema = z.object({
     title: z.string().min(1, "Title is required"),
     concept: z.string().min(1, "Concept is required"),
+    type: z.enum([ProjectTypes.FILM, ProjectTypes.ESTATE]),
     genres: z.array(z.string()).max(3, "Maximum 3 genres allowed").optional(),
     tones: z.array(z.string()).max(3, "Maximum 3 tones allowed").optional(),
 });
@@ -48,6 +49,7 @@ export function CreateProjectModal({
         defaultValues: {
             title: "",
             concept: "",
+            type: ProjectTypes.FILM,
             genres: [],
             tones: [],
         }
@@ -58,6 +60,7 @@ export function CreateProjectModal({
             reset({
                 title: project?.title || "",
                 concept: project?.original_concept || "",
+                type: project?.type ?? ProjectTypes.FILM,
                 genres: project?.genres || [],
                 tones: project?.tones || [],
             });
@@ -68,7 +71,8 @@ export function CreateProjectModal({
         if (project) {
             updateProject(
                 { uuid: project.uuid, project: { 
-                    title: data.title, 
+                    title: data.title,
+                    type: data.type,
                     original_concept: data.concept,
                     genres: data.genres as ProjectGenre[],
                     tones: data.tones as ProjectTone[]
@@ -82,7 +86,8 @@ export function CreateProjectModal({
         } else {
             createProject(
                 { 
-                    title: data.title, 
+                    title: data.title,
+                    type: data.type,
                     original_concept: data.concept,
                     genres: data.genres as ProjectGenre[],
                     tones: data.tones as ProjectTone[]
@@ -104,6 +109,33 @@ export function CreateProjectModal({
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <ModalHeader className="flex flex-col gap-1">{project ? "Edit Project" : "Create New Project"}</ModalHeader>
                         <ModalBody>
+                            <Controller
+                                name="type"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        className="w-full"
+                                        label="Type"
+                                        variant="bordered"
+                                        placeholder="Select project type"
+                                        selectedKeys={new Set([field.value])}
+                                        onSelectionChange={(keys) => {
+                                            const v = Array.from(keys)[0];
+                                            if (v === ProjectTypes.FILM || v === ProjectTypes.ESTATE) {
+                                                field.onChange(v);
+                                            }
+                                        }}
+                                        isInvalid={!!errors.type}
+                                        errorMessage={errors.type?.message}
+                                    >
+                                        {TypeOptions.map((opt) => (
+                                            <SelectItem key={opt.value} textValue={opt.label}>
+                                                {opt.label}
+                                            </SelectItem>
+                                        ))}
+                                    </Select>
+                                )}
+                            />
                             <Controller
                                 name="title"
                                 control={control}

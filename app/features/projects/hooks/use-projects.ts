@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProjects, getProject, createProject, updateProject, deleteProject, enrichProject } from "../services/project.services";
-import { Project, CreateProjectDto, UpdateProjectDto } from "../interfaces/projects.interfaces";
+import { Project, CreateProjectDto, UpdateProjectDto, ProjectsListQuery } from "../interfaces/projects.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -8,8 +8,12 @@ const QueryKeys = {
     project: (uuid: string) => `project-${uuid}`,
 }
 
-export const useProjects = () => {
-    return useQuery<Project[]>({ queryKey: [QueryKeys.projects], queryFn: getProjects, retry: false });
+export const useProjects = (query?: ProjectsListQuery) => {
+    return useQuery<Project[]>({
+        queryKey: [QueryKeys.projects, query],
+        queryFn: () => getProjects(query),
+        retry: false,
+    });
 }
 
 export const useProject = (uuid: string) => {

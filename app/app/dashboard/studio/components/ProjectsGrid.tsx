@@ -1,5 +1,6 @@
 "use client"
 import { useProjects } from "@/features/projects/hooks/use-projects";
+import { Project } from "@/features/projects/interfaces/projects.interfaces";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectSkeleton } from "./ProjectSkeleton";
 import { Button, Card, CardBody } from "@heroui/react";
@@ -56,7 +57,7 @@ export function ProjectsGrid() {
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {projects.map((project: any) => (
+            {projects.map((project: Project) => (
                 <ProjectCard key={project.uuid || project.id} project={project} />
             ))}
         </div>

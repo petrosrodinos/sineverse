@@ -137,6 +137,7 @@ exports.Prisma.ProjectScalarFieldEnum = {
   uuid: 'uuid',
   user_uuid: 'user_uuid',
   title: 'title',
+  type: 'type',
   original_concept: 'original_concept',
   enriched_concept: 'enriched_concept',
   genres: 'genres',
@@ -244,6 +245,11 @@ exports.AuthRole = exports.$Enums.AuthRole = {
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN',
   SUPPORT: 'SUPPORT'
+};
+
+exports.ProjectType = exports.$Enums.ProjectType = {
+  FILM: 'FILM',
+  ESTATE: 'ESTATE'
 };
 
 exports.AssetStatus = exports.$Enums.AssetStatus = {

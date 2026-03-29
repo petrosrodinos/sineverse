@@ -1,11 +1,16 @@
-import { IsString, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsEnum } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ProjectType } from '@/generated/prisma';
 
 export class CreateProjectDto {
 
   @ApiPropertyOptional({ description: 'Title of the project' })
   @IsString()
   title: string;
+
+  @ApiProperty({ enum: ProjectType, description: 'Project vertical' })
+  @IsEnum(ProjectType)
+  type: ProjectType;
 
   @ApiProperty({ description: 'Original concept of the project' })
   @IsString()

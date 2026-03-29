@@ -43,6 +43,11 @@ enum AssetRole {
   GENERATED_CAPTION
 }
 
+enum ProjectType {
+  FILM
+  ESTATE
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   uuid       String   @unique @default(uuid())
@@ -67,16 +72,17 @@ model User {
 }
 
 model Project {
-  id               Int      @id @default(autoincrement())
-  uuid             String   @unique @default(uuid())
+  id               Int         @id @default(autoincrement())
+  uuid             String      @unique @default(uuid())
   user_uuid        String
   title            String
-  original_concept String   @db.Text
-  enriched_concept String?  @db.Text
+  type             ProjectType @default(FILM)
+  original_concept String      @db.Text
+  enriched_concept String?     @db.Text
   genres           Json?
   tones            Json?
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  created_at       DateTime    @default(now())
+  updated_at       DateTime    @updatedAt
 
   user           User           @relation(fields: [user_uuid], references: [uuid], onDelete: Cascade)
   scenes         Scene[]

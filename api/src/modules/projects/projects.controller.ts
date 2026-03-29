@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -6,6 +6,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { JwtGuard } from 'src/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { EnrichProjectDto } from './dto/enrich-project.dto';
+import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
+import { ProjectsQueryDto, ProjectsQuerySchema } from './dto/query-projects.dto';
 
 
 @ApiTags('Projects')
@@ -25,8 +27,11 @@ export class ProjectsController {
   @Get()
   @ApiOperation({ summary: 'Retrieve all projects' })
   @ApiResponse({ status: 200, description: 'Returned all projects successfully.' })
-  findAll(@CurrentUser('uuid') uuid: string) {
-    return this.projectsService.findAll(uuid);
+  findAll(
+    @CurrentUser('uuid') uuid: string,
+    @Query(new ZodValidationPipe(ProjectsQuerySchema)) query: ProjectsQueryDto,
+  ) {
+    return this.projectsService.findAll(uuid, query);
   }
 
   @Get(':uuid')

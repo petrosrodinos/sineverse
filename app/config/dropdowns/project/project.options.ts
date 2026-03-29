@@ -1,4 +1,4 @@
-import { ProjectGenres, ProjectTones, ProjectTone, ProjectGenre, ProjectStatus, ProjectStatuses } from "@/features/projects/interfaces/projects.interfaces";
+import { ProjectGenres, ProjectTones, ProjectTone, ProjectGenre, ProjectStatus, ProjectStatuses, ProjectTypes, ProjectType } from "@/features/projects/interfaces/projects.interfaces";
 import { DropdownOption } from "@/interfaces/scene-variations-options.interfaces";
 
 export const GenreOptions: DropdownOption<ProjectGenre>[] = [
@@ -74,6 +74,16 @@ export const ToneOptionsLabels: Record<ProjectTone, string> = {
     [ProjectTones.INTENSE]: "Intense",
     [ProjectTones.WHIMSICAL]: "Whimsical",
 }
+
+export const TypeOptions: { label: string; value: ProjectType }[] = [
+    { label: "Film", value: ProjectTypes.FILM },
+    { label: "Estate", value: ProjectTypes.ESTATE },
+];
+
+export const TypeOptionsLabels: Record<ProjectType, string> = {
+    [ProjectTypes.FILM]: "Film",
+    [ProjectTypes.ESTATE]: "Estate",
+};
 
 export const ProjectStatusesLabels: Record<ProjectStatus, string> = {
     [ProjectStatuses.DRAFT]: "Draft",

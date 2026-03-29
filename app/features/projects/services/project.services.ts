@@ -1,10 +1,10 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Project, CreateProjectDto, UpdateProjectDto, EnrichProjectDto } from "../interfaces/projects.interfaces";
+import { Project, CreateProjectDto, UpdateProjectDto, EnrichProjectDto, ProjectsListQuery } from "../interfaces/projects.interfaces";
 
-export const getProjects = async (): Promise<Project[]> => {
+export const getProjects = async (query?: ProjectsListQuery): Promise<Project[]> => {
     try {
-        const response = await axiosInstance.get<Project[]>(ApiRoutes.projects.prefix);
+        const response = await axiosInstance.get<Project[]>(ApiRoutes.projects.prefix, { params: query });
         return response.data;
     } catch (error: any) {
         console.error(error);

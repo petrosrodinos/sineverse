@@ -5,6 +5,8 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { EnrichProjectDto } from './dto/enrich-project.dto';
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { DocumentsService } from '../documents/documents.service';
+import { ProjectsQueryDto } from './dto/query-projects.dto';
+import { Prisma } from '@/generated/prisma';
 
 @Injectable()
 export class ProjectsService {
@@ -32,9 +34,13 @@ export class ProjectsService {
     }
   }
 
-  async findAll(user_uuid: string) {
+  async findAll(user_uuid: string, query?: ProjectsQueryDto) {
     try {
-      return await this.prisma.project.findMany({ where: { user_uuid }, orderBy: { created_at: 'desc' } });
+      const where: Prisma.ProjectWhereInput = { user_uuid };
+      if (query?.type) {
+        where.type = query.type;
+      }
+      return await this.prisma.project.findMany({ where, orderBy: { created_at: 'desc' } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve projects', { cause: error });
     }

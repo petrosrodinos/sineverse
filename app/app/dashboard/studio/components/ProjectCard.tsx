@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Project } from "@/features/projects/interfaces/projects.interfaces";
 import { useRouter } from "next/navigation";
 import { Routes } from "@/config/routes";
-import { GenreOptionsLabels } from "@/config/dropdowns/project/project.options";
+import { GenreOptionsLabels, TypeOptionsLabels } from "@/config/dropdowns/project/project.options";
 
 interface ProjectCardProps {
     project: Project;
@@ -16,11 +16,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
     return (
         <Card className="hover:scale-[1.02] cursor-pointer transition-transform">
             <CardHeader className="flex gap-3 justify-between">
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                     <p className="text-md font-bold">{project.title}</p>
                     <p className="text-small text-default-500">
                         {new Date(project.created_at).toLocaleDateString()}
                     </p>
+                    <Chip size="sm" variant="flat" color="primary">
+                        {TypeOptionsLabels[project.type]}
+                    </Chip>
                 </div>
             </CardHeader>
             <CardBody>
