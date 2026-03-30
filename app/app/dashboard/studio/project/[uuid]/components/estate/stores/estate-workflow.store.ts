@@ -41,11 +41,13 @@ type EstateWorkflowState = {
 
 type EstateWorkflowActions = {
   reset: () => void;
+  setMockProject: (project: Project) => void;
   queueRevokeUrl: (url: string) => void;
   addUploadingPlaceholders: (files: File[]) => void;
   removePromptImageAsset: (promptAssetUuid: string) => void;
   getUploadedFiles: () => File[];
   hydratePromptImageAssetsFromScenes: (scenes: Scene[]) => void;
+  mergePromptImageAssetsFromScenes: (scenes: Scene[]) => void;
   setStep: (step: WorkflowStep) => void;
   goToStep: (step: WorkflowStep) => void;
   goNext: () => void;
@@ -78,6 +80,23 @@ function buildInitialState(): EstateWorkflowState {
   };
 }
 
+function estatePromptAssetsFromScenes(scenes: Scene[], project: Project): ProjectAsset[] {
+  return [...scenes]
+    .sort((a, b) => a.order - b.order)
+    .flatMap((scene) =>
+      (scene.scene_variations ?? []).flatMap((variation) =>
+        (variation.project_assets ?? [])
+          .filter((asset) => asset.role === AssetRoles.PROMPT_IMAGE)
+          .map((asset) => ({
+            ...asset,
+            project,
+            scene,
+            scene_variation: { ...variation, scene },
+          })),
+      ),
+    );
+}
+
 export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflowActions>((set, get) => ({
   ...buildInitialState(),
   reset: () => {
@@ -87,6 +106,7 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
     });
     set(buildInitialState());
   },
+  setMockProject: (project) => set({ mockProject: project }),
   queueRevokeUrl: (url) =>
     set((state) => ({
       objectUrlsToRevoke: state.objectUrlsToRevoke.includes(url)
@@ -185,11 +205,7 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
   getUploadedFiles: () => Object.values(get().uploadedFilesByPromptAssetUuid),
   hydratePromptImageAssetsFromScenes: (scenes) =>
     set((state) => {
-      const promptImageAssets = scenes.flatMap((scene) =>
-        (scene.scene_variations ?? []).flatMap((variation) =>
-          (variation.project_assets ?? []).filter((asset) => asset.role === AssetRoles.PROMPT_IMAGE),
-        ),
-      );
+      const promptImageAssets = estatePromptAssetsFromScenes(scenes, state.mockProject);
 
       return {
         promptImageAssets,
@@ -201,6 +217,14 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         estateAudioTrackByVideoUuid: {},
         step2Skipped: false,
         finalVideoAsset: state.finalVideoAsset,
+      };
+    }),
+  mergePromptImageAssetsFromScenes: (scenes) =>
+    set((state) => {
+      const fromApi = estatePromptAssetsFromScenes(scenes, state.mockProject);
+      const localOnly = state.promptImageAssets.filter((a) => a.document.url.startsWith("blob:"));
+      return {
+        promptImageAssets: [...fromApi, ...localOnly],
       };
     }),
   setStep: (step) => set({ activeStep: step }),

@@ -3,14 +3,38 @@
 import { Button } from "@heroui/button";
 import { Skeleton } from "@heroui/skeleton";
 import { Trash2, Upload } from "lucide-react";
-import { useCallback, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
 import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 
 export function UploadPhotosStep() {
+  const params = useParams<{ uuid: string }>();
+  const projectUuid = params?.uuid ?? "";
+  const mockProject = useEstateWorkflowStore((s) => s.mockProject);
   const promptImageAssets = useEstateWorkflowStore((s) => s.promptImageAssets);
   const addUploadingPlaceholders = useEstateWorkflowStore((s) => s.addUploadingPlaceholders);
   const removePromptImageAsset = useEstateWorkflowStore((s) => s.removePromptImageAsset);
+  const mergePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.mergePromptImageAssetsFromScenes);
+
+  const { data: scenes, isLoading, isSuccess } = useScenes(
+    projectUuid ? { project_uuid: projectUuid } : undefined,
+    { enabled: !!projectUuid && mockProject.uuid === projectUuid },
+  );
+
+  useEffect(() => {
+    if (isSuccess && scenes !== undefined) {
+      mergePromptImageAssetsFromScenes(scenes);
+    }
+  }, [isSuccess, scenes, mergePromptImageAssetsFromScenes]);
+
+  const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
+
+  const [pendingRemove, setPendingRemove] = useState<ProjectAsset | null>(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const openPicker = useCallback(() => {
@@ -51,11 +75,37 @@ export function UploadPhotosStep() {
   }, []);
 
   const handleRemove = useCallback(
-    (uuid: string) => () => {
-      removePromptImageAsset(uuid);
+    (asset: ProjectAsset) => () => {
+      setPendingRemove(asset);
     },
-    [removePromptImageAsset],
+    [],
   );
+
+  const handleCloseRemoveModal = useCallback(() => {
+    if (!isDeletingScene) {
+      setPendingRemove(null);
+    }
+  }, [isDeletingScene]);
+
+  const handleConfirmRemove = useCallback(async () => {
+    if (!pendingRemove) {
+      return;
+    }
+    const isLocal = pendingRemove.document.url.startsWith("blob:");
+    if (isLocal) {
+      removePromptImageAsset(pendingRemove.uuid);
+      setPendingRemove(null);
+      return;
+    }
+    try {
+      await deleteScene(pendingRemove.scene_uuid);
+      removePromptImageAsset(pendingRemove.uuid);
+    } finally {
+      setPendingRemove(null);
+    }
+  }, [pendingRemove, deleteScene, removePromptImageAsset]);
+
+  const showLoadingGrid = isLoading && promptImageAssets.length === 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -83,6 +133,13 @@ export function UploadPhotosStep() {
           Choose files
         </Button>
       </div>
+      {showLoadingGrid && (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="aspect-[4/3] w-full rounded-xl" />
+          ))}
+        </div>
+      )}
       {promptImageAssets.length > 0 && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {promptImageAssets.map((asset) => (
@@ -101,7 +158,7 @@ export function UploadPhotosStep() {
               </div>
               <button
                 type="button"
-                onClick={handleRemove(asset.uuid)}
+                onClick={handleRemove(asset)}
                 className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/85 text-foreground shadow-md backdrop-blur-sm md:opacity-0 md:transition-opacity md:duration-200 md:group-hover:opacity-100"
                 aria-label="Remove image"
               >
@@ -111,6 +168,19 @@ export function UploadPhotosStep() {
           ))}
         </div>
       )}
+      <ConfirmationModal
+        isOpen={pendingRemove !== null}
+        onClose={handleCloseRemoveModal}
+        onConfirm={handleConfirmRemove}
+        title="Remove photo"
+        description={
+          pendingRemove?.document.url.startsWith("blob:")
+            ? "Remove this photo from the list?"
+            : "Delete this scene and its image from the project? This cannot be undone."
+        }
+        confirmText="Remove"
+        isLoading={isDeletingScene}
+      />
     </div>
   );
 }

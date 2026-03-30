@@ -50,7 +50,15 @@ export class ScenesService {
       return await this.prisma.scene.findMany({
         where: whereClause,
         include: {
-          scene_variations: true
+          scene_variations: {
+            include: {
+              project_assets: {
+                include: {
+                  document: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
           order: 'asc'

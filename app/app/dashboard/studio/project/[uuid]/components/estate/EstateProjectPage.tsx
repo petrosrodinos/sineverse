@@ -1,12 +1,18 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
+import { useProject } from "@/features/projects/hooks/use-projects";
 import { EstateStepper } from "./components/EstateStepper";
 import { useMockVideoGeneration } from "./hooks/useMockVideoGeneration";
 import { useEstateWorkflowStore } from "./stores/estate-workflow.store";
 
 export function EstateProjectPage() {
+  const params = useParams<{ uuid: string }>();
+  const projectUuid = params?.uuid ?? "";
+  const { data: project } = useProject(projectUuid);
   const reset = useEstateWorkflowStore((s) => s.reset);
+  const setMockProject = useEstateWorkflowStore((s) => s.setMockProject);
   useMockVideoGeneration();
 
   useEffect(() => {
@@ -15,6 +21,12 @@ export function EstateProjectPage() {
       reset();
     };
   }, [reset]);
+
+  useEffect(() => {
+    if (project) {
+      setMockProject(project);
+    }
+  }, [project, setMockProject]);
 
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-auto p-4 lg:p-6">

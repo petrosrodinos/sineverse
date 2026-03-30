@@ -8,8 +8,12 @@ const QueryKeys = {
     scene: (uuid: string) => `scene-${uuid}`,
 }
 
-export const useScenes = (query?: SceneQueryDto) => {
-    return useQuery<Scene[]>({ queryKey: [QueryKeys.scenes, query], queryFn: () => getScenes(query) });
+export const useScenes = (query?: SceneQueryDto, options?: { enabled?: boolean }) => {
+    return useQuery<Scene[]>({
+        queryKey: [QueryKeys.scenes, query],
+        queryFn: () => getScenes(query),
+        enabled: options?.enabled ?? true,
+    });
 }
 
 export const useScene = (uuid: string) => {
