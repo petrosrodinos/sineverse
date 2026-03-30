@@ -3,9 +3,10 @@
 import { Button } from "@heroui/button";
 import { Progress } from "@heroui/progress";
 import { Check } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useCreateEstateScenesFromImages } from "@/features/scenes/hooks/use-scenes";
+import { useProject } from "@/features/projects/hooks/use-projects";
+import { useCreateEstateScenesFromImages, useScenes } from "@/features/scenes/hooks/use-scenes";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
@@ -17,10 +18,29 @@ export function EstateStepper() {
   const { activeStep, stepLabels, canGoNext, canGoBack, goNext, goBack, goToStep, stepReachable } = useEstateStepper();
   const skipStep2 = useEstateWorkflowStore((s) => s.skipStep2);
   const getUploadedFiles = useEstateWorkflowStore((s) => s.getUploadedFiles);
+  const setMockProject = useEstateWorkflowStore((s) => s.setMockProject);
+  const mergePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.mergePromptImageAssetsFromScenes);
   const hydratePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.hydratePromptImageAssetsFromScenes);
   const { mutateAsync: createEstateScenesFromImages, isPending: isCreatingEstateScenes } =
     useCreateEstateScenesFromImages();
   const params = useParams<{ uuid: string }>();
+  const projectUuid = params?.uuid ?? "";
+  const { data: project } = useProject(projectUuid);
+  const { data: scenes, isSuccess } = useScenes(
+    projectUuid ? { project_uuid: projectUuid } : undefined,
+    { enabled: !!projectUuid },
+  );
+
+  useEffect(() => {
+    if (!project || project.uuid !== projectUuid) {
+      return;
+    }
+    if (!isSuccess || scenes === undefined) {
+      return;
+    }
+    setMockProject(project);
+    mergePromptImageAssetsFromScenes(scenes);
+  }, [project, projectUuid, isSuccess, scenes, setMockProject, mergePromptImageAssetsFromScenes]);
 
   const handleStepClick = useCallback(
     (step: WorkflowStep) => () => {
@@ -41,7 +61,6 @@ export function EstateStepper() {
       return;
     }
 
-    const projectUuid = params?.uuid;
     if (!projectUuid) {
       return;
     }
@@ -62,7 +81,7 @@ export function EstateStepper() {
     getUploadedFiles,
     goNext,
     hydratePromptImageAssetsFromScenes,
-    params?.uuid,
+    projectUuid,
   ]);
 
   const handleBack = useCallback(() => {

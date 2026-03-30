@@ -45,7 +45,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                    color="primary" 
                    variant="flat" 
                    className="w-full"
-                   onPress={() => router.push(Routes.project(project.uuid))}
+                   onPress={() => router.push(Routes.project(project.uuid, { type: project.type }))}
                 >
                     Open Project
                 </Button>

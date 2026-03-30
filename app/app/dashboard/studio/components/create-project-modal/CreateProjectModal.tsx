@@ -82,7 +82,7 @@ export function CreateProjectModal({
                 {
                     onSuccess: (newProject) => {
                         onClose();
-                        router.push(Routes.project(newProject.uuid));
+                        router.push(Routes.project(newProject.uuid, { type: newProject.type }));
                     },
                 }
             );
@@ -114,7 +114,7 @@ export function CreateProjectModal({
                 {
                     onSuccess: (newProject) => {
                         onClose();
-                        router.push(Routes.project(newProject.uuid));
+                        router.push(Routes.project(newProject.uuid, { type: newProject.type }));
                     },
                 }
             );

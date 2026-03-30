@@ -3,7 +3,7 @@
 import { Skeleton } from "@heroui/skeleton";
 import { ImagePlus, Plus, Trash2, Upload } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
@@ -14,22 +14,14 @@ import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 export function UploadPhotosStep() {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
-  const mockProject = useEstateWorkflowStore((s) => s.mockProject);
   const promptImageAssets = useEstateWorkflowStore((s) => s.promptImageAssets);
   const addUploadingPlaceholders = useEstateWorkflowStore((s) => s.addUploadingPlaceholders);
   const removePromptImageAsset = useEstateWorkflowStore((s) => s.removePromptImageAsset);
-  const mergePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.mergePromptImageAssetsFromScenes);
 
-  const { data: scenes, isLoading, isSuccess } = useScenes(
+  const { isLoading } = useScenes(
     projectUuid ? { project_uuid: projectUuid } : undefined,
-    { enabled: !!projectUuid && mockProject.uuid === projectUuid },
+    { enabled: !!projectUuid },
   );
-
-  useEffect(() => {
-    if (isSuccess && scenes !== undefined) {
-      mergePromptImageAssetsFromScenes(scenes);
-    }
-  }, [isSuccess, scenes, mergePromptImageAssetsFromScenes]);
 
   const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
 
