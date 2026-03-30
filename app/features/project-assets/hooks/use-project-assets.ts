@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
-import { ProjectAsset, ProjectAssetsQueryDto, CreateProjectAssetDto, CreateSceneVideoDto, GenerateSceneVariationImageDto, ProjectAssetsResponse, ProjectAssetVideoEnrichDto } from "../interfaces/project-assets.interfaces";
-import { getProjectAssets, getProjectAsset, createSceneVideo, createProjectAsset, createSceneVariationImage, deleteProjectAsset, deleteSceneVariationPromptImage, uploadSceneVariationPromptImage, selectProjectAsset, enrichProjectAssetVideo } from "../services/project-assets.services";
+import { ProjectAsset, ProjectAssetsQueryDto, CreateProjectAssetDto, CreateSceneVideoDto, GenerateSceneVariationImageDto, ProjectAssetsResponse, ProjectAssetVideoEnrichDto, CreateEstateWalkthroughVideosDto } from "../interfaces/project-assets.interfaces";
+import { getProjectAssets, getProjectAsset, createSceneVideo, createProjectAsset, createSceneVariationImage, deleteProjectAsset, deleteSceneVariationPromptImage, uploadSceneVariationPromptImage, selectProjectAsset, enrichProjectAssetVideo, createEstateWalkthroughVideos } from "../services/project-assets.services";
 import { addToast } from "@heroui/toast";
 
 
@@ -62,6 +62,16 @@ export const useCreateSceneVideo = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (payload: CreateSceneVideoDto) => createSceneVideo(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.projectAssets] });
+        }
+    });
+}
+
+export const useCreateEstateWalkthroughVideos = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: CreateEstateWalkthroughVideosDto) => createEstateWalkthroughVideos(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.projectAssets] });
         }

@@ -3,6 +3,7 @@
 import { Navbar as HeroUINavbar, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
+import { Skeleton } from "@heroui/skeleton";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
 import { User, CreditCard, LogOut, Menu } from "lucide-react";
 import { Button } from "@heroui/button";
@@ -11,8 +12,9 @@ import { Routes } from "@/config/routes";
 import { useLayoutStore } from "@/stores/layout.store";
 
 export function DashboardNavbar() {
-  const { data: session } = useSession();
-  const {full_name,email} = session || {}
+  const { data: session, status } = useSession();
+  const isSessionLoading = status === "loading";
+  const { full_name, email } = session || {};
   const { toggleMobileDrawer } = useLayoutStore();
 
   return (
@@ -27,9 +29,13 @@ export function DashboardNavbar() {
       <NavbarContent className="w-full" justify="end">
         <NavbarItem className="flex items-center gap-3 ml-auto">
           <ThemeSwitch />
-          <Dropdown placement="bottom-end" classNames={{ content: "rounded-xl shadow-lg border border-default-200/80 p-0 min-w-[220px]" }}>
+          <Dropdown placement="bottom-end" isDisabled={isSessionLoading} classNames={{ content: "rounded-xl shadow-lg border border-default-200/80 p-0 min-w-[220px]" }}>
             <DropdownTrigger>
-              <Avatar as="button" name={full_name} className="h-8 w-8 cursor-pointer transition-transform" />
+              {isSessionLoading ? (
+                <Skeleton className="h-8 w-8 shrink-0 rounded-full" />
+              ) : (
+                <Avatar as="button" name={full_name} className="h-8 w-8 cursor-pointer transition-transform" />
+              )}
             </DropdownTrigger>
             <DropdownMenu aria-label="User menu" className="p-0" itemClasses={{ base: "gap-3" }}>
               <DropdownSection showDivider>

@@ -159,7 +159,7 @@ export function UploadPhotosStep() {
       >
         <div className="p-4 sm:p-5">
           {showLoadingGrid ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Skeleton key={i} className="aspect-[4/3] w-full rounded-xl" />
               ))}
@@ -200,7 +200,7 @@ export function UploadPhotosStep() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {promptImageAssets.map((asset) => (
                   <div
                     key={asset.uuid}

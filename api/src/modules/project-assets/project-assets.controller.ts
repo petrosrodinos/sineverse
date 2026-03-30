@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
 import { CreateProjectAssetDto, GenerateProjectAssetImageDto, CreateProjectAssetVideoDto } from './dto/create-project-asset.dto';
@@ -7,7 +7,6 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
-
 @ApiTags('Project Assets')
 @Controller('project-assets')
 @UseGuards(JwtGuard)
@@ -26,6 +25,16 @@ export class ProjectAssetsController {
   @ApiResponse({ status: 200, description: 'Returned all project assets successfully.' })
   findAll(@CurrentUser('uuid') user_uuid: string, @Query() query: ProjectAssetQueryDto) {
     return this.projectAssetsService.findAll(user_uuid, query);
+  }
+
+  @Post('estate/walkthrough-videos')
+  @ApiOperation({ summary: 'Create AI walkthrough videos from estate listing photos' })
+  @ApiResponse({ status: 201, description: 'Walkthrough video jobs created.' })
+  createEstateWalkthroughVideos(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body('project_uuid', ParseUUIDPipe) project_uuid: string,
+  ) {
+    return this.projectAssetsService.createEstateWalkthroughVideos(user_uuid, project_uuid);
   }
 
   @Get(':uuid')

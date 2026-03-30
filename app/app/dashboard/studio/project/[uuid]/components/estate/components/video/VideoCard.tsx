@@ -1,29 +1,63 @@
 "use client";
 
-import { Card, CardBody } from "@heroui/card";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
-import { Spinner } from "@heroui/spinner";
 import type { Key } from "react";
-import { useCallback } from "react";
-import { Play } from "lucide-react";
+import { useCallback, useEffect } from "react";
+import { AlertCircle, GripVertical, Play } from "lucide-react";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID, ESTATE_DEFAULT_TRANSITION_ID, ESTATE_TRANSITION_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { useVideoReorderItem } from "../../hooks/useVideoReorderItem";
 import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 import { TrimRangeField } from "./TrimRangeField";
+
+export type VideoCardReorderProps = {
+  index: number;
+  canReorder: boolean;
+  onReorder: (fromIndex: number, toIndex: number) => void;
+  dragIndex: number | null;
+  setDragIndex: (index: number | null) => void;
+};
 
 type VideoCardProps = {
   asset: ProjectAsset;
   compact?: boolean;
   videoAssetUuid: string;
+  reorder?: VideoCardReorderProps;
 };
 
-export function VideoCard({ asset, compact = false, videoAssetUuid }: VideoCardProps) {
-  const thumbUrl = asset.prompt_images?.[0]?.document.url ?? "";
-  const showEditor = asset.status === ProjectAssetStatuses.COMPLETED;
+export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: VideoCardProps) {
+  const mergeEstateVideoAsset = useEstateWorkflowStore((s) => s.mergeEstateVideoAsset);
+
+  const { data: polled } = useProjectAsset(videoAssetUuid, {
+    refetchInterval: (query) => {
+      const st = query.state.data?.status;
+      return st === ProjectAssetStatuses.PENDING || st === ProjectAssetStatuses.PROCESSING ? 3000 : false;
+    },
+  });
+
+  useEffect(() => {
+    if (!polled) {
+      return;
+    }
+    mergeEstateVideoAsset(videoAssetUuid, polled);
+  }, [polled, videoAssetUuid, mergeEstateVideoAsset]);
+
+  const display = polled ?? asset;
+  const sceneOrder =
+    display.scene?.order ??
+    asset.scene?.order ??
+    display.scene_variation?.scene?.order ??
+    asset.scene_variation?.scene?.order;
+  const thumbUrl = display.prompt_images?.[0]?.document.url ?? "";
+  const videoUrl = display.document?.url ?? "";
+  const showEditor = display.status === ProjectAssetStatuses.COMPLETED;
 
   const trimRange = useEstateWorkflowStore((s) => s.trimRangeByVideoUuid[videoAssetUuid] ?? { start: 0, end: 5 });
   const transitionId = useEstateWorkflowStore((s) => s.transitionByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_TRANSITION_ID);
@@ -71,27 +105,70 @@ export function VideoCard({ asset, compact = false, videoAssetUuid }: VideoCardP
 
   const playIconClass = compact ? "h-4 w-4 fill-current" : "h-6 w-6 fill-current";
 
-  return (
+  const reorderHandlers = useVideoReorderItem(
+    reorder
+      ? {
+          index: reorder.index,
+          canReorder: reorder.canReorder,
+          onReorder: reorder.onReorder,
+          setDragIndex: reorder.setDragIndex,
+        }
+      : {
+          index: 0,
+          canReorder: false,
+          onReorder: () => {},
+          setDragIndex: () => {},
+        },
+  );
+
+  const card = (
     <Card className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5">
-      <CardBody className={compact ? "gap-2 p-3" : "gap-4 p-4"}>
-        <div className="flex flex-wrap items-center justify-between gap-1">
-          <span className={compact ? "text-tiny font-medium text-default-600" : "text-small font-medium text-default-600"}>scene.order {asset.scene.order}</span>
-          <span className="text-tiny uppercase tracking-wide text-default-500">{asset.status}</span>
-        </div>
+      <CardHeader
+        className={`flex flex-wrap items-center justify-between gap-2 ${
+          compact ? "px-3 pb-2 pt-3" : "px-4 pb-3 pt-4"
+        }`}
+      >
+        <span className={compact ? "text-tiny font-semibold text-foreground" : "text-small font-semibold text-foreground"}>
+          Scene {sceneOrder ?? "—"}
+        </span>
+        {display.status === ProjectAssetStatuses.FAILED ? (
+          <Chip size="sm" variant="flat" color="danger">
+            Failed
+          </Chip>
+        ) : display.status === ProjectAssetStatuses.COMPLETED ? (
+          <Chip size="sm" variant="flat" color="success">
+            Complete
+          </Chip>
+        ) : display.status === ProjectAssetStatuses.PENDING || display.status === ProjectAssetStatuses.PROCESSING ? (
+          <Chip size="sm" variant="flat" color="success">
+            {display.status === ProjectAssetStatuses.PENDING ? "Queued" : "Processing"}
+          </Chip>
+        ) : (
+          <Chip size="sm" variant="flat">{display.status}</Chip>
+        )}
+      </CardHeader>
+      <CardBody className={compact ? "gap-2 p-3 pt-0" : "gap-4 p-4 pt-0"}>
         <div className={previewShell}>
-          {asset.status === ProjectAssetStatuses.PENDING && (
+          {(display.status === ProjectAssetStatuses.PENDING ||
+            display.status === ProjectAssetStatuses.PROCESSING) && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <Skeleton className="h-full w-full rounded-lg" />
+              <Skeleton className={compact ? "h-full w-full rounded-lg" : "h-full w-full rounded-xl"} />
             </div>
           )}
-          {asset.status === ProjectAssetStatuses.PROCESSING && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-default-200/30">
-              <Spinner size="sm" color="secondary" />
+          {display.status === ProjectAssetStatuses.FAILED && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-danger/10 p-2">
+              <AlertCircle className="h-8 w-8 text-danger" />
+              <p className="text-center text-tiny text-danger line-clamp-3">{display.error_message || "Generation failed"}</p>
+              {thumbUrl ? <img alt="" src={thumbUrl} className="absolute inset-0 -z-10 h-full w-full object-cover opacity-40" /> : null}
             </div>
           )}
-          {asset.status === ProjectAssetStatuses.COMPLETED && (
+          {display.status === ProjectAssetStatuses.COMPLETED && (
             <>
-              <img alt="" src={thumbUrl} className="h-full w-full object-cover" />
+              {videoUrl ? (
+                <video src={videoUrl} className="h-full w-full object-cover" muted playsInline loop preload="metadata" />
+              ) : (
+                <img alt="" src={thumbUrl} className="h-full w-full object-cover" />
+              )}
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
                 <div className={playBtnShell}>
                   <Play className={playIconClass} />
@@ -119,5 +196,34 @@ export function VideoCard({ asset, compact = false, videoAssetUuid }: VideoCardP
         )}
       </CardBody>
     </Card>
+  );
+
+  if (!reorder) {
+    return card;
+  }
+
+  return (
+    <div
+      className={`min-w-0 rounded-2xl transition-opacity duration-200 ${
+        reorder.dragIndex === reorder.index ? "opacity-60" : "opacity-100"
+      }`}
+      draggable={reorderHandlers.draggable}
+      onDragStart={reorderHandlers.handleDragStart}
+      onDragOver={reorderHandlers.handleDragOver}
+      onDrop={reorderHandlers.handleDrop}
+      onDragEnd={reorderHandlers.handleDragEnd}
+    >
+      <div className="flex gap-1.5">
+        {reorder.canReorder && (
+          <div
+            className="flex shrink-0 cursor-grab items-start pt-2 text-default-400 active:cursor-grabbing"
+            aria-hidden
+          >
+            <GripVertical className="h-4 w-4" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">{card}</div>
+      </div>
+    </div>
   );
 }

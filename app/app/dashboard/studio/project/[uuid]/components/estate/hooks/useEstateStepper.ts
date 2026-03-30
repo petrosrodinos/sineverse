@@ -8,7 +8,7 @@ import { canNavigateToStep } from "../utils/estate-workflow.utils";
 
 const STEP_LABELS: readonly { step: WorkflowStep; title: string; subtitle: string }[] = [
   { step: 1, title: "Upload Photos", subtitle: "Add listing images" },
-  { step: 2, title: "Generate & Edit Clips", subtitle: "Optional — you can skip" },
+  { step: 2, title: "Generate & Edit Clips", subtitle: "AI clips from your photos" },
   { step: 3, title: "Generate Final Video", subtitle: "Review and render" },
 ];
 
@@ -17,7 +17,6 @@ export function useEstateStepper() {
   const promptImageAssets = useEstateWorkflowStore((s) => s.promptImageAssets);
   const videoAssetsByUuid = useEstateWorkflowStore((s) => s.videoAssetsByUuid);
   const videoOrder = useEstateWorkflowStore((s) => s.videoOrder);
-  const step2Skipped = useEstateWorkflowStore((s) => s.step2Skipped);
   const goNext = useEstateWorkflowStore((s) => s.goNext);
   const goBack = useEstateWorkflowStore((s) => s.goBack);
   const goToStep = useEstateWorkflowStore((s) => s.goToStep);
@@ -27,9 +26,8 @@ export function useEstateStepper() {
       promptImageAssets,
       videoAssetsByUuid,
       videoOrder,
-      step2Skipped,
     }),
-    [promptImageAssets, videoAssetsByUuid, videoOrder, step2Skipped],
+    [promptImageAssets, videoAssetsByUuid, videoOrder],
   );
 
   const canGoNextFromStep1 = useMemo(

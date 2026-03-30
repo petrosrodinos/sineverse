@@ -6,13 +6,12 @@ import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
 
 export function useMockVideoGeneration(): void {
   const activeStep = useEstateWorkflowStore((s) => s.activeStep);
-  const step2Skipped = useEstateWorkflowStore((s) => s.step2Skipped);
   const videoOrder = useEstateWorkflowStore((s) => s.videoOrder);
   const videoAssetsByUuid = useEstateWorkflowStore((s) => s.videoAssetsByUuid);
   const setVideoAssetStatus = useEstateWorkflowStore((s) => s.setVideoAssetStatus);
 
   useEffect(() => {
-    if (activeStep !== 2 || step2Skipped) {
+    if (activeStep !== 2) {
       return;
     }
     const hasProcessing = videoOrder.some(
@@ -35,5 +34,5 @@ export function useMockVideoGeneration(): void {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [activeStep, step2Skipped, videoOrder, videoAssetsByUuid, setVideoAssetStatus]);
+  }, [activeStep, videoOrder, videoAssetsByUuid, setVideoAssetStatus]);
 }

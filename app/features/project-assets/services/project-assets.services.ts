@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { ProjectAsset, GenerateSceneVariationImageDto, ProjectAssetsQueryDto, CreateSceneVideoDto, CreateProjectAssetDto, ProjectAssetsResponse, ProjectAssetVideoEnrichDto } from "../interfaces/project-assets.interfaces";
+import { ProjectAsset, GenerateSceneVariationImageDto, ProjectAssetsQueryDto, CreateSceneVideoDto, CreateProjectAssetDto, ProjectAssetsResponse, ProjectAssetVideoEnrichDto, CreateEstateWalkthroughVideosDto } from "../interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "../interfaces/project-assets-metadata.interfaces";
 
 export const createProjectAsset = async (payload: CreateProjectAssetDto): Promise<ProjectAsset> => {
@@ -54,6 +54,16 @@ export const createSceneVideo = async (payload: CreateSceneVideoDto): Promise<Pr
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to create scene video");
+        throw error;
+    }
+}
+
+export const createEstateWalkthroughVideos = async (payload: CreateEstateWalkthroughVideosDto): Promise<ProjectAsset[]> => {
+    try {
+        const response = await axiosInstance.post<ProjectAsset[]>(ApiRoutes.project_assets.estate_walkthrough_videos, payload);
+        return response.data;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to create walkthrough videos");
         throw error;
     }
 }

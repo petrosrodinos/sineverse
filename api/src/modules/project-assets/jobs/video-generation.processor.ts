@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { Logger } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { VIDEO_GENERATION_QUEUE } from '../queues/video.constants';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
@@ -106,6 +106,11 @@ export class VideoGenerationProcessor extends WorkerHost {
 
             this.logger.error(`Failed to initiate video generation: ${details}`, error.stack);
 
+            if (this.isRequestTimeout(error, details)) {
+                await this.deleteVideoProjectAssetKeepPromptImages(projectAssetUuid);
+                return { status: 'timeout', removed: true };
+            }
+
             await this.prisma.projectAsset.update({
                 where: { uuid: projectAssetUuid },
                 data: {
@@ -115,6 +120,46 @@ export class VideoGenerationProcessor extends WorkerHost {
             });
 
             throw error;
+        }
+    }
+
+    private isRequestTimeout(error: unknown, details: string): boolean {
+        if (/timeout|timed out|ETIMEDOUT|ECONNABORTED|deadline/i.test(details)) {
+            return true;
+        }
+        if (error instanceof HttpException) {
+            const status = error.getStatus();
+            if (status === 408 || status === 504) {
+                return true;
+            }
+        }
+        if (error && typeof error === 'object') {
+            const e = error as { code?: string; cause?: { code?: string } };
+            if (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT') {
+                return true;
+            }
+            if (e.cause?.code === 'ETIMEDOUT' || e.cause?.code === 'ECONNABORTED') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private async deleteVideoProjectAssetKeepPromptImages(projectAssetUuid: string): Promise<void> {
+        try {
+            await this.prisma.projectAsset.delete({
+                where: { uuid: projectAssetUuid },
+            });
+            this.logger.warn(`Removed video project asset ${projectAssetUuid} after request timeout (prompt images unchanged).`);
+        } catch (deleteError: any) {
+            this.logger.error(`Could not delete video project asset ${projectAssetUuid}: ${deleteError?.message}`);
+            await this.prisma.projectAsset.update({
+                where: { uuid: projectAssetUuid },
+                data: {
+                    status: AssetStatus.FAILED,
+                    error_message: 'Request timed out',
+                },
+            });
         }
     }
 

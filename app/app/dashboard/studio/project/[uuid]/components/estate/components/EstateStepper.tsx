@@ -16,7 +16,6 @@ import { UploadPhotosStep } from "./steps/UploadPhotosStep";
 
 export function EstateStepper() {
   const { activeStep, stepLabels, canGoNext, canGoBack, goNext, goBack, goToStep, stepReachable } = useEstateStepper();
-  const skipStep2 = useEstateWorkflowStore((s) => s.skipStep2);
   const getUploadedFiles = useEstateWorkflowStore((s) => s.getUploadedFiles);
   const setMockProject = useEstateWorkflowStore((s) => s.setMockProject);
   const mergePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.mergePromptImageAssetsFromScenes);
@@ -88,10 +87,6 @@ export function EstateStepper() {
     goBack();
   }, [goBack]);
 
-  const handleSkip = useCallback(() => {
-    skipStep2();
-  }, [skipStep2]);
-
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4">
@@ -131,11 +126,6 @@ export function EstateStepper() {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {activeStep === 2 && (
-            <Button variant="bordered" color="default" onPress={handleSkip}>
-              Skip
-            </Button>
-          )}
           {activeStep !== 3 && (
             <Button color="secondary" onPress={handleNext} isDisabled={!canGoNext || isCreatingEstateScenes} isLoading={isCreatingEstateScenes}>
               Next

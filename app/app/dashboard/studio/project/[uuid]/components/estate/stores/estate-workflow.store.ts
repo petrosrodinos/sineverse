@@ -17,8 +17,6 @@ import {
   createMockScene,
   createMockSceneVariation,
   createPromptImageProjectAsset,
-  createVideoProjectAsset,
-  defaultVideoMetadata,
 } from "../utils/estate-workflow-mock.factory";
 import { canNavigateToStep, moveIdInOrder } from "../utils/estate-workflow.utils";
 
@@ -33,7 +31,6 @@ type EstateWorkflowState = {
   trimRangeByVideoUuid: Record<string, VideoTrimRange>;
   transitionByVideoUuid: Record<string, string>;
   estateAudioTrackByVideoUuid: Record<string, string>;
-  step2Skipped: boolean;
   finalVideoAsset: ProjectAsset | null;
   objectUrlsToRevoke: string[];
   uploadedFilesByPromptAssetUuid: Record<string, File>;
@@ -48,12 +45,12 @@ type EstateWorkflowActions = {
   getUploadedFiles: () => File[];
   hydratePromptImageAssetsFromScenes: (scenes: Scene[]) => void;
   mergePromptImageAssetsFromScenes: (scenes: Scene[]) => void;
+  hydrateEstateVideoAssetsFromApi: (assets: ProjectAsset[]) => void;
+  mergeEstateVideoAsset: (uuid: string, patch: Partial<ProjectAsset>) => void;
   setStep: (step: WorkflowStep) => void;
   goToStep: (step: WorkflowStep) => void;
   goNext: () => void;
   goBack: () => void;
-  skipStep2: () => void;
-  initVideoAssetsFromPrompts: () => void;
   setTrimRange: (videoAssetUuid: string, start: number, end: number) => void;
   setTransition: (videoAssetUuid: string, transitionId: string) => void;
   setEstateAudioTrack: (videoAssetUuid: string, audioTrackId: string) => void;
@@ -73,7 +70,6 @@ function buildInitialState(): EstateWorkflowState {
     trimRangeByVideoUuid: {},
     transitionByVideoUuid: {},
     estateAudioTrackByVideoUuid: {},
-    step2Skipped: false,
     finalVideoAsset: null,
     objectUrlsToRevoke: [],
     uploadedFilesByPromptAssetUuid: {},
@@ -216,7 +212,6 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         trimRangeByVideoUuid: {},
         transitionByVideoUuid: {},
         estateAudioTrackByVideoUuid: {},
-        step2Skipped: false,
         finalVideoAsset: state.finalVideoAsset,
       };
     }),
@@ -228,6 +223,48 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         promptImageAssets: [...fromApi, ...localOnly],
       };
     }),
+  hydrateEstateVideoAssetsFromApi: (assets) =>
+    set((state) => {
+      const sorted = [...assets].sort((a, b) => (a.scene?.order ?? 0) - (b.scene?.order ?? 0));
+      const videoAssetsByUuid: Record<string, ProjectAsset> = {};
+      const videoOrder: string[] = [];
+      sorted.forEach((a) => {
+        const merged: ProjectAsset = {
+          ...a,
+          project: state.mockProject,
+        };
+        videoAssetsByUuid[a.uuid] = merged;
+        videoOrder.push(a.uuid);
+      });
+      const trimRangeByVideoUuid: Record<string, VideoTrimRange> = {};
+      const transitionByVideoUuid: Record<string, string> = {};
+      const estateAudioTrackByVideoUuid: Record<string, string> = {};
+      videoOrder.forEach((id) => {
+        trimRangeByVideoUuid[id] = { start: 0, end: 5 };
+        transitionByVideoUuid[id] = ESTATE_DEFAULT_TRANSITION_ID;
+        estateAudioTrackByVideoUuid[id] = ESTATE_DEFAULT_AUDIO_TRACK_ID;
+      });
+      return {
+        videoAssetsByUuid,
+        videoOrder,
+        trimRangeByVideoUuid,
+        transitionByVideoUuid,
+        estateAudioTrackByVideoUuid,
+      };
+    }),
+  mergeEstateVideoAsset: (uuid, patch) =>
+    set((state) => {
+      const a = state.videoAssetsByUuid[uuid];
+      if (!a) {
+        return state;
+      }
+      return {
+        videoAssetsByUuid: {
+          ...state.videoAssetsByUuid,
+          [uuid]: { ...a, ...patch },
+        },
+      };
+    }),
   setStep: (step) => set({ activeStep: step }),
   goToStep: (step) => {
     const state = get();
@@ -237,60 +274,13 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
           promptImageAssets: state.promptImageAssets,
           videoAssetsByUuid: state.videoAssetsByUuid,
           videoOrder: state.videoOrder,
-          step2Skipped: state.step2Skipped,
         },
         step,
       )
     ) {
       return;
     }
-    if (step === 2 && state.activeStep === 1) {
-      get().initVideoAssetsFromPrompts();
-    }
     set({ activeStep: step });
-  },
-  initVideoAssetsFromPrompts: () => {
-    const { mockProject, promptImageAssets } = get();
-    const completed = promptImageAssets.filter(
-      (a) => a.status === ProjectAssetStatuses.COMPLETED,
-    );
-    const videoAssetsByUuid: Record<string, ProjectAsset> = {};
-    const videoOrder: string[] = [];
-    completed.forEach((prompt) => {
-      const videoDoc = createMockDocument({
-        filename: `generated-${prompt.document.filename}`,
-        mimetype: "video/mp4",
-        size: 0,
-        url: "",
-      });
-      const video = createVideoProjectAsset({
-        project: mockProject,
-        scene: prompt.scene,
-        sceneVariation: prompt.scene_variation,
-        document: videoDoc,
-        status: ProjectAssetStatuses.PENDING,
-        metadata: defaultVideoMetadata(),
-        promptImages: [prompt],
-      });
-      videoAssetsByUuid[video.uuid] = video;
-      videoOrder.push(video.uuid);
-    });
-    const trimRangeByVideoUuid: Record<string, VideoTrimRange> = {};
-    const transitionByVideoUuid: Record<string, string> = {};
-    const estateAudioTrackByVideoUuid: Record<string, string> = {};
-    videoOrder.forEach((id) => {
-      trimRangeByVideoUuid[id] = { start: 0, end: 5 };
-      transitionByVideoUuid[id] = ESTATE_DEFAULT_TRANSITION_ID;
-      estateAudioTrackByVideoUuid[id] = ESTATE_DEFAULT_AUDIO_TRACK_ID;
-    });
-    set({
-      videoAssetsByUuid,
-      videoOrder,
-      trimRangeByVideoUuid,
-      transitionByVideoUuid,
-      estateAudioTrackByVideoUuid,
-      step2Skipped: false,
-    });
   },
   goNext: () => {
     const { activeStep, promptImageAssets, videoAssetsByUuid, videoOrder } = get();
@@ -301,7 +291,6 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       if (!hasReady) {
         return;
       }
-      get().initVideoAssetsFromPrompts();
       set({ activeStep: 2 });
       return;
     }
@@ -324,32 +313,6 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
     if (activeStep === 3) {
       set({ activeStep: 2 });
     }
-  },
-  skipStep2: () => {
-    const { videoOrder } = get();
-    if (videoOrder.length === 0) {
-      get().initVideoAssetsFromPrompts();
-    }
-    const state = get();
-    const nextVideos: Record<string, ProjectAsset> = { ...state.videoAssetsByUuid };
-    state.videoOrder.forEach((id) => {
-      const v = nextVideos[id];
-      if (!v) {
-        return;
-      }
-      const thumb = v.prompt_images?.[0]?.document.url ?? "";
-      nextVideos[id] = {
-        ...v,
-        status: ProjectAssetStatuses.COMPLETED,
-        document: { ...v.document, url: thumb },
-        updated_at: new Date().toISOString(),
-      };
-    });
-    set({
-      videoAssetsByUuid: nextVideos,
-      step2Skipped: true,
-      activeStep: 3,
-    });
   },
   setTrimRange: (videoAssetUuid, start, end) =>
     set((state) => {

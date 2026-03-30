@@ -14,6 +14,10 @@ import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/co
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
+import {
+  ESTATE_WALKTHROUGH_VIDEO_MODEL,
+  ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
+} from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 
 @Injectable()
@@ -103,6 +107,12 @@ export class ProjectAssetsService {
         where: { uuid, user_uuid },
         include: {
           document: true,
+          scene: true,
+          scene_variation: {
+            include: {
+              scene: true,
+            },
+          },
           prompt_images: {
             include: {
               document: true,
@@ -223,6 +233,154 @@ export class ProjectAssetsService {
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to trigger video generation', { cause: error });
+    }
+  }
+
+  async createEstateWalkthroughVideos(user_uuid: string, project_uuid: string) {
+    try {
+      const project = await this.prisma.project.findFirst({
+        where: { uuid: project_uuid, user_uuid },
+      });
+
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      const scenes = await this.prisma.scene.findMany({
+        where: { project_uuid, user_uuid },
+        orderBy: { order: 'asc' },
+        include: {
+          scene_variations: {
+            include: {
+              project_assets: {
+                where: { role: AssetRole.PROMPT_IMAGE },
+                include: { document: true },
+              },
+            },
+          },
+        },
+      });
+
+      type EstateWalkthroughTask = {
+        scene: (typeof scenes)[number];
+        variation: NonNullable<(typeof scenes)[number]['scene_variations'][number]>;
+        promptAsset: NonNullable<
+          ReturnType<
+            NonNullable<(typeof scenes)[number]['scene_variations'][number]['project_assets']['find']>
+          >
+        >;
+      };
+
+      const tasks: EstateWalkthroughTask[] = [];
+
+      for (const scene of scenes) {
+        const variation = scene.scene_variations[0];
+        if (!variation) {
+          continue;
+        }
+
+        const promptAsset = variation.project_assets.find((a) => a.role === AssetRole.PROMPT_IMAGE);
+        if (!promptAsset) {
+          continue;
+        }
+
+        tasks.push({ scene, variation, promptAsset });
+      }
+
+      if (!tasks.length) {
+        return [];
+      }
+
+      const variationUuids = tasks.map((t) => t.variation.uuid);
+
+      const existingVideos = await this.prisma.projectAsset.findMany({
+        where: {
+          user_uuid,
+          scene_variation_uuid: { in: variationUuids },
+          role: AssetRole.GENERATED_VIDEO,
+        },
+        select: { uuid: true, status: true, scene_variation_uuid: true },
+      });
+
+      const videosByVariation = new Map<string, { uuid: string; status: AssetStatus }[]>();
+
+      for (const row of existingVideos) {
+        if (!row.scene_variation_uuid) {
+          continue;
+        }
+        const list = videosByVariation.get(row.scene_variation_uuid) ?? [];
+        list.push({ uuid: row.uuid, status: row.status });
+        videosByVariation.set(row.scene_variation_uuid, list);
+      }
+
+      const resolveExistingUuid = (variationUuid: string): string | null => {
+        const list = videosByVariation.get(variationUuid) ?? [];
+        const active = list.find(
+          (a) => a.status === AssetStatus.PENDING || a.status === AssetStatus.PROCESSING,
+        );
+        if (active) {
+          return active.uuid;
+        }
+        const completed = list.find((a) => a.status === AssetStatus.COMPLETED);
+        return completed?.uuid ?? null;
+      };
+
+      type Resolved =
+        | { kind: 'existing'; uuid: string }
+        | { kind: 'create'; task: EstateWalkthroughTask };
+
+      const resolved: Resolved[] = tasks.map((task) => {
+        const uuid = resolveExistingUuid(task.variation.uuid);
+        if (uuid) {
+          return { kind: 'existing', uuid };
+        }
+        return { kind: 'create', task };
+      });
+
+      const created = await Promise.all(
+        resolved
+          .filter((r): r is { kind: 'create'; task: EstateWalkthroughTask } => r.kind === 'create')
+          .map((r) =>
+            this.createVideo(user_uuid, r.task.variation.uuid, {
+              project_uuid,
+              scene_uuid: r.task.scene.uuid,
+              scene_variation_uuid: r.task.variation.uuid,
+              ai_model: ESTATE_WALKTHROUGH_VIDEO_MODEL,
+              prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
+              prompt_image_uuids: [r.task.promptAsset.uuid],
+              include_sound: false,
+            } as CreateProjectAssetVideoDto),
+          ),
+      );
+
+      let createdIndex = 0;
+      const createdUuids = resolved.map((r) => {
+        if (r.kind === 'existing') {
+          return r.uuid;
+        }
+        return created[createdIndex++].uuid;
+      });
+
+      const assets = await this.prisma.projectAsset.findMany({
+        where: { uuid: { in: createdUuids } },
+        include: {
+          document: true,
+          prompt_images: {
+            include: {
+              document: true,
+            },
+          },
+          project: true,
+          scene: true,
+          scene_variation: true,
+        },
+      });
+
+      return assets.sort((a, b) => (a.scene?.order ?? 0) - (b.scene?.order ?? 0));
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      this.logger.error(`createEstateWalkthroughVideos: ${error?.message}`);
+      throw new InternalServerErrorException('Failed to create estate walkthrough videos', { cause: error });
     }
   }
 

@@ -19,7 +19,6 @@ type NavigateSlice = {
   promptImageAssets: ProjectAsset[];
   videoAssetsByUuid: Record<string, ProjectAsset | undefined>;
   videoOrder: string[];
-  step2Skipped: boolean;
 };
 
 export function canNavigateToStep(state: NavigateSlice, target: WorkflowStep): boolean {
@@ -39,7 +38,7 @@ export function canNavigateToStep(state: NavigateSlice, target: WorkflowStep): b
     const allDone = state.videoOrder.every(
       (id) => state.videoAssetsByUuid[id]?.status === ProjectAssetStatuses.COMPLETED,
     );
-    return state.step2Skipped || allDone;
+    return allDone;
   }
   return false;
 }

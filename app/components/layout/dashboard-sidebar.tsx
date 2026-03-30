@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { ChevronsUpDown, CreditCard, LogOut, User, PanelLeftClose, PanelLeft, X } from "lucide-react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
+import { Skeleton } from "@heroui/skeleton";
 import { Button } from "@heroui/button";
 import { Tooltip } from "@heroui/tooltip";
 import { Drawer, DrawerContent, DrawerBody } from "@heroui/drawer";
@@ -46,8 +47,9 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
   const pathname = usePathname();
   const { collapsed, toggle } = useSidebarCollapsed();
   const { isMobileDrawerOpen, setMobileDrawerOpen } = useLayoutStore();
-  const { data: session } = useSession();
-  const {full_name,email} = session || {}
+  const { data: session, status } = useSession();
+  const isSessionLoading = status === "loading";
+  const { full_name, email } = session || {};
 
   const sidebarContent = (
     <nav className="flex h-full w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-50 dark:shadow-black/10">
@@ -102,7 +104,7 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
           })}
         </div>
         <div className="mt-auto border-t border-default-200/60 dark:border-default-100/20 pt-3 px-2">
-          <Dropdown placement="top-start">
+          <Dropdown placement="top-start" isDisabled={isSessionLoading}>
             <DropdownTrigger>
               <Button
                 variant="flat"
@@ -111,14 +113,31 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
                   collapsed ? "justify-center min-w-0 px-0" : "justify-start gap-3 px-3"
                 )}
               >
-                <Avatar name={full_name} className="h-9 w-9 shrink-0" />
-                {!collapsed && (
+                {isSessionLoading ? (
                   <>
-                    <div className="min-w-0 flex-1 text-left">
-                      <p className="truncate text-sm font-semibold text-foreground">{full_name}</p>
-                      <p className="truncate text-xs font-normal text-default-500">{email}</p>
-                    </div>
-                    <ChevronsUpDown className="size-4 shrink-0 text-default-400" />
+                    <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
+                    {!collapsed && (
+                      <>
+                        <div className="min-w-0 flex-1 space-y-1.5 text-left">
+                          <Skeleton className="h-4 w-[min(100%,10rem)] rounded-md" />
+                          <Skeleton className="h-3 w-[min(100%,12rem)] rounded-md" />
+                        </div>
+                        <Skeleton className="size-4 shrink-0 rounded-full" />
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Avatar name={full_name} className="h-9 w-9 shrink-0" />
+                    {!collapsed && (
+                      <>
+                        <div className="min-w-0 flex-1 text-left">
+                          <p className="truncate text-sm font-semibold text-foreground">{full_name}</p>
+                          <p className="truncate text-xs font-normal text-default-500">{email}</p>
+                        </div>
+                        <ChevronsUpDown className="size-4 shrink-0 text-default-400" />
+                      </>
+                    )}
                   </>
                 )}
               </Button>
