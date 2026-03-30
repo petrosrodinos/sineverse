@@ -47,7 +47,7 @@ export class ScenesService {
         whereClause.project_uuid = query.project_uuid;
       }
 
-      return await this.prisma.scene.findMany({
+      const scenes = await this.prisma.scene.findMany({
         where: whereClause,
         include: {
           scene_variations: {
@@ -64,6 +64,17 @@ export class ScenesService {
           order: 'asc'
         }
       });
+
+      return scenes.map((scene) => ({
+        ...scene,
+        scene_variations: scene.scene_variations?.map((v) => ({
+          ...v,
+          project_assets: v.project_assets?.map((a) => ({
+            ...a,
+            scene_uuid: a.scene_uuid ?? scene.uuid,
+          })),
+        })),
+      }));
 
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve scenes', { cause: error });
@@ -251,8 +262,8 @@ export class ScenesService {
 
       const createdScenes = await this.prisma.$transaction(async (tx) => {
         const scenes = await Promise.all(
-          prepared.map((item) =>
-            tx.scene.create({
+          prepared.map(async (item) => {
+            const scene = await tx.scene.create({
               data: {
                 user_uuid,
                 project_uuid: dto.project_uuid,
@@ -286,8 +297,27 @@ export class ScenesService {
                   },
                 },
               },
-            }),
-          ),
+            });
+
+            const variationUuids = scene.scene_variations.map((v) => v.uuid);
+            if (variationUuids.length) {
+              await tx.projectAsset.updateMany({
+                where: { scene_variation_uuid: { in: variationUuids } },
+                data: { scene_uuid: scene.uuid },
+              });
+            }
+
+            return {
+              ...scene,
+              scene_variations: scene.scene_variations.map((v) => ({
+                ...v,
+                project_assets: v.project_assets.map((a) => ({
+                  ...a,
+                  scene_uuid: scene.uuid,
+                })),
+              })),
+            };
+          }),
         );
 
         return scenes.sort((a, b) => a.order - b.order);

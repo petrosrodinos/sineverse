@@ -89,6 +89,7 @@ function estatePromptAssetsFromScenes(scenes: Scene[], project: Project): Projec
           .filter((asset) => asset.role === AssetRoles.PROMPT_IMAGE)
           .map((asset) => ({
             ...asset,
+            scene_uuid: asset.scene_uuid ?? scene.uuid,
             project,
             scene,
             scene_variation: { ...variation, scene },
