@@ -1,7 +1,7 @@
 "use client";
 
 import { Slider } from "@heroui/slider";
-import { ESTATE_TRIM_SEC_MAX } from "../../constants/estate-workflow.constants";
+import { ESTATE_TRIM_SEC_MAX } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
 type TrimRangeFieldProps = {
   start: number;

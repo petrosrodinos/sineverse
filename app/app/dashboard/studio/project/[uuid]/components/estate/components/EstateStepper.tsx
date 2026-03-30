@@ -4,7 +4,7 @@ import { Button } from "@heroui/button";
 import { Progress } from "@heroui/progress";
 import { Check } from "lucide-react";
 import { useCallback } from "react";
-import type { WorkflowStep } from "../constants/estate-workflow.constants";
+import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
 import { FinalRenderStep } from "./steps/FinalRenderStep";
@@ -12,16 +12,7 @@ import { GenerateEditStep } from "./steps/GenerateEditStep";
 import { UploadPhotosStep } from "./steps/UploadPhotosStep";
 
 export function EstateStepper() {
-  const {
-    activeStep,
-    stepLabels,
-    canGoNext,
-    canGoBack,
-    goNext,
-    goBack,
-    goToStep,
-    stepReachable,
-  } = useEstateStepper();
+  const { activeStep, stepLabels, canGoNext, canGoBack, goNext, goBack, goToStep, stepReachable } = useEstateStepper();
   const skipStep2 = useEstateWorkflowStore((s) => s.skipStep2);
 
   const handleStepClick = useCallback(
@@ -52,29 +43,9 @@ export function EstateStepper() {
             const reachable = stepReachable[step];
             const isComplete = activeStep > step;
             return (
-              <button
-                key={step}
-                type="button"
-                onClick={reachable ? handleStepClick(step) : undefined}
-                disabled={!reachable}
-                className={`flex flex-1 flex-col gap-1 rounded-2xl border p-4 text-left transition-colors duration-200 ${
-                  isActive
-                    ? "border-secondary-500/60 bg-secondary-500/10"
-                    : "border-default-200 bg-default-100/30 dark:border-default-100/20 dark:bg-default-100/5"
-                } ${reachable ? "cursor-pointer hover:border-secondary-400/50" : "cursor-not-allowed opacity-50"}`}
-              >
+              <button key={step} type="button" onClick={reachable ? handleStepClick(step) : undefined} disabled={!reachable} className={`flex flex-1 flex-col gap-1 rounded-2xl border p-4 text-left transition-colors duration-200 ${isActive ? "border-secondary-500/60 bg-secondary-500/10" : "border-default-200 bg-default-100/30 dark:border-default-100/20 dark:bg-default-100/5"} ${reachable ? "cursor-pointer hover:border-secondary-400/50" : "cursor-not-allowed opacity-50"}`}>
                 <div className="flex items-center gap-3">
-                  <span
-                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-small font-semibold ${
-                      isComplete
-                        ? "bg-secondary-500 text-white"
-                        : isActive
-                          ? "bg-secondary-500/90 text-white"
-                          : "bg-default-200 text-default-600 dark:bg-default-100/20 dark:text-default-300"
-                    }`}
-                  >
-                    {isComplete ? <Check className="h-4 w-4" /> : step}
-                  </span>
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-small font-semibold ${isComplete ? "bg-secondary-500 text-white" : isActive ? "bg-secondary-500/90 text-white" : "bg-default-200 text-default-600 dark:bg-default-100/20 dark:text-default-300"}`}>{isComplete ? <Check className="h-4 w-4" /> : step}</span>
                   <div>
                     <p className="text-base font-semibold text-foreground">{title}</p>
                     <p className="text-small text-default-500">{subtitle}</p>
@@ -84,14 +55,7 @@ export function EstateStepper() {
             );
           })}
         </div>
-        <Progress
-          aria-label="Workflow progress"
-          size="sm"
-          value={activeStep}
-          maxValue={3}
-          color="secondary"
-          classNames={{ track: "h-1.5" }}
-        />
+        <Progress aria-label="Workflow progress" size="sm" value={activeStep} maxValue={3} color="secondary" classNames={{ track: "h-1.5" }} />
       </div>
       <div className="rounded-2xl border border-default-200 bg-default-100/40 p-4 shadow-sm dark:border-default-100/20 dark:bg-default-100/5 md:p-8">
         <div className="transition-opacity duration-300">

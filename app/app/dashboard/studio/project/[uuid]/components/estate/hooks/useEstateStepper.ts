@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import type { WorkflowStep } from "../constants/estate-workflow.constants";
+import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
 import { canNavigateToStep } from "../utils/estate-workflow.utils";
 

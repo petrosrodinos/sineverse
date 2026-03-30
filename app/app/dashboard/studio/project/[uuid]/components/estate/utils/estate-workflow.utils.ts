@@ -1,6 +1,6 @@
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import type { WorkflowStep } from "../constants/estate-workflow.constants";
+import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
 export function moveIdInOrder(order: readonly string[], fromIndex: number, toIndex: number): string[] {
   if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) {

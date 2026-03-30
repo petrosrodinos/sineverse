@@ -8,7 +8,7 @@ import {
   ESTATE_MOCK_FINAL_VIDEO_URL,
   ESTATE_TRIM_SEC_MAX,
   type WorkflowStep,
-} from "../constants/estate-workflow.constants";
+} from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import {
   createFinalListingVideoAsset,
   createMockDocument,
@@ -125,10 +125,10 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
           promptImageAssets: state.promptImageAssets.map((a) =>
             a.uuid === promptAsset.uuid
               ? {
-                  ...a,
-                  status: ProjectAssetStatuses.COMPLETED,
-                  updated_at: new Date().toISOString(),
-                }
+                ...a,
+                status: ProjectAssetStatuses.COMPLETED,
+                updated_at: new Date().toISOString(),
+              }
               : a,
           ),
         }));
