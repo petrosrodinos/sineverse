@@ -45,3 +45,8 @@ export interface GenerateAiScenesDto {
 export interface ReorderScenesDto {
     scenes: { uuid: string; order: number }[];
 }
+
+export interface CreateEstateScenesFromImagesDto {
+    project_uuid: string;
+    files: File[];
+}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import type { Project } from "@/features/projects/interfaces/projects.interfaces";
 import {
   ESTATE_DEFAULT_AUDIO_TRACK_ID,
@@ -35,6 +36,7 @@ type EstateWorkflowState = {
   step2Skipped: boolean;
   finalVideoAsset: ProjectAsset | null;
   objectUrlsToRevoke: string[];
+  uploadedFilesByPromptAssetUuid: Record<string, File>;
 };
 
 type EstateWorkflowActions = {
@@ -42,6 +44,8 @@ type EstateWorkflowActions = {
   queueRevokeUrl: (url: string) => void;
   addUploadingPlaceholders: (files: File[]) => void;
   removePromptImageAsset: (promptAssetUuid: string) => void;
+  getUploadedFiles: () => File[];
+  hydratePromptImageAssetsFromScenes: (scenes: Scene[]) => void;
   setStep: (step: WorkflowStep) => void;
   goToStep: (step: WorkflowStep) => void;
   goNext: () => void;
@@ -70,6 +74,7 @@ function buildInitialState(): EstateWorkflowState {
     step2Skipped: false,
     finalVideoAsset: null,
     objectUrlsToRevoke: [],
+    uploadedFilesByPromptAssetUuid: {},
   };
 }
 
@@ -119,6 +124,10 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       });
       set((state) => ({
         promptImageAssets: [...state.promptImageAssets, promptAsset],
+        uploadedFilesByPromptAssetUuid: {
+          ...state.uploadedFilesByPromptAssetUuid,
+          [promptAsset.uuid]: file,
+        },
       }));
       window.setTimeout(() => {
         set((state) => ({
@@ -162,6 +171,9 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       });
       return {
         promptImageAssets: nextPrompts,
+        uploadedFilesByPromptAssetUuid: Object.fromEntries(
+          Object.entries(state.uploadedFilesByPromptAssetUuid).filter(([assetUuid]) => assetUuid !== promptAssetUuid),
+        ),
         videoAssetsByUuid: nextVideos,
         videoOrder: nextOrder,
         trimRangeByVideoUuid,
@@ -170,6 +182,27 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       };
     });
   },
+  getUploadedFiles: () => Object.values(get().uploadedFilesByPromptAssetUuid),
+  hydratePromptImageAssetsFromScenes: (scenes) =>
+    set((state) => {
+      const promptImageAssets = scenes.flatMap((scene) =>
+        (scene.scene_variations ?? []).flatMap((variation) =>
+          (variation.project_assets ?? []).filter((asset) => asset.role === AssetRoles.PROMPT_IMAGE),
+        ),
+      );
+
+      return {
+        promptImageAssets,
+        uploadedFilesByPromptAssetUuid: {},
+        videoAssetsByUuid: {},
+        videoOrder: [],
+        trimRangeByVideoUuid: {},
+        transitionByVideoUuid: {},
+        estateAudioTrackByVideoUuid: {},
+        step2Skipped: false,
+        finalVideoAsset: state.finalVideoAsset,
+      };
+    }),
   setStep: (step) => set({ activeStep: step }),
   goToStep: (step) => {
     const state = get();

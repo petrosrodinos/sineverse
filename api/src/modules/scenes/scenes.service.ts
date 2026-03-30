@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -9,6 +9,13 @@ import { GenerateAiScenesSchemaType } from '@/shared/services/ai-helper/schemas/
 import { ReorderScenesDto } from './dto/reorder-scenes.dto';
 import { DocumentsService } from '../documents/documents.service';
 import { AssetRole, AssetStatus, DocumentType } from '@/generated/prisma';
+import { CreateEstateScenesFromImagesDto } from './dto/create-estate-scenes-from-images.dto';
+
+type UploadedSceneImageFile = {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+};
 
 @Injectable()
 export class ScenesService {
@@ -189,6 +196,102 @@ export class ScenesService {
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Failed to generate ai scenes', { cause: error });
+    }
+  }
+
+  async createEstateScenesFromImages(
+    user_uuid: string,
+    dto: CreateEstateScenesFromImagesDto,
+    files: UploadedSceneImageFile[],
+  ) {
+    try {
+      if (!files?.length) {
+        throw new BadRequestException('At least one image is required');
+      }
+
+      const project = await this.prisma.project.findFirst({
+        where: { uuid: dto.project_uuid, user_uuid },
+      });
+
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      const existingCount = await this.prisma.scene.count({
+        where: { project_uuid: dto.project_uuid, user_uuid },
+      });
+
+      const prepared = await Promise.all(
+        files.map(async (file, index) => {
+          if (!file.mimetype?.startsWith('image/')) {
+            throw new BadRequestException(`Invalid file type: ${file.originalname}`);
+          }
+
+          const documentUuid = await this.documentsService.saveImageFromBuffer(
+            file.buffer,
+            `estate-prompt-${dto.project_uuid}-${Date.now()}-${index}`,
+            file.mimetype,
+          );
+
+          return {
+            documentUuid,
+            title: file.originalname || `Photo ${index + 1}`,
+            order: existingCount + index + 1,
+          };
+        }),
+      );
+
+      const createdScenes = await this.prisma.$transaction(async (tx) => {
+        const scenes = await Promise.all(
+          prepared.map((item) =>
+            tx.scene.create({
+              data: {
+                user_uuid,
+                project_uuid: dto.project_uuid,
+                title: item.title,
+                order: item.order,
+                scene_variations: {
+                  create: {
+                    user_uuid,
+                    title: '',
+                    project_assets: {
+                      create: {
+                        user_uuid,
+                        project_uuid: dto.project_uuid,
+                        type: DocumentType.IMAGE,
+                        role: AssetRole.PROMPT_IMAGE,
+                        status: AssetStatus.COMPLETED,
+                        document_uuid: item.documentUuid,
+                      },
+                    },
+                  },
+                },
+              },
+              include: {
+                scene_variations: {
+                  include: {
+                    project_assets: {
+                      include: {
+                        document: true,
+                      },
+                    },
+                  },
+                },
+              },
+            }),
+          ),
+        );
+
+        return scenes.sort((a, b) => a.order - b.order);
+      });
+
+      return createdScenes;
+    } catch (error) {
+      console.log('error', error);
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to create estate scenes from images', { cause: error });
     }
   }
 

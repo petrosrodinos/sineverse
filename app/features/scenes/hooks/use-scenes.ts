@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getScenes, getScene, createScene, updateScene, deleteScene, generateAiScenes, reorderScenes } from "../services/scenes.services";
-import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, ReorderScenesDto } from "../interfaces/scenes.interfaces";
+import { getScenes, getScene, createScene, updateScene, deleteScene, generateAiScenes, reorderScenes, createEstateScenesFromImages } from "../services/scenes.services";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, ReorderScenesDto, CreateEstateScenesFromImagesDto } from "../interfaces/scenes.interfaces";
 import { addToast } from "@heroui/toast";
 
 const QueryKeys = {
@@ -115,6 +115,23 @@ export const useReorderScenes = () => {
         onError: (error) => {
             addToast({
                 title: "Failed to reorder scenes",
+                description: error.message,
+                severity: "danger",
+            });
+        }
+    });
+}
+
+export const useCreateEstateScenesFromImages = () => {
+    const queryClient = useQueryClient();
+    return useMutation<Scene[], Error, CreateEstateScenesFromImagesDto>({
+        mutationFn: createEstateScenesFromImages,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.scenes] });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to create scenes from uploaded images",
                 description: error.message,
                 severity: "danger",
             });

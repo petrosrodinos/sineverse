@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { ScenesService } from './scenes.service';
 import { CreateSceneDto } from './dto/create-scene.dto';
@@ -9,6 +9,14 @@ import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { SceneQuerySchema, SceneQueryDto } from './dto/query-scene.dto';
 import { GenerateAiScenesDto } from './dto/generate-ai-scenes.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CreateEstateScenesFromImagesDto } from './dto/create-estate-scenes-from-images.dto';
+
+type UploadedSceneImageFile = {
+  buffer: Buffer;
+  mimetype: string;
+  originalname: string;
+};
 
 @ApiTags('Scenes')
 @Controller('scenes')
@@ -73,5 +81,17 @@ export class ScenesController {
   @ApiResponse({ status: 200, description: 'The scenes have been successfully reordered.' })
   reorder(@Body() reorderScenesDto: ReorderScenesDto) {
     return this.scenesService.reorder(reorderScenesDto);
+  }
+
+  @Post('estate/from-images')
+  @UseInterceptors(FilesInterceptor('files'))
+  @ApiOperation({ summary: 'Create estate scenes from uploaded images' })
+  @ApiResponse({ status: 201, description: 'Estate scenes created from images successfully.' })
+  createEstateScenesFromImages(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() dto: CreateEstateScenesFromImagesDto,
+    @UploadedFiles() files: UploadedSceneImageFile[],
+  ) {
+    return this.scenesService.createEstateScenesFromImages(user_uuid, dto, files);
   }
 }

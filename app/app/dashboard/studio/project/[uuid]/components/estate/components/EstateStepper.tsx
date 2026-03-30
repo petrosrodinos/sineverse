@@ -4,6 +4,8 @@ import { Button } from "@heroui/button";
 import { Progress } from "@heroui/progress";
 import { Check } from "lucide-react";
 import { useCallback } from "react";
+import { useParams } from "next/navigation";
+import { useCreateEstateScenesFromImages } from "@/features/scenes/hooks/use-scenes";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
@@ -14,6 +16,11 @@ import { UploadPhotosStep } from "./steps/UploadPhotosStep";
 export function EstateStepper() {
   const { activeStep, stepLabels, canGoNext, canGoBack, goNext, goBack, goToStep, stepReachable } = useEstateStepper();
   const skipStep2 = useEstateWorkflowStore((s) => s.skipStep2);
+  const getUploadedFiles = useEstateWorkflowStore((s) => s.getUploadedFiles);
+  const hydratePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.hydratePromptImageAssetsFromScenes);
+  const { mutateAsync: createEstateScenesFromImages, isPending: isCreatingEstateScenes } =
+    useCreateEstateScenesFromImages();
+  const params = useParams<{ uuid: string }>();
 
   const handleStepClick = useCallback(
     (step: WorkflowStep) => () => {
@@ -22,9 +29,41 @@ export function EstateStepper() {
     [goToStep],
   );
 
-  const handleNext = useCallback(() => {
-    goNext();
-  }, [goNext]);
+  const handleNext = useCallback(async () => {
+    if (activeStep !== 1) {
+      goNext();
+      return;
+    }
+
+    const files = getUploadedFiles();
+    if (files.length === 0) {
+      goNext();
+      return;
+    }
+
+    const projectUuid = params?.uuid;
+    if (!projectUuid) {
+      return;
+    }
+
+    try {
+      const scenes = await createEstateScenesFromImages({
+        project_uuid: projectUuid,
+        files,
+      });
+      hydratePromptImageAssetsFromScenes(scenes);
+      goNext();
+    } catch {
+      return;
+    }
+  }, [
+    activeStep,
+    createEstateScenesFromImages,
+    getUploadedFiles,
+    goNext,
+    hydratePromptImageAssetsFromScenes,
+    params?.uuid,
+  ]);
 
   const handleBack = useCallback(() => {
     goBack();
@@ -79,7 +118,7 @@ export function EstateStepper() {
             </Button>
           )}
           {activeStep !== 3 && (
-            <Button color="secondary" onPress={handleNext} isDisabled={!canGoNext}>
+            <Button color="secondary" onPress={handleNext} isDisabled={!canGoNext || isCreatingEstateScenes} isLoading={isCreatingEstateScenes}>
               Next
             </Button>
           )}

@@ -24,6 +24,7 @@ export const ApiRoutes = {
         prefix: "/scenes",
         scene: (scene_uuid: string) => `/scenes/${scene_uuid}`,
         generate_ai_scenes: "/scenes/generate-ai-scenes",
+        estate_from_images: "/scenes/estate/from-images",
         reorder: "/scenes/reorder",
     },
     scene_variations: {

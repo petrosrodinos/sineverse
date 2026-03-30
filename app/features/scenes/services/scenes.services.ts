@@ -1,6 +1,6 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, GenerateAiScenesDto, ReorderScenesDto } from "../interfaces/scenes.interfaces";
+import { Scene, CreateSceneDto, UpdateSceneDto, SceneQueryDto, GenerateAiScenesDto, ReorderScenesDto, CreateEstateScenesFromImagesDto } from "../interfaces/scenes.interfaces";
 
 export const getScenes = async (query?: SceneQueryDto): Promise<Scene[]> => {
     try {
@@ -67,6 +67,25 @@ export const reorderScenes = async (reorder: ReorderScenesDto): Promise<void> =>
         await axiosInstance.post(ApiRoutes.scenes.reorder, reorder);
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to reorder scenes");
+        throw error;
+    }
+}
+
+export const createEstateScenesFromImages = async (payload: CreateEstateScenesFromImagesDto): Promise<Scene[]> => {
+    try {
+        const formData = new FormData();
+        formData.append("project_uuid", payload.project_uuid);
+        payload.files.forEach((file) => {
+            formData.append("files", file);
+        });
+        const response = await axiosInstance.post<Scene[]>(ApiRoutes.scenes.estate_from_images, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to create estate scenes from images");
         throw error;
     }
 }
