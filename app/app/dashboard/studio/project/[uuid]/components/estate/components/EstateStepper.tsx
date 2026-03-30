@@ -11,7 +11,7 @@ import type { WorkflowStep } from "../../../../../../../../config/dropdowns/proj
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
 import { FinalRenderStep } from "./steps/FinalRenderStep";
-import { GenerateEditStep } from "./steps/GenerateEditStep";
+import { GenerateVideosStep } from "./steps/GenerateVideosStep";
 import { UploadPhotosStep } from "./steps/UploadPhotosStep";
 
 export function EstateStepper() {
@@ -20,15 +20,11 @@ export function EstateStepper() {
   const setMockProject = useEstateWorkflowStore((s) => s.setMockProject);
   const mergePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.mergePromptImageAssetsFromScenes);
   const hydratePromptImageAssetsFromScenes = useEstateWorkflowStore((s) => s.hydratePromptImageAssetsFromScenes);
-  const { mutateAsync: createEstateScenesFromImages, isPending: isCreatingEstateScenes } =
-    useCreateEstateScenesFromImages();
+  const { mutateAsync: createEstateScenesFromImages, isPending: isCreatingEstateScenes } = useCreateEstateScenesFromImages();
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
   const { data: project } = useProject(projectUuid);
-  const { data: scenes, isSuccess } = useScenes(
-    projectUuid ? { project_uuid: projectUuid } : undefined,
-    { enabled: !!projectUuid },
-  );
+  const { data: scenes, isSuccess } = useScenes(projectUuid ? { project_uuid: projectUuid } : undefined, { enabled: !!projectUuid });
 
   useEffect(() => {
     if (!project || project.uuid !== projectUuid) {
@@ -74,14 +70,7 @@ export function EstateStepper() {
     } catch {
       return;
     }
-  }, [
-    activeStep,
-    createEstateScenesFromImages,
-    getUploadedFiles,
-    goNext,
-    hydratePromptImageAssetsFromScenes,
-    projectUuid,
-  ]);
+  }, [activeStep, createEstateScenesFromImages, getUploadedFiles, goNext, hydratePromptImageAssetsFromScenes, projectUuid]);
 
   const handleBack = useCallback(() => {
     goBack();
@@ -113,7 +102,7 @@ export function EstateStepper() {
       <div className="rounded-2xl border border-default-200 bg-default-100/40 p-4 shadow-sm dark:border-default-100/20 dark:bg-default-100/5 md:p-8">
         <div className="transition-opacity duration-300">
           {activeStep === 1 && <UploadPhotosStep />}
-          {activeStep === 2 && <GenerateEditStep />}
+          {activeStep === 2 && <GenerateVideosStep />}
           {activeStep === 3 && <FinalRenderStep />}
         </div>
       </div>

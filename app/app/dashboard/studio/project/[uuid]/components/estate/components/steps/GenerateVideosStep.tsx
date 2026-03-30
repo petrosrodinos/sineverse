@@ -14,15 +14,7 @@ import { VideoCard } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
 import { VideoReorderList } from "../video/VideoReorderList";
 
-function ClipRow({
-  videoAssetUuid,
-  index,
-  reorderCtx,
-}: {
-  videoAssetUuid: string;
-  index: number;
-  reorderCtx: VideoReorderListRenderContext;
-}) {
+function ClipRow({ videoAssetUuid, index, reorderCtx }: { videoAssetUuid: string; index: number; reorderCtx: VideoReorderListRenderContext }) {
   const asset = useEstateWorkflowStore((s) => s.videoAssetsByUuid[videoAssetUuid]);
 
   if (!asset) {
@@ -40,7 +32,7 @@ function ClipRow({
   return <VideoCard asset={asset} compact videoAssetUuid={videoAssetUuid} reorder={reorder} />;
 }
 
-export function GenerateEditStep() {
+export function GenerateVideosStep() {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
 
@@ -75,8 +67,8 @@ export function GenerateEditStep() {
       if (assets.length) {
         hydrateEstateVideoAssetsFromApi(assets);
         addToast({
-          title: "Walkthrough clips queued",
-          description: "AI is generating your listing clips. You can monitor progress below.",
+          title: "Video generation started",
+          description: "AI is generating your walkthrough clips.",
           severity: "success",
         });
       } else {
@@ -151,17 +143,9 @@ export function GenerateEditStep() {
       </Card>
 
       {showGeneratingShell && (
-        <div
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
-          role="status"
-          aria-busy="true"
-          aria-label="Preparing walkthrough clips"
-        >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" role="status" aria-busy="true" aria-label="Preparing walkthrough clips">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card
-              key={`walkthrough-skeleton-${i}`}
-              className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5"
-            >
+            <Card key={`walkthrough-skeleton-${i}`} className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5">
               <CardBody className="gap-2 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Skeleton className="h-3.5 w-20 rounded-md" />
