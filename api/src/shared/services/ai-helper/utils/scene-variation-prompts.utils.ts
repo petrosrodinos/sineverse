@@ -1,28 +1,31 @@
-import { AiPromptResponse, EnrichSceneVariationConfig } from "../interfaces/ai-helper.interfaces";
+import {
+  AiPromptResponse,
+  EnrichSceneVariationConfig,
+} from '../interfaces/ai-helper.interfaces';
 
 export const generateEnrichSceneVariationPrompt = (
-    config: EnrichSceneVariationConfig
+  config: EnrichSceneVariationConfig,
 ): AiPromptResponse => {
-    const {
-        original_concept,
-        enriched_concept,
-        genres,
-        tones,
-        directions,
-        project_title,
-        scene_title,
-        scene_description,
-        scene_variation_title,
-        prompt_text,
-        negative_prompt,
-        ai_model,
-        include_prompt,
-        include_negative_prompt,
-        include_video_generation_options,
-    } = config;
+  const {
+    original_concept,
+    enriched_concept,
+    genres,
+    tones,
+    directions,
+    project_title,
+    scene_title,
+    scene_description,
+    scene_variation_title,
+    prompt_text,
+    negative_prompt,
+    ai_model,
+    include_prompt,
+    include_negative_prompt,
+    include_video_generation_options,
+  } = config;
 
-    return {
-        system: `
+  return {
+    system: `
 You are an elite AI video prompt refinement engine.
 
 Your role is to optimize a SINGLE scene variation for high-end AI video generation.
@@ -96,31 +99,31 @@ Return ONLY the JSON object.
 Only include properties that correspond to true include flags.
 `.trim(),
 
-        prompt: `
+    prompt: `
 PROJECT CONTEXT
 Project Title:
 ${project_title}
 
 Original Concept:
-${original_concept ?? ""}
+${original_concept ?? ''}
 
-${enriched_concept ? `Enriched Concept:\n${enriched_concept}\n` : ""}
+${enriched_concept ? `Enriched Concept:\n${enriched_concept}\n` : ''}
 
-${genres?.length ? `Genres:\n${genres.join(", ")}\n` : ""}
-${tones?.length ? `Tones:\n${tones.join(", ")}\n` : ""}
-${directions ? `Creative Directions (MANDATORY TO FOLLOW):\n${directions}\n` : ""}
+${genres?.length ? `Genres:\n${genres.join(', ')}\n` : ''}
+${tones?.length ? `Tones:\n${tones.join(', ')}\n` : ''}
+${directions ? `Creative Directions (MANDATORY TO FOLLOW):\n${directions}\n` : ''}
 
 SCENE CONTEXT
-${scene_title ? `Scene Title:\n${scene_title}\n` : ""}
-${scene_variation_title ? `Scene Variation Title:\n${scene_variation_title}\n` : ""}
-${scene_description ? `Scene Description:\n${scene_description}\n` : ""}
+${scene_title ? `Scene Title:\n${scene_title}\n` : ''}
+${scene_variation_title ? `Scene Variation Title:\n${scene_variation_title}\n` : ''}
+${scene_description ? `Scene Description:\n${scene_description}\n` : ''}
 
 CURRENT INPUTS
-${prompt_text ? `Existing Prompt Text:\n${prompt_text}\n` : "No existing prompt text provided.\n"}
-${negative_prompt ? `Existing Negative Prompt:\n${negative_prompt}\n` : ""}
+${prompt_text ? `Existing Prompt Text:\n${prompt_text}\n` : 'No existing prompt text provided.\n'}
+${negative_prompt ? `Existing Negative Prompt:\n${negative_prompt}\n` : ''}
 
 AI Model:
-${ai_model ?? "Not specified"}
+${ai_model ?? 'Not specified'}
 
 FLAGS
 include_prompt: ${include_prompt}
@@ -129,5 +132,5 @@ include_video_generation_options: ${include_video_generation_options}
 
 Refine or generate outputs strictly according to the rules and return valid JSON only.
 `.trim(),
-    };
+  };
 };

@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -15,14 +20,17 @@ export class SceneVariationsService {
     private readonly prisma: PrismaService,
     private readonly aiHelperService: AiHelperService,
     private readonly documentsService: DocumentsService,
-  ) { }
+  ) {}
 
-
-  async create(user_uuid: string, createSceneVariationDto: CreateSceneVariationDto) {
+  async create(
+    user_uuid: string,
+    createSceneVariationDto: CreateSceneVariationDto,
+  ) {
     try {
-      const scene = await this.prisma.scene.findFirst({ where: { uuid: createSceneVariationDto.scene_uuid, user_uuid } });
+      const scene = await this.prisma.scene.findFirst({
+        where: { uuid: createSceneVariationDto.scene_uuid, user_uuid },
+      });
       if (!scene) throw new NotFoundException('Scene not found');
-
 
       const variation = await this.prisma.sceneVariation.create({
         data: {
@@ -30,14 +38,17 @@ export class SceneVariationsService {
           selected: createSceneVariationDto.selected ?? false,
           user_uuid,
           scene_uuid: scene.uuid,
-        }
+        },
       });
 
       return variation;
     } catch (error) {
       this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to create scene variation', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to create scene variation',
+        { cause: error },
+      );
     }
   }
 
@@ -55,7 +66,10 @@ export class SceneVariationsService {
       return variations;
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Failed to retrieve scene variations', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to retrieve scene variations',
+        { cause: error },
+      );
     }
   }
 
@@ -73,11 +87,18 @@ export class SceneVariationsService {
     } catch (error) {
       this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to retrieve scene variation', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to retrieve scene variation',
+        { cause: error },
+      );
     }
   }
 
-  async update(user_uuid: string, uuid: string, updateSceneVariationDto: UpdateSceneVariationDto) {
+  async update(
+    user_uuid: string,
+    uuid: string,
+    updateSceneVariationDto: UpdateSceneVariationDto,
+  ) {
     try {
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid, user_uuid },
@@ -87,8 +108,10 @@ export class SceneVariationsService {
       if (!variation) throw new NotFoundException('Scene variation not found');
 
       const variationUpdateData: any = {};
-      if (updateSceneVariationDto.title !== undefined) variationUpdateData.title = updateSceneVariationDto.title;
-      if (updateSceneVariationDto.selected !== undefined) variationUpdateData.selected = updateSceneVariationDto.selected;
+      if (updateSceneVariationDto.title !== undefined)
+        variationUpdateData.title = updateSceneVariationDto.title;
+      if (updateSceneVariationDto.selected !== undefined)
+        variationUpdateData.selected = updateSceneVariationDto.selected;
 
       const performUpdates = async (tx: any) => {
         if (updateSceneVariationDto.selected === true) {
@@ -98,7 +121,7 @@ export class SceneVariationsService {
               uuid: { not: uuid },
               user_uuid,
             },
-            data: { selected: false }
+            data: { selected: false },
           });
         }
 
@@ -111,18 +134,23 @@ export class SceneVariationsService {
 
         return tx.sceneVariation.findUnique({
           where: { uuid },
-          include: { project_assets: { include: { document: true } }, scene: true }
+          include: {
+            project_assets: { include: { document: true } },
+            scene: true,
+          },
         });
       };
 
       const result = await this.prisma.$transaction(performUpdates);
 
       return result;
-
     } catch (error) {
       this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to update scene variation', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to update scene variation',
+        { cause: error },
+      );
     }
   }
 
@@ -132,7 +160,10 @@ export class SceneVariationsService {
       await this.documentsService.deleteVariationDocuments(uuid);
       return await this.prisma.sceneVariation.delete({ where: { uuid } });
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete scene variation', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to delete scene variation',
+        { cause: error },
+      );
     }
   }
 
@@ -140,7 +171,7 @@ export class SceneVariationsService {
     try {
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid, user_uuid },
-        include: { project_assets: true }
+        include: { project_assets: true },
       });
       if (!variation) throw new NotFoundException('Scene variation not found');
 
@@ -155,10 +186,14 @@ export class SceneVariationsService {
         ...dataToCopy
       } = variation;
 
-      const oldVideoAsset = project_assets.find(pa => pa.role === AssetRole.GENERATED_VIDEO);
-      const metadataToCopy = oldVideoAsset ? (oldVideoAsset.metadata || {}) : {};
+      const oldVideoAsset = project_assets.find(
+        (pa) => pa.role === AssetRole.GENERATED_VIDEO,
+      );
+      const metadataToCopy = oldVideoAsset ? oldVideoAsset.metadata || {} : {};
 
-      const scene = await this.prisma.scene.findFirst({ where: { uuid: variation.scene_uuid } });
+      const scene = await this.prisma.scene.findFirst({
+        where: { uuid: variation.scene_uuid },
+      });
 
       const newVariation = await this.prisma.sceneVariation.create({
         data: {
@@ -173,20 +208,21 @@ export class SceneVariationsService {
               role: AssetRole.GENERATED_VIDEO,
               status: AssetStatus.PENDING,
               metadata: metadataToCopy as any,
-            }
-          }
+            },
+          },
         },
         include: {
-          project_assets: { include: { document: true } }
-        }
+          project_assets: { include: { document: true } },
+        },
       });
       return newVariation;
     } catch (error) {
       this.logger.error(error);
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to duplicate scene variation', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to duplicate scene variation',
+        { cause: error },
+      );
     }
   }
-
-
 }

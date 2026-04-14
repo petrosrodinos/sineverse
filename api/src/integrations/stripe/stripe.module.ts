@@ -10,8 +10,24 @@ import { StripeCustomersService } from './services/stripe-customers.service';
 import { StripeCouponsService } from './services/stripe-coupons.service';
 
 @Module({
-    imports: [ConfigModule, PrismaModule],
-    providers: [StripeConfig, StripeAccountsService, StripeProductsService, StripePaymentsService, StripePaymentsWebhooksService, StripeCustomersService, StripeCouponsService],
-    exports: [StripeConfig, StripeAccountsService, StripeProductsService, StripePaymentsService, StripePaymentsWebhooksService, StripeCustomersService, StripeCouponsService],
+  imports: [ConfigModule, PrismaModule],
+  providers: [
+    StripeConfig,
+    StripeAccountsService,
+    StripeProductsService,
+    StripePaymentsService,
+    StripePaymentsWebhooksService,
+    StripeCustomersService,
+    StripeCouponsService,
+  ],
+  exports: [
+    StripeConfig,
+    StripeAccountsService,
+    StripeProductsService,
+    StripePaymentsService,
+    StripePaymentsWebhooksService,
+    StripeCustomersService,
+    StripeCouponsService,
+  ],
 })
-export class StripeIntegrationModule { }
+export class StripeIntegrationModule {}

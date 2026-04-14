@@ -21,13 +21,19 @@ export class UsersController {
 
   @Patch('me')
   @ApiOperation({ summary: 'Update current user profile' })
-  updateMe(@CurrentUser('uuid') user_uuid: string, @Body() dto: UpdateProfileDto) {
+  updateMe(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() dto: UpdateProfileDto,
+  ) {
     return this.usersService.updateProfile(user_uuid, dto);
   }
 
   @Patch('me/password')
   @ApiOperation({ summary: 'Update current user password' })
-  updateMyPassword(@CurrentUser('uuid') user_uuid: string, @Body() dto: UpdatePasswordDto) {
+  updateMyPassword(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() dto: UpdatePasswordDto,
+  ) {
     return this.usersService.updatePassword(user_uuid, dto);
   }
 }

@@ -8,4 +8,4 @@ import { SendgridModule } from '@/integrations/notifications/sendgrid/sendgrid.m
   controllers: [MailController],
   providers: [MailService],
 })
-export class MailModule { }
+export class MailModule {}

@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { CreateSmDto } from './dto/create-sm.dto';
 import { UpdateSmDto } from './dto/update-sm.dto';
@@ -6,10 +5,7 @@ import { TwillioSmsService } from '@/integrations/notifications/twillio/services
 
 @Injectable()
 export class SmsService {
-
-  constructor(
-    private readonly smsService: TwillioSmsService
-  ) { }
+  constructor(private readonly smsService: TwillioSmsService) {}
 
   create(createSmDto: CreateSmDto) {
     try {

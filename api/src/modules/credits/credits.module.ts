@@ -8,7 +8,12 @@ import { CreditsService } from './credits.service';
 import { CreditsWebhooksController } from './credits-webhooks.controller';
 
 @Module({
-  imports: [PrismaModule, ConfigModule, StripeIntegrationModule, CurrencyModule],
+  imports: [
+    PrismaModule,
+    ConfigModule,
+    StripeIntegrationModule,
+    CurrencyModule,
+  ],
   controllers: [CreditsController, CreditsWebhooksController],
   providers: [CreditsService],
   exports: [CreditsService],

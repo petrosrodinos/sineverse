@@ -7,14 +7,14 @@ import { CreateImageAdapter } from './image/create-image.adapter';
 import { AimlApiService } from './aimlapi.service';
 
 @Module({
-    imports: [HttpModule],
-    providers: [
-        CreateVideoAdapter,
-        CreateVideoService,
-        CreateImageAdapter,
-        CreateImageService,
-        AimlApiService,
-    ],
-    exports: [AimlApiService],
+  imports: [HttpModule],
+  providers: [
+    CreateVideoAdapter,
+    CreateVideoService,
+    CreateImageAdapter,
+    CreateImageService,
+    AimlApiService,
+  ],
+  exports: [AimlApiService],
 })
-export class AimlApiModule { }
+export class AimlApiModule {}

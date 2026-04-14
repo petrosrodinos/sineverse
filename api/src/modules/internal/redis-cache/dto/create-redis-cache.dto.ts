@@ -1,9 +1,9 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class CreateRedisCacheDto {
-    @IsString()
-    key: string;
+  @IsString()
+  key: string;
 
-    @IsString()
-    value: string;
+  @IsString()
+  value: string;
 }

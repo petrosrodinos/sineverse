@@ -3,8 +3,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { CreateJwtService } from './jwt.service';
 
 @Module({
-    imports: [JwtModule.register({})],
-    providers: [CreateJwtService],
-    exports: [CreateJwtService],
+  imports: [JwtModule.register({})],
+  providers: [CreateJwtService],
+  exports: [CreateJwtService],
 })
-export class CreateJwtServiceModule { }
+export class CreateJwtServiceModule {}

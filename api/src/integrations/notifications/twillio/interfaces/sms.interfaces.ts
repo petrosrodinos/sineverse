@@ -1,15 +1,16 @@
 export interface CreateSms {
-    from?: string;
-    to: string;
-    body: string;
+  from?: string;
+  to: string;
+  body: string;
 }
 
 export interface ShortCode {
-    appointly: ShortCodeType;
+  appointly: ShortCodeType;
 }
 
 export const ShortCodeTypes = {
-    appointly: 'APPOINTLY',
+  appointly: 'APPOINTLY',
 } as const;
 
-export type ShortCodeType = (typeof ShortCodeTypes)[keyof typeof ShortCodeTypes];
+export type ShortCodeType =
+  (typeof ShortCodeTypes)[keyof typeof ShortCodeTypes];

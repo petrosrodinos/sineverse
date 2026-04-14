@@ -11,14 +11,10 @@ import { AuthRoles } from 'src/modules/auth/interfaces/auth.interface';
 @UseGuards(JwtGuard, RolesGuard)
 @Roles(AuthRoles.ADMIN)
 export class MailController {
-  constructor(private readonly mailService: MailService) { }
+  constructor(private readonly mailService: MailService) {}
 
   @Post('send-email')
   create(@Body() createMailDto: CreateMailDto) {
     return this.mailService.create(createMailDto);
   }
-
-
-
-
 }

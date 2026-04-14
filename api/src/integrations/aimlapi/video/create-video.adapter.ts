@@ -2,116 +2,150 @@ import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { CreateVideoRequest, CreateVideoResponse, VideoStatusResponse } from '../core/schemas';
+import {
+  CreateVideoRequest,
+  CreateVideoResponse,
+  VideoStatusResponse,
+} from '../core/schemas';
 
 @Injectable()
 export class CreateVideoAdapter {
-    private readonly logger = new Logger(CreateVideoAdapter.name);
-    private readonly baseUrl = 'https://api.aimlapi.com/v2';
+  private readonly logger = new Logger(CreateVideoAdapter.name);
+  private readonly baseUrl = 'https://api.aimlapi.com/v2';
 
-    constructor(
-        private readonly httpService: HttpService,
-        private readonly configService: ConfigService,
-    ) { }
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
+  ) {}
 
-    async createVideo(request: CreateVideoRequest): Promise<CreateVideoResponse> {
-        const payload = this.cleanPayload(request);
-        this.logger.debug(`Sending generation payload: ${JSON.stringify(payload, null, 2)}`);
-        this.logger.log(`[aiml-create] model=${request.model}`);
+  async createVideo(request: CreateVideoRequest): Promise<CreateVideoResponse> {
+    const payload = this.cleanPayload(request);
+    this.logger.debug(
+      `Sending generation payload: ${JSON.stringify(payload, null, 2)}`,
+    );
+    this.logger.log(`[aiml-create] model=${request.model}`);
 
-        try {
-            const response = await this.performApiCall<any>('POST', '/video/generations', payload);
-            this.logger.log(`[aiml-create] response id=${response?.id ?? 'none'} status=${response?.status ?? 'unknown'}`);
+    try {
+      const response = await this.performApiCall<any>(
+        'POST',
+        '/video/generations',
+        payload,
+      );
+      this.logger.log(
+        `[aiml-create] response id=${response?.id ?? 'none'} status=${response?.status ?? 'unknown'}`,
+      );
 
-            if (!response || !response.id) {
-                throw new Error('Invalid response: Missing generation ID');
-            }
+      if (!response || !response.id) {
+        throw new Error('Invalid response: Missing generation ID');
+      }
 
-            return {
-                id: response.id,
-                status: response.status,
-            };
-        } catch (error) {
-            this.handleProviderError(error, `generation with model ${request.model}`);
+      return {
+        id: response.id,
+        status: response.status,
+      };
+    } catch (error) {
+      this.handleProviderError(error, `generation with model ${request.model}`);
+    }
+  }
+
+  async getVideoStatus(taskId: string): Promise<VideoStatusResponse> {
+    try {
+      this.logger.debug(`[aiml-status] requesting generation_id=${taskId}`);
+      const response = await this.performApiCall<any>(
+        'GET',
+        `/video/generations?generation_id=${taskId}`,
+        undefined,
+        30000,
+      );
+      this.logger.debug(
+        `[aiml-status] response generation_id=${taskId} status=${response?.status ?? 'unknown'}`,
+      );
+
+      return {
+        id: response.id,
+        status: response.status,
+        video: response.video ? { url: response.video.url } : null,
+        error: response.error
+          ? { name: response.error.name, message: response.error.message }
+          : null,
+      };
+    } catch (error) {
+      this.handleProviderError(error, 'status retrieval');
+    }
+  }
+
+  private cleanPayload(obj: any): any {
+    const clean: any = {};
+    Object.keys(obj).forEach((key) => {
+      const value = obj[key];
+      if (value !== undefined && value !== null) {
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          const nested = this.cleanPayload(value);
+          if (Object.keys(nested).length > 0) {
+            clean[key] = nested;
+          }
+        } else if (Array.isArray(value)) {
+          if (value.length > 0) {
+            clean[key] = value;
+          }
+        } else {
+          clean[key] = value;
         }
+      }
+    });
+    return clean;
+  }
+
+  private async performApiCall<T>(
+    method: 'GET' | 'POST',
+    path: string,
+    data?: any,
+    timeoutMs?: number,
+  ): Promise<T> {
+    const apiKey = this.configService.get<string>('AIMLAPI_KEY');
+    if (!apiKey) {
+      this.logger.error('AIMLAPI_KEY is missing in environment config.');
+      throw new HttpException(
+        'API Configuration Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
-    async getVideoStatus(taskId: string): Promise<VideoStatusResponse> {
-        try {
-            this.logger.debug(`[aiml-status] requesting generation_id=${taskId}`);
-            const response = await this.performApiCall<any>('GET', `/video/generations?generation_id=${taskId}`, undefined, 30000);
-            this.logger.debug(`[aiml-status] response generation_id=${taskId} status=${response?.status ?? 'unknown'}`);
+    const url = `${this.baseUrl}${path}`;
+    const headers = {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    };
 
-            return {
-                id: response.id,
-                status: response.status,
-                video: response.video ? { url: response.video.url } : null,
-                error: response.error ? { name: response.error.name, message: response.error.message } : null,
-            };
-        } catch (error) {
-            this.handleProviderError(error, 'status retrieval');
-        }
+    try {
+      this.logger.debug(`[aiml-http] ${method} ${url}`);
+      const request$ =
+        method === 'POST'
+          ? this.httpService.post<T>(url, data, { headers, timeout: timeoutMs })
+          : this.httpService.get<T>(url, { headers, timeout: timeoutMs });
+
+      const response = await firstValueFrom(request$);
+      this.logger.debug(`[aiml-http] ${method} ${url} -> ${response.status}`);
+      return response.data;
+    } catch (error: any) {
+      throw error; // Rethrow to handle in caller
     }
+  }
 
+  private handleProviderError(error: any, context: string): never {
+    const statusCode =
+      error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+    const errorMessage =
+      error.response?.data?.error?.message || error.message || 'Unknown error';
 
-    private cleanPayload(obj: any): any {
-        const clean: any = {};
-        Object.keys(obj).forEach(key => {
-            const value = obj[key];
-            if (value !== undefined && value !== null) {
-                if (typeof value === 'object' && !Array.isArray(value)) {
-                    const nested = this.cleanPayload(value);
-                    if (Object.keys(nested).length > 0) {
-                        clean[key] = nested;
-                    }
-                } else if (Array.isArray(value)) {
-                    if (value.length > 0) {
-                        clean[key] = value;
-                    }
-                } else {
-                    clean[key] = value;
-                }
-            }
-        });
-        return clean;
-    }
+    this.logger.error(`Failure during ${context}: ${errorMessage}`);
 
-    private async performApiCall<T>(method: 'GET' | 'POST', path: string, data?: any, timeoutMs?: number): Promise<T> {
-        const apiKey = this.configService.get<string>('AIMLAPI_KEY');
-        if (!apiKey) {
-            this.logger.error('AIMLAPI_KEY is missing in environment config.');
-            throw new HttpException('API Configuration Error', HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        const url = `${this.baseUrl}${path}`;
-        const headers = {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-        };
-
-        try {
-            this.logger.debug(`[aiml-http] ${method} ${url}`);
-            const request$ = method === 'POST'
-                ? this.httpService.post<T>(url, data, { headers, timeout: timeoutMs })
-                : this.httpService.get<T>(url, { headers, timeout: timeoutMs });
-
-            const response = await firstValueFrom(request$);
-            this.logger.debug(`[aiml-http] ${method} ${url} -> ${response.status}`);
-            return response.data;
-        } catch (error: any) {
-            throw error; // Rethrow to handle in caller
-        }
-    }
-
-    private handleProviderError(error: any, context: string): never {
-        const statusCode = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
-        const errorMessage = error.response?.data?.error?.message || error.message || 'Unknown error';
-
-        this.logger.error(`Failure during ${context}: ${errorMessage}`);
-
-        throw new HttpException({
-            error: 'ProviderExecutionError',
-            details: errorMessage,
-        }, statusCode);
-    }
+    throw new HttpException(
+      {
+        error: 'ProviderExecutionError',
+        details: errorMessage,
+      },
+      statusCode,
+    );
+  }
 }

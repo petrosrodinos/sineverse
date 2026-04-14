@@ -1,5 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { ScenesService } from './scenes.service';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
@@ -22,19 +40,32 @@ type UploadedSceneImageFile = {
 @Controller('scenes')
 @UseGuards(JwtGuard)
 export class ScenesController {
-  constructor(private readonly scenesService: ScenesService) { }
+  constructor(private readonly scenesService: ScenesService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new scene' })
-  @ApiResponse({ status: 201, description: 'The scene has been successfully created.' })
-  create(@CurrentUser('uuid') user_uuid: string, @Body() createSceneDto: CreateSceneDto) {
+  @ApiResponse({
+    status: 201,
+    description: 'The scene has been successfully created.',
+  })
+  create(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() createSceneDto: CreateSceneDto,
+  ) {
     return this.scenesService.create(user_uuid, createSceneDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Retrieve all scenes' })
-  @ApiResponse({ status: 200, description: 'Returned all scenes successfully.' })
-  @ApiQuery({ name: 'project_uuid', required: false, description: 'Filter scenes by project UUID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returned all scenes successfully.',
+  })
+  @ApiQuery({
+    name: 'project_uuid',
+    required: false,
+    description: 'Filter scenes by project UUID',
+  })
   findAll(
     @CurrentUser('uuid') user_uuid: string,
     @Query(new ZodValidationPipe(SceneQuerySchema)) query: SceneQueryDto,
@@ -54,16 +85,26 @@ export class ScenesController {
   @Patch(':uuid')
   @ApiOperation({ summary: 'Update a scene by UUID' })
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene' })
-  @ApiResponse({ status: 200, description: 'The scene has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The scene has been successfully updated.',
+  })
   @ApiResponse({ status: 404, description: 'Scene not found.' })
-  update(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateSceneDto: UpdateSceneDto) {
+  update(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Body() updateSceneDto: UpdateSceneDto,
+  ) {
     return this.scenesService.update(user_uuid, uuid, updateSceneDto);
   }
 
   @Delete(':uuid')
   @ApiOperation({ summary: 'Delete a scene by UUID' })
   @ApiParam({ name: 'uuid', description: 'The UUID of the scene' })
-  @ApiResponse({ status: 200, description: 'The scene has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The scene has been successfully deleted.',
+  })
   @ApiResponse({ status: 404, description: 'Scene not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.scenesService.remove(user_uuid, uuid);
@@ -71,14 +112,23 @@ export class ScenesController {
 
   @Post('generate-ai-scenes')
   @ApiOperation({ summary: 'Generate AI scenes' })
-  @ApiResponse({ status: 200, description: 'The AI scenes have been successfully generated.' })
-  generateAiScenes(@CurrentUser('uuid') user_uuid: string, @Body() generateAiScenesDto: GenerateAiScenesDto) {
+  @ApiResponse({
+    status: 200,
+    description: 'The AI scenes have been successfully generated.',
+  })
+  generateAiScenes(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() generateAiScenesDto: GenerateAiScenesDto,
+  ) {
     return this.scenesService.generateAiScenes(user_uuid, generateAiScenesDto);
   }
 
   @Post('reorder')
   @ApiOperation({ summary: 'Reorder scenes' })
-  @ApiResponse({ status: 200, description: 'The scenes have been successfully reordered.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The scenes have been successfully reordered.',
+  })
   reorder(@Body() reorderScenesDto: ReorderScenesDto) {
     return this.scenesService.reorder(reorderScenesDto);
   }
@@ -86,12 +136,19 @@ export class ScenesController {
   @Post('estate/from-images')
   @UseInterceptors(FilesInterceptor('files'))
   @ApiOperation({ summary: 'Create estate scenes from uploaded images' })
-  @ApiResponse({ status: 201, description: 'Estate scenes created from images successfully.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Estate scenes created from images successfully.',
+  })
   createEstateScenesFromImages(
     @CurrentUser('uuid') user_uuid: string,
     @Body() dto: CreateEstateScenesFromImagesDto,
     @UploadedFiles() files: UploadedSceneImageFile[],
   ) {
-    return this.scenesService.createEstateScenesFromImages(user_uuid, dto, files);
+    return this.scenesService.createEstateScenesFromImages(
+      user_uuid,
+      dto,
+      files,
+    );
   }
 }

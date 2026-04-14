@@ -1,9 +1,9 @@
-import { EnrichImagePromptConfig } from "../interfaces/ai-helper.interfaces";
+import { EnrichImagePromptConfig } from '../interfaces/ai-helper.interfaces';
 
 export const generateEnrichImagePrompt = (config: EnrichImagePromptConfig) => {
-    return {
-        system: `You are an expert in AI image generation. Your task is to enrich the given image prompt based on the provided context and instructions.`,
-        prompt: `
+  return {
+    system: `You are an expert in AI image generation. Your task is to enrich the given image prompt based on the provided context and instructions.`,
+    prompt: `
         Context:
         - Original Prompt: ${config.prompt_text}
         - AI Model: ${config.ai_model}
@@ -18,5 +18,5 @@ export const generateEnrichImagePrompt = (config: EnrichImagePromptConfig) => {
         
         Please provide the enriched prompt:
         `,
-    };
+  };
 };

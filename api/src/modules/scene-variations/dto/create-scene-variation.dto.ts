@@ -10,9 +10,10 @@ export class CreateSceneVariationDto {
   @IsString()
   title: string;
 
-  @ApiPropertyOptional({ description: 'Whether this variation is the selected one' })
+  @ApiPropertyOptional({
+    description: 'Whether this variation is the selected one',
+  })
   @IsBoolean()
   @IsOptional()
   selected?: boolean;
-
 }

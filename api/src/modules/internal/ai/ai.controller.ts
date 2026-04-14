@@ -10,12 +10,10 @@ import { AuthRoles } from 'src/modules/auth/interfaces/auth.interface';
 @UseGuards(JwtGuard, RolesGuard)
 @Roles(AuthRoles.ADMIN)
 export class AiController {
-  constructor(private readonly aiService: InternalAiService) { }
+  constructor(private readonly aiService: InternalAiService) {}
 
   @Post()
   create(@Body() createAiDto: CreateAiDto) {
     return this.aiService.create(createAiDto);
   }
-
-
 }

@@ -51,6 +51,11 @@ export const ApiRoutes = {
         purchases: "/credits/purchases",
         checkout: "/credits/checkout",
     },
+    admin: {
+        overview: "/admin/dashboard/overview",
+        users: "/admin/dashboard/users",
+        purchases: "/admin/dashboard/purchases",
+    },
     scene_videos: {
         prefix: "/scene-videos",
         scene_video: (scene_video_uuid: string) => `/scene-videos/${scene_video_uuid}`,

@@ -1,38 +1,39 @@
-import { AiPromptResponse, GenerateAiScenesConfig } from "../interfaces/ai-helper.interfaces";
-import { generateEnrichSceneVariationPrompt } from "./scene-variation-prompts.utils";
+import {
+  AiPromptResponse,
+  GenerateAiScenesConfig,
+} from '../interfaces/ai-helper.interfaces';
+import { generateEnrichSceneVariationPrompt } from './scene-variation-prompts.utils';
 
 export const generateScenePrompt = (
-    config: GenerateAiScenesConfig
+  config: GenerateAiScenesConfig,
 ): AiPromptResponse => {
-    const {
-        original_concept,
-        enriched_concept,
-        genres,
-        tones,
-        directions,
-        project_title,
-        number_of_scenes,
-        scene_variations,
-        continue_scenes,
-        scenes,
-    } = config;
+  const {
+    original_concept,
+    enriched_concept,
+    genres,
+    tones,
+    directions,
+    project_title,
+    number_of_scenes,
+    scene_variations,
+    continue_scenes,
+    scenes,
+  } = config;
 
-    const lastOrder =
-        scenes && scenes.length > 0
-            ? Math.max(...scenes.map((s) => s.order))
-            : 0;
+  const lastOrder =
+    scenes && scenes.length > 0 ? Math.max(...scenes.map((s) => s.order)) : 0;
 
-    const startingOrder = lastOrder + 1;
+  const startingOrder = lastOrder + 1;
 
-    const sceneVariationRules = generateEnrichSceneVariationPrompt({
-        ...config,
-        include_prompt: true,
-        include_negative_prompt: true,
-        include_video_generation_options: true,
-    }).system
+  const sceneVariationRules = generateEnrichSceneVariationPrompt({
+    ...config,
+    include_prompt: true,
+    include_negative_prompt: true,
+    include_video_generation_options: true,
+  }).system;
 
-    return {
-        system: `
+  return {
+    system: `
 You are an elite AI cinematic story architect and structured output generator.
 
 Your role is to generate structured cinematic scenes for AI video production.
@@ -124,22 +125,22 @@ STRICT OUTPUT RULES
 Return ONLY the JSON object.
 `.trim(),
 
-        prompt: `
+    prompt: `
 PROJECT CONTEXT
 --------------------------------
 Project Title:
 ${project_title}
 
 Original Concept:
-${original_concept ?? ""}
+${original_concept ?? ''}
 
-${enriched_concept ? `Existing Enriched Concept:\n${enriched_concept}\n` : ""}
+${enriched_concept ? `Existing Enriched Concept:\n${enriched_concept}\n` : ''}
 
-${genres?.length ? `Genres:\n${genres.join(", ")}\n` : ""}
+${genres?.length ? `Genres:\n${genres.join(', ')}\n` : ''}
 
-${tones?.length ? `Tones:\n${tones.join(", ")}\n` : ""}
+${tones?.length ? `Tones:\n${tones.join(', ')}\n` : ''}
 
-${directions ? `Creative Directions (MANDATORY TO FOLLOW):\n${directions}\n` : ""}
+${directions ? `Creative Directions (MANDATORY TO FOLLOW):\n${directions}\n` : ''}
 
 --------------------------------
 GENERATION SETTINGS
@@ -160,20 +161,21 @@ include_video_generation_options: true
 --------------------------------
 EXISTING SCENES (DO NOT MODIFY)
 --------------------------------
-${scenes && scenes.length > 0
-                ? scenes
-                    .map(
-                        (s) => `
+${
+  scenes && scenes.length > 0
+    ? scenes
+        .map(
+          (s) => `
 Order: ${s.order}
 Title: ${s.title}
 Description: ${s.description}
-`
-                    )
-                    .join("\n")
-                : "No existing scenes."
-            }
+`,
+        )
+        .join('\n')
+    : 'No existing scenes.'
+}
 
 Generate the structured JSON response now.
 `.trim(),
-    };
+  };
 };

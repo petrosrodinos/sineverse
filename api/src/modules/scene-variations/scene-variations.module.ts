@@ -11,4 +11,4 @@ import { AimlApiModule } from '@/integrations/aimlapi/aimlapi.module';
   controllers: [SceneVariationsController],
   providers: [SceneVariationsService],
 })
-export class SceneVariationsModule { }
+export class SceneVariationsModule {}

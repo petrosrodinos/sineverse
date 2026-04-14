@@ -16,6 +16,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Routes } from "@/config/routes";
 import { useLayoutStore } from "@/stores/layout.store";
 import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
+import { RoleType } from "@/features/user/interfaces/user.interfaces";
 
 const SIDEBAR_MEDIA_QUERY = "(max-width: 768px)";
 
@@ -50,6 +51,9 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
   const { data: session, status } = useSession();
   const isSessionLoading = status === "loading";
   const { full_name, email } = session || {};
+  const visibleItems = items.filter(
+    (item) => !item.roles || (session?.role && item.roles.includes(session.role as RoleType))
+  );
 
   const sidebarContent = (
     <nav className="flex h-full w-full flex-col rounded-2xl border border-default-200 bg-default-100 py-1.5 shadow-lg shadow-default-200/20 dark:border-default-100/10 dark:bg-default-50 dark:shadow-black/10">
@@ -74,7 +78,7 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
           </Button>
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
-          {items.map((item) => {
+          {visibleItems.map((item) => {
             const Icon = item.icon;
             const isActive = 
               pathname === item.href || 

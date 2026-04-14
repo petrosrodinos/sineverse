@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 export interface CreateStripeCheckoutSession {
   account_uuid: string;
@@ -14,7 +14,7 @@ export interface CreateStripeCheckoutSession {
 
 export interface CheckoutSessionDTO {
   id: string;
-  status: "open" | "complete" | "expired";
+  status: 'open' | 'complete' | 'expired';
   amount_total: number;
   currency: string;
   customer: string | null;
@@ -69,7 +69,6 @@ export interface StripeTransferResponse {
   created: number;
 }
 
-
 export interface StripeSessionResponse {
   session: CheckoutSessionDTO;
   paymentIntent: PaymentIntentDTO;
@@ -85,4 +84,5 @@ export const StripePaymentContext = {
   BOOKING_PAYMENT: 'BOOKING_PAYMENT',
 } as const;
 
-export type StripePaymentContext = typeof StripePaymentContext[keyof typeof StripePaymentContext];
+export type StripePaymentContext =
+  (typeof StripePaymentContext)[keyof typeof StripePaymentContext];

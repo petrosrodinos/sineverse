@@ -31,7 +31,11 @@ export class CurrencyService {
     };
   }
 
-  async getUsdToEurRate(): Promise<{ rate: number; source: 'live' | 'fallback'; timestamp: Date }> {
+  async getUsdToEurRate(): Promise<{
+    rate: number;
+    source: 'live' | 'fallback';
+    timestamp: Date;
+  }> {
     try {
       const response = await firstValueFrom(
         this.httpService.get<{ rates?: { EUR?: number }; date?: string }>(
@@ -42,7 +46,9 @@ export class CurrencyService {
 
       const rate = ensurePositiveRate(Number(response.data?.rates?.EUR));
 
-      const fetchedAt = response.data?.date ? new Date(response.data.date) : new Date();
+      const fetchedAt = response.data?.date
+        ? new Date(response.data.date)
+        : new Date();
 
       await this.prisma.currencyRateSnapshot.create({
         data: {
@@ -72,7 +78,9 @@ export class CurrencyService {
       });
 
       if (!fallback) {
-        throw new InternalServerErrorException('Currency rate unavailable and no fallback snapshot exists');
+        throw new InternalServerErrorException(
+          'Currency rate unavailable and no fallback snapshot exists',
+        );
       }
 
       await this.prisma.currencyRateSnapshot.create({

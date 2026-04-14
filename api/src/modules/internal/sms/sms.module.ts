@@ -8,4 +8,4 @@ import { TwillioModule } from 'src/integrations/notifications/twillio/twillio.mo
   controllers: [SmsController],
   providers: [SmsService],
 })
-export class SmsModule { }
+export class SmsModule {}

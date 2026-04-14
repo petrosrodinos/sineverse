@@ -27,13 +27,19 @@ export class CreditsController {
 
   @Get('usage')
   @ApiOperation({ summary: 'Get credits usage history' })
-  getUsage(@CurrentUser('uuid') user_uuid: string, @Query() query: CreditsPaginationQueryDto) {
+  getUsage(
+    @CurrentUser('uuid') user_uuid: string,
+    @Query() query: CreditsPaginationQueryDto,
+  ) {
     return this.creditsService.getUsage(user_uuid, query.page, query.limit);
   }
 
   @Get('purchases')
   @ApiOperation({ summary: 'Get credit purchase history' })
-  getPurchases(@CurrentUser('uuid') user_uuid: string, @Query() query: CreditsPaginationQueryDto) {
+  getPurchases(
+    @CurrentUser('uuid') user_uuid: string,
+    @Query() query: CreditsPaginationQueryDto,
+  ) {
     return this.creditsService.getPurchases(user_uuid, query.page, query.limit);
   }
 

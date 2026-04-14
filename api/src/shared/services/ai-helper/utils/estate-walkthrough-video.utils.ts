@@ -1,4 +1,4 @@
-import { VideoModels } from "@/integrations/aimlapi/core/constants";
+import { VideoModels } from '@/integrations/aimlapi/core/constants';
 
 export const ESTATE_WALKTHROUGH_VIDEO_MODEL = VideoModels.VEO_3_FAST;
 

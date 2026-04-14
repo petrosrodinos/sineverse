@@ -5,13 +5,8 @@ import { TwillioSmsService } from './services/sms.service';
 import { CallsService } from './services/calls.service';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [
-        TwillioSmsService,
-        TwillioConfig,
-        Logger,
-        CallsService
-    ],
-    exports: [TwillioSmsService, CallsService],
+  imports: [ConfigModule],
+  providers: [TwillioSmsService, TwillioConfig, Logger, CallsService],
+  exports: [TwillioSmsService, CallsService],
 })
-export class TwillioModule { }
+export class TwillioModule {}

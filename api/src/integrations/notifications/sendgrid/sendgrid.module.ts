@@ -7,15 +7,15 @@ import { TemplateService } from './utils/templates.utils';
 import { SendGridListService } from './services/list.service';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [
-        SendgridMailService,
-        SendGridAdapter,
-        SendgridConfig,
-        TemplateService,
-        Logger,
-        SendGridListService
-    ],
-    exports: [SendgridMailService, SendGridListService],
+  imports: [ConfigModule],
+  providers: [
+    SendgridMailService,
+    SendGridAdapter,
+    SendgridConfig,
+    TemplateService,
+    Logger,
+    SendGridListService,
+  ],
+  exports: [SendgridMailService, SendGridListService],
 })
-export class SendgridModule { }
+export class SendgridModule {}

@@ -11,10 +11,9 @@ export class DocumentsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly gcsService: GcsService,
-  ) { }
+  ) {}
 
   async saveVideoFromUrl(url: string, filename: string): Promise<string> {
-
     try {
       // 1. Download video from provider URL
       const response = await axios.get(url, { responseType: 'arraybuffer' });
@@ -28,7 +27,6 @@ export class DocumentsService {
   }
 
   async saveVideoFromBuffer(buffer: Buffer, filename: string): Promise<string> {
-
     try {
       // 1. Upload to GCS
       const uploadResponse = await this.gcsService.uploadImageFromBuffer(
@@ -56,7 +54,6 @@ export class DocumentsService {
   }
 
   async saveImageFromUrl(url: string, filename: string): Promise<string> {
-
     try {
       const response = await axios.get(url, { responseType: 'arraybuffer' });
       const buffer = Buffer.from(response.data, 'binary');
@@ -68,8 +65,11 @@ export class DocumentsService {
     }
   }
 
-  async saveImageFromBuffer(buffer: Buffer, filename: string, mimetype: string): Promise<string> {
-
+  async saveImageFromBuffer(
+    buffer: Buffer,
+    filename: string,
+    mimetype: string,
+  ): Promise<string> {
     try {
       // 1. Upload to GCS
       const uploadResponse = await this.gcsService.uploadImageFromBuffer(
@@ -96,11 +96,10 @@ export class DocumentsService {
     }
   }
 
-
   async deleteDocument(documentUuid: string): Promise<void> {
     try {
       const document = await this.prisma.document.findUnique({
-        where: { uuid: documentUuid }
+        where: { uuid: documentUuid },
       });
 
       if (!document) {
@@ -111,13 +110,11 @@ export class DocumentsService {
         await this.gcsService.deleteImage({
           filename: document.path,
         });
-      } catch (error) {
-      }
+      } catch (error) {}
 
       await this.prisma.document.delete({
-        where: { uuid: documentUuid }
+        where: { uuid: documentUuid },
       });
-
     } catch (error) {
       throw error;
     }
@@ -127,7 +124,9 @@ export class DocumentsService {
     try {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid: variationUuid },
-        include: { project_assets: { where: { role: AssetRole.GENERATED_VIDEO } } }
+        include: {
+          project_assets: { where: { role: AssetRole.GENERATED_VIDEO } },
+        },
       });
 
       const videoAsset = variation?.project_assets?.[0];
@@ -144,8 +143,8 @@ export class DocumentsService {
       const variation = await this.prisma.sceneVariation.findUnique({
         where: { uuid: variationUuid },
         include: {
-          project_assets: true
-        }
+          project_assets: true,
+        },
       });
 
       if (!variation) return;
@@ -156,7 +155,9 @@ export class DocumentsService {
         }
       }
     } catch (error) {
-      this.logger.error(`Error deleting documents for variation ${variationUuid}: ${error.message}`);
+      this.logger.error(
+        `Error deleting documents for variation ${variationUuid}: ${error.message}`,
+      );
     }
   }
 
@@ -164,14 +165,16 @@ export class DocumentsService {
     try {
       const variations = await this.prisma.sceneVariation.findMany({
         where: { scene_uuid: sceneUuid },
-        select: { uuid: true }
+        select: { uuid: true },
       });
 
       for (const variation of variations) {
         await this.deleteVariationDocuments(variation.uuid);
       }
     } catch (error) {
-      this.logger.error(`Error deleting documents for scene ${sceneUuid}: ${error.message}`);
+      this.logger.error(
+        `Error deleting documents for scene ${sceneUuid}: ${error.message}`,
+      );
     }
   }
 
@@ -179,15 +182,16 @@ export class DocumentsService {
     try {
       const scenes = await this.prisma.scene.findMany({
         where: { project_uuid: projectUuid },
-        select: { uuid: true }
+        select: { uuid: true },
       });
 
       for (const scene of scenes) {
         await this.deleteSceneDocuments(scene.uuid);
       }
     } catch (error) {
-      this.logger.error(`Error deleting documents for project ${projectUuid}: ${error.message}`);
+      this.logger.error(
+        `Error deleting documents for project ${projectUuid}: ${error.message}`,
+      );
     }
   }
-
 }

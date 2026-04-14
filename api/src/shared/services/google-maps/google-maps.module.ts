@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GoogleMapsService } from './google-maps.service';
 
 @Module({
-    providers: [GoogleMapsService],
-    exports: [GoogleMapsService],
+  providers: [GoogleMapsService],
+  exports: [GoogleMapsService],
 })
-export class GoogleMapsModule { }
+export class GoogleMapsModule {}

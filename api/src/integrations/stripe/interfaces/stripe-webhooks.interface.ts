@@ -1,5 +1,5 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 export type PaymentIntentWithCharges = Stripe.PaymentIntent & {
-    charges: Stripe.ApiList<Stripe.Charge>;
+  charges: Stripe.ApiList<Stripe.Charge>;
 };

@@ -1,107 +1,103 @@
 import { z } from 'zod';
 
 export interface AIGenerateOptions<T = any> {
-    provider?: AiProvider;
-    model?: AiModel;
-    system?: string;
-    prompt: string;
-    schema?: z.ZodSchema<T>;
-    output?: 'json' | 'no-schema';
-    temperature?: number;
-    maxOutputTokens?: number;
-    topP?: number;
-    frequencyPenalty?: number;
-    presencePenalty?: number;
+  provider?: AiProvider;
+  model?: AiModel;
+  system?: string;
+  prompt: string;
+  schema?: z.ZodSchema<T>;
+  output?: 'json' | 'no-schema';
+  temperature?: number;
+  maxOutputTokens?: number;
+  topP?: number;
+  frequencyPenalty?: number;
+  presencePenalty?: number;
 }
 
 export interface AIGenerateTextResponse {
-    response: string;
-    usage?: AICostResponse
+  response: string;
+  usage?: AICostResponse;
 }
 
 export interface AIGenerateObjectResponse<T = any> {
-    response: T | null;
-    usage?: AICostResponse
+  response: T | null;
+  usage?: AICostResponse;
 }
 
 export interface AIGenerateVideoOptions {
-    provider: string;
-    model: string;
-    prompt: string;
-    negative_prompt?: string;
-    aspect_ratio?: string;
-    resolution?: string;
-    duration_sec?: number;
-    seed?: string;
+  provider: string;
+  model: string;
+  prompt: string;
+  negative_prompt?: string;
+  aspect_ratio?: string;
+  resolution?: string;
+  duration_sec?: number;
+  seed?: string;
 }
 
 export interface AIVideoResponse {
-    provider_job_id: string;
-    status: 'pending' | 'processing' | 'completed' | 'failed';
-    url?: string;
-    videoBuffer?: Uint8Array;
-    error?: string;
+  provider_job_id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  url?: string;
+  videoBuffer?: Uint8Array;
+  error?: string;
 }
 
-
-
 export interface AIStreamTextOptions extends AIGenerateOptions {
-    onToken?: (token: string) => void;
-    onComplete?: (fullText: string) => void;
+  onToken?: (token: string) => void;
+  onComplete?: (fullText: string) => void;
 }
 
 export interface AIModelInfo {
-    provider: AiProvider;
-    model: AiModel;
+  provider: AiProvider;
+  model: AiModel;
 }
 
 export interface AICost {
-    provider?: AiProvider,
-    model?: AiModel,
-    inputTokens: number,
-    outputTokens: number,
+  provider?: AiProvider;
+  model?: AiModel;
+  inputTokens: number;
+  outputTokens: number;
 }
 
 export interface AICostResponse {
-    inputTokens: number;
-    outputTokens: number;
-    totalTokens: number;
-    inputRate: number;
-    outputRate: number;
-    inputCost: number;
-    outputCost: number;
-    totalCost: number;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  inputRate: number;
+  outputRate: number;
+  inputCost: number;
+  outputCost: number;
+  totalCost: number;
 }
 
 export const AiProviders = {
-    openai: 'openai',
-    grok: 'grok',
-    gemini: 'gemini',
-    runway: 'RUNWAY',
-    pika: 'PIKA',
+  openai: 'openai',
+  grok: 'grok',
+  gemini: 'gemini',
+  runway: 'RUNWAY',
+  pika: 'PIKA',
 } as const;
 
 export const AiModels = {
-    openai: {
-        gpt4o: 'gpt-4o',
-        gpt4oMini: 'gpt-4o-mini',
-        gpt4Turbo: 'gpt-4-turbo',
-        gpt4: 'gpt-4',
-        gpt35Turbo: 'gpt-3.5-turbo',
-    },
-    grok: {
-        grokBeta: 'grok-beta',
-        grokPro: 'grok-pro',
-    },
-    gemini: {
-        geminiPro: 'gemini-pro',
-        geminiProVision: 'gemini-pro-vision',
-        gemini15Pro: 'gemini-1.5-pro',
-        gemini15Flash: 'gemini-1.5-flash',
-    }
-}
+  openai: {
+    gpt4o: 'gpt-4o',
+    gpt4oMini: 'gpt-4o-mini',
+    gpt4Turbo: 'gpt-4-turbo',
+    gpt4: 'gpt-4',
+    gpt35Turbo: 'gpt-3.5-turbo',
+  },
+  grok: {
+    grokBeta: 'grok-beta',
+    grokPro: 'grok-pro',
+  },
+  gemini: {
+    geminiPro: 'gemini-pro',
+    geminiProVision: 'gemini-pro-vision',
+    gemini15Pro: 'gemini-1.5-pro',
+    gemini15Flash: 'gemini-1.5-flash',
+  },
+};
 
-export type AiProvider = typeof AiProviders[keyof typeof AiProviders];
+export type AiProvider = (typeof AiProviders)[keyof typeof AiProviders];
 export type AiModel = string;
-
-

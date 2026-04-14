@@ -4,8 +4,7 @@ import { AiService } from '@/integrations/ai/services/ai.service';
 
 @Injectable()
 export class InternalAiService {
-
-  constructor(private readonly aiService: AiService) { }
+  constructor(private readonly aiService: AiService) {}
 
   create(createAiDto: CreateAiDto) {
     try {
@@ -22,6 +21,4 @@ export class InternalAiService {
       throw new BadRequestException(error.message);
     }
   }
-
-
 }

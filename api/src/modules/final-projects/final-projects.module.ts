@@ -8,4 +8,4 @@ import { PrismaModule } from '@/core/databases/prisma/prisma.module';
   controllers: [FinalProjectsController],
   providers: [FinalProjectsService],
 })
-export class FinalProjectsModule { }
+export class FinalProjectsModule {}

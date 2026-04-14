@@ -3,8 +3,8 @@ import { AiService } from './services/ai.service';
 import { AiConfig } from './utils/ai.config';
 
 @Module({
-    imports: [],
-    providers: [AiService, AiConfig],
-    exports: [AiService],
+  imports: [],
+  providers: [AiService, AiConfig],
+  exports: [AiService],
 })
-export class AiIntegrationModule { }
+export class AiIntegrationModule {}

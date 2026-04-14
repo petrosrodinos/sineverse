@@ -1,71 +1,124 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { SceneVariationsService } from './scene-variations.service';
 import { CreateSceneVariationDto } from './dto/create-scene-variation.dto';
 import { UpdateSceneVariationDto } from './dto/update-scene-variation.dto';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
-import { SceneVariationQueryDto, SceneVariationQuerySchema } from './dto/query-scene-variation.dto';
-
+import {
+  SceneVariationQueryDto,
+  SceneVariationQuerySchema,
+} from './dto/query-scene-variation.dto';
 
 @ApiTags('Scene Variations')
 @Controller('scene-variations')
 @UseGuards(JwtGuard)
 @ApiBearerAuth()
 export class SceneVariationsController {
-    constructor(private readonly sceneVariationsService: SceneVariationsService) { }
+  constructor(
+    private readonly sceneVariationsService: SceneVariationsService,
+  ) {}
 
-    @Post()
-    @ApiOperation({ summary: 'Create a new scene variation' })
-    @ApiResponse({ status: 201, description: 'The scene variation has been successfully created.' })
-    create(@CurrentUser('uuid') uuid: string, @Body() createSceneVariationDto: CreateSceneVariationDto) {
-        return this.sceneVariationsService.create(uuid, createSceneVariationDto);
-    }
+  @Post()
+  @ApiOperation({ summary: 'Create a new scene variation' })
+  @ApiResponse({
+    status: 201,
+    description: 'The scene variation has been successfully created.',
+  })
+  create(
+    @CurrentUser('uuid') uuid: string,
+    @Body() createSceneVariationDto: CreateSceneVariationDto,
+  ) {
+    return this.sceneVariationsService.create(uuid, createSceneVariationDto);
+  }
 
-    @Get()
-    @ApiOperation({ summary: 'Retrieve all scene variations' })
-    @ApiResponse({ status: 200, description: 'Returned all scene variations successfully.' })
-    findAll(@CurrentUser('uuid') uuid: string, @Query(new ZodValidationPipe(SceneVariationQuerySchema)) query: SceneVariationQueryDto) {
-        return this.sceneVariationsService.findAll(uuid, query);
-    }
+  @Get()
+  @ApiOperation({ summary: 'Retrieve all scene variations' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returned all scene variations successfully.',
+  })
+  findAll(
+    @CurrentUser('uuid') uuid: string,
+    @Query(new ZodValidationPipe(SceneVariationQuerySchema))
+    query: SceneVariationQueryDto,
+  ) {
+    return this.sceneVariationsService.findAll(uuid, query);
+  }
 
-    @Get(':uuid')
-    @ApiOperation({ summary: 'Retrieve a scene variation by UUID' })
-    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
-    @ApiResponse({ status: 200, description: 'Returned the scene variation successfully.' })
-    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
-    findOne(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
-        return this.sceneVariationsService.findOne(user_uuid, uuid);
-    }
+  @Get(':uuid')
+  @ApiOperation({ summary: 'Retrieve a scene variation by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returned the scene variation successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  findOne(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.sceneVariationsService.findOne(user_uuid, uuid);
+  }
 
-    @Patch(':uuid')
-    @ApiOperation({ summary: 'Update a scene variation by UUID' })
-    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
-    @ApiResponse({ status: 200, description: 'The scene variation has been successfully updated.' })
-    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
-    update(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string, @Body() updateSceneVariationDto: UpdateSceneVariationDto) {
-        return this.sceneVariationsService.update(user_uuid, uuid, updateSceneVariationDto);
-    }
+  @Patch(':uuid')
+  @ApiOperation({ summary: 'Update a scene variation by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({
+    status: 200,
+    description: 'The scene variation has been successfully updated.',
+  })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  update(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Body() updateSceneVariationDto: UpdateSceneVariationDto,
+  ) {
+    return this.sceneVariationsService.update(
+      user_uuid,
+      uuid,
+      updateSceneVariationDto,
+    );
+  }
 
-    @Delete(':uuid')
-    @ApiOperation({ summary: 'Delete a scene variation by UUID' })
-    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
-    @ApiResponse({ status: 200, description: 'The scene variation has been successfully deleted.' })
-    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
-    remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
-        return this.sceneVariationsService.remove(user_uuid, uuid);
-    }
+  @Delete(':uuid')
+  @ApiOperation({ summary: 'Delete a scene variation by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({
+    status: 200,
+    description: 'The scene variation has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.sceneVariationsService.remove(user_uuid, uuid);
+  }
 
-    @Post(':uuid/duplicate')
-    @ApiOperation({ summary: 'Duplicate a scene variation by UUID' })
-    @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
-    @ApiResponse({ status: 201, description: 'The scene variation has been successfully duplicated.' })
-    @ApiResponse({ status: 404, description: 'Scene variation not found.' })
-    duplicate(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
-        return this.sceneVariationsService.duplicate(user_uuid, uuid);
-    }
-
-
-
+  @Post(':uuid/duplicate')
+  @ApiOperation({ summary: 'Duplicate a scene variation by UUID' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the scene variation' })
+  @ApiResponse({
+    status: 201,
+    description: 'The scene variation has been successfully duplicated.',
+  })
+  @ApiResponse({ status: 404, description: 'Scene variation not found.' })
+  duplicate(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
+    return this.sceneVariationsService.duplicate(user_uuid, uuid);
+  }
 }

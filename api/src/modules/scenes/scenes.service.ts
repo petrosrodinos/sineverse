@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateSceneDto } from './dto/create-scene.dto';
 import { UpdateSceneDto } from './dto/update-scene.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -23,24 +28,28 @@ export class ScenesService {
     private readonly prisma: PrismaService,
     private readonly aiHelperService: AiHelperService,
     private readonly documentsService: DocumentsService,
-  ) { }
+  ) {}
 
   async create(user_uuid: string, createSceneDto: CreateSceneDto) {
     try {
-
-      const scenes = await this.findAll(user_uuid, { project_uuid: createSceneDto.project_uuid });
+      const scenes = await this.findAll(user_uuid, {
+        project_uuid: createSceneDto.project_uuid,
+      });
       const order = scenes.length + 1;
 
-      return await this.prisma.scene.create({ data: { ...createSceneDto, user_uuid, order } });
+      return await this.prisma.scene.create({
+        data: { ...createSceneDto, user_uuid, order },
+      });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Failed to create scene', { cause: error });
+      throw new InternalServerErrorException('Failed to create scene', {
+        cause: error,
+      });
     }
   }
 
   async findAll(user_uuid: string, query?: SceneQueryDto) {
     try {
-
       const whereClause: any = { user_uuid };
 
       if (query?.project_uuid) {
@@ -61,8 +70,8 @@ export class ScenesService {
           },
         },
         orderBy: {
-          order: 'asc'
-        }
+          order: 'asc',
+        },
       });
 
       return scenes.map((scene) => ({
@@ -75,40 +84,51 @@ export class ScenesService {
           })),
         })),
       }));
-
     } catch (error) {
-      throw new InternalServerErrorException('Failed to retrieve scenes', { cause: error });
+      throw new InternalServerErrorException('Failed to retrieve scenes', {
+        cause: error,
+      });
     }
   }
 
   async findOne(user_uuid: string, uuid: string) {
     try {
-
       const scene = await this.prisma.scene.findFirst({
-        where: { uuid, user_uuid }, include: {
+        where: { uuid, user_uuid },
+        include: {
           scene_variations: {
             include: {
-              project_assets: true
-            }
-          }
-        }
+              project_assets: true,
+            },
+          },
+        },
       });
 
       if (!scene) throw new NotFoundException('Scene not found');
 
       return scene;
-
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to retrieve scene', { cause: error });
+      throw new InternalServerErrorException('Failed to retrieve scene', {
+        cause: error,
+      });
     }
   }
 
-  async update(user_uuid: string, uuid: string, updateSceneDto: UpdateSceneDto) {
+  async update(
+    user_uuid: string,
+    uuid: string,
+    updateSceneDto: UpdateSceneDto,
+  ) {
     try {
-      return await this.prisma.scene.update({ where: { uuid, user_uuid }, data: updateSceneDto });
+      return await this.prisma.scene.update({
+        where: { uuid, user_uuid },
+        data: updateSceneDto,
+      });
     } catch (error) {
-      throw new InternalServerErrorException('Failed to update scene', { cause: error });
+      throw new InternalServerErrorException('Failed to update scene', {
+        cause: error,
+      });
     }
   }
 
@@ -117,14 +137,17 @@ export class ScenesService {
       await this.documentsService.deleteSceneDocuments(uuid);
       return await this.prisma.scene.delete({ where: { uuid, user_uuid } });
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete scene', { cause: error });
+      throw new InternalServerErrorException('Failed to delete scene', {
+        cause: error,
+      });
     }
   }
 
-  async generateAiScenes(user_uuid: string, generateAiScenesDto: GenerateAiScenesDto) {
-
+  async generateAiScenes(
+    user_uuid: string,
+    generateAiScenesDto: GenerateAiScenesDto,
+  ) {
     try {
-
       const {
         project_uuid,
         number_of_scenes,
@@ -135,9 +158,10 @@ export class ScenesService {
       } = generateAiScenesDto;
 
       const project = await this.prisma.project.findUnique({
-        where: { user_uuid, uuid: project_uuid }, include: {
-          scenes: true
-        }
+        where: { user_uuid, uuid: project_uuid },
+        include: {
+          scenes: true,
+        },
       });
 
       if (!project) {
@@ -155,26 +179,28 @@ export class ScenesService {
         scene_variations,
         continue_scenes,
         enrich_concept,
-        scenes: project.scenes.map(scene => ({
+        scenes: project.scenes.map((scene) => ({
           order: scene.order,
           title: scene.title,
-          description: scene.description
-        }))
-      }
+          description: scene.description,
+        })),
+      };
 
       if (config.enrich_concept) {
-        const enrichedConcept = await this.aiHelperService.enrichProjectConcept(config);
+        const enrichedConcept =
+          await this.aiHelperService.enrichProjectConcept(config);
         config.enriched_concept = enrichedConcept.response;
       }
 
-      const generatedAiScenes: GenerateAiScenesSchemaType = await this.aiHelperService.generateAiScenes(config);
+      const generatedAiScenes: GenerateAiScenesSchemaType =
+        await this.aiHelperService.generateAiScenes(config);
 
       if (!generatedAiScenes?.scenes?.length) {
         throw new InternalServerErrorException('Failed to generate ai scenes');
       }
 
       const newScenes = await this.prisma.$transaction(
-        generatedAiScenes.scenes.map(scene =>
+        generatedAiScenes.scenes.map((scene) =>
           this.prisma.scene.create({
             data: {
               project: { connect: { uuid: project_uuid } },
@@ -194,8 +220,8 @@ export class ScenesService {
                       role: AssetRole.GENERATED_VIDEO,
                       status: AssetStatus.PENDING,
                       metadata: variation.project_asset_video as any,
-                    }
-                  }
+                    },
+                  },
                 })),
               },
             },
@@ -211,10 +237,11 @@ export class ScenesService {
       }
 
       return newScenes;
-
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Failed to generate ai scenes', { cause: error });
+      throw new InternalServerErrorException('Failed to generate ai scenes', {
+        cause: error,
+      });
     }
   }
 
@@ -243,7 +270,9 @@ export class ScenesService {
       const prepared = await Promise.all(
         files.map(async (file, index) => {
           if (!file.mimetype?.startsWith('image/')) {
-            throw new BadRequestException(`Invalid file type: ${file.originalname}`);
+            throw new BadRequestException(
+              `Invalid file type: ${file.originalname}`,
+            );
           }
 
           const documentUuid = await this.documentsService.saveImageFromBuffer(
@@ -326,10 +355,16 @@ export class ScenesService {
       return createdScenes;
     } catch (error) {
       console.log('error', error);
-      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
-      throw new InternalServerErrorException('Failed to create estate scenes from images', { cause: error });
+      throw new InternalServerErrorException(
+        'Failed to create estate scenes from images',
+        { cause: error },
+      );
     }
   }
 
@@ -357,7 +392,9 @@ export class ScenesService {
       });
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Failed to reorder scenes', { cause: error });
+      throw new InternalServerErrorException('Failed to reorder scenes', {
+        cause: error,
+      });
     }
   }
 }

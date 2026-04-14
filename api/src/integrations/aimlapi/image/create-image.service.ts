@@ -4,35 +4,31 @@ import { CreateImageSchema, ImageGenerationResponse } from '../core/schemas';
 
 @Injectable()
 export class CreateImageService {
-    private readonly logger = new Logger(CreateImageService.name);
+  private readonly logger = new Logger(CreateImageService.name);
 
-    constructor(
-        private readonly createImageAdapter: CreateImageAdapter
-    ) {
+  constructor(private readonly createImageAdapter: CreateImageAdapter) {}
 
+  async execute(input: unknown): Promise<ImageGenerationResponse> {
+    const validation = await CreateImageSchema.safeParseAsync(input);
+
+    if (!validation.success) {
+      const errorTrace = validation.error.errors
+        .map((e) => `${e.path.join('.')}: ${e.message}`)
+        .join('; ');
+
+      this.logger.error(`Payload validation failed: ${errorTrace}`);
+
+      throw new HttpException(
+        {
+          error: 'PayloadValidationFailed',
+          message: errorTrace,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    async execute(input: unknown): Promise<ImageGenerationResponse> {
-        const validation = await CreateImageSchema.safeParseAsync(input);
+    const request = validation.data;
 
-        if (!validation.success) {
-            const errorTrace = validation.error.errors
-                .map(e => `${e.path.join('.')}: ${e.message}`)
-                .join('; ');
-
-            this.logger.error(`Payload validation failed: ${errorTrace}`);
-
-            throw new HttpException({
-                error: 'PayloadValidationFailed',
-                message: errorTrace,
-            }, HttpStatus.BAD_REQUEST);
-        }
-
-        const request = validation.data;
-
-        return this.createImageAdapter.createImage(request);
-    }
-
-
-
+    return this.createImageAdapter.createImage(request);
+  }
 }

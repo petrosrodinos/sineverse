@@ -5,48 +5,54 @@ import type { RedisOptions } from 'ioredis';
 
 @Global()
 @Module({
-    imports: [ConfigModule],
-    providers: [
-        {
-            provide: REDIS_OPTIONS,
-            useFactory: (configService: ConfigService): RedisOptions | null => {
-                const logger = new Logger('RedisModule');
+  imports: [ConfigModule],
+  providers: [
+    {
+      provide: REDIS_OPTIONS,
+      useFactory: (configService: ConfigService): RedisOptions | null => {
+        const logger = new Logger('RedisModule');
 
-                const redisUrl = configService.get<string>('REDIS_URL');
+        const redisUrl = configService.get<string>('REDIS_URL');
 
-                if (!redisUrl) {
-                    logger.warn('REDIS_URL not set, BullMQ will use default localhost:6379');
-                    return {
-                        host: 'localhost',
-                        port: 6379,
-                    };
-                }
+        if (!redisUrl) {
+          logger.warn(
+            'REDIS_URL not set, BullMQ will use default localhost:6379',
+          );
+          return {
+            host: 'localhost',
+            port: 6379,
+          };
+        }
 
-                try {
-                    const url = new URL(redisUrl.includes('://') ? redisUrl : `redis://${redisUrl}`);
-                    return {
-                        host: url.hostname,
-                        port: parseInt(url.port, 10) || 6379,
-                        password: url.password || undefined,
-                        username: url.username || undefined,
-                        maxRetriesPerRequest: null,
-                        enableReadyCheck: false,
-                        retryStrategy: (times) => {
-                            const delay = Math.min(times * 100, 3000);
-                            return delay;
-                        },
-                    };
-                } catch (error) {
-                    logger.error(`Invalid REDIS_URL: ${redisUrl}, falling back to localhost:6379`);
-                    return {
-                        host: 'localhost',
-                        port: 6379,
-                    };
-                }
+        try {
+          const url = new URL(
+            redisUrl.includes('://') ? redisUrl : `redis://${redisUrl}`,
+          );
+          return {
+            host: url.hostname,
+            port: parseInt(url.port, 10) || 6379,
+            password: url.password || undefined,
+            username: url.username || undefined,
+            maxRetriesPerRequest: null,
+            enableReadyCheck: false,
+            retryStrategy: (times) => {
+              const delay = Math.min(times * 100, 3000);
+              return delay;
             },
-            inject: [ConfigService],
-        },
-    ],
-    exports: [REDIS_OPTIONS],
+          };
+        } catch (error) {
+          logger.error(
+            `Invalid REDIS_URL: ${redisUrl}, falling back to localhost:6379`,
+          );
+          return {
+            host: 'localhost',
+            port: 6379,
+          };
+        }
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: [REDIS_OPTIONS],
 })
-export class RedisModule { }
+export class RedisModule {}

@@ -6,11 +6,8 @@ import { CreateJwtServiceModule } from '@/shared/utils/jwt/jwt.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  imports: [
-    PrismaModule,
-    CreateJwtServiceModule,
-  ],
+  imports: [PrismaModule, CreateJwtServiceModule],
   providers: [EmailAuthService, JwtStrategy, Logger],
   controllers: [EmailAuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

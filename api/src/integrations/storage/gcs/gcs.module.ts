@@ -5,13 +5,8 @@ import { GcsService } from './services/gcs.service';
 import { GcsConfig } from './config/gcs.config';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [
-        GcsService,
-        GcsAdapter,
-        GcsConfig,
-        Logger
-    ],
-    exports: [GcsService],
+  imports: [ConfigModule],
+  providers: [GcsService, GcsAdapter, GcsConfig, Logger],
+  exports: [GcsService],
 })
-export class GcsIntegrationModule { }
+export class GcsIntegrationModule {}

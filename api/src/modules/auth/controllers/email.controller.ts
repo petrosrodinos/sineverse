@@ -9,38 +9,35 @@ import { WaitlistDto } from '../dto/waitlist.dto';
 @ApiTags('Email Authentication')
 @Controller('auth/email')
 export class EmailAuthController {
-    constructor(private readonly authService: EmailAuthService) { }
+  constructor(private readonly authService: EmailAuthService) {}
 
-    @Post('register')
-    @ApiOperation({ summary: 'Register a new user with email and password' })
-    @ApiBody({ type: RegisterEmailDto })
-    @ApiResponse({
-        status: 201,
-        description: 'User registered successfully',
-        type: AuthResponse
-    })
-    @ApiResponse({
-        status: 409,
-        description: 'Conflict - User with this email already exists'
-    })
-    async registerWithEmail(@Body() dto: RegisterEmailDto) {
-        try {
-            return this.authService.registerWithEmail(dto);
+  @Post('register')
+  @ApiOperation({ summary: 'Register a new user with email and password' })
+  @ApiBody({ type: RegisterEmailDto })
+  @ApiResponse({
+    status: 201,
+    description: 'User registered successfully',
+    type: AuthResponse,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict - User with this email already exists',
+  })
+  async registerWithEmail(@Body() dto: RegisterEmailDto) {
+    try {
+      return this.authService.registerWithEmail(dto);
+    } catch (error) {}
+  }
 
-        } catch (error) {
-        }
-    }
-
-    @Post('login')
-    @ApiOperation({ summary: 'Login user with email and password' })
-    @ApiBody({ type: LoginEmailDto })
-    @ApiResponse({
-        status: 200,
-        description: 'User logged in successfully',
-        type: AuthResponse
-    })
-    async loginWithEmail(@Body() dto: LoginEmailDto) {
-        return this.authService.loginWithEmail(dto);
-    }
-
+  @Post('login')
+  @ApiOperation({ summary: 'Login user with email and password' })
+  @ApiBody({ type: LoginEmailDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User logged in successfully',
+    type: AuthResponse,
+  })
+  async loginWithEmail(@Body() dto: LoginEmailDto) {
+    return this.authService.loginWithEmail(dto);
+  }
 }

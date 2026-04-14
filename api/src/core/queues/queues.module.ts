@@ -5,28 +5,28 @@ import { REDIS_OPTIONS } from '../databases/redis/redis.constants';
 
 @Global()
 @Module({
-    imports: [
-        BullModule.forRootAsync({
-            inject: [REDIS_OPTIONS],
-            useFactory: (redisOptions: RedisOptions | null) => {
-                const logger = new Logger('QueuesModule');
+  imports: [
+    BullModule.forRootAsync({
+      inject: [REDIS_OPTIONS],
+      useFactory: (redisOptions: RedisOptions | null) => {
+        const logger = new Logger('QueuesModule');
 
-                if (!redisOptions) {
-                    logger.warn('Redis options not provided, using defaults for BullMQ');
-                    return {
-                        connection: {
-                            host: 'localhost',
-                            port: 6379,
-                        }
-                    };
-                }
-
-                return {
-                    connection: redisOptions,
-                };
+        if (!redisOptions) {
+          logger.warn('Redis options not provided, using defaults for BullMQ');
+          return {
+            connection: {
+              host: 'localhost',
+              port: 6379,
             },
-        }),
-    ],
-    exports: [BullModule],
+          };
+        }
+
+        return {
+          connection: redisOptions,
+        };
+      },
+    }),
+  ],
+  exports: [BullModule],
 })
-export class QueuesModule { }
+export class QueuesModule {}

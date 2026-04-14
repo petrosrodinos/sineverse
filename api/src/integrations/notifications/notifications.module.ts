@@ -3,8 +3,8 @@ import { SendgridModule } from './sendgrid/sendgrid.module';
 import { TwillioModule } from './twillio/twillio.module';
 
 @Module({
-    imports: [SendgridModule, TwillioModule],
-    providers: [],
-    exports: [],
+  imports: [SendgridModule, TwillioModule],
+  providers: [],
+  exports: [],
 })
-export class NotificationsIntegrationModule { }
+export class NotificationsIntegrationModule {}

@@ -3,7 +3,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ProjectType } from '@/generated/prisma';
 
 export class CreateProjectDto {
-
   @ApiPropertyOptional({ description: 'Title of the project' })
   @IsString()
   title: string;
@@ -17,7 +16,9 @@ export class CreateProjectDto {
   @IsOptional()
   original_concept?: string;
 
-  @ApiPropertyOptional({ description: 'Enriched concept of the project (typically AI generated)' })
+  @ApiPropertyOptional({
+    description: 'Enriched concept of the project (typically AI generated)',
+  })
   @IsString()
   @IsOptional()
   enriched_concept?: string;
@@ -33,5 +34,4 @@ export class CreateProjectDto {
   @IsString({ each: true })
   @IsOptional()
   tones?: string[];
-
 }

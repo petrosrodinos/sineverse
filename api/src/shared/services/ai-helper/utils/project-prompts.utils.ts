@@ -1,12 +1,22 @@
-import { AiPromptResponse, EnrichProjectConceptConfig } from "../interfaces/ai-helper.interfaces";
+import {
+  AiPromptResponse,
+  EnrichProjectConceptConfig,
+} from '../interfaces/ai-helper.interfaces';
 
 export const generateEnrichProjectConceptPrompt = (
-    config: EnrichProjectConceptConfig
+  config: EnrichProjectConceptConfig,
 ): AiPromptResponse => {
-    const { project_title, original_concept, enriched_concept, genres, tones, directions } = config;
+  const {
+    project_title,
+    original_concept,
+    enriched_concept,
+    genres,
+    tones,
+    directions,
+  } = config;
 
-    return {
-        system: `
+  return {
+    system: `
 You are a cinematic story development engine designed to expand raw movie ideas into strong narrative foundations for AI-generated films.
 
 Your task is to enrich and strengthen the original concept or the already enriched concept WITHOUT generating scenes.
@@ -59,20 +69,21 @@ Avoid generic language.
 Make it emotionally grounded and production-ready.
     `.trim(),
 
-        prompt: `
+    prompt: `
 
 Project Title:
 ${project_title}
 
 Original Concept:
-${original_concept ?? ""}
+${original_concept ?? ''}
 
 ${enriched_concept ? `Already Enriched Concept:\n${enriched_concept}\n` : ''}
 
-${genres?.length ? `Genres:\n${genres.join(', ')}\n` : ''}${tones?.length ? `Tones:\n${tones.join(', ')}\n` : ''
-            }${directions ? `Creative Directions / Constraints:\n${directions}\n` : ''}
+${genres?.length ? `Genres:\n${genres.join(', ')}\n` : ''}${
+      tones?.length ? `Tones:\n${tones.join(', ')}\n` : ''
+    }${directions ? `Creative Directions / Constraints:\n${directions}\n` : ''}
 
 Enrich and structurally develop this concept into a strong cinematic foundation for later AI-based scene generation.
     `.trim(),
-    };
+  };
 };

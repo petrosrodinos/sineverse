@@ -10,4 +10,4 @@ import { DocumentsModule } from '../documents/documents.module';
   controllers: [ProjectsController],
   providers: [ProjectsService],
 })
-export class ProjectsModule { }
+export class ProjectsModule {}

@@ -1,7 +1,8 @@
 "use client";
 
 import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
-import { LayoutDashboard, Coins, Settings } from "lucide-react";
+import { LayoutDashboard, Coins, Settings, Shield } from "lucide-react";
+import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 
 export const dashboardSidebarItems: DashboardSidebarItem[] = [
   {
@@ -21,5 +22,12 @@ export const dashboardSidebarItems: DashboardSidebarItem[] = [
     name: "settings",
     href: "/dashboard/settings",
     icon: Settings,
+  },
+  {
+    label: "Admin",
+    name: "admin",
+    href: "/dashboard/admin",
+    icon: Shield,
+    roles: [RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN],
   },
 ];

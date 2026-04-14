@@ -3,7 +3,5 @@ import { DocumentsService } from './documents.service';
 
 @Controller('documents')
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) { }
-
-
+  constructor(private readonly documentsService: DocumentsService) {}
 }

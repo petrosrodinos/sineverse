@@ -5,12 +5,9 @@ import { PrismaModule } from '@/core/databases/prisma/prisma.module';
 import { GcsIntegrationModule } from '@/integrations/storage/gcs/gcs.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    GcsIntegrationModule,
-  ],
+  imports: [PrismaModule, GcsIntegrationModule],
   controllers: [DocumentsController],
   providers: [DocumentsService],
   exports: [DocumentsService],
 })
-export class DocumentsModule { }
+export class DocumentsModule {}

@@ -28,4 +28,4 @@ import { CreditsModule } from '../credits/credits.module';
   controllers: [ProjectAssetsController],
   providers: [ProjectAssetsService, VideoGenerationProcessor],
 })
-export class ProjectAssetsModule { }
+export class ProjectAssetsModule {}

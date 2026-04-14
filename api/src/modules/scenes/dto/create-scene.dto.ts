@@ -18,5 +18,4 @@ export class CreateSceneDto {
   @IsInt()
   @IsOptional()
   order: number;
-
 }

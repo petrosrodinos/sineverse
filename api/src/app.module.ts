@@ -19,6 +19,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
 import { ProjectAssetsModule } from './modules/project-assets/project-assets.module';
 import { CreditsModule } from './modules/credits/credits.module';
 import { UsersModule } from './modules/users/users.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -41,8 +42,9 @@ import { UsersModule } from './modules/users/users.module';
     ProjectAssetsModule,
     CreditsModule,
     UsersModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

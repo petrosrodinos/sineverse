@@ -8,4 +8,4 @@ import { AiIntegrationModule } from '@/integrations/ai/ai.module';
   controllers: [AiController],
   providers: [InternalAiService],
 })
-export class AiModule { }
+export class AiModule {}

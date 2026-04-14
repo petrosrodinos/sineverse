@@ -8,4 +8,4 @@ import { AppCacheModule } from '@/shared/services/cache/cache.module';
   controllers: [RedisCacheController],
   providers: [RedisCacheService],
 })
-export class RedisCacheModule { }
+export class RedisCacheModule {}

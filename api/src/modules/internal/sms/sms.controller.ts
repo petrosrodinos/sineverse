@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { SmsService } from './sms.service';
 import { CreateSmDto } from './dto/create-sm.dto';
 import { UpdateSmDto } from './dto/update-sm.dto';
@@ -11,7 +20,7 @@ import { AuthRoles } from 'src/modules/auth/interfaces/auth.interface';
 @UseGuards(JwtGuard, RolesGuard)
 @Roles(AuthRoles.ADMIN)
 export class SmsController {
-  constructor(private readonly smsService: SmsService) { }
+  constructor(private readonly smsService: SmsService) {}
 
   @Post()
   create(@Body() createSmDto: CreateSmDto) {
