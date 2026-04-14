@@ -6,29 +6,29 @@ import { Queue } from 'bullmq';
 import { getQueueToken } from '@nestjs/bullmq';
 import { BullModule } from '@nestjs/bullmq';
 import { BULL_BOARD_ADAPTER } from './queues.constants';
+import { VIDEO_GENERATION_QUEUE } from '@/modules/project-assets/queues/video.constants';
 
 
 @Global()
 @Module({
     imports: [
         BullModule.registerQueue(
-            // { name: MESSAGE_QUEUE },
+            { name: VIDEO_GENERATION_QUEUE },
         ),
     ],
     providers: [
         {
             provide: BULL_BOARD_ADAPTER,
             inject: [
-                // getQueueToken(CAMPAIGN_QUEUE),
+                getQueueToken(VIDEO_GENERATION_QUEUE),
             ],
-            useFactory: (campaignQueue: Queue, messageQueue: Queue) => {
+            useFactory: (videoGenerationQueue: Queue) => {
                 const serverAdapter = new ExpressAdapter();
                 serverAdapter.setBasePath('/admin/queues');
 
                 createBullBoard({
                     queues: [
-                        new BullMQAdapter(campaignQueue),
-                        new BullMQAdapter(messageQueue),
+                        new BullMQAdapter(videoGenerationQueue),
                     ],
                     serverAdapter,
                 });

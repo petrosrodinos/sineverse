@@ -101,6 +101,10 @@ export class ProjectAssetsService {
     }
   }
 
+  async getAimlBalance() {
+    return this.aimlApiService.getBalance();
+  }
+
   async findOne(user_uuid: string, uuid: string) {
     try {
       const asset = await this.prisma.projectAsset.findFirst({
@@ -216,17 +220,15 @@ export class ProjectAssetsService {
           } : undefined
         }
       });
+      this.logger.log(`[video-enqueue] created asset=${projectAsset.uuid} variation=${variation.uuid} model=${(metadata as any).ai_model ?? 'default'}`);
 
       await this.videoQueue.add(VIDEO_GENERATION_JOB, {
         projectAssetUuid: projectAsset.uuid,
       }, {
-        attempts: 3,
-        backoff: {
-          type: 'exponential',
-          delay: 5000,
-        },
+        attempts: 1,
         removeOnComplete: true,
       });
+      this.logger.log(`[video-enqueue] queued asset=${projectAsset.uuid} attempts=1`);
 
       return projectAsset;
 

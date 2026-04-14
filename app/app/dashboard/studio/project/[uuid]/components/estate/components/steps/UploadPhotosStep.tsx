@@ -11,6 +11,9 @@ import { addToast } from "@heroui/toast";
 import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
 import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"] as const;
+const ACCEPTED_IMAGE_INPUT = ".jpg,.jpeg,.png";
+
 export function UploadPhotosStep() {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
@@ -41,7 +44,14 @@ export function UploadPhotosStep() {
       if (!list || list.length === 0) {
         return;
       }
-      addUploadingPlaceholders(Array.from(list));
+      const images = Array.from(list).filter((file) =>
+        ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]),
+      );
+      if (images.length === 0) {
+        event.target.value = "";
+        return;
+      }
+      addUploadingPlaceholders(images);
       event.target.value = "";
     },
     [addUploadingPlaceholders],
@@ -56,7 +66,9 @@ export function UploadPhotosStep() {
       if (!list || list.length === 0) {
         return;
       }
-      const images = Array.from(list).filter((f) => f.type.startsWith("image/"));
+      const images = Array.from(list).filter((file) =>
+        ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]),
+      );
       if (images.length === 0) {
         return;
       }
@@ -144,7 +156,7 @@ export function UploadPhotosStep() {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={ACCEPTED_IMAGE_INPUT}
         multiple
         className="hidden"
         onChange={handleFileChange}

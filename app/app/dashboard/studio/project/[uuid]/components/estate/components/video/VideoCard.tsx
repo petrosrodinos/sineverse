@@ -1,17 +1,20 @@
 "use client";
 
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import type { Key } from "react";
-import { useCallback, useEffect } from "react";
-import { AlertCircle, GripVertical, Play } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AlertCircle, GripVertical, Play, Trash2 } from "lucide-react";
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
+import { useDeleteScene } from "@/features/scenes/hooks/use-scenes";
 import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID, ESTATE_DEFAULT_TRANSITION_ID, ESTATE_TRANSITION_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useVideoReorderItem } from "../../hooks/useVideoReorderItem";
 import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
@@ -34,6 +37,9 @@ type VideoCardProps = {
 
 export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: VideoCardProps) {
   const mergeEstateVideoAsset = useEstateWorkflowStore((s) => s.mergeEstateVideoAsset);
+  const removePromptImageAsset = useEstateWorkflowStore((s) => s.removePromptImageAsset);
+  const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { data: polled } = useProjectAsset(videoAssetUuid, {
     refetchInterval: (query) => {
@@ -58,6 +64,15 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
   const thumbUrl = display.prompt_images?.[0]?.document.url ?? "";
   const videoUrl = display.document?.url ?? "";
   const showEditor = display.status === ProjectAssetStatuses.COMPLETED;
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const sceneUuid = display.scene_uuid ?? display.scene?.uuid ?? asset.scene_uuid ?? asset.scene?.uuid ?? null;
+  const promptImageUuid = useMemo(
+    () =>
+      display.prompt_images?.[0]?.uuid ??
+      asset.prompt_images?.[0]?.uuid ??
+      null,
+    [display.prompt_images, asset.prompt_images],
+  );
 
   const trimRange = useEstateWorkflowStore((s) => s.trimRangeByVideoUuid[videoAssetUuid] ?? { start: 0, end: 5 });
   const transitionId = useEstateWorkflowStore((s) => s.transitionByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_TRANSITION_ID);
@@ -99,6 +114,31 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
     [videoAssetUuid, setEstateAudioTrack],
   );
 
+  const handleOpenDeleteModal = useCallback(() => {
+    if (!sceneUuid) {
+      return;
+    }
+    setIsDeleteModalOpen(true);
+  }, [sceneUuid]);
+
+  const handleCloseDeleteModal = useCallback(() => {
+    if (isDeletingScene) {
+      return;
+    }
+    setIsDeleteModalOpen(false);
+  }, [isDeletingScene]);
+
+  const handleConfirmDeleteScene = useCallback(async () => {
+    if (!sceneUuid) {
+      return;
+    }
+    await deleteScene(sceneUuid);
+    if (promptImageUuid) {
+      removePromptImageAsset(promptImageUuid);
+    }
+    setIsDeleteModalOpen(false);
+  }, [sceneUuid, deleteScene, promptImageUuid, removePromptImageAsset]);
+
   const previewShell = compact ? "relative h-24 w-full overflow-hidden rounded-lg bg-default-200/40 sm:h-28" : "relative aspect-video w-full overflow-hidden rounded-xl bg-default-200/40";
 
   const playBtnShell = compact ? "flex h-9 w-9 items-center justify-center rounded-full bg-background/80 text-foreground shadow-md backdrop-blur-sm" : "flex h-14 w-14 items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur-sm";
@@ -131,21 +171,35 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
         <span className={compact ? "text-tiny font-semibold text-foreground" : "text-small font-semibold text-foreground"}>
           Scene {sceneOrder ?? "—"}
         </span>
-        {display.status === ProjectAssetStatuses.FAILED ? (
-          <Chip size="sm" variant="flat" color="danger">
-            Failed
-          </Chip>
-        ) : display.status === ProjectAssetStatuses.COMPLETED ? (
-          <Chip size="sm" variant="flat" color="success">
-            Complete
-          </Chip>
-        ) : display.status === ProjectAssetStatuses.PENDING || display.status === ProjectAssetStatuses.PROCESSING ? (
-          <Chip size="sm" variant="flat" color="success">
-            {display.status === ProjectAssetStatuses.PENDING ? "Queued" : "Processing"}
-          </Chip>
-        ) : (
-          <Chip size="sm" variant="flat">{display.status}</Chip>
-        )}
+        <div className="flex items-center gap-2">
+          {display.status === ProjectAssetStatuses.FAILED ? (
+            <Chip size="sm" variant="flat" color="danger">
+              Failed
+            </Chip>
+          ) : display.status === ProjectAssetStatuses.COMPLETED ? (
+            <Chip size="sm" variant="flat" color="success">
+              Complete
+            </Chip>
+          ) : display.status === ProjectAssetStatuses.PENDING || display.status === ProjectAssetStatuses.PROCESSING ? (
+            <Chip size="sm" variant="flat" color="success">
+              {display.status === ProjectAssetStatuses.PENDING ? "Queued" : "Processing"}
+            </Chip>
+          ) : (
+            <Chip size="sm" variant="flat">{display.status}</Chip>
+          )}
+          {isDevelopment && !!sceneUuid && (
+            <Button
+              size="sm"
+              color="danger"
+              variant="flat"
+              isIconOnly
+              onPress={handleOpenDeleteModal}
+              aria-label="Delete scene"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardBody className={compact ? "gap-2 p-3 pt-0" : "gap-4 p-4 pt-0"}>
         <div className={previewShell}>
@@ -199,31 +253,57 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
   );
 
   if (!reorder) {
-    return card;
+    return (
+      <>
+        {card}
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDeleteScene}
+          title="Delete scene"
+          description="Delete this scene and all related assets? This action cannot be undone."
+          confirmText="Delete"
+          confirmColor="danger"
+          isLoading={isDeletingScene}
+        />
+      </>
+    );
   }
 
   return (
-    <div
-      className={`min-w-0 rounded-2xl transition-opacity duration-200 ${
-        reorder.dragIndex === reorder.index ? "opacity-60" : "opacity-100"
-      }`}
-      draggable={reorderHandlers.draggable}
-      onDragStart={reorderHandlers.handleDragStart}
-      onDragOver={reorderHandlers.handleDragOver}
-      onDrop={reorderHandlers.handleDrop}
-      onDragEnd={reorderHandlers.handleDragEnd}
-    >
-      <div className="flex gap-1.5">
-        {reorder.canReorder && (
-          <div
-            className="flex shrink-0 cursor-grab items-start pt-2 text-default-400 active:cursor-grabbing"
-            aria-hidden
-          >
-            <GripVertical className="h-4 w-4" />
-          </div>
-        )}
-        <div className="min-w-0 flex-1">{card}</div>
+    <>
+      <div
+        className={`min-w-0 rounded-2xl transition-opacity duration-200 ${
+          reorder.dragIndex === reorder.index ? "opacity-60" : "opacity-100"
+        }`}
+        draggable={reorderHandlers.draggable}
+        onDragStart={reorderHandlers.handleDragStart}
+        onDragOver={reorderHandlers.handleDragOver}
+        onDrop={reorderHandlers.handleDrop}
+        onDragEnd={reorderHandlers.handleDragEnd}
+      >
+        <div className="flex gap-1.5">
+          {reorder.canReorder && (
+            <div
+              className="flex shrink-0 cursor-grab items-start pt-2 text-default-400 active:cursor-grabbing"
+              aria-hidden
+            >
+              <GripVertical className="h-4 w-4" />
+            </div>
+          )}
+          <div className="min-w-0 flex-1">{card}</div>
+        </div>
       </div>
-    </div>
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDeleteScene}
+        title="Delete scene"
+        description="Delete this scene and all related assets? This action cannot be undone."
+        confirmText="Delete"
+        confirmColor="danger"
+        isLoading={isDeletingScene}
+      />
+    </>
   );
 }

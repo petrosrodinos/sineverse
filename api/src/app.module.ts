@@ -7,6 +7,7 @@ import { SmsModule } from './modules/internal/sms/sms.module';
 import { AiModule } from './modules/internal/ai/ai.module';
 import { RedisModule } from './core/databases/redis/redis.module';
 import { QueuesModule } from './core/queues/queues.module';
+import { BullBoardModule } from './core/queues/bull-board.module';
 import { RedisCacheModule } from './modules/internal/redis-cache/redis-cache.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from './shared/config/env/env.module';
@@ -26,6 +27,7 @@ import { ProjectAssetsModule } from './modules/project-assets/project-assets.mod
     AiModule,
     RedisModule,
     QueuesModule,
+    BullBoardModule,
     RedisCacheModule,
     // GraphQLModule,
     AuthModule,

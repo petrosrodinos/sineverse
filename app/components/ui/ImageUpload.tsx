@@ -4,6 +4,9 @@ import { Button } from "@heroui/button";
 import { Image, Upload, X } from "lucide-react";
 import { Spinner } from "@heroui/spinner";
 
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"] as const;
+const ACCEPTED_IMAGE_INPUT = ".jpg,.jpeg,.png";
+
 interface ImageUploadProps {
   value?: string;
   onChange?: (file: File) => void;
@@ -27,8 +30,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
+  const isAcceptedImageType = useCallback((file: File) => ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]), []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files && e.target.files[0] && isAcceptedImageType(e.target.files[0])) {
       onChange?.(e.target.files[0]);
     }
   };
@@ -48,11 +53,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       e.preventDefault();
       e.stopPropagation();
       setDragActive(false);
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      if (e.dataTransfer.files && e.dataTransfer.files[0] && isAcceptedImageType(e.dataTransfer.files[0])) {
         onChange?.(e.dataTransfer.files[0]);
       }
     },
-    [onChange]
+    [isAcceptedImageType, onChange]
   );
 
   return (
@@ -83,7 +88,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 <input
                   type="file"
                   className="hidden"
-                  accept="image/*"
+                  accept={ACCEPTED_IMAGE_INPUT}
                   onChange={handleFileChange}
                   disabled={isLoading}
                 />
@@ -114,7 +119,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             <input
               type="file"
               className="hidden"
-              accept="image/*"
+              accept={ACCEPTED_IMAGE_INPUT}
               onChange={handleFileChange}
               disabled={isLoading}
             />
@@ -123,7 +128,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
             <div className="text-center">
               <p className="text-sm font-medium">Click to upload or drag and drop</p>
-              <p className="text-xs text-default-400">PNG, JPG or WEBP (max. 5MB)</p>
+              <p className="text-xs text-default-400">PNG or JPG (max. 5MB)</p>
             </div>
           </label>
         )}

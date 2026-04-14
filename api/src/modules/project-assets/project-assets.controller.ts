@@ -27,6 +27,13 @@ export class ProjectAssetsController {
     return this.projectAssetsService.findAll(user_uuid, query);
   }
 
+  @Get('aiml/balance')
+  @ApiOperation({ summary: 'Get AIML API balance for current backend key' })
+  @ApiResponse({ status: 200, description: 'Returned AIML balance successfully.' })
+  getAimlBalance() {
+    return this.projectAssetsService.getAimlBalance();
+  }
+
   @Post('estate/walkthrough-videos')
   @ApiOperation({ summary: 'Create AI walkthrough videos from estate listing photos' })
   @ApiResponse({ status: 201, description: 'Walkthrough video jobs created.' })

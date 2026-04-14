@@ -1,6 +1,40 @@
 /**
  * Maps a Prisma SceneVariation to a model-specific payload for AIML API.
  */
+
+const NORMALIZED_ASPECT_RATIO_BY_MODEL: Record<string, readonly string[]> = {
+    default: ['16:9', '9:16', '1:1'],
+    kling: ['16:9', '9:16', '1:1', '2.35:1', '4:3'],
+    veo: ['16:9', '9:16', '1:1', '2.35:1', '4:3'],
+    seedance: ['16:9', '4:3', '1:1', '3:4', '9:16', '21:9', '9:21'],
+};
+
+const normalizeAspectRatio = (model: string, aspectRatio?: string): string | undefined => {
+    if (!aspectRatio) {
+        return undefined;
+    }
+
+    const normalized = aspectRatio.replace('x', ':').trim();
+
+    if (model.includes('seedance') && normalized === '2.35:1') {
+        return '21:9';
+    }
+
+    const allowed = model.includes('kling')
+        ? NORMALIZED_ASPECT_RATIO_BY_MODEL.kling
+        : model.includes('veo')
+            ? NORMALIZED_ASPECT_RATIO_BY_MODEL.veo
+            : model.includes('seedance')
+                ? NORMALIZED_ASPECT_RATIO_BY_MODEL.seedance
+                : NORMALIZED_ASPECT_RATIO_BY_MODEL.default;
+
+    if (allowed.includes(normalized)) {
+        return normalized;
+    }
+
+    return allowed[0];
+};
+
 export const transformVariationToModelPayload = (variation: any, model: string): any => {
     const buildPrompt = () => {
         const parts = [variation.prompt_text || ''];
@@ -31,7 +65,7 @@ export const transformVariationToModelPayload = (variation: any, model: string):
         model,
         prompt: buildPrompt(),
         seed: variation.seed ? parseInt(variation.seed) : undefined,
-        aspect_ratio: variation.aspect_ratio?.replace('x', ':') || undefined,
+        aspect_ratio: normalizeAspectRatio(model, variation.aspect_ratio),
         duration: variation.duration_sec || undefined,
     };
 
