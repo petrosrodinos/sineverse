@@ -42,6 +42,13 @@ export const ApiRoutes = {
         create_image: (scene_variation_uuid: string) => `/project-assets/scene-variations/${scene_variation_uuid}/create-image`,
         enrich_video: (project_asset_uuid: string) => `/project-assets/${project_asset_uuid}/enrich-video`,
     },
+    credits: {
+        summary: "/credits/summary",
+        packs: "/credits/packs",
+        usage: "/credits/usage",
+        purchases: "/credits/purchases",
+        checkout: "/credits/checkout",
+    },
     scene_videos: {
         prefix: "/scene-videos",
         scene_video: (scene_video_uuid: string) => `/scene-videos/${scene_video_uuid}`,

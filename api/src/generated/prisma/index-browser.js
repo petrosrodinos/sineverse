@@ -128,6 +128,7 @@ exports.Prisma.UserScalarFieldEnum = {
   full_name: 'full_name',
   password: 'password',
   role: 'role',
+  credits_balance: 'credits_balance',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -215,6 +216,79 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.CreditPackScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  key: 'key',
+  name: 'name',
+  credits_amount: 'credits_amount',
+  amount_cents: 'amount_cents',
+  currency: 'currency',
+  stripe_product_id: 'stripe_product_id',
+  stripe_price_id: 'stripe_price_id',
+  active: 'active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.CreditPurchaseScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  credit_pack_uuid: 'credit_pack_uuid',
+  status: 'status',
+  credits_amount: 'credits_amount',
+  amount_cents: 'amount_cents',
+  gross_amount_cents: 'gross_amount_cents',
+  stripe_fee_cents: 'stripe_fee_cents',
+  net_amount_cents: 'net_amount_cents',
+  currency: 'currency',
+  stripe_session_id: 'stripe_session_id',
+  stripe_payment_intent_id: 'stripe_payment_intent_id',
+  stripe_charge_id: 'stripe_charge_id',
+  stripe_receipt_url: 'stripe_receipt_url',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  user_uuid: 'user_uuid',
+  type: 'type',
+  delta_credits: 'delta_credits',
+  balance_after: 'balance_after',
+  project_type: 'project_type',
+  source: 'source',
+  source_ref_uuid: 'source_ref_uuid',
+  idempotency_key: 'idempotency_key',
+  credit_purchase_uuid: 'credit_purchase_uuid',
+  provider_charge_amount_usd: 'provider_charge_amount_usd',
+  provider_charge_amount: 'provider_charge_amount',
+  app_fee_rate: 'app_fee_rate',
+  app_fee_amount: 'app_fee_amount',
+  gross_charge_amount: 'gross_charge_amount',
+  fx_rate_usd_to_eur: 'fx_rate_usd_to_eur',
+  fx_source: 'fx_source',
+  fx_timestamp: 'fx_timestamp',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.CurrencyRateSnapshotScalarFieldEnum = {
+  id: 'id',
+  base_currency: 'base_currency',
+  quote_currency: 'quote_currency',
+  rate: 'rate',
+  source: 'source',
+  is_fallback: 'is_fallback',
+  fetched_at: 'fetched_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -281,6 +355,20 @@ exports.AssetRole = exports.$Enums.AssetRole = {
   GENERATED_CAPTION: 'GENERATED_CAPTION'
 };
 
+exports.CreditPurchaseStatus = exports.$Enums.CreditPurchaseStatus = {
+  PENDING: 'PENDING',
+  SUCCEEDED: 'SUCCEEDED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+};
+
+exports.CreditLedgerType = exports.$Enums.CreditLedgerType = {
+  PURCHASE: 'PURCHASE',
+  USAGE: 'USAGE',
+  ADJUSTMENT: 'ADJUSTMENT',
+  REFUND: 'REFUND'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Project: 'Project',
@@ -288,7 +376,11 @@ exports.Prisma.ModelName = {
   SceneVariation: 'SceneVariation',
   ProjectAsset: 'ProjectAsset',
   FinalProject: 'FinalProject',
-  Document: 'Document'
+  Document: 'Document',
+  CreditPack: 'CreditPack',
+  CreditPurchase: 'CreditPurchase',
+  CreditLedgerEntry: 'CreditLedgerEntry',
+  CurrencyRateSnapshot: 'CurrencyRateSnapshot'
 };
 
 /**

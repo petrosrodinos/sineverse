@@ -7,7 +7,8 @@ import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
-import { AssetRole, AssetStatus } from '@/generated/prisma';
+import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
+import { CreditsService } from '@/modules/credits/credits.service';
 
 export interface VideoGenerationJobData {
     projectAssetUuid: string;
@@ -23,6 +24,7 @@ export class VideoGenerationProcessor extends WorkerHost {
         private readonly prisma: PrismaService,
         private readonly aimlApiService: AimlApiService,
         private readonly documentsService: DocumentsService,
+        private readonly creditsService: CreditsService,
     ) {
         super();
     }
@@ -41,7 +43,12 @@ export class VideoGenerationProcessor extends WorkerHost {
                             include: { document: true }
                         }
                     }
-                }
+                },
+                project: {
+                    select: {
+                        type: true,
+                    },
+                },
             },
         });
 
@@ -169,7 +176,15 @@ export class VideoGenerationProcessor extends WorkerHost {
             this.logger.debug(`[video-poll:${taskId}] cycle=${pollCount} checking local status`);
             const currentAsset = await this.prisma.projectAsset.findUnique({
                 where: { uuid: projectAssetUuid },
-                select: { status: true },
+                select: {
+                    status: true,
+                    user_uuid: true,
+                    project: {
+                        select: {
+                            type: true,
+                        },
+                    },
+                },
             });
 
             if (!currentAsset) {
@@ -204,6 +219,28 @@ export class VideoGenerationProcessor extends WorkerHost {
                             document_uuid: videoUuid,
                         },
                     });
+
+                    const providerCreditsUsed = Number(statusResponse.meta?.usage?.credits_used ?? 0);
+                    const providerUsdSpent = Number(statusResponse.meta?.usage?.usd_spent ?? 0);
+                    if (providerCreditsUsed > 0) {
+                        try {
+                            await this.creditsService.recordUsageDeduction({
+                                user_uuid: currentAsset.user_uuid,
+                                project_type: currentAsset.user_uuid ? (currentAsset.project?.type ?? ProjectType.FILM) : ProjectType.FILM,
+                                provider_credits_used: providerCreditsUsed,
+                                provider_charge_amount: Number.isFinite(providerUsdSpent) && providerUsdSpent > 0 ? providerUsdSpent : null,
+                                source_ref_uuid: projectAssetUuid,
+                                metadata: {
+                                    provider: 'aimlapi',
+                                    provider_task_id: taskId,
+                                    provider_credits_used: providerCreditsUsed,
+                                    provider_charge_amount: providerUsdSpent,
+                                },
+                            });
+                        } catch (error: any) {
+                            this.logger.error(`[video-poll:${taskId}] failed to deduct credits: ${error?.message}`);
+                        }
+                    }
                     this.logger.log(`[video-poll:${taskId}] asset completed document_uuid=${videoUuid}`);
 
                     return;

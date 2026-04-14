@@ -10,6 +10,7 @@ import { AiIntegrationModule } from '@/integrations/ai/ai.module';
 import { AimlApiModule } from '@/integrations/aimlapi/aimlapi.module';
 import { DocumentsModule } from '../documents/documents.module';
 import { BullModule } from '@nestjs/bullmq';
+import { CreditsModule } from '../credits/credits.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { BullModule } from '@nestjs/bullmq';
     }),
     DocumentsModule,
     AiHelperModule,
+    CreditsModule,
   ],
   controllers: [ProjectAssetsController],
   providers: [ProjectAssetsService, VideoGenerationProcessor],

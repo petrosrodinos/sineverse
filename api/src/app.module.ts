@@ -17,6 +17,7 @@ import { SceneVariationsModule } from './modules/scene-variations/scene-variatio
 import { FinalProjectsModule } from './modules/final-projects/final-projects.module';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { ProjectAssetsModule } from './modules/project-assets/project-assets.module';
+import { CreditsModule } from './modules/credits/credits.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { ProjectAssetsModule } from './modules/project-assets/project-assets.mod
     FinalProjectsModule,
     DocumentsModule,
     ProjectAssetsModule,
+    CreditsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -8,6 +8,7 @@ export const CreateVideoResponseSchema = z.object({
 
 export const UsageSchema = z.object({
     credits_used: z.number(),
+    usd_spent: z.number().optional(),
 });
 
 export const MetaSchema = z.object({
