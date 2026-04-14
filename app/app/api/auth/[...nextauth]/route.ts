@@ -70,7 +70,7 @@ const authOptions: NextAuthOptions = {
             else if (new URL(url).origin === baseUrl) return url;
             return baseUrl + "/dashboard";
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.user_uuid = user.user_uuid;
                 token.email = user.email;
@@ -80,6 +80,10 @@ const authOptions: NextAuthOptions = {
                 token.access_token = user.access_token;
                 token.expires_in = user.expires_in;
                 token.isLoggedIn = user.isLoggedIn;
+            }
+
+            if (trigger === "update" && session?.full_name) {
+                token.full_name = session.full_name as string;
             }
             return token;
         },

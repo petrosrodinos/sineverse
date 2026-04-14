@@ -7,6 +7,8 @@ import { Skeleton } from "@heroui/skeleton";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCurrentUserProfile, useUpdateCurrentUserPassword, useUpdateCurrentUserProfile } from "@/features/users/hooks/use-users";
+import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/stores/auth";
 
 type ProfileFormValues = {
   full_name: string;
@@ -22,6 +24,8 @@ export default function SettingsPage() {
   const { data: user, isLoading } = useCurrentUserProfile();
   const { mutate: updateProfile, isPending: isUpdatingProfile } = useUpdateCurrentUserProfile();
   const { mutate: updatePassword, isPending: isUpdatingPassword } = useUpdateCurrentUserPassword();
+  const { update: updateSession } = useSession();
+  const { updateUser } = useAuthStore((state) => state);
 
   const {
     register: registerProfile,
@@ -53,7 +57,15 @@ export default function SettingsPage() {
   }, [user?.full_name, resetProfile]);
 
   const onSubmitProfile = (values: ProfileFormValues) => {
-    updateProfile({ full_name: values.full_name });
+    updateProfile(
+      { full_name: values.full_name },
+      {
+        onSuccess: async (updated) => {
+          await updateSession({ full_name: updated?.full_name ?? values.full_name });
+          updateUser({ full_name: updated?.full_name ?? values.full_name });
+        },
+      },
+    );
   };
 
   const onSubmitPassword = (values: PasswordFormValues) => {
