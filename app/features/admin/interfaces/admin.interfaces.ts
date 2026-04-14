@@ -31,10 +31,19 @@ export interface AdminUserRow {
   uuid: string;
   full_name: string;
   email: string;
+  phone: string | null;
   role: RoleType;
   credits_balance: number;
   token_usage: number;
   created_at: string;
+}
+
+export interface UpdateAdminUserPayload {
+  email: string;
+  full_name: string;
+  phone: string | null;
+  role: RoleType;
+  credits_balance: number;
 }
 
 export interface AdminPurchasesQuery {

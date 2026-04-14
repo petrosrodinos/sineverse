@@ -54,6 +54,7 @@ export const ApiRoutes = {
     admin: {
         overview: "/admin/dashboard/overview",
         users: "/admin/dashboard/users",
+        user: (user_uuid: string) => `/admin/dashboard/users/${user_uuid}`,
         purchases: "/admin/dashboard/purchases",
     },
     scene_videos: {

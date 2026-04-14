@@ -1,12 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { DocumentsService } from '../documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { CreditLedgerType, DocumentType, Prisma } from '@/generated/prisma';
+import {
+  AuthRole,
+  CreditLedgerType,
+  DocumentType,
+  Prisma,
+} from '@/generated/prisma';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
+import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly documentsService: DocumentsService,
+  ) {}
 
   async getOverview() {
     const [
@@ -81,6 +96,7 @@ export class AdminService {
           uuid: true,
           full_name: true,
           email: true,
+          phone: true,
           role: true,
           credits_balance: true,
           created_at: true,
@@ -181,5 +197,108 @@ export class AdminService {
         };
       }),
     };
+  }
+
+  async updateUser(userUuid: string, dto: UpdateAdminUserDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { uuid: userUuid },
+      select: { uuid: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const data: Prisma.UserUpdateInput = {};
+
+    if (dto.email !== undefined) {
+      const email = dto.email.trim().toLowerCase();
+      if (!email) {
+        throw new BadRequestException('Email cannot be empty');
+      }
+      data.email = email;
+    }
+
+    if (dto.full_name !== undefined) {
+      const fullName = dto.full_name.trim();
+      if (!fullName) {
+        throw new BadRequestException('Full name cannot be empty');
+      }
+      data.full_name = fullName;
+    }
+
+    if (dto.phone !== undefined) {
+      const normalizedPhone = dto.phone ? dto.phone.trim() : null;
+      data.phone = normalizedPhone || null;
+    }
+
+    if (dto.role !== undefined) {
+      if (!Object.values(AuthRole).includes(dto.role)) {
+        throw new BadRequestException('Invalid role');
+      }
+      data.role = dto.role;
+    }
+
+    if (dto.credits_balance !== undefined) {
+      const balance = Number(dto.credits_balance);
+      if (!Number.isInteger(balance) || balance < 0) {
+        throw new BadRequestException(
+          'Credits balance must be a non-negative integer',
+        );
+      }
+      data.credits_balance = balance;
+    }
+
+    try {
+      return await this.prisma.user.update({
+        where: { uuid: userUuid },
+        data,
+        select: {
+          uuid: true,
+          full_name: true,
+          email: true,
+          phone: true,
+          role: true,
+          credits_balance: true,
+          created_at: true,
+          updated_at: true,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update user', {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteUser(userUuid: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { uuid: userUuid },
+      select: { uuid: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const projects = await this.prisma.project.findMany({
+      where: { user_uuid: userUuid },
+      select: { uuid: true },
+    });
+
+    for (const project of projects) {
+      await this.documentsService.deleteProjectDocuments(project.uuid);
+    }
+
+    try {
+      await this.prisma.user.delete({
+        where: { uuid: userUuid },
+      });
+      return { success: true };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete user', {
+        cause: error,
+      });
+    }
   }
 }

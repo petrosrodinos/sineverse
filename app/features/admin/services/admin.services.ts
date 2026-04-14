@@ -7,6 +7,7 @@ import {
   AdminPurchasesQuery,
   AdminUserRow,
   AdminUsersQuery,
+  UpdateAdminUserPayload,
 } from "../interfaces/admin.interfaces";
 
 export const getAdminOverview = async (): Promise<AdminOverview> => {
@@ -29,5 +30,15 @@ export const getAdminPurchases = async (
   const response = await axiosInstance.get<AdminPaginationResponse<AdminPurchaseRow>>(ApiRoutes.admin.purchases, {
     params: query,
   });
+  return response.data;
+};
+
+export const updateAdminUser = async (userUuid: string, payload: UpdateAdminUserPayload): Promise<AdminUserRow> => {
+  const response = await axiosInstance.patch<AdminUserRow>(ApiRoutes.admin.user(userUuid), payload);
+  return response.data;
+};
+
+export const deleteAdminUser = async (userUuid: string): Promise<{ success: boolean }> => {
+  const response = await axiosInstance.delete<{ success: boolean }>(ApiRoutes.admin.user(userUuid));
   return response.data;
 };
