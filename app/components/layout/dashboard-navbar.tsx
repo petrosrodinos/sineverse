@@ -44,10 +44,10 @@ export function DashboardNavbar() {
                 </DropdownItem>
               </DropdownSection>
               <DropdownSection className="py-1">
-                <DropdownItem key="account" startContent={<User className="size-4" />} href="/dashboard/settings" className="rounded-lg">
+                <DropdownItem key="account" startContent={<User className="size-4" />} href={Routes.settings} className="rounded-lg">
                   Account
                 </DropdownItem>
-                <DropdownItem key="billing" startContent={<CreditCard className="size-4" />} href="/dashboard/billing" className="rounded-lg">
+                <DropdownItem key="billing" startContent={<CreditCard className="size-4" />} href={Routes.billing} className="rounded-lg">
                   Billing
                 </DropdownItem>
                 <DropdownItem 

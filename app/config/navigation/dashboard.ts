@@ -1,7 +1,7 @@
 "use client";
 
 import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
-import { BarChart3, Clock, LayoutDashboard, Users, Upload, Coins, Settings } from "lucide-react";
+import { LayoutDashboard, Coins, Settings } from "lucide-react";
 
 export const dashboardSidebarItems: DashboardSidebarItem[] = [
   {
@@ -9,30 +9,6 @@ export const dashboardSidebarItems: DashboardSidebarItem[] = [
     name: "studio",
     href: "/dashboard",
     icon: LayoutDashboard,
-  },
-  {
-    label: "Media Library",
-    name: "media",
-    href: "/dashboard/media",
-    icon: BarChart3,
-  },
-  {
-    label: "Timeline",
-    name: "timeline",
-    href: "/dashboard/timeline",
-    icon: Clock,
-  },
-  {
-    label: "Publish",
-    name: "publish",
-    href: "/dashboard/publish",
-    icon: Upload,
-  },
-  {
-    label: "Analytics",
-    name: "analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
   },
   {
     label: "Credits",

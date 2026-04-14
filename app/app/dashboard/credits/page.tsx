@@ -2,8 +2,10 @@
 
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
 import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
 import { useCreateCreditCheckout, useCreditPacks, useCreditsPurchases, useCreditsSummary, useCreditsUsage } from "@/features/credits/hooks/use-credits";
 
 function formatCurrency(amountCents: number, currency: string) {
@@ -29,6 +31,20 @@ function formatAmount(amount: number | string | null | undefined, currency: stri
   }).format(numeric);
 }
 
+function getUsageTypeChipColor(projectType?: string | null): "primary" | "secondary" | "success" | "warning" | "danger" | "default" {
+  if (projectType === "FILM") return "secondary";
+  if (projectType === "ESTATE") return "primary";
+  return "default";
+}
+
+function getStatusChipColor(status?: string | null): "primary" | "secondary" | "success" | "warning" | "danger" | "default" {
+  if (status === "SUCCEEDED") return "success";
+  if (status === "PENDING") return "warning";
+  if (status === "FAILED") return "danger";
+  if (status === "EXPIRED") return "default";
+  return "default";
+}
+
 export default function CreditsPage() {
   const { data: summary, isLoading: summaryLoading } = useCreditsSummary();
   const { data: packs, isLoading: packsLoading } = useCreditPacks();
@@ -37,27 +53,23 @@ export default function CreditsPage() {
   const { mutate: createCheckout, isPending: checkoutPending } = useCreateCreditCheckout();
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 sm:p-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-foreground">Credits</h1>
-        <p className="text-sm text-default-500">Buy credits, monitor usage, and review purchase history.</p>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
+      <div className="rounded-2xl border border-default-200 bg-gradient-to-br from-default-100 to-default-50 p-5 sm:p-6">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Credits Center</h1>
+        <p className="mt-1 text-sm text-default-500">Manage your balance, top up packs, and review detailed usage and purchase records.</p>
       </div>
 
-      <Card>
-        <CardHeader className="pb-1">
-          <p className="text-sm text-default-500">Current balance</p>
-        </CardHeader>
-        <CardBody className="pt-0">
-          {summaryLoading ? (
-            <Skeleton className="h-10 w-24 rounded-lg" />
-          ) : (
-            <div className="text-4xl font-bold">{summary?.balance ?? 0}</div>
-          )}
-          <p className="mt-2 text-xs text-default-500">
-            Purchased: {summary?.purchased_credits ?? 0} | Used: {summary?.used_credits ?? 0}
-          </p>
-        </CardBody>
-      </Card>
+      <section className="rounded-2xl border border-default-200 bg-gradient-to-r from-primary-500/10 via-default-100 to-secondary-500/10 px-6 py-7 sm:px-8">
+        <p className="text-xs uppercase tracking-[0.18em] text-default-500">Current balance</p>
+        {summaryLoading ? (
+          <Skeleton className="mt-2 h-12 w-36 rounded-xl" />
+        ) : (
+          <div className="mt-2 flex items-end gap-3">
+            <span className="text-5xl font-bold leading-none text-foreground">{summary?.balance ?? 0}</span>
+            <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
+          </div>
+        )}
+      </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         {packsLoading &&
@@ -71,20 +83,36 @@ export default function CreditsPage() {
             </Card>
           ))}
         {!packsLoading &&
-          packs?.map((pack) => (
-            <Card key={pack.uuid}>
-              <CardBody className="gap-3">
-                <div>
-                  <p className="text-sm text-default-500">{pack.name}</p>
-                  <p className="text-2xl font-semibold">{pack.credits_amount} credits</p>
+          packs?.map((pack, index) => (
+            <Card
+              key={pack.uuid}
+              className={
+                index === 1
+                  ? "border border-primary/40 bg-gradient-to-br from-primary/10 to-transparent shadow-lg shadow-primary/10"
+                  : "border border-default-200 bg-default-50/40 shadow-sm"
+              }
+            >
+              <CardBody className="gap-4 p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-sm text-default-500">{pack.name}</p>
+                    <p className="text-3xl font-bold leading-tight">{pack.credits_amount} <span className="text-base font-medium text-default-500">credits</span></p>
+                  </div>
+                  {index === 1 && (
+                    <Chip color="primary" variant="flat" size="sm">
+                      Best value
+                    </Chip>
+                  )}
                 </div>
-                <p className="text-xl font-bold">{formatCurrency(pack.amount_cents, pack.currency)}</p>
+                <p className="text-2xl font-bold">{formatCurrency(pack.amount_cents, pack.currency)}</p>
                 <Button
-                  color="primary"
+                  color={index === 1 ? "primary" : "default"}
+                  variant={index === 1 ? "solid" : "flat"}
                   onPress={() => createCheckout({ pack_key: pack.key })}
                   isLoading={checkoutPending}
+                  className="font-semibold"
                 >
-                  Buy
+                  Buy Pack
                 </Button>
               </CardBody>
             </Card>
@@ -98,53 +126,64 @@ export default function CreditsPage() {
         <CardBody>
           <Tabs aria-label="Credits history tabs" variant="underlined">
             <Tab key="usage" title="Credit Usage">
-              <div className="mt-3 flex flex-col gap-3">
-                {!usage?.items?.length && <p className="text-sm text-default-500">No usage yet.</p>}
-                {usage?.items?.map((item) => (
-                  <div key={item.uuid} className="flex items-center justify-between rounded-lg border border-default-200 px-3 py-2">
-                    <div>
-                      <p className="text-sm font-medium">{item.project_type ?? "Unknown"} generation</p>
-                      <p className="text-xs text-default-500">{new Date(item.created_at).toLocaleString()}</p>
-                      {formatAmount(item.gross_charge_amount, "EUR") && (
-                        <p className="text-xs text-default-500">
-                          Gross charge: {formatAmount(item.gross_charge_amount, "EUR")}
-                        </p>
-                      )}
-                      {item.fx_source === "fallback" && (
-                        <p className="text-[11px] font-medium text-warning">
-                          FX fallback rate used
-                        </p>
-                      )}
-                    </div>
-                    <p className="text-sm font-semibold">{item.delta_credits}</p>
-                  </div>
-                ))}
+              <div className="mt-3">
+                <Table aria-label="Credits usage table" removeWrapper>
+                  <TableHeader>
+                    <TableColumn>TYPE</TableColumn>
+                    <TableColumn>DATE</TableColumn>
+                    <TableColumn>GROSS CHARGE</TableColumn>
+                    <TableColumn>CREDITS</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent="No usage yet.">
+                    {(usage?.items ?? []).map((item) => (
+                      <TableRow key={item.uuid}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Chip size="sm" color={getUsageTypeChipColor(item.project_type)} variant="flat">
+                              {item.project_type ?? "UNKNOWN"}
+                            </Chip>
+                            {item.fx_source === "fallback" && (
+                              <Chip size="sm" color="warning" variant="dot">
+                                FX fallback
+                              </Chip>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
+                        <TableCell>{formatAmount(item.gross_charge_amount, "EUR") ?? "-"}</TableCell>
+                        <TableCell>
+                          <span className="font-semibold text-foreground">{item.delta_credits}</span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </Tab>
             <Tab key="purchases" title="Purchases">
-              <div className="mt-3 flex flex-col gap-3">
-                {!purchases?.items?.length && <p className="text-sm text-default-500">No purchases yet.</p>}
-                {purchases?.items?.map((item) => (
-                  <div key={item.uuid} className="flex items-center justify-between rounded-lg border border-default-200 px-3 py-2">
-                    <div>
-                      <p className="text-sm font-medium">{item.credit_pack?.name ?? "Credit Pack"}</p>
-                      <p className="text-xs text-default-500">{new Date(item.created_at).toLocaleString()}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold">{formatCurrency(item.amount_cents, item.currency)}</p>
-                      <p className="text-xs text-default-500">{item.status}</p>
-                      {item.gross_amount_cents !== null && item.gross_amount_cents !== undefined && (
-                        <p className="text-[11px] text-default-500">Gross: {formatCurrency(item.gross_amount_cents, item.currency)}</p>
-                      )}
-                      {item.stripe_fee_cents !== null && item.stripe_fee_cents !== undefined && (
-                        <p className="text-[11px] text-default-500">Fee: {formatCurrency(item.stripe_fee_cents, item.currency)}</p>
-                      )}
-                      {item.net_amount_cents !== null && item.net_amount_cents !== undefined && (
-                        <p className="text-[11px] text-default-500">Net: {formatCurrency(item.net_amount_cents, item.currency)}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+              <div className="mt-3">
+                <Table aria-label="Credits purchases table" removeWrapper>
+                  <TableHeader>
+                    <TableColumn>PACK</TableColumn>
+                    <TableColumn>DATE</TableColumn>
+                    <TableColumn>STATUS</TableColumn>
+                    <TableColumn>GROSS</TableColumn>
+                  </TableHeader>
+                  <TableBody emptyContent="No purchases yet.">
+                    {(purchases?.items ?? []).map((item) => (
+                      <TableRow key={item.uuid}>
+                        <TableCell>{item.credit_pack?.name ?? "Credit Pack"}</TableCell>
+                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Chip size="sm" color={getStatusChipColor(item.status)} variant="flat">
+                            {item.status}
+                          </Chip>
+                        </TableCell>
+                        <TableCell>{item.gross_amount_cents != null ? formatCurrency(item.gross_amount_cents, item.currency) : "-"}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </Tab>
           </Tabs>

@@ -14,6 +14,8 @@ export const ApiRoutes = {
     users: {
         prefix: "/users",
         me: "/users/me",
+        update_me: "/users/me",
+        update_password: "/users/me/password",
     },
     projects: {
         prefix: "/projects",

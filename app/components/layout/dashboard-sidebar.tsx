@@ -143,10 +143,10 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Account actions" className="min-w-[200px] rounded-xl">
-              <DropdownItem key="account" startContent={<User className="size-4" />} href="/dashboard/settings">
+              <DropdownItem key="account" startContent={<User className="size-4" />} href={Routes.settings}>
                 Account
               </DropdownItem>
-              <DropdownItem key="billing" startContent={<CreditCard className="size-4" />} href="/dashboard/billing">
+              <DropdownItem key="billing" startContent={<CreditCard className="size-4" />} href={Routes.billing}>
                 Billing
               </DropdownItem>
               <DropdownSection>

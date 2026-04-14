@@ -18,6 +18,7 @@ import { FinalProjectsModule } from './modules/final-projects/final-projects.mod
 import { DocumentsModule } from './modules/documents/documents.module';
 import { ProjectAssetsModule } from './modules/project-assets/project-assets.module';
 import { CreditsModule } from './modules/credits/credits.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CreditsModule } from './modules/credits/credits.module';
     DocumentsModule,
     ProjectAssetsModule,
     CreditsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

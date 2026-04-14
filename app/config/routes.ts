@@ -3,6 +3,8 @@ import type { ProjectType } from "@/features/projects/interfaces/projects.interf
 export const Routes = {
     dashboard: "/dashboard",
     studio: "/dashboard/studio",
+    settings: "/dashboard/settings",
+    billing: "/dashboard/credits",
     project: (uuid: string, options?: { type?: ProjectType }) => {
         const path = `/dashboard/studio/project/${uuid}`;
         if (!options?.type) {
