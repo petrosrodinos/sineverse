@@ -75,6 +75,9 @@ export const createEstateScenesFromImages = async (payload: CreateEstateScenesFr
     try {
         const formData = new FormData();
         formData.append("project_uuid", payload.project_uuid);
+        if (payload.ai_model) {
+            formData.append("ai_model", payload.ai_model);
+        }
         payload.files.forEach((file) => {
             formData.append("files", file);
         });

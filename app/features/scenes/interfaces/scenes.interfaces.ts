@@ -49,4 +49,5 @@ export interface ReorderScenesDto {
 export interface CreateEstateScenesFromImagesDto {
     project_uuid: string;
     files: File[];
+    ai_model?: string;
 }

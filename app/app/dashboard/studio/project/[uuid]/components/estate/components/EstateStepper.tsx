@@ -84,7 +84,11 @@ export function EstateStepper() {
     if (!projectUuid) return;
 
     try {
-      await createEstateScenesFromImages({ project_uuid: projectUuid, files });
+      await createEstateScenesFromImages({
+        project_uuid: projectUuid,
+        files,
+        ai_model: selectedVideoModel.id,
+      });
       setPendingFiles((prev) => {
         prev.forEach((pf) => URL.revokeObjectURL(pf.previewUrl));
         return [];
@@ -93,7 +97,7 @@ export function EstateStepper() {
     } catch {
       return;
     }
-  }, [activeStep, projectUuid, createEstateScenesFromImages]);
+  }, [activeStep, projectUuid, createEstateScenesFromImages, selectedVideoModel.id]);
 
   const handleBack = useCallback(() => {
     setActiveStep((s) => Math.max(s - 1, 1) as WorkflowStep);
@@ -147,7 +151,7 @@ export function EstateStepper() {
               onVideoModelChange={setSelectedVideoModelId}
             />
           )}
-          {activeStep === 2 && <GenerateVideosStep finalProjectUuid={finalProject?.uuid ?? null} hasPromptImages={promptImageAssets.length > 0} walkthroughAiModel={selectedVideoModel.api_value} />}
+          {activeStep === 2 && <GenerateVideosStep finalProjectUuid={finalProject?.uuid ?? null} hasPromptImages={promptImageAssets.length > 0} walkthroughAiModel={selectedVideoModel.id} />}
           {activeStep === 3 && <FinalRenderStep finalProjectUuid={finalProject?.uuid ?? null} />}
         </div>
       </div>

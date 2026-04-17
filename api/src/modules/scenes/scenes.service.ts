@@ -310,6 +310,9 @@ export class ScenesService {
                         role: AssetRole.PROMPT_IMAGE,
                         status: AssetStatus.COMPLETED,
                         document_uuid: item.documentUuid,
+                        metadata: dto.ai_model
+                          ? { walkthrough_ai_model: dto.ai_model }
+                          : undefined,
                       },
                     },
                   },

@@ -14,6 +14,7 @@ import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
 import {
   ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST,
+  ESTATE_WALKTHROUGH_VIDEO_MODEL,
   ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
 } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
@@ -85,7 +86,18 @@ export class VideoGenerationProcessor extends WorkerHost {
         prompt_image: promptImageAsset || null,
       };
 
-      const model = metadata.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
+      const workflowSource =
+        typeof metadata.workflow_source === 'string'
+          ? metadata.workflow_source
+          : null;
+      const isEstateWalkthrough =
+        workflowSource === ESTATE_WALKTHROUGH_WORKFLOW_SOURCE &&
+        projectAsset.project?.type === ProjectType.ESTATE;
+      const model =
+        metadata.ai_model ||
+        (isEstateWalkthrough
+          ? ESTATE_WALKTHROUGH_VIDEO_MODEL
+          : VideoModels.KLING_VIDEO_V3_STANDARD);
       const payload = transformVariationToModelPayload(configForMapping, model);
 
       const genResponse = await this.aimlApiService.video.create(payload);

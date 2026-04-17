@@ -38,6 +38,40 @@ const normalizeAspectRatio = (
   return allowed[0];
 };
 
+const normalizeDuration = (
+  model: string,
+  duration?: number,
+): number | undefined => {
+  if (!duration || !Number.isFinite(duration)) {
+    return undefined;
+  }
+
+  const normalized = Math.floor(duration);
+
+  if (model.includes('seedance')) {
+    return [5, 10].includes(normalized) ? normalized : 5;
+  }
+
+  if (
+    model.includes('kling-video/v1/standard') ||
+    model.includes('v2.1-master')
+  ) {
+    return [5, 10].includes(normalized) ? normalized : 5;
+  }
+
+  if (model.includes('klingai/video-v3')) {
+    if (normalized < 3) return 3;
+    if (normalized > 15) return 15;
+    return normalized;
+  }
+
+  if (model.includes('veo')) {
+    return [4, 6, 8].includes(normalized) ? normalized : 8;
+  }
+
+  return normalized;
+};
+
 export const transformVariationToModelPayload = (
   variation: any,
   model: string,
@@ -80,7 +114,7 @@ export const transformVariationToModelPayload = (
     prompt: buildPrompt(),
     seed: variation.seed ? parseInt(variation.seed) : undefined,
     aspect_ratio: normalizeAspectRatio(model, variation.aspect_ratio),
-    duration: variation.duration_sec || undefined,
+    duration: normalizeDuration(model, variation.duration_sec),
   };
 
   // Kling Mappings

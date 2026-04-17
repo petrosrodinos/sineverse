@@ -271,9 +271,6 @@ export class ProjectAssetsService {
             : undefined,
         },
       });
-      this.logger.log(
-        `[video-enqueue] created asset=${projectAsset.uuid} variation=${variation.uuid} model=${(metadata as any).ai_model ?? 'default'}`,
-      );
 
       await this.videoQueue.add(
         VIDEO_GENERATION_JOB,
@@ -284,9 +281,6 @@ export class ProjectAssetsService {
           attempts: 1,
           removeOnComplete: true,
         },
-      );
-      this.logger.log(
-        `[video-enqueue] queued asset=${projectAsset.uuid} attempts=1`,
       );
 
       return projectAsset;
@@ -426,7 +420,10 @@ export class ProjectAssetsService {
               project_uuid,
               scene_uuid: r.task.scene.uuid,
               scene_variation_uuid: r.task.variation.uuid,
-              ai_model: ai_model ?? ESTATE_WALKTHROUGH_VIDEO_MODEL,
+              ai_model:
+                ai_model ??
+                ((r.task.promptAsset.metadata as { walkthrough_ai_model?: string } | null)
+                  ?.walkthrough_ai_model ?? ESTATE_WALKTHROUGH_VIDEO_MODEL),
               duration_sec: ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
               prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
               workflow_source: ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
