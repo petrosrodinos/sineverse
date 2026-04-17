@@ -35,6 +35,9 @@ export class VideoGenerationProcessor extends WorkerHost {
     const projectAsset = await this.prisma.projectAsset.findUnique({
       where: { uuid: projectAssetUuid },
       include: {
+        prompt_images: {
+          include: { document: true },
+        },
         scene_variation: {
           include: {
             project_assets: {
@@ -66,7 +69,8 @@ export class VideoGenerationProcessor extends WorkerHost {
 
       const variation = projectAsset.scene_variation;
       const metadata = (projectAsset.metadata || {}) as any;
-      const promptImageAsset = variation.project_assets?.[0];
+      const promptImageAsset =
+        projectAsset.prompt_images?.[0] ?? variation.project_assets?.[0];
 
       const configForMapping = {
         ...variation,
