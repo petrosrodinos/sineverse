@@ -446,7 +446,6 @@ export class CreditsService {
           source: 'stripe_checkout',
           source_ref_uuid: purchase.uuid,
           idempotency_key: `purchase:${purchase.uuid}`,
-          credit_purchase_uuid: purchase.uuid,
           metadata: {
             stripe_session_id: session.id,
             amount_cents: purchase.amount_cents,

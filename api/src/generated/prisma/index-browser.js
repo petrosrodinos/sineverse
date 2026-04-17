@@ -316,7 +316,6 @@ exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   source: 'source',
   source_ref_uuid: 'source_ref_uuid',
   idempotency_key: 'idempotency_key',
-  credit_purchase_uuid: 'credit_purchase_uuid',
   provider_charge_amount_usd: 'provider_charge_amount_usd',
   provider_charge_amount: 'provider_charge_amount',
   app_fee_rate: 'app_fee_rate',

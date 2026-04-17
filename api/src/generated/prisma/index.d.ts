@@ -2735,37 +2735,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type CreditPurchaseCountOutputType
-   */
-
-  export type CreditPurchaseCountOutputType = {
-    ledger_entries: number
-  }
-
-  export type CreditPurchaseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ledger_entries?: boolean | CreditPurchaseCountOutputTypeCountLedger_entriesArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CreditPurchaseCountOutputType without action
-   */
-  export type CreditPurchaseCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CreditPurchaseCountOutputType
-     */
-    select?: CreditPurchaseCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CreditPurchaseCountOutputType without action
-   */
-  export type CreditPurchaseCountOutputTypeCountLedger_entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CreditLedgerEntryWhereInput
-  }
-
-
-  /**
    * Models
    */
 
@@ -18090,8 +18059,6 @@ export namespace Prisma {
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     credit_pack?: boolean | CreditPackDefaultArgs<ExtArgs>
-    ledger_entries?: boolean | CreditPurchase$ledger_entriesArgs<ExtArgs>
-    _count?: boolean | CreditPurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["creditPurchase"]>
 
   export type CreditPurchaseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -18165,8 +18132,6 @@ export namespace Prisma {
   export type CreditPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     credit_pack?: boolean | CreditPackDefaultArgs<ExtArgs>
-    ledger_entries?: boolean | CreditPurchase$ledger_entriesArgs<ExtArgs>
-    _count?: boolean | CreditPurchaseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CreditPurchaseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -18182,7 +18147,6 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       credit_pack: Prisma.$CreditPackPayload<ExtArgs>
-      ledger_entries: Prisma.$CreditLedgerEntryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -18599,7 +18563,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     credit_pack<T extends CreditPackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CreditPackDefaultArgs<ExtArgs>>): Prisma__CreditPackClient<$Result.GetResult<Prisma.$CreditPackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    ledger_entries<T extends CreditPurchase$ledger_entriesArgs<ExtArgs> = {}>(args?: Subset<T, CreditPurchase$ledger_entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CreditLedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19043,30 +19006,6 @@ export namespace Prisma {
   }
 
   /**
-   * CreditPurchase.ledger_entries
-   */
-  export type CreditPurchase$ledger_entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CreditLedgerEntry
-     */
-    select?: CreditLedgerEntrySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CreditLedgerEntry
-     */
-    omit?: CreditLedgerEntryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CreditLedgerEntryInclude<ExtArgs> | null
-    where?: CreditLedgerEntryWhereInput
-    orderBy?: CreditLedgerEntryOrderByWithRelationInput | CreditLedgerEntryOrderByWithRelationInput[]
-    cursor?: CreditLedgerEntryWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CreditLedgerEntryScalarFieldEnum | CreditLedgerEntryScalarFieldEnum[]
-  }
-
-  /**
    * CreditPurchase without action
    */
   export type CreditPurchaseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19132,7 +19071,6 @@ export namespace Prisma {
     source: string | null
     source_ref_uuid: string | null
     idempotency_key: string | null
-    credit_purchase_uuid: string | null
     provider_charge_amount_usd: Decimal | null
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
@@ -19156,7 +19094,6 @@ export namespace Prisma {
     source: string | null
     source_ref_uuid: string | null
     idempotency_key: string | null
-    credit_purchase_uuid: string | null
     provider_charge_amount_usd: Decimal | null
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
@@ -19180,7 +19117,6 @@ export namespace Prisma {
     source: number
     source_ref_uuid: number
     idempotency_key: number
-    credit_purchase_uuid: number
     provider_charge_amount_usd: number
     provider_charge_amount: number
     app_fee_rate: number
@@ -19231,7 +19167,6 @@ export namespace Prisma {
     source?: true
     source_ref_uuid?: true
     idempotency_key?: true
-    credit_purchase_uuid?: true
     provider_charge_amount_usd?: true
     provider_charge_amount?: true
     app_fee_rate?: true
@@ -19255,7 +19190,6 @@ export namespace Prisma {
     source?: true
     source_ref_uuid?: true
     idempotency_key?: true
-    credit_purchase_uuid?: true
     provider_charge_amount_usd?: true
     provider_charge_amount?: true
     app_fee_rate?: true
@@ -19279,7 +19213,6 @@ export namespace Prisma {
     source?: true
     source_ref_uuid?: true
     idempotency_key?: true
-    credit_purchase_uuid?: true
     provider_charge_amount_usd?: true
     provider_charge_amount?: true
     app_fee_rate?: true
@@ -19391,7 +19324,6 @@ export namespace Prisma {
     source: string | null
     source_ref_uuid: string | null
     idempotency_key: string | null
-    credit_purchase_uuid: string | null
     provider_charge_amount_usd: Decimal | null
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
@@ -19435,7 +19367,6 @@ export namespace Prisma {
     source?: boolean
     source_ref_uuid?: boolean
     idempotency_key?: boolean
-    credit_purchase_uuid?: boolean
     provider_charge_amount_usd?: boolean
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
@@ -19448,7 +19379,6 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19462,7 +19392,6 @@ export namespace Prisma {
     source?: boolean
     source_ref_uuid?: boolean
     idempotency_key?: boolean
-    credit_purchase_uuid?: boolean
     provider_charge_amount_usd?: boolean
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
@@ -19475,7 +19404,6 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19489,7 +19417,6 @@ export namespace Prisma {
     source?: boolean
     source_ref_uuid?: boolean
     idempotency_key?: boolean
-    credit_purchase_uuid?: boolean
     provider_charge_amount_usd?: boolean
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
@@ -19502,7 +19429,6 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }, ExtArgs["result"]["creditLedgerEntry"]>
 
   export type CreditLedgerEntrySelectScalar = {
@@ -19516,7 +19442,6 @@ export namespace Prisma {
     source?: boolean
     source_ref_uuid?: boolean
     idempotency_key?: boolean
-    credit_purchase_uuid?: boolean
     provider_charge_amount_usd?: boolean
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
@@ -19530,25 +19455,21 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "credit_purchase_uuid" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "gross_charge_amount" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
+  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "gross_charge_amount" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
   export type CreditLedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }
   export type CreditLedgerEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }
   export type CreditLedgerEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    credit_purchase?: boolean | CreditLedgerEntry$credit_purchaseArgs<ExtArgs>
   }
 
   export type $CreditLedgerEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CreditLedgerEntry"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      credit_purchase: Prisma.$CreditPurchasePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -19561,7 +19482,6 @@ export namespace Prisma {
       source: string | null
       source_ref_uuid: string | null
       idempotency_key: string | null
-      credit_purchase_uuid: string | null
       provider_charge_amount_usd: Prisma.Decimal | null
       provider_charge_amount: Prisma.Decimal | null
       app_fee_rate: Prisma.Decimal | null
@@ -19968,7 +19888,6 @@ export namespace Prisma {
   export interface Prisma__CreditLedgerEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    credit_purchase<T extends CreditLedgerEntry$credit_purchaseArgs<ExtArgs> = {}>(args?: Subset<T, CreditLedgerEntry$credit_purchaseArgs<ExtArgs>>): Prisma__CreditPurchaseClient<$Result.GetResult<Prisma.$CreditPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20008,7 +19927,6 @@ export namespace Prisma {
     readonly source: FieldRef<"CreditLedgerEntry", 'String'>
     readonly source_ref_uuid: FieldRef<"CreditLedgerEntry", 'String'>
     readonly idempotency_key: FieldRef<"CreditLedgerEntry", 'String'>
-    readonly credit_purchase_uuid: FieldRef<"CreditLedgerEntry", 'String'>
     readonly provider_charge_amount_usd: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly provider_charge_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly app_fee_rate: FieldRef<"CreditLedgerEntry", 'Decimal'>
@@ -20413,25 +20331,6 @@ export namespace Prisma {
      * Limit how many CreditLedgerEntries to delete.
      */
     limit?: number
-  }
-
-  /**
-   * CreditLedgerEntry.credit_purchase
-   */
-  export type CreditLedgerEntry$credit_purchaseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CreditPurchase
-     */
-    select?: CreditPurchaseSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CreditPurchase
-     */
-    omit?: CreditPurchaseOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CreditPurchaseInclude<ExtArgs> | null
-    where?: CreditPurchaseWhereInput
   }
 
   /**
@@ -21787,7 +21686,6 @@ export namespace Prisma {
     source: 'source',
     source_ref_uuid: 'source_ref_uuid',
     idempotency_key: 'idempotency_key',
-    credit_purchase_uuid: 'credit_purchase_uuid',
     provider_charge_amount_usd: 'provider_charge_amount_usd',
     provider_charge_amount: 'provider_charge_amount',
     app_fee_rate: 'app_fee_rate',
@@ -23231,7 +23129,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"CreditPurchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     credit_pack?: XOR<CreditPackScalarRelationFilter, CreditPackWhereInput>
-    ledger_entries?: CreditLedgerEntryListRelationFilter
   }
 
   export type CreditPurchaseOrderByWithRelationInput = {
@@ -23255,7 +23152,6 @@ export namespace Prisma {
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
     credit_pack?: CreditPackOrderByWithRelationInput
-    ledger_entries?: CreditLedgerEntryOrderByRelationAggregateInput
   }
 
   export type CreditPurchaseWhereUniqueInput = Prisma.AtLeast<{
@@ -23282,7 +23178,6 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"CreditPurchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     credit_pack?: XOR<CreditPackScalarRelationFilter, CreditPackWhereInput>
-    ledger_entries?: CreditLedgerEntryListRelationFilter
   }, "id" | "uuid" | "stripe_session_id" | "stripe_payment_intent_id" | "stripe_charge_id">
 
   export type CreditPurchaseOrderByWithAggregationInput = {
@@ -23349,7 +23244,6 @@ export namespace Prisma {
     source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     source_ref_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     idempotency_key?: StringNullableFilter<"CreditLedgerEntry"> | string | null
-    credit_purchase_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     provider_charge_amount_usd?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
@@ -23362,7 +23256,6 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
     updated_at?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    credit_purchase?: XOR<CreditPurchaseNullableScalarRelationFilter, CreditPurchaseWhereInput> | null
   }
 
   export type CreditLedgerEntryOrderByWithRelationInput = {
@@ -23376,7 +23269,6 @@ export namespace Prisma {
     source?: SortOrderInput | SortOrder
     source_ref_uuid?: SortOrderInput | SortOrder
     idempotency_key?: SortOrderInput | SortOrder
-    credit_purchase_uuid?: SortOrderInput | SortOrder
     provider_charge_amount_usd?: SortOrderInput | SortOrder
     provider_charge_amount?: SortOrderInput | SortOrder
     app_fee_rate?: SortOrderInput | SortOrder
@@ -23389,7 +23281,6 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
-    credit_purchase?: CreditPurchaseOrderByWithRelationInput
   }
 
   export type CreditLedgerEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -23406,7 +23297,6 @@ export namespace Prisma {
     project_type?: EnumProjectTypeNullableFilter<"CreditLedgerEntry"> | $Enums.ProjectType | null
     source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     source_ref_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
-    credit_purchase_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     provider_charge_amount_usd?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
@@ -23419,7 +23309,6 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
     updated_at?: DateTimeFilter<"CreditLedgerEntry"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    credit_purchase?: XOR<CreditPurchaseNullableScalarRelationFilter, CreditPurchaseWhereInput> | null
   }, "id" | "uuid" | "idempotency_key">
 
   export type CreditLedgerEntryOrderByWithAggregationInput = {
@@ -23433,7 +23322,6 @@ export namespace Prisma {
     source?: SortOrderInput | SortOrder
     source_ref_uuid?: SortOrderInput | SortOrder
     idempotency_key?: SortOrderInput | SortOrder
-    credit_purchase_uuid?: SortOrderInput | SortOrder
     provider_charge_amount_usd?: SortOrderInput | SortOrder
     provider_charge_amount?: SortOrderInput | SortOrder
     app_fee_rate?: SortOrderInput | SortOrder
@@ -23466,7 +23354,6 @@ export namespace Prisma {
     source?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     source_ref_uuid?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     idempotency_key?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
-    credit_purchase_uuid?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     provider_charge_amount_usd?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
@@ -24770,7 +24657,6 @@ export namespace Prisma {
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutCredit_purchasesInput
     credit_pack: CreditPackCreateNestedOneWithoutCredit_purchasesInput
-    ledger_entries?: CreditLedgerEntryCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseUncheckedCreateInput = {
@@ -24792,7 +24678,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseUpdateInput = {
@@ -24813,7 +24698,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutCredit_purchasesNestedInput
     credit_pack?: CreditPackUpdateOneRequiredWithoutCredit_purchasesNestedInput
-    ledger_entries?: CreditLedgerEntryUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseUncheckedUpdateInput = {
@@ -24835,7 +24719,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseCreateManyInput = {
@@ -24919,7 +24802,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutCredit_ledger_entriesInput
-    credit_purchase?: CreditPurchaseCreateNestedOneWithoutLedger_entriesInput
   }
 
   export type CreditLedgerEntryUncheckedCreateInput = {
@@ -24933,7 +24815,6 @@ export namespace Prisma {
     source?: string | null
     source_ref_uuid?: string | null
     idempotency_key?: string | null
-    credit_purchase_uuid?: string | null
     provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
@@ -24968,7 +24849,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutCredit_ledger_entriesNestedInput
-    credit_purchase?: CreditPurchaseUpdateOneWithoutLedger_entriesNestedInput
   }
 
   export type CreditLedgerEntryUncheckedUpdateInput = {
@@ -24982,7 +24862,6 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    credit_purchase_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -25007,7 +24886,6 @@ export namespace Prisma {
     source?: string | null
     source_ref_uuid?: string | null
     idempotency_key?: string | null
-    credit_purchase_uuid?: string | null
     provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
@@ -25054,7 +24932,6 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    credit_purchase_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -26434,11 +26311,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type CreditPurchaseNullableScalarRelationFilter = {
-    is?: CreditPurchaseWhereInput | null
-    isNot?: CreditPurchaseWhereInput | null
-  }
-
   export type CreditLedgerEntryCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
@@ -26450,7 +26322,6 @@ export namespace Prisma {
     source?: SortOrder
     source_ref_uuid?: SortOrder
     idempotency_key?: SortOrder
-    credit_purchase_uuid?: SortOrder
     provider_charge_amount_usd?: SortOrder
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
@@ -26487,7 +26358,6 @@ export namespace Prisma {
     source?: SortOrder
     source_ref_uuid?: SortOrder
     idempotency_key?: SortOrder
-    credit_purchase_uuid?: SortOrder
     provider_charge_amount_usd?: SortOrder
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
@@ -26511,7 +26381,6 @@ export namespace Prisma {
     source?: SortOrder
     source_ref_uuid?: SortOrder
     idempotency_key?: SortOrder
-    credit_purchase_uuid?: SortOrder
     provider_charge_amount_usd?: SortOrder
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
@@ -28191,20 +28060,6 @@ export namespace Prisma {
     connect?: CreditPackWhereUniqueInput
   }
 
-  export type CreditLedgerEntryCreateNestedManyWithoutCredit_purchaseInput = {
-    create?: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput> | CreditLedgerEntryCreateWithoutCredit_purchaseInput[] | CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput[]
-    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput | CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput[]
-    createMany?: CreditLedgerEntryCreateManyCredit_purchaseInputEnvelope
-    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-  }
-
-  export type CreditLedgerEntryUncheckedCreateNestedManyWithoutCredit_purchaseInput = {
-    create?: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput> | CreditLedgerEntryCreateWithoutCredit_purchaseInput[] | CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput[]
-    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput | CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput[]
-    createMany?: CreditLedgerEntryCreateManyCredit_purchaseInputEnvelope
-    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-  }
-
   export type EnumCreditPurchaseStatusFieldUpdateOperationsInput = {
     set?: $Enums.CreditPurchaseStatus
   }
@@ -28225,44 +28080,10 @@ export namespace Prisma {
     update?: XOR<XOR<CreditPackUpdateToOneWithWhereWithoutCredit_purchasesInput, CreditPackUpdateWithoutCredit_purchasesInput>, CreditPackUncheckedUpdateWithoutCredit_purchasesInput>
   }
 
-  export type CreditLedgerEntryUpdateManyWithoutCredit_purchaseNestedInput = {
-    create?: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput> | CreditLedgerEntryCreateWithoutCredit_purchaseInput[] | CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput[]
-    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput | CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput[]
-    upsert?: CreditLedgerEntryUpsertWithWhereUniqueWithoutCredit_purchaseInput | CreditLedgerEntryUpsertWithWhereUniqueWithoutCredit_purchaseInput[]
-    createMany?: CreditLedgerEntryCreateManyCredit_purchaseInputEnvelope
-    set?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    disconnect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    delete?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    update?: CreditLedgerEntryUpdateWithWhereUniqueWithoutCredit_purchaseInput | CreditLedgerEntryUpdateWithWhereUniqueWithoutCredit_purchaseInput[]
-    updateMany?: CreditLedgerEntryUpdateManyWithWhereWithoutCredit_purchaseInput | CreditLedgerEntryUpdateManyWithWhereWithoutCredit_purchaseInput[]
-    deleteMany?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
-  }
-
-  export type CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseNestedInput = {
-    create?: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput> | CreditLedgerEntryCreateWithoutCredit_purchaseInput[] | CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput[]
-    connectOrCreate?: CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput | CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput[]
-    upsert?: CreditLedgerEntryUpsertWithWhereUniqueWithoutCredit_purchaseInput | CreditLedgerEntryUpsertWithWhereUniqueWithoutCredit_purchaseInput[]
-    createMany?: CreditLedgerEntryCreateManyCredit_purchaseInputEnvelope
-    set?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    disconnect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    delete?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    connect?: CreditLedgerEntryWhereUniqueInput | CreditLedgerEntryWhereUniqueInput[]
-    update?: CreditLedgerEntryUpdateWithWhereUniqueWithoutCredit_purchaseInput | CreditLedgerEntryUpdateWithWhereUniqueWithoutCredit_purchaseInput[]
-    updateMany?: CreditLedgerEntryUpdateManyWithWhereWithoutCredit_purchaseInput | CreditLedgerEntryUpdateManyWithWhereWithoutCredit_purchaseInput[]
-    deleteMany?: CreditLedgerEntryScalarWhereInput | CreditLedgerEntryScalarWhereInput[]
-  }
-
   export type UserCreateNestedOneWithoutCredit_ledger_entriesInput = {
     create?: XOR<UserCreateWithoutCredit_ledger_entriesInput, UserUncheckedCreateWithoutCredit_ledger_entriesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCredit_ledger_entriesInput
     connect?: UserWhereUniqueInput
-  }
-
-  export type CreditPurchaseCreateNestedOneWithoutLedger_entriesInput = {
-    create?: XOR<CreditPurchaseCreateWithoutLedger_entriesInput, CreditPurchaseUncheckedCreateWithoutLedger_entriesInput>
-    connectOrCreate?: CreditPurchaseCreateOrConnectWithoutLedger_entriesInput
-    connect?: CreditPurchaseWhereUniqueInput
   }
 
   export type EnumCreditLedgerTypeFieldUpdateOperationsInput = {
@@ -28291,16 +28112,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutCredit_ledger_entriesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCredit_ledger_entriesInput, UserUpdateWithoutCredit_ledger_entriesInput>, UserUncheckedUpdateWithoutCredit_ledger_entriesInput>
-  }
-
-  export type CreditPurchaseUpdateOneWithoutLedger_entriesNestedInput = {
-    create?: XOR<CreditPurchaseCreateWithoutLedger_entriesInput, CreditPurchaseUncheckedCreateWithoutLedger_entriesInput>
-    connectOrCreate?: CreditPurchaseCreateOrConnectWithoutLedger_entriesInput
-    upsert?: CreditPurchaseUpsertWithoutLedger_entriesInput
-    disconnect?: CreditPurchaseWhereInput | boolean
-    delete?: CreditPurchaseWhereInput | boolean
-    connect?: CreditPurchaseWhereUniqueInput
-    update?: XOR<XOR<CreditPurchaseUpdateToOneWithWhereWithoutLedger_entriesInput, CreditPurchaseUpdateWithoutLedger_entriesInput>, CreditPurchaseUncheckedUpdateWithoutLedger_entriesInput>
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -28992,7 +28803,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     credit_pack: CreditPackCreateNestedOneWithoutCredit_purchasesInput
-    ledger_entries?: CreditLedgerEntryCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseUncheckedCreateWithoutUserInput = {
@@ -29013,7 +28823,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseCreateOrConnectWithoutUserInput = {
@@ -29046,7 +28855,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
-    credit_purchase?: CreditPurchaseCreateNestedOneWithoutLedger_entriesInput
   }
 
   export type CreditLedgerEntryUncheckedCreateWithoutUserInput = {
@@ -29059,7 +28867,6 @@ export namespace Prisma {
     source?: string | null
     source_ref_uuid?: string | null
     idempotency_key?: string | null
-    credit_purchase_uuid?: string | null
     provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
@@ -29319,7 +29126,6 @@ export namespace Prisma {
     source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     source_ref_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     idempotency_key?: StringNullableFilter<"CreditLedgerEntry"> | string | null
-    credit_purchase_uuid?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     provider_charge_amount_usd?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
@@ -32231,7 +32037,6 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutCredit_purchasesInput
-    ledger_entries?: CreditLedgerEntryCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseUncheckedCreateWithoutCredit_packInput = {
@@ -32252,7 +32057,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedCreateNestedManyWithoutCredit_purchaseInput
   }
 
   export type CreditPurchaseCreateOrConnectWithoutCredit_packInput = {
@@ -32357,63 +32161,6 @@ export namespace Prisma {
     create: XOR<CreditPackCreateWithoutCredit_purchasesInput, CreditPackUncheckedCreateWithoutCredit_purchasesInput>
   }
 
-  export type CreditLedgerEntryCreateWithoutCredit_purchaseInput = {
-    uuid?: string
-    type: $Enums.CreditLedgerType
-    delta_credits: number
-    balance_after: number
-    project_type?: $Enums.ProjectType | null
-    source?: string | null
-    source_ref_uuid?: string | null
-    idempotency_key?: string | null
-    provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
-    fx_source?: string | null
-    fx_timestamp?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutCredit_ledger_entriesInput
-  }
-
-  export type CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput = {
-    id?: number
-    uuid?: string
-    user_uuid: string
-    type: $Enums.CreditLedgerType
-    delta_credits: number
-    balance_after: number
-    project_type?: $Enums.ProjectType | null
-    source?: string | null
-    source_ref_uuid?: string | null
-    idempotency_key?: string | null
-    provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
-    fx_source?: string | null
-    fx_timestamp?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type CreditLedgerEntryCreateOrConnectWithoutCredit_purchaseInput = {
-    where: CreditLedgerEntryWhereUniqueInput
-    create: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput>
-  }
-
-  export type CreditLedgerEntryCreateManyCredit_purchaseInputEnvelope = {
-    data: CreditLedgerEntryCreateManyCredit_purchaseInput | CreditLedgerEntryCreateManyCredit_purchaseInput[]
-    skipDuplicates?: boolean
-  }
-
   export type UserUpsertWithoutCredit_purchasesInput = {
     update: XOR<UserUpdateWithoutCredit_purchasesInput, UserUncheckedUpdateWithoutCredit_purchasesInput>
     create: XOR<UserCreateWithoutCredit_purchasesInput, UserUncheckedCreateWithoutCredit_purchasesInput>
@@ -32502,22 +32249,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CreditLedgerEntryUpsertWithWhereUniqueWithoutCredit_purchaseInput = {
-    where: CreditLedgerEntryWhereUniqueInput
-    update: XOR<CreditLedgerEntryUpdateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedUpdateWithoutCredit_purchaseInput>
-    create: XOR<CreditLedgerEntryCreateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedCreateWithoutCredit_purchaseInput>
-  }
-
-  export type CreditLedgerEntryUpdateWithWhereUniqueWithoutCredit_purchaseInput = {
-    where: CreditLedgerEntryWhereUniqueInput
-    data: XOR<CreditLedgerEntryUpdateWithoutCredit_purchaseInput, CreditLedgerEntryUncheckedUpdateWithoutCredit_purchaseInput>
-  }
-
-  export type CreditLedgerEntryUpdateManyWithWhereWithoutCredit_purchaseInput = {
-    where: CreditLedgerEntryScalarWhereInput
-    data: XOR<CreditLedgerEntryUpdateManyMutationInput, CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseInput>
-  }
-
   export type UserCreateWithoutCredit_ledger_entriesInput = {
     uuid?: string
     email: string
@@ -32558,52 +32289,6 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutCredit_ledger_entriesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCredit_ledger_entriesInput, UserUncheckedCreateWithoutCredit_ledger_entriesInput>
-  }
-
-  export type CreditPurchaseCreateWithoutLedger_entriesInput = {
-    uuid?: string
-    status?: $Enums.CreditPurchaseStatus
-    credits_amount: number
-    amount_cents: number
-    gross_amount_cents?: number | null
-    stripe_fee_cents?: number | null
-    net_amount_cents?: number | null
-    currency?: string
-    stripe_session_id?: string | null
-    stripe_payment_intent_id?: string | null
-    stripe_charge_id?: string | null
-    stripe_receipt_url?: string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UserCreateNestedOneWithoutCredit_purchasesInput
-    credit_pack: CreditPackCreateNestedOneWithoutCredit_purchasesInput
-  }
-
-  export type CreditPurchaseUncheckedCreateWithoutLedger_entriesInput = {
-    id?: number
-    uuid?: string
-    user_uuid: string
-    credit_pack_uuid: string
-    status?: $Enums.CreditPurchaseStatus
-    credits_amount: number
-    amount_cents: number
-    gross_amount_cents?: number | null
-    stripe_fee_cents?: number | null
-    net_amount_cents?: number | null
-    currency?: string
-    stripe_session_id?: string | null
-    stripe_payment_intent_id?: string | null
-    stripe_charge_id?: string | null
-    stripe_receipt_url?: string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type CreditPurchaseCreateOrConnectWithoutLedger_entriesInput = {
-    where: CreditPurchaseWhereUniqueInput
-    create: XOR<CreditPurchaseCreateWithoutLedger_entriesInput, CreditPurchaseUncheckedCreateWithoutLedger_entriesInput>
   }
 
   export type UserUpsertWithoutCredit_ledger_entriesInput = {
@@ -32652,58 +32337,6 @@ export namespace Prisma {
     project_assets?: ProjectAssetUncheckedUpdateManyWithoutUserNestedInput
     final_projects?: FinalProjectUncheckedUpdateManyWithoutUserNestedInput
     credit_purchases?: CreditPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type CreditPurchaseUpsertWithoutLedger_entriesInput = {
-    update: XOR<CreditPurchaseUpdateWithoutLedger_entriesInput, CreditPurchaseUncheckedUpdateWithoutLedger_entriesInput>
-    create: XOR<CreditPurchaseCreateWithoutLedger_entriesInput, CreditPurchaseUncheckedCreateWithoutLedger_entriesInput>
-    where?: CreditPurchaseWhereInput
-  }
-
-  export type CreditPurchaseUpdateToOneWithWhereWithoutLedger_entriesInput = {
-    where?: CreditPurchaseWhereInput
-    data: XOR<CreditPurchaseUpdateWithoutLedger_entriesInput, CreditPurchaseUncheckedUpdateWithoutLedger_entriesInput>
-  }
-
-  export type CreditPurchaseUpdateWithoutLedger_entriesInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
-    credits_amount?: IntFieldUpdateOperationsInput | number
-    amount_cents?: IntFieldUpdateOperationsInput | number
-    gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    currency?: StringFieldUpdateOperationsInput | string
-    stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_payment_intent_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_charge_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_receipt_url?: NullableStringFieldUpdateOperationsInput | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCredit_purchasesNestedInput
-    credit_pack?: CreditPackUpdateOneRequiredWithoutCredit_purchasesNestedInput
-  }
-
-  export type CreditPurchaseUncheckedUpdateWithoutLedger_entriesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    credit_pack_uuid?: StringFieldUpdateOperationsInput | string
-    status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
-    credits_amount?: IntFieldUpdateOperationsInput | number
-    amount_cents?: IntFieldUpdateOperationsInput | number
-    gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
-    currency?: StringFieldUpdateOperationsInput | string
-    stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_payment_intent_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_charge_id?: NullableStringFieldUpdateOperationsInput | string | null
-    stripe_receipt_url?: NullableStringFieldUpdateOperationsInput | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateManyUserInput = {
@@ -32802,7 +32435,6 @@ export namespace Prisma {
     source?: string | null
     source_ref_uuid?: string | null
     idempotency_key?: string | null
-    credit_purchase_uuid?: string | null
     provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
@@ -33050,7 +32682,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     credit_pack?: CreditPackUpdateOneRequiredWithoutCredit_purchasesNestedInput
-    ledger_entries?: CreditLedgerEntryUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseUncheckedUpdateWithoutUserInput = {
@@ -33071,7 +32702,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseUncheckedUpdateManyWithoutUserInput = {
@@ -33114,7 +32744,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    credit_purchase?: CreditPurchaseUpdateOneWithoutLedger_entriesNestedInput
   }
 
   export type CreditLedgerEntryUncheckedUpdateWithoutUserInput = {
@@ -33127,7 +32756,6 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    credit_purchase_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -33151,7 +32779,6 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    credit_purchase_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -34365,7 +33992,6 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutCredit_purchasesNestedInput
-    ledger_entries?: CreditLedgerEntryUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseUncheckedUpdateWithoutCredit_packInput = {
@@ -34386,7 +34012,6 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    ledger_entries?: CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseNestedInput
   }
 
   export type CreditPurchaseUncheckedUpdateManyWithoutCredit_packInput = {
@@ -34404,101 +34029,6 @@ export namespace Prisma {
     stripe_payment_intent_id?: NullableStringFieldUpdateOperationsInput | string | null
     stripe_charge_id?: NullableStringFieldUpdateOperationsInput | string | null
     stripe_receipt_url?: NullableStringFieldUpdateOperationsInput | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CreditLedgerEntryCreateManyCredit_purchaseInput = {
-    id?: number
-    uuid?: string
-    user_uuid: string
-    type: $Enums.CreditLedgerType
-    delta_credits: number
-    balance_after: number
-    project_type?: $Enums.ProjectType | null
-    source?: string | null
-    source_ref_uuid?: string | null
-    idempotency_key?: string | null
-    provider_charge_amount_usd?: Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
-    fx_source?: string | null
-    fx_timestamp?: Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type CreditLedgerEntryUpdateWithoutCredit_purchaseInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumCreditLedgerTypeFieldUpdateOperationsInput | $Enums.CreditLedgerType
-    delta_credits?: IntFieldUpdateOperationsInput | number
-    balance_after?: IntFieldUpdateOperationsInput | number
-    project_type?: NullableEnumProjectTypeFieldUpdateOperationsInput | $Enums.ProjectType | null
-    source?: NullableStringFieldUpdateOperationsInput | string | null
-    source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_source?: NullableStringFieldUpdateOperationsInput | string | null
-    fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCredit_ledger_entriesNestedInput
-  }
-
-  export type CreditLedgerEntryUncheckedUpdateWithoutCredit_purchaseInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumCreditLedgerTypeFieldUpdateOperationsInput | $Enums.CreditLedgerType
-    delta_credits?: IntFieldUpdateOperationsInput | number
-    balance_after?: IntFieldUpdateOperationsInput | number
-    project_type?: NullableEnumProjectTypeFieldUpdateOperationsInput | $Enums.ProjectType | null
-    source?: NullableStringFieldUpdateOperationsInput | string | null
-    source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_source?: NullableStringFieldUpdateOperationsInput | string | null
-    fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CreditLedgerEntryUncheckedUpdateManyWithoutCredit_purchaseInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumCreditLedgerTypeFieldUpdateOperationsInput | $Enums.CreditLedgerType
-    delta_credits?: IntFieldUpdateOperationsInput | number
-    balance_after?: IntFieldUpdateOperationsInput | number
-    project_type?: NullableEnumProjectTypeFieldUpdateOperationsInput | $Enums.ProjectType | null
-    source?: NullableStringFieldUpdateOperationsInput | string | null
-    source_ref_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    idempotency_key?: NullableStringFieldUpdateOperationsInput | string | null
-    provider_charge_amount_usd?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    fx_source?: NullableStringFieldUpdateOperationsInput | string | null
-    fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
