@@ -203,6 +203,67 @@ exports.Prisma.FinalProjectScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.TimelineTrackScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  final_project_uuid: 'final_project_uuid',
+  type: 'type',
+  order: 'order',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TimelineClipScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  track_uuid: 'track_uuid',
+  project_asset_uuid: 'project_asset_uuid',
+  start_sec: 'start_sec',
+  end_sec: 'end_sec',
+  trim_start: 'trim_start',
+  trim_end: 'trim_end',
+  volume: 'volume',
+  speed: 'speed',
+  transition_in_uuid: 'transition_in_uuid',
+  transition_out_uuid: 'transition_out_uuid',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TimelineTransitionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  type: 'type',
+  duration: 'duration',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TimelineCaptionScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  clip_uuid: 'clip_uuid',
+  text: 'text',
+  start_sec: 'start_sec',
+  end_sec: 'end_sec',
+  position: 'position',
+  style: 'style',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.TimelineMusicScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  final_project_uuid: 'final_project_uuid',
+  audio_uuid: 'audio_uuid',
+  start_sec: 'start_sec',
+  end_sec: 'end_sec',
+  volume: 'volume',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.DocumentScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
@@ -355,6 +416,23 @@ exports.AssetRole = exports.$Enums.AssetRole = {
   GENERATED_CAPTION: 'GENERATED_CAPTION'
 };
 
+exports.TimelineTrackType = exports.$Enums.TimelineTrackType = {
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  VOICEOVER: 'VOICEOVER',
+  MUSIC: 'MUSIC',
+  CAPTION: 'CAPTION'
+};
+
+exports.TimelineTransitionType = exports.$Enums.TimelineTransitionType = {
+  FADE: 'FADE',
+  CROSSFADE: 'CROSSFADE',
+  DISSOLVE: 'DISSOLVE',
+  SLIDE_LEFT: 'SLIDE_LEFT',
+  SLIDE_RIGHT: 'SLIDE_RIGHT',
+  ZOOM: 'ZOOM'
+};
+
 exports.CreditPurchaseStatus = exports.$Enums.CreditPurchaseStatus = {
   PENDING: 'PENDING',
   SUCCEEDED: 'SUCCEEDED',
@@ -376,6 +454,11 @@ exports.Prisma.ModelName = {
   SceneVariation: 'SceneVariation',
   ProjectAsset: 'ProjectAsset',
   FinalProject: 'FinalProject',
+  TimelineTrack: 'TimelineTrack',
+  TimelineClip: 'TimelineClip',
+  TimelineTransition: 'TimelineTransition',
+  TimelineCaption: 'TimelineCaption',
+  TimelineMusic: 'TimelineMusic',
   Document: 'Document',
   CreditPack: 'CreditPack',
   CreditPurchase: 'CreditPurchase',

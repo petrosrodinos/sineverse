@@ -6,11 +6,12 @@ export type WorkflowStep = 1 | 2 | 3;
 export const ESTATE_TRIM_SEC_MAX = 10;
 
 export const ESTATE_TRANSITION_OPTIONS = [
-  { id: "none", label: "None" },
-  { id: "fade", label: "Fade" },
-  { id: "dissolve", label: "Dissolve" },
-  { id: "wipe", label: "Wipe" },
-  { id: "slide", label: "Slide" },
+  { id: "FADE", label: "Fade" },
+  { id: "CROSSFADE", label: "Crossfade" },
+  { id: "DISSOLVE", label: "Dissolve" },
+  { id: "SLIDE_LEFT", label: "Slide left" },
+  { id: "SLIDE_RIGHT", label: "Slide right" },
+  { id: "ZOOM", label: "Zoom" },
 ] as const;
 
 export const ESTATE_AUDIO_TRACK_OPTIONS = [
