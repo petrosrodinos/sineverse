@@ -3,7 +3,6 @@
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
-import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
@@ -15,7 +14,7 @@ import type { ProjectAsset } from "@/features/project-assets/interfaces/project-
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { useDeleteScene } from "@/features/scenes/hooks/use-scenes";
-import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID, ESTATE_DEFAULT_TRANSITION_ID, ESTATE_TRANSITION_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { ESTATE_DEFAULT_TRANSITION_ID, ESTATE_TRANSITION_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useVideoReorderItem } from "../../hooks/useVideoReorderItem";
 import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 import { TrimRangeField } from "./TrimRangeField";
@@ -76,10 +75,8 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
 
   const trimRange = useEstateWorkflowStore((s) => s.trimRangeByVideoUuid[videoAssetUuid] ?? { start: 0, end: 5 });
   const transitionId = useEstateWorkflowStore((s) => s.transitionByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_TRANSITION_ID);
-  const audioTrackId = useEstateWorkflowStore((s) => s.estateAudioTrackByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_AUDIO_TRACK_ID);
   const setTrimRange = useEstateWorkflowStore((s) => s.setTrimRange);
   const setTransition = useEstateWorkflowStore((s) => s.setTransition);
-  const setEstateAudioTrack = useEstateWorkflowStore((s) => s.setEstateAudioTrack);
 
   const handleTrimChange = useCallback(
     (start: number, end: number) => {
@@ -99,19 +96,6 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
       }
     },
     [videoAssetUuid, setTransition],
-  );
-
-  const handleAudioChange = useCallback(
-    (keys: "all" | Iterable<Key>) => {
-      if (keys === "all") {
-        return;
-      }
-      const first = Array.from(keys)[0];
-      if (typeof first === "string") {
-        setEstateAudioTrack(videoAssetUuid, first);
-      }
-    },
-    [videoAssetUuid, setEstateAudioTrack],
   );
 
   const handleOpenDeleteModal = useCallback(() => {
@@ -259,12 +243,6 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
             <TrimRangeField start={trimRange.start} end={trimRange.end} onChange={handleTrimChange} />
             <Select label="Transition" size="sm" selectedKeys={new Set([transitionId])} onSelectionChange={handleTransitionChange} classNames={{ trigger: "min-h-10" }}>
               {ESTATE_TRANSITION_OPTIONS.map((opt) => (
-                <SelectItem key={opt.id}>{opt.label}</SelectItem>
-              ))}
-            </Select>
-            <Divider className="my-1" />
-            <Select label="Audio" size="sm" selectedKeys={new Set([audioTrackId])} onSelectionChange={handleAudioChange} classNames={{ trigger: "min-h-10" }}>
-              {ESTATE_AUDIO_TRACK_OPTIONS.map((opt) => (
                 <SelectItem key={opt.id}>{opt.label}</SelectItem>
               ))}
             </Select>

@@ -30,7 +30,7 @@ type EstateWorkflowState = {
   videoOrder: string[];
   trimRangeByVideoUuid: Record<string, VideoTrimRange>;
   transitionByVideoUuid: Record<string, string>;
-  estateAudioTrackByVideoUuid: Record<string, string>;
+  estateAudioTrackId: string;
   finalVideoAsset: ProjectAsset | null;
   objectUrlsToRevoke: string[];
   uploadedFilesByPromptAssetUuid: Record<string, File>;
@@ -53,7 +53,7 @@ type EstateWorkflowActions = {
   goBack: () => void;
   setTrimRange: (videoAssetUuid: string, start: number, end: number) => void;
   setTransition: (videoAssetUuid: string, transitionId: string) => void;
-  setEstateAudioTrack: (videoAssetUuid: string, audioTrackId: string) => void;
+  setEstateAudioTrack: (audioTrackId: string) => void;
   setVideoAssetStatus: (videoAssetUuid: string, status: ProjectAsset["status"]) => void;
   reorderVideoAssets: (fromIndex: number, toIndex: number) => void;
   startFinalRender: () => void;
@@ -69,7 +69,7 @@ function buildInitialState(): EstateWorkflowState {
     videoOrder: [],
     trimRangeByVideoUuid: {},
     transitionByVideoUuid: {},
-    estateAudioTrackByVideoUuid: {},
+    estateAudioTrackId: ESTATE_DEFAULT_AUDIO_TRACK_ID,
     finalVideoAsset: null,
     objectUrlsToRevoke: [],
     uploadedFilesByPromptAssetUuid: {},
@@ -180,11 +180,9 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       const nextOrder = state.videoOrder.filter((id) => !removeIds.includes(id));
       const trimRangeByVideoUuid = { ...state.trimRangeByVideoUuid };
       const transitionByVideoUuid = { ...state.transitionByVideoUuid };
-      const estateAudioTrackByVideoUuid = { ...state.estateAudioTrackByVideoUuid };
       removeIds.forEach((id) => {
         delete trimRangeByVideoUuid[id];
         delete transitionByVideoUuid[id];
-        delete estateAudioTrackByVideoUuid[id];
       });
       return {
         promptImageAssets: nextPrompts,
@@ -195,7 +193,6 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         videoOrder: nextOrder,
         trimRangeByVideoUuid,
         transitionByVideoUuid,
-        estateAudioTrackByVideoUuid,
       };
     });
   },
@@ -211,7 +208,7 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         videoOrder: [],
         trimRangeByVideoUuid: {},
         transitionByVideoUuid: {},
-        estateAudioTrackByVideoUuid: {},
+        estateAudioTrackId: ESTATE_DEFAULT_AUDIO_TRACK_ID,
         finalVideoAsset: state.finalVideoAsset,
       };
     }),
@@ -238,18 +235,15 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       });
       const trimRangeByVideoUuid: Record<string, VideoTrimRange> = {};
       const transitionByVideoUuid: Record<string, string> = {};
-      const estateAudioTrackByVideoUuid: Record<string, string> = {};
       videoOrder.forEach((id) => {
         trimRangeByVideoUuid[id] = { start: 0, end: 5 };
         transitionByVideoUuid[id] = ESTATE_DEFAULT_TRANSITION_ID;
-        estateAudioTrackByVideoUuid[id] = ESTATE_DEFAULT_AUDIO_TRACK_ID;
       });
       return {
         videoAssetsByUuid,
         videoOrder,
         trimRangeByVideoUuid,
         transitionByVideoUuid,
-        estateAudioTrackByVideoUuid,
       };
     }),
   mergeEstateVideoAsset: (uuid, patch) =>
@@ -343,17 +337,9 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         },
       };
     }),
-  setEstateAudioTrack: (videoAssetUuid, audioTrackId) =>
-    set((state) => {
-      if (!state.videoAssetsByUuid[videoAssetUuid]) {
-        return state;
-      }
-      return {
-        estateAudioTrackByVideoUuid: {
-          ...state.estateAudioTrackByVideoUuid,
-          [videoAssetUuid]: audioTrackId,
-        },
-      };
+  setEstateAudioTrack: (audioTrackId) =>
+    set({
+      estateAudioTrackId: audioTrackId,
     }),
   setVideoAssetStatus: (videoAssetUuid, status) =>
     set((state) => {
