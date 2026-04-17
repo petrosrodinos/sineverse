@@ -51,3 +51,24 @@ export const deleteFinalProject = async (uuid: string) => {
         throw error;
     }
 }
+
+export const renderFinalProject = async (uuid: string): Promise<void> => {
+    try {
+        await axiosInstance.post(ApiRoutes.final_projects.render(uuid));
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to start render");
+        throw error;
+    }
+}
+
+export const downloadFinalProjectVideo = async (uuid: string): Promise<Blob> => {
+    try {
+        const response = await axiosInstance.get(ApiRoutes.final_projects.download(uuid), {
+            responseType: "blob",
+        });
+        return response.data as Blob;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to download rendered video");
+        throw error;
+    }
+}

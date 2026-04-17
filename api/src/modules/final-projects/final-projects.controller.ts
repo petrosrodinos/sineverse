@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Query,
+  StreamableFile,
+  Res,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,6 +25,7 @@ import { FinalProjectsService } from './final-projects.service';
 import { CreateFinalProjectDto } from './dto/create-final-project.dto';
 import { UpdateFinalProjectDto } from './dto/update-final-project.dto';
 import { FinalProjectQuerySchema, FinalProjectQueryDto } from './dto/query-final-project.dto';
+import type { Response } from 'express';
 
 @ApiTags('Final Projects')
 @Controller('final-projects')
@@ -99,5 +102,34 @@ export class FinalProjectsController {
   @ApiResponse({ status: 404, description: 'Final project not found.' })
   remove(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
     return this.finalProjectsService.remove(user_uuid, uuid);
+  }
+
+  @Post(':uuid/render')
+  @ApiOperation({ summary: 'Start rendering a final project video' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
+  @ApiResponse({ status: 201, description: 'Render job queued successfully.' })
+  @ApiResponse({ status: 404, description: 'Final project not found.' })
+  @ApiResponse({ status: 409, description: 'Render already in progress.' })
+  startRender(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+    return this.finalProjectsService.startRender(user_uuid, uuid);
+  }
+
+  @Get(':uuid/download')
+  @ApiOperation({ summary: 'Download final rendered video' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
+  @ApiResponse({ status: 200, description: 'Rendered video downloaded.' })
+  @ApiResponse({ status: 404, description: 'Rendered video not found.' })
+  async downloadVideo(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.finalProjectsService.downloadVideo(user_uuid, uuid);
+    res.setHeader('Content-Type', file.mimetype);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${file.filename}"`,
+    );
+    return new StreamableFile(file.buffer);
   }
 }

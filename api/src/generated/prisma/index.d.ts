@@ -9219,6 +9219,7 @@ export namespace Prisma {
     duration_sec: number | null
     video_uuid: string | null
     thumbnail_uuid: string | null
+    render_status: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -9232,6 +9233,7 @@ export namespace Prisma {
     duration_sec: number | null
     video_uuid: string | null
     thumbnail_uuid: string | null
+    render_status: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -9245,6 +9247,7 @@ export namespace Prisma {
     duration_sec: number
     video_uuid: number
     thumbnail_uuid: number
+    render_status: number
     created_at: number
     updated_at: number
     _all: number
@@ -9270,6 +9273,7 @@ export namespace Prisma {
     duration_sec?: true
     video_uuid?: true
     thumbnail_uuid?: true
+    render_status?: true
     created_at?: true
     updated_at?: true
   }
@@ -9283,6 +9287,7 @@ export namespace Prisma {
     duration_sec?: true
     video_uuid?: true
     thumbnail_uuid?: true
+    render_status?: true
     created_at?: true
     updated_at?: true
   }
@@ -9296,6 +9301,7 @@ export namespace Prisma {
     duration_sec?: true
     video_uuid?: true
     thumbnail_uuid?: true
+    render_status?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -9396,6 +9402,7 @@ export namespace Prisma {
     duration_sec: number | null
     video_uuid: string | null
     thumbnail_uuid: string | null
+    render_status: string
     created_at: Date
     updated_at: Date
     _count: FinalProjectCountAggregateOutputType | null
@@ -9428,6 +9435,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -9448,6 +9456,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -9465,6 +9474,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -9482,11 +9492,12 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type FinalProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "duration_sec" | "video_uuid" | "thumbnail_uuid" | "created_at" | "updated_at", ExtArgs["result"]["finalProject"]>
+  export type FinalProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "duration_sec" | "video_uuid" | "thumbnail_uuid" | "render_status" | "created_at" | "updated_at", ExtArgs["result"]["finalProject"]>
   export type FinalProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -9528,6 +9539,7 @@ export namespace Prisma {
       duration_sec: number | null
       video_uuid: string | null
       thumbnail_uuid: string | null
+      render_status: string
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["finalProject"]>
@@ -9967,6 +9979,7 @@ export namespace Prisma {
     readonly duration_sec: FieldRef<"FinalProject", 'Int'>
     readonly video_uuid: FieldRef<"FinalProject", 'String'>
     readonly thumbnail_uuid: FieldRef<"FinalProject", 'String'>
+    readonly render_status: FieldRef<"FinalProject", 'String'>
     readonly created_at: FieldRef<"FinalProject", 'DateTime'>
     readonly updated_at: FieldRef<"FinalProject", 'DateTime'>
   }
@@ -21633,6 +21646,7 @@ export namespace Prisma {
     duration_sec: 'duration_sec',
     video_uuid: 'video_uuid',
     thumbnail_uuid: 'thumbnail_uuid',
+    render_status: 'render_status',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -22571,6 +22585,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -22590,6 +22605,7 @@ export namespace Prisma {
     duration_sec?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
     thumbnail_uuid?: SortOrderInput | SortOrder
+    render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -22612,6 +22628,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -22631,6 +22648,7 @@ export namespace Prisma {
     duration_sec?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
     thumbnail_uuid?: SortOrderInput | SortOrder
+    render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: FinalProjectCountOrderByAggregateInput
@@ -22652,6 +22670,7 @@ export namespace Prisma {
     duration_sec?: IntNullableWithAggregatesFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableWithAggregatesFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableWithAggregatesFilter<"FinalProject"> | string | null
+    render_status?: StringWithAggregatesFilter<"FinalProject"> | string
     created_at?: DateTimeWithAggregatesFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"FinalProject"> | Date | string
   }
@@ -24072,6 +24091,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -24091,6 +24111,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -24101,6 +24122,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -24120,6 +24142,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -24135,6 +24158,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -24143,6 +24167,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24156,6 +24181,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25786,6 +25812,7 @@ export namespace Prisma {
     duration_sec?: SortOrder
     video_uuid?: SortOrder
     thumbnail_uuid?: SortOrder
+    render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -25804,6 +25831,7 @@ export namespace Prisma {
     duration_sec?: SortOrder
     video_uuid?: SortOrder
     thumbnail_uuid?: SortOrder
+    render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -25817,6 +25845,7 @@ export namespace Prisma {
     duration_sec?: SortOrder
     video_uuid?: SortOrder
     thumbnail_uuid?: SortOrder
+    render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28911,6 +28940,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
@@ -28928,6 +28958,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -29213,6 +29244,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
   }
@@ -29433,6 +29465,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -29450,6 +29483,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -31211,6 +31245,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -31229,6 +31264,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -31425,6 +31461,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -31443,6 +31480,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -31804,6 +31842,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -31822,6 +31861,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -31883,6 +31923,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -31901,6 +31942,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -31952,6 +31994,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -31969,6 +32012,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -31989,6 +32033,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutFinal_projectsInput
@@ -32006,6 +32051,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     video_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
     timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
@@ -32721,6 +32767,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -32948,6 +32995,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -32965,6 +33013,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -32979,6 +33028,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33152,6 +33202,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33272,6 +33323,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -33289,6 +33341,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -33303,6 +33356,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34052,6 +34106,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     thumbnail_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -34064,6 +34119,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     video_uuid?: string | null
+    render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -34101,6 +34157,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -34118,6 +34175,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -34132,6 +34190,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34140,6 +34199,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
@@ -34157,6 +34217,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
@@ -34171,6 +34232,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -9,6 +9,7 @@ export interface FinalProject {
     duration_sec: number | null;
     video_uuid: string | null;
     thumbnail_uuid: string | null;
+    render_status: string;
     created_at: string;
     updated_at: string;
     video?: Document;

@@ -145,7 +145,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
 
   const [captionText, setCaptionText] = useState("");
   const [captionStartSec, setCaptionStartSec] = useState(ESTATE_DEFAULT_CAPTION_START_SEC);
-  const [captionEndSec, setCaptionEndSec] = useState(ESTATE_DEFAULT_CAPTION_END_SEC);
+  const [captionEndSec, setCaptionEndSec] = useState(videoDurationSec);
   const [captionPosition, setCaptionPosition] = useState<string>(ESTATE_DEFAULT_CAPTION_POSITION);
   const [captionStyle, setCaptionStyle] = useState<string>(ESTATE_DEFAULT_CAPTION_STYLE);
 
@@ -219,10 +219,11 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
   const handleCaptionEndSecChange = useCallback((value: string) => {
     const parsed = Number(value);
     if (Number.isFinite(parsed)) {
-      setCaptionEndSec(parsed);
-      scheduleCaptionUpsert({ text: captionText, start_sec: captionStartSec, end_sec: parsed, position: captionPosition, style: captionStyle });
+      const nextEndSec = Math.min(parsed, videoDurationSec);
+      setCaptionEndSec(nextEndSec);
+      scheduleCaptionUpsert({ text: captionText, start_sec: captionStartSec, end_sec: nextEndSec, position: captionPosition, style: captionStyle });
     }
-  }, [scheduleCaptionUpsert, captionText, captionStartSec, captionPosition, captionStyle]);
+  }, [scheduleCaptionUpsert, captionText, captionStartSec, captionPosition, captionStyle, videoDurationSec]);
 
   const handleCaptionPositionChange = useCallback((keys: "all" | Iterable<Key>) => {
     if (keys === "all") return;
@@ -248,6 +249,9 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
       setVideoDurationSec(durationSec);
       if (!clipLoadedRef.current) {
         setTrimEnd(durationSec);
+      }
+      if (!captionLoadedRef.current) {
+        setCaptionEndSec(durationSec);
       }
     }
   }, []);
@@ -354,7 +358,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
                   <Input label="Captions" size="sm" value={captionText} onValueChange={handleCaptionTextChange} />
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <Input label="Caption Start (sec)" type="number" size="sm" value={captionStartSec.toString()} onValueChange={handleCaptionStartSecChange} />
-                    <Input label="Caption End (sec)" type="number" size="sm" value={captionEndSec.toString()} onValueChange={handleCaptionEndSecChange} />
+                    <Input label="Caption End (sec)" type="number" size="sm" value={captionEndSec.toString()} min={0} max={videoDurationSec} onValueChange={handleCaptionEndSecChange} />
                   </div>
                   <Select label="Caption Position" size="sm" selectedKeys={new Set([captionPosition])} onSelectionChange={handleCaptionPositionChange} classNames={{ trigger: "min-h-10" }}>
                     {ESTATE_CAPTION_POSITION_OPTIONS.map((opt) => (

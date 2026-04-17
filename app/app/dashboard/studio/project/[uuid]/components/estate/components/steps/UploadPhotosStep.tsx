@@ -218,11 +218,11 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
                   </div>
                 ))}
 
-                <button type="button" onClick={openPicker} className="group/add flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary-500/15 ring-1 ring-secondary-500/25 transition group-hover/add:scale-105 group-hover/add:bg-secondary-500/25">
-                    <Plus className="h-6 w-6" strokeWidth={2.25} />
+                <button type="button" onClick={openPicker} className="group/add flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary-500/15 ring-1 ring-secondary-500/25 transition group-hover/add:scale-105 group-hover/add:bg-secondary-500/25 sm:h-12 sm:w-12">
+                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.25} />
                   </span>
-                  <span className="text-tiny font-semibold tracking-wide">Add more</span>
+                  <span className="text-[11px] font-semibold tracking-wide sm:text-tiny">Add more</span>
                 </button>
               </div>
             </div>

@@ -1,7 +1,10 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { HttpException, Logger } from '@nestjs/common';
-import { VIDEO_GENERATION_QUEUE } from '../queues/video.constants';
+import {
+  VIDEO_GENERATION_CONCURRENCY,
+  VIDEO_GENERATION_QUEUE,
+} from '../queues/video.constants';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -14,7 +17,7 @@ export interface VideoGenerationJobData {
   projectAssetUuid: string;
 }
 
-@Processor(VIDEO_GENERATION_QUEUE)
+@Processor(VIDEO_GENERATION_QUEUE, { concurrency: VIDEO_GENERATION_CONCURRENCY })
 export class VideoGenerationProcessor extends WorkerHost {
   private readonly logger = new Logger(VideoGenerationProcessor.name);
   private readonly POLL_INTERVAL_MS = 15000; // 15 seconds

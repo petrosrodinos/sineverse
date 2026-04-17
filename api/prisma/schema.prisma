@@ -220,6 +220,7 @@ model FinalProject {
   duration_sec   Int?
   video_uuid     String?
   thumbnail_uuid String?
+  render_status  String   @default("IDLE")
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 

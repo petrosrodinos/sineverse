@@ -92,9 +92,9 @@ export function EstateStepper() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div className="flex flex-col gap-5 sm:gap-8">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex flex-col gap-2.5 sm:grid sm:grid-cols-3 sm:gap-4">
           {stepLabels.map(({ step, title, subtitle }) => {
             const isActive = activeStep === step;
             const reachable = stepReachable[step];
@@ -105,31 +105,31 @@ export function EstateStepper() {
                 type="button"
                 onClick={reachable ? handleStepClick(step) : undefined}
                 disabled={!reachable}
-                className={`flex flex-1 flex-col gap-1 rounded-2xl border p-4 text-left transition-colors duration-200 ${
+                className={`w-full rounded-2xl border p-3.5 text-left transition-colors duration-200 sm:p-4 ${
                   isActive
                     ? "border-secondary-500/60 bg-secondary-500/10"
                     : "border-default-200 bg-default-100/30 dark:border-default-100/20 dark:bg-default-100/5"
                 } ${reachable ? "cursor-pointer hover:border-secondary-400/50" : "cursor-not-allowed opacity-50"}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-small font-semibold ${
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-small font-semibold ${
                     isComplete ? "bg-secondary-500 text-white" : isActive ? "bg-secondary-500/90 text-white" : "bg-default-200 text-default-600 dark:bg-default-100/20 dark:text-default-300"
                   }`}>
                     {isComplete ? <Check className="h-4 w-4" /> : step}
                   </span>
-                  <div>
-                    <p className="text-base font-semibold text-foreground">{title}</p>
-                    <p className="text-small text-default-500">{subtitle}</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-foreground sm:text-base">{title}</p>
+                    <p className="text-tiny text-default-500 sm:text-small">{subtitle}</p>
                   </div>
                 </div>
               </button>
             );
           })}
         </div>
-        <Progress aria-label="Workflow progress" size="sm" value={activeStep} maxValue={3} color="secondary" classNames={{ track: "h-1.5" }} />
+        <Progress aria-label="Workflow progress" size="sm" value={activeStep} maxValue={3} color="secondary" classNames={{ track: "h-1.5 sm:h-2" }} />
       </div>
 
-      <div className="rounded-2xl border border-default-200 bg-default-100/40 p-4 shadow-sm dark:border-default-100/20 dark:bg-default-100/5 md:p-8">
+      <div className="rounded-2xl border border-default-200 bg-default-100/40 p-3 shadow-sm dark:border-default-100/20 dark:bg-default-100/5 sm:p-4 md:p-8">
         <div className="transition-opacity duration-300">
           {activeStep === 1 && <UploadPhotosStep pendingFiles={pendingFiles} setPendingFiles={setPendingFiles} />}
           {activeStep === 2 && <GenerateVideosStep finalProjectUuid={finalProject?.uuid ?? null} hasPromptImages={promptImageAssets.length > 0} />}
@@ -137,21 +137,22 @@ export function EstateStepper() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-default-200 pt-6 dark:border-default-100/20">
-        <div>
+      <div className="flex flex-col gap-3 border-t border-default-200 pt-5 dark:border-default-100/20 sm:flex-row sm:items-center sm:justify-between sm:pt-6">
+        <div className="w-full sm:w-auto">
           {canGoBack && (
-            <Button variant="light" onPress={handleBack}>
+            <Button variant="light" onPress={handleBack} className="w-full sm:w-auto">
               Back
             </Button>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
           {activeStep !== 3 && (
             <Button
               color="secondary"
               onPress={handleNext}
               isDisabled={!canGoNext || isCreatingEstateScenes}
               isLoading={isCreatingEstateScenes}
+              className="w-full sm:w-auto"
             >
               Next
             </Button>

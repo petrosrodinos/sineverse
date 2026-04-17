@@ -64,6 +64,8 @@ export const ApiRoutes = {
     final_projects: {
         prefix: "/final-projects",
         final_project: (final_project_uuid: string) => `/final-projects/${final_project_uuid}`,
+    render: (final_project_uuid: string) => `/final-projects/${final_project_uuid}/render`,
+    download: (final_project_uuid: string) => `/final-projects/${final_project_uuid}/download`,
     },
     google_maps: {
         timezone: "/google-maps/timezone",

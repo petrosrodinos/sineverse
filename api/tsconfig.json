@@ -21,5 +21,6 @@
       "@/*": ["src/*"],
       "generated/*": ["src/generated/*"]
     }
-  }
+  },
+  "exclude": ["remotion"]
 }

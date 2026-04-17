@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFinalProjects, getFinalProject, createFinalProject, updateFinalProject, deleteFinalProject } from "../services/final-projects.services";
+import { getFinalProjects, getFinalProject, createFinalProject, updateFinalProject, deleteFinalProject, renderFinalProject } from "../services/final-projects.services";
 import { FinalProject, CreateFinalProjectDto, UpdateFinalProjectDto, FinalProjectQueryDto } from "../interfaces/final-projects.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -49,7 +49,15 @@ export const useFinalProjectByProject = (projectUuid: string) => {
 }
 
 export const useFinalProject = (uuid: string) => {
-    return useQuery<FinalProject>({ queryKey: [QueryKeys.finalProject(uuid)], queryFn: () => getFinalProject(uuid) });
+    return useQuery<FinalProject>({
+        queryKey: [QueryKeys.finalProject(uuid)],
+        queryFn: () => getFinalProject(uuid),
+        enabled: !!uuid,
+        refetchInterval: (query) => {
+            if (query.state.data?.render_status === 'RENDERING') return 3000;
+            return false;
+        },
+    });
 }
 
 export const useCreateFinalProject = () => {
@@ -113,5 +121,23 @@ export const useDeleteFinalProject = () => {
                 severity: "danger",
             });
         }
+    });
+}
+
+export const useRenderFinalProject = () => {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, string>({
+        mutationFn: renderFinalProject,
+        onSuccess: (_, uuid) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.finalProject(uuid)] });
+            queryClient.invalidateQueries({ queryKey: ['final-projects'] });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to start video render",
+                description: error.message,
+                severity: "danger",
+            });
+        },
     });
 }

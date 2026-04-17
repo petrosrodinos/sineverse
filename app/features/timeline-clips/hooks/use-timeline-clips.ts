@@ -55,12 +55,14 @@ export const useCreateTimelineClip = () => {
 
 export const useUpdateTimelineClip = () => {
     const queryClient = useQueryClient();
-    return useMutation<TimelineClip, Error, { uuid: string; dto: UpdateTimelineClipDto }>({
+    return useMutation<TimelineClip, Error, { uuid: string; dto: UpdateTimelineClipDto; invalidateTimelineQueries?: boolean }>({
         mutationFn: ({ uuid, dto }) => updateTimelineClip(uuid, dto),
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({
-                queryKey: ['timeline-clips', { final_project_uuid: data.final_project_uuid }],
-            });
+        onSuccess: (data, variables) => {
+            if (variables.invalidateTimelineQueries !== false) {
+                queryClient.invalidateQueries({
+                    queryKey: ['timeline-clips', { final_project_uuid: data.final_project_uuid }],
+                });
+            }
             queryClient.invalidateQueries({ queryKey: [QueryKeys.timelineClip(data.uuid)] });
         },
         onError: (error) => {
