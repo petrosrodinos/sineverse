@@ -217,6 +217,7 @@ export class CreditsService {
     project_type: ProjectType;
     provider_credits_used: number;
     source_ref_uuid: string;
+    fixed_credits_deduction?: number;
     provider_charge_amount?: number | null;
     metadata?: Prisma.JsonObject;
   }) {
@@ -225,6 +226,7 @@ export class CreditsService {
       project_type,
       provider_credits_used,
       source_ref_uuid,
+      fixed_credits_deduction,
       metadata,
       provider_charge_amount,
     } = params;
@@ -232,10 +234,10 @@ export class CreditsService {
       return null;
     }
 
-    const deduct = this.calculateUsageCredits(
-      provider_credits_used,
-      project_type,
-    );
+    const deduct =
+      typeof fixed_credits_deduction === 'number'
+        ? Math.max(Math.floor(fixed_credits_deduction), 0)
+        : this.calculateUsageCredits(provider_credits_used, project_type);
     const appFeeRate = this.calculateUsageAppFeeRate(project_type);
     const providerChargeUsd =
       typeof provider_charge_amount === 'number' && provider_charge_amount > 0

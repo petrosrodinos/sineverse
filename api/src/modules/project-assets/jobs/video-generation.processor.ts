@@ -12,6 +12,10 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
+import {
+  ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST,
+  ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
+} from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 export interface VideoGenerationJobData {
   projectAssetUuid: string;
@@ -186,6 +190,7 @@ export class VideoGenerationProcessor extends WorkerHost {
         select: {
           status: true,
           user_uuid: true,
+          metadata: true,
           project: {
             select: {
               type: true,
@@ -236,6 +241,14 @@ export class VideoGenerationProcessor extends WorkerHost {
             },
           });
 
+          const metadata = (currentAsset.metadata ?? {}) as Record<string, unknown>;
+          const workflowSource =
+            typeof metadata.workflow_source === 'string'
+              ? metadata.workflow_source
+              : null;
+          const isEstateWalkthrough =
+            workflowSource === ESTATE_WALKTHROUGH_WORKFLOW_SOURCE &&
+            currentAsset.project?.type === ProjectType.ESTATE;
           const providerCreditsUsed = Number(
             statusResponse.meta?.usage?.credits_used ?? 0,
           );
@@ -251,8 +264,13 @@ export class VideoGenerationProcessor extends WorkerHost {
               provider_credits_used: Number.isFinite(providerCreditsUsed)
                 ? Math.max(providerCreditsUsed, 0)
                 : 0,
+              fixed_credits_deduction: isEstateWalkthrough
+                ? ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST
+                : undefined,
               provider_charge_amount:
-                Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
+                !isEstateWalkthrough &&
+                Number.isFinite(providerUsdSpent) &&
+                providerUsdSpent > 0
                   ? providerUsdSpent
                   : null,
               source_ref_uuid: projectAssetUuid,
@@ -261,6 +279,7 @@ export class VideoGenerationProcessor extends WorkerHost {
                 provider_task_id: taskId,
                 provider_credits_used: providerCreditsUsed,
                 provider_charge_amount: providerUsdSpent,
+                workflow_source: workflowSource,
               },
             });
           } catch (error: any) {

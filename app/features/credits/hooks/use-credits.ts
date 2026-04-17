@@ -19,6 +19,7 @@ export const useCreditsSummary = () => {
   return useQuery({
     queryKey: [QueryKeys.summary],
     queryFn: getCreditsSummary,
+    refetchInterval: 10000,
   });
 };
 
@@ -33,6 +34,7 @@ export const useCreditsUsage = () => {
   return useQuery({
     queryKey: [QueryKeys.usage],
     queryFn: getCreditsUsage,
+    refetchInterval: 10000,
   });
 };
 

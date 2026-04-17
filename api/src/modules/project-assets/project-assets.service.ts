@@ -30,6 +30,7 @@ import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
 import {
   ESTATE_WALKTHROUGH_VIDEO_MODEL,
+  ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
   ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
   ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
 } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
@@ -428,6 +429,7 @@ export class ProjectAssetsService {
               ai_model: ai_model ?? ESTATE_WALKTHROUGH_VIDEO_MODEL,
               duration_sec: ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
               prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
+              workflow_source: ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
               prompt_image_uuids: [r.task.promptAsset.uuid],
               include_sound: false,
             } as CreateProjectAssetVideoDto),
