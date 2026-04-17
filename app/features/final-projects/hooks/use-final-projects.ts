@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFinalProjects, getFinalProject, createFinalProject, updateFinalProject, deleteFinalProject, renderFinalProject } from "../services/final-projects.services";
+import { getFinalProjects, getFinalProject, createFinalProject, updateFinalProject, deleteFinalProject, renderFinalProject, deleteAllFinalProjectVideos, deleteFinalProjectVideoByDocument } from "../services/final-projects.services";
 import { FinalProject, CreateFinalProjectDto, UpdateFinalProjectDto, FinalProjectQueryDto } from "../interfaces/final-projects.interfaces";
 import { addToast } from "@heroui/toast";
 
@@ -135,6 +135,52 @@ export const useRenderFinalProject = () => {
         onError: (error) => {
             addToast({
                 title: "Failed to start video render",
+                description: error.message,
+                severity: "danger",
+            });
+        },
+    });
+}
+
+export const useDeleteFinalProjectVideo = () => {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, { finalProjectUuid: string }>({
+        mutationFn: ({ finalProjectUuid }) =>
+            deleteAllFinalProjectVideos(finalProjectUuid),
+        onSuccess: (_, { finalProjectUuid }) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.finalProject(finalProjectUuid)] });
+            queryClient.invalidateQueries({ queryKey: ['final-projects'] });
+            addToast({
+                title: "Rendered videos deleted",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to delete rendered videos",
+                description: error.message,
+                severity: "danger",
+            });
+        },
+    });
+}
+
+export const useDeleteFinalProjectVideoByDocument = () => {
+    const queryClient = useQueryClient();
+    return useMutation<void, Error, { finalProjectUuid: string; documentUuid: string }>({
+        mutationFn: ({ finalProjectUuid, documentUuid }) =>
+            deleteFinalProjectVideoByDocument(finalProjectUuid, documentUuid),
+        onSuccess: (_, { finalProjectUuid }) => {
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.finalProject(finalProjectUuid)] });
+            queryClient.invalidateQueries({ queryKey: ['final-projects'] });
+            addToast({
+                title: "Rendered video deleted",
+                severity: "success",
+            });
+        },
+        onError: (error) => {
+            addToast({
+                title: "Failed to delete rendered video",
                 description: error.message,
                 severity: "danger",
             });

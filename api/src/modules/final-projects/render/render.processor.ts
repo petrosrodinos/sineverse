@@ -62,10 +62,6 @@ export class RenderProcessor extends WorkerHost {
         throw new Error('No renderable clips found — ensure all videos have been generated');
       }
 
-      this.logger.log(
-        `Rendering ${inputProps.clips.length} clips for FinalProject ${finalProjectUuid}`,
-      );
-
       const videoBuffer = await this.renderService.render(inputProps);
       const filename = `final-render-${finalProjectUuid}-${Date.now()}.mp4`;
       const videoUuid = await this.documentsService.saveVideoFromBuffer(videoBuffer, filename);
@@ -77,8 +73,6 @@ export class RenderProcessor extends WorkerHost {
           render_status: FinalProjectRenderStatus.COMPLETED,
         },
       });
-
-      this.logger.log(`FinalProject ${finalProjectUuid} rendered successfully`);
     } catch (error: any) {
       this.logger.error(
         `Render failed for ${finalProjectUuid}: ${error.message}`,

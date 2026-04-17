@@ -90,3 +90,30 @@ export const downloadFinalProjectVideoByDocument = async (
         throw error;
     }
 }
+
+export const deleteFinalProjectVideoByDocument = async (
+    finalProjectUuid: string,
+    documentUuid: string,
+): Promise<void> => {
+    try {
+        await axiosInstance.delete(
+            ApiRoutes.final_projects.delete_document(finalProjectUuid, documentUuid),
+        );
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to delete rendered video");
+        throw error;
+    }
+}
+
+export const deleteAllFinalProjectVideos = async (
+    finalProjectUuid: string,
+): Promise<void> => {
+    try {
+        await axiosInstance.delete(
+            ApiRoutes.final_projects.delete_all_videos(finalProjectUuid),
+        );
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to delete rendered videos");
+        throw error;
+    }
+}

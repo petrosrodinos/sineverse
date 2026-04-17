@@ -228,7 +228,7 @@ export class CreditsService {
       metadata,
       provider_charge_amount,
     } = params;
-    if (!provider_credits_used || provider_credits_used <= 0) {
+    if (provider_credits_used < 0) {
       return null;
     }
 

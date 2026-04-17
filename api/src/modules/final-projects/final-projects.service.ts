@@ -15,6 +15,7 @@ import { FinalProjectQueryDto } from './dto/query-final-project.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { FINAL_RENDER_QUEUE, FINAL_RENDER_JOB, FinalProjectRenderStatus } from './render/render.constants';
 import type { FinalRenderJobData } from './render/render.processor';
+import { DocumentsService } from '../documents/documents.service';
 
 @Injectable()
 export class FinalProjectsService {
@@ -22,6 +23,7 @@ export class FinalProjectsService {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly documentsService: DocumentsService,
     @InjectQueue(FINAL_RENDER_QUEUE) private readonly finalRenderQueue: Queue,
   ) {}
 
@@ -106,10 +108,6 @@ export class FinalProjectsService {
 
   async startRender(user_uuid: string, uuid: string) {
     try {
-      this.logger.log(
-        `Start render requested for finalProject=${uuid} by user=${user_uuid}`,
-      );
-
       const finalProject = await this.findOne(user_uuid, uuid);
 
       if (finalProject.render_status === FinalProjectRenderStatus.RENDERING) {
@@ -138,11 +136,7 @@ export class FinalProjectsService {
       });
 
       const jobData: FinalRenderJobData = { finalProjectUuid: uuid };
-      const job = await this.finalRenderQueue.add(FINAL_RENDER_JOB, jobData);
-
-      this.logger.log(
-        `Render job queued for finalProject=${uuid} jobId=${job.id}`,
-      );
+      await this.finalRenderQueue.add(FINAL_RENDER_JOB, jobData);
 
       return { message: 'Render queued successfully' };
     } catch (error) {
@@ -223,6 +217,86 @@ export class FinalProjectsService {
         throw error;
       }
       throw new InternalServerErrorException('Failed to download rendered video', {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteRenderedVideo(
+    user_uuid: string,
+    final_project_uuid: string,
+    document_uuid: string,
+  ): Promise<{ success: true }> {
+    try {
+      const finalProject = await this.findOne(user_uuid, final_project_uuid);
+      const history = (finalProject as { render_history?: Array<{ uuid: string }> })
+        .render_history ?? [];
+      const target = history.find((item) => item.uuid === document_uuid);
+      if (!target) {
+        throw new NotFoundException('Rendered video file not found');
+      }
+
+      const remaining = history.filter((item) => item.uuid !== document_uuid);
+      const nextVideoUuid =
+        finalProject.video_uuid === document_uuid
+          ? (remaining[0]?.uuid ?? null)
+          : finalProject.video_uuid;
+      const nextRenderStatus =
+        nextVideoUuid === null ? FinalProjectRenderStatus.IDLE : FinalProjectRenderStatus.COMPLETED;
+
+      await this.prisma.finalProject.update({
+        where: { uuid: final_project_uuid },
+        data: {
+          video_uuid: nextVideoUuid,
+          render_status: nextRenderStatus,
+        },
+      });
+
+      await this.documentsService.deleteDocument(document_uuid);
+      return { success: true };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to delete rendered video', {
+        cause: error,
+      });
+    }
+  }
+
+  async deleteAllRenderedVideos(
+    user_uuid: string,
+    final_project_uuid: string,
+  ): Promise<{ success: true; deleted: number }> {
+    try {
+      const finalProject = await this.findOne(user_uuid, final_project_uuid);
+      const history = (finalProject as { render_history?: Array<{ uuid: string }> })
+        .render_history ?? [];
+      const uuids = Array.from(
+        new Set([
+          ...(history.map((item) => item.uuid)),
+          ...(finalProject.video_uuid ? [finalProject.video_uuid] : []),
+        ]),
+      );
+
+      await this.prisma.finalProject.update({
+        where: { uuid: final_project_uuid },
+        data: {
+          video_uuid: null,
+          render_status: FinalProjectRenderStatus.IDLE,
+        },
+      });
+
+      for (const documentUuid of uuids) {
+        await this.documentsService.deleteDocument(documentUuid);
+      }
+
+      return { success: true, deleted: uuids.length };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to delete rendered videos', {
         cause: error,
       });
     }

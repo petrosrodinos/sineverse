@@ -157,4 +157,34 @@ export class FinalProjectsController {
     );
     return new StreamableFile(file.buffer);
   }
+
+  @Delete(':uuid/videos/:documentUuid')
+  @ApiOperation({ summary: 'Delete a specific rendered video from history' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
+  @ApiParam({ name: 'documentUuid', description: 'The UUID of the rendered video document' })
+  @ApiResponse({ status: 200, description: 'Rendered video deleted.' })
+  @ApiResponse({ status: 404, description: 'Rendered video not found.' })
+  deleteRenderedVideo(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Param('documentUuid') documentUuid: string,
+  ) {
+    return this.finalProjectsService.deleteRenderedVideo(
+      user_uuid,
+      uuid,
+      documentUuid,
+    );
+  }
+
+  @Delete(':uuid/videos')
+  @ApiOperation({ summary: 'Delete all rendered videos for a final project' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
+  @ApiResponse({ status: 200, description: 'Rendered videos deleted.' })
+  @ApiResponse({ status: 404, description: 'Final project not found.' })
+  deleteAllRenderedVideos(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
+    return this.finalProjectsService.deleteAllRenderedVideos(user_uuid, uuid);
+  }
 }

@@ -82,59 +82,66 @@ const getVideoTransform = (
     },
   );
   const baseOpacity = Math.min(fadeInOpacity, fadeOutOpacity);
+  const baseScale = 1.06;
 
   if (transitionType === 'SLIDE_LEFT') {
-    const enterX = interpolate(frame, [0, duration], [60, 0], {
+    const enterX = interpolate(frame, [0, duration], [36, 0], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     });
     const exitX = interpolate(
       frame,
       [Math.max(clipDurationFrames - duration, 0), clipDurationFrames],
-      [0, -60],
+      [0, -36],
       {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       },
     );
-    return { opacity: baseOpacity, transform: `translateX(${enterX + exitX}px)` };
+    return {
+      opacity: baseOpacity,
+      transform: `translateX(${enterX + exitX}px) scale(${baseScale})`,
+    };
   }
 
   if (transitionType === 'SLIDE_RIGHT') {
-    const enterX = interpolate(frame, [0, duration], [-60, 0], {
+    const enterX = interpolate(frame, [0, duration], [-36, 0], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     });
     const exitX = interpolate(
       frame,
       [Math.max(clipDurationFrames - duration, 0), clipDurationFrames],
-      [0, 60],
+      [0, 36],
       {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       },
     );
-    return { opacity: baseOpacity, transform: `translateX(${enterX + exitX}px)` };
+    return {
+      opacity: baseOpacity,
+      transform: `translateX(${enterX + exitX}px) scale(${baseScale})`,
+    };
   }
 
   if (transitionType === 'ZOOM') {
-    const enterScale = interpolate(frame, [0, duration], [1.08, 1], {
+    const enterScale = interpolate(frame, [0, duration], [1.12, 1.06], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     });
     const exitScale = interpolate(
       frame,
       [Math.max(clipDurationFrames - duration, 0), clipDurationFrames],
-      [1, 0.92],
+      [1.06, 1.12],
       {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       },
     );
-    return { opacity: baseOpacity, transform: `scale(${Math.min(enterScale, exitScale)})` };
+    return { opacity: baseOpacity, transform: `scale(${Math.max(enterScale, exitScale)})` };
   }
 
-  return { opacity: baseOpacity, transform: 'translateX(0px) scale(1)' };
+  return { opacity: baseOpacity, transform: `translateX(0px) scale(${baseScale})` };
 };
 
 const ClipLayer = ({ clip }) => {
@@ -162,6 +169,7 @@ const ClipLayer = ({ clip }) => {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
+        overflow: 'hidden',
         ...videoStyle,
       },
     }),

@@ -242,31 +242,31 @@ export class VideoGenerationProcessor extends WorkerHost {
           const providerUsdSpent = Number(
             statusResponse.meta?.usage?.usd_spent ?? 0,
           );
-          if (providerCreditsUsed > 0) {
-            try {
-              await this.creditsService.recordUsageDeduction({
-                user_uuid: currentAsset.user_uuid,
-                project_type: currentAsset.user_uuid
-                  ? (currentAsset.project?.type ?? ProjectType.FILM)
-                  : ProjectType.FILM,
+          try {
+            await this.creditsService.recordUsageDeduction({
+              user_uuid: currentAsset.user_uuid,
+              project_type: currentAsset.user_uuid
+                ? (currentAsset.project?.type ?? ProjectType.FILM)
+                : ProjectType.FILM,
+              provider_credits_used: Number.isFinite(providerCreditsUsed)
+                ? Math.max(providerCreditsUsed, 0)
+                : 0,
+              provider_charge_amount:
+                Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
+                  ? providerUsdSpent
+                  : null,
+              source_ref_uuid: projectAssetUuid,
+              metadata: {
+                provider: 'aimlapi',
+                provider_task_id: taskId,
                 provider_credits_used: providerCreditsUsed,
-                provider_charge_amount:
-                  Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
-                    ? providerUsdSpent
-                    : null,
-                source_ref_uuid: projectAssetUuid,
-                metadata: {
-                  provider: 'aimlapi',
-                  provider_task_id: taskId,
-                  provider_credits_used: providerCreditsUsed,
-                  provider_charge_amount: providerUsdSpent,
-                },
-              });
-            } catch (error: any) {
-              this.logger.error(
-                `[video-poll:${taskId}] failed to deduct credits: ${error?.message}`,
-              );
-            }
+                provider_charge_amount: providerUsdSpent,
+              },
+            });
+          } catch (error: any) {
+            this.logger.error(
+              `[video-poll:${taskId}] failed to deduct credits: ${error?.message}`,
+            );
           }
           return;
         }

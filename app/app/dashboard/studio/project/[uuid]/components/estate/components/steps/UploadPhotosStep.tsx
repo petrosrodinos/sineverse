@@ -24,16 +24,9 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
 
-  const { data: scenes, isLoading } = useScenes(
-    projectUuid ? { project_uuid: projectUuid } : undefined,
-    { enabled: !!projectUuid },
-  );
+  const { data: scenes, isLoading } = useScenes(projectUuid ? { project_uuid: projectUuid } : undefined, { enabled: !!projectUuid });
 
-  const promptImageAssets: ProjectAsset[] = (scenes ?? []).flatMap((scene) =>
-    (scene.scene_variations ?? []).flatMap((sv) =>
-      (sv.project_assets ?? []).filter((a) => a.role === "PROMPT_IMAGE"),
-    ),
-  );
+  const promptImageAssets: ProjectAsset[] = (scenes ?? []).flatMap((scene) => (scene.scene_variations ?? []).flatMap((sv) => (sv.project_assets ?? []).filter((a) => a.role === "PROMPT_IMAGE")));
 
   const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
 
@@ -47,33 +40,40 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
     inputRef.current?.click();
   }, []);
 
-  const addFiles = useCallback((files: FileList | File[]) => {
-    const images = Array.from(files).filter((f) =>
-      ACCEPTED_IMAGE_TYPES.includes(f.type as (typeof ACCEPTED_IMAGE_TYPES)[number]),
-    );
-    if (images.length === 0) return;
-    setPendingFiles((prev) => [
-      ...prev,
-      ...images.map((file) => ({
-        id: `${Date.now()}-${Math.random()}`,
-        file,
-        previewUrl: URL.createObjectURL(file),
-      })),
-    ]);
-  }, [setPendingFiles]);
+  const addFiles = useCallback(
+    (files: FileList | File[]) => {
+      const images = Array.from(files).filter((f) => ACCEPTED_IMAGE_TYPES.includes(f.type as (typeof ACCEPTED_IMAGE_TYPES)[number]));
+      if (images.length === 0) return;
+      setPendingFiles((prev) => [
+        ...prev,
+        ...images.map((file) => ({
+          id: `${Date.now()}-${Math.random()}`,
+          file,
+          previewUrl: URL.createObjectURL(file),
+        })),
+      ]);
+    },
+    [setPendingFiles],
+  );
 
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const list = event.target.files;
-    if (list && list.length > 0) addFiles(list);
-    event.target.value = "";
-  }, [addFiles]);
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const list = event.target.files;
+      if (list && list.length > 0) addFiles(list);
+      event.target.value = "";
+    },
+    [addFiles],
+  );
 
-  const handleDrop = useCallback((event: React.DragEvent) => {
-    event.preventDefault();
-    dragDepth.current = 0;
-    setIsDragOver(false);
-    if (event.dataTransfer.files?.length) addFiles(event.dataTransfer.files);
-  }, [addFiles]);
+  const handleDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      dragDepth.current = 0;
+      setIsDragOver(false);
+      if (event.dataTransfer.files?.length) addFiles(event.dataTransfer.files);
+    },
+    [addFiles],
+  );
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -95,13 +95,19 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
     }
   }, []);
 
-  const handleRemoveApiAsset = useCallback((asset: ProjectAsset) => () => {
-    setPendingRemoveAsset(asset);
-  }, []);
+  const handleRemoveApiAsset = useCallback(
+    (asset: ProjectAsset) => () => {
+      setPendingRemoveAsset(asset);
+    },
+    [],
+  );
 
-  const handleRemovePendingFile = useCallback((id: string) => () => {
-    setPendingRemoveFileId(id);
-  }, []);
+  const handleRemovePendingFile = useCallback(
+    (id: string) => () => {
+      setPendingRemoveFileId(id);
+    },
+    [],
+  );
 
   const handleCloseRemoveModal = useCallback(() => {
     if (!isDeletingScene) {
@@ -137,18 +143,10 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
   const showLoadingGrid = isLoading && promptImageAssets.length === 0 && pendingFiles.length === 0;
   const hasPhotos = promptImageAssets.length > 0 || pendingFiles.length > 0;
 
-  const pickerClassName = [
-    "relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300",
-    "bg-gradient-to-br from-default-100/50 via-default-50/30 to-secondary-500/[0.07]",
-    "dark:from-default-100/10 dark:via-default-100/5 dark:to-secondary-500/10",
-    isDragOver ? "border-secondary-500 ring-4 ring-secondary-500/20" : "border-default-300/90 dark:border-default-100/25",
-    "hover:border-secondary-400/70 dark:hover:border-secondary-500/40",
-  ].join(" ");
+  const pickerClassName = ["relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300", "bg-gradient-to-br from-default-100/50 via-default-50/30 to-secondary-500/[0.07]", "dark:from-default-100/10 dark:via-default-100/5 dark:to-secondary-500/10", isDragOver ? "border-secondary-500 ring-4 ring-secondary-500/20" : "border-default-300/90 dark:border-default-100/25", "hover:border-secondary-400/70 dark:hover:border-secondary-500/40"].join(" ");
 
   const isConfirmModalOpen = pendingRemoveAsset !== null || pendingRemoveFileId !== null;
-  const confirmModalDescription = pendingRemoveFileId !== null
-    ? "Remove this photo from the list?"
-    : "Delete this scene and its image from the project? This cannot be undone.";
+  const confirmModalDescription = pendingRemoveFileId !== null ? "Remove this photo from the list?" : "Delete this scene and its image from the project? This cannot be undone.";
 
   return (
     <div className="flex flex-col gap-6">
@@ -169,7 +167,7 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
               </div>
               <div className="max-w-sm space-y-1.5">
                 <p className="text-lg font-semibold tracking-tight text-foreground">Add listing photos</p>
-                <p className="text-small leading-relaxed text-default-500">Drop images here or click to browse. You can add more anytime with the + tile.</p>
+                <p className="text-small leading-relaxed text-default-500">Drop images here or click to browse. You can add more anytime.</p>
               </div>
               <span className="inline-flex items-center gap-2 rounded-full bg-secondary-500/10 px-4 py-2 text-small font-medium text-secondary-700 dark:text-secondary-300">
                 <Upload className="h-4 w-4" />
@@ -185,9 +183,7 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
                   </span>
                   <div>
                     <p className="text-sm font-semibold text-foreground">Your photos</p>
-                    <p className="text-tiny text-default-500">
-                      {promptImageAssets.length + pendingFiles.length} selected · drop to add more
-                    </p>
+                    <p className="text-tiny text-default-500">{promptImageAssets.length + pendingFiles.length} selected · drop to add more</p>
                   </div>
                 </div>
               </div>
@@ -195,11 +191,7 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {promptImageAssets.map((asset) => (
                   <div key={asset.uuid} className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-default-200/40 shadow-sm ring-1 ring-black/[0.06] transition duration-200 hover:ring-secondary-500/35 dark:bg-default-100/10 dark:ring-white/10">
-                    {asset.status === ProjectAssetStatuses.PROCESSING ? (
-                      <Skeleton className="h-full w-full rounded-xl" />
-                    ) : (
-                      <img alt="" src={asset.document.url} className="h-full w-full object-cover" />
-                    )}
+                    {asset.status === ProjectAssetStatuses.PROCESSING ? <Skeleton className="h-full w-full rounded-xl" /> : <img alt="" src={asset.document.url} className="h-full w-full object-cover" />}
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent p-2 pt-8">
                       <p className="truncate text-tiny font-medium text-white/95">{asset.document.filename}</p>
                     </div>
@@ -230,15 +222,7 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
         </div>
       </div>
 
-      <ConfirmationModal
-        isOpen={isConfirmModalOpen}
-        onClose={handleCloseRemoveModal}
-        onConfirm={handleConfirmRemove}
-        title="Remove photo"
-        description={confirmModalDescription}
-        confirmText="Remove"
-        isLoading={isDeletingScene}
-      />
+      <ConfirmationModal isOpen={isConfirmModalOpen} onClose={handleCloseRemoveModal} onConfirm={handleConfirmRemove} title="Remove photo" description={confirmModalDescription} confirmText="Remove" isLoading={isDeletingScene} />
     </div>
   );
 }
