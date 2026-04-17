@@ -20,19 +20,12 @@ export class CreateVideoAdapter {
 
   async createVideo(request: CreateVideoRequest): Promise<CreateVideoResponse> {
     const payload = this.cleanPayload(request);
-    this.logger.debug(
-      `Sending generation payload: ${JSON.stringify(payload, null, 2)}`,
-    );
-    this.logger.log(`[aiml-create] model=${request.model}`);
 
     try {
       const response = await this.performApiCall<any>(
         'POST',
         '/video/generations',
         payload,
-      );
-      this.logger.log(
-        `[aiml-create] response id=${response?.id ?? 'none'} status=${response?.status ?? 'unknown'}`,
       );
 
       if (!response || !response.id) {
@@ -50,15 +43,11 @@ export class CreateVideoAdapter {
 
   async getVideoStatus(taskId: string): Promise<VideoStatusResponse> {
     try {
-      this.logger.debug(`[aiml-status] requesting generation_id=${taskId}`);
       const response = await this.performApiCall<any>(
         'GET',
         `/video/generations?generation_id=${taskId}`,
         undefined,
         30000,
-      );
-      this.logger.debug(
-        `[aiml-status] response generation_id=${taskId} status=${response?.status ?? 'unknown'}`,
       );
 
       return {
@@ -118,14 +107,12 @@ export class CreateVideoAdapter {
     };
 
     try {
-      this.logger.debug(`[aiml-http] ${method} ${url}`);
       const request$ =
         method === 'POST'
           ? this.httpService.post<T>(url, data, { headers, timeout: timeoutMs })
           : this.httpService.get<T>(url, { headers, timeout: timeoutMs });
 
       const response = await firstValueFrom(request$);
-      this.logger.debug(`[aiml-http] ${method} ${url} -> ${response.status}`);
       return response.data;
     } catch (error: any) {
       throw error; // Rethrow to handle in caller

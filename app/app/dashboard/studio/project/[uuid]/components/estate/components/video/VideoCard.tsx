@@ -7,9 +7,9 @@ import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
-import type { Key } from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertCircle, GripVertical, Play, Trash2 } from "lucide-react";
+import type { Key, MouseEvent as ReactMouseEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AlertCircle, GripVertical, Trash2 } from "lucide-react";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
@@ -128,6 +128,25 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
     setIsDeleteModalOpen(false);
   }, [isDeletingScene]);
 
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (el) {
+      el.pause();
+      el.currentTime = 0;
+    }
+  }, [videoUrl]);
+
+  const handlePreviewMouseDown = useCallback(
+    (event: ReactMouseEvent) => {
+      if (reorder?.canReorder) {
+        event.stopPropagation();
+      }
+    },
+    [reorder?.canReorder],
+  );
+
   const handleConfirmDeleteScene = useCallback(async () => {
     if (!sceneUuid) {
       return;
@@ -140,10 +159,6 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
   }, [sceneUuid, deleteScene, promptImageUuid, removePromptImageAsset]);
 
   const previewShell = compact ? "relative h-24 w-full overflow-hidden rounded-lg bg-default-200/40 sm:h-28" : "relative aspect-video w-full overflow-hidden rounded-xl bg-default-200/40";
-
-  const playBtnShell = compact ? "flex h-9 w-9 items-center justify-center rounded-full bg-background/80 text-foreground shadow-md backdrop-blur-sm" : "flex h-14 w-14 items-center justify-center rounded-full bg-background/80 text-foreground shadow-lg backdrop-blur-sm";
-
-  const playIconClass = compact ? "h-4 w-4 fill-current" : "h-6 w-6 fill-current";
 
   const reorderHandlers = useVideoReorderItem(
     reorder
@@ -217,18 +232,25 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
             </div>
           )}
           {display.status === ProjectAssetStatuses.COMPLETED && (
-            <>
+            <div
+              className="relative h-full w-full"
+              onMouseDown={videoUrl ? handlePreviewMouseDown : undefined}
+            >
               {videoUrl ? (
-                <video src={videoUrl} className="h-full w-full object-cover" muted playsInline loop preload="metadata" />
+                <video
+                  ref={videoRef}
+                  src={videoUrl}
+                  className="h-full w-full object-cover"
+                  controls
+                  muted
+                  playsInline
+                  loop
+                  preload="metadata"
+                />
               ) : (
                 <img alt="" src={thumbUrl} className="h-full w-full object-cover" />
               )}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
-                <div className={playBtnShell}>
-                  <Play className={playIconClass} />
-                </div>
-              </div>
-            </>
+            </div>
           )}
         </div>
         {showEditor && (

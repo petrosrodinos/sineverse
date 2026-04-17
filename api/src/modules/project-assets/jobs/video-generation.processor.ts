@@ -31,9 +31,6 @@ export class VideoGenerationProcessor extends WorkerHost {
 
   async process(job: Job<VideoGenerationJobData>): Promise<any> {
     const { projectAssetUuid } = job.data;
-    this.logger.log(
-      `[video-job:${job.id}] started for asset=${projectAssetUuid}`,
-    );
 
     const projectAsset = await this.prisma.projectAsset.findUnique({
       where: { uuid: projectAssetUuid },
@@ -62,8 +59,6 @@ export class VideoGenerationProcessor extends WorkerHost {
     }
 
     try {
-      this.logger.log(`[video-job:${job.id}] setting asset to PROCESSING`);
-
       await this.prisma.projectAsset.update({
         where: { uuid: projectAssetUuid },
         data: { status: AssetStatus.PROCESSING },
@@ -80,19 +75,9 @@ export class VideoGenerationProcessor extends WorkerHost {
       };
 
       const model = metadata.ai_model || VideoModels.KLING_VIDEO_V3_STANDARD;
-      this.logger.log(
-        `[video-job:${job.id}] selected model=${model} promptImage=${promptImageAsset?.uuid ?? 'none'}`,
-      );
-
       const payload = transformVariationToModelPayload(configForMapping, model);
-      this.logger.debug(
-        `[video-job:${job.id}] mapped payload=${JSON.stringify(payload)}`,
-      );
 
       const genResponse = await this.aimlApiService.video.create(payload);
-      this.logger.log(
-        `[video-job:${job.id}] provider generation created id=${genResponse.id} status=${genResponse.status}`,
-      );
 
       if (!genResponse.id) {
         throw new Error('Failed to get a generation ID from AIML API');
@@ -103,14 +88,8 @@ export class VideoGenerationProcessor extends WorkerHost {
         where: { uuid: projectAssetUuid },
         data: { provider_job_id: genResponse.id },
       });
-      this.logger.log(
-        `[video-job:${job.id}] stored provider_job_id=${genResponse.id}`,
-      );
 
       await this.pollUntilTerminal(genResponse.id, projectAssetUuid);
-      this.logger.log(
-        `[video-job:${job.id}] finished successfully asset=${projectAssetUuid}`,
-      );
 
       return { status: 'completed', taskId: genResponse.id };
     } catch (error: any) {
@@ -172,9 +151,6 @@ export class VideoGenerationProcessor extends WorkerHost {
       await this.prisma.projectAsset.delete({
         where: { uuid: projectAssetUuid },
       });
-      this.logger.warn(
-        `Removed video project asset ${projectAssetUuid} after request timeout (prompt images unchanged).`,
-      );
     } catch (deleteError: any) {
       this.logger.error(
         `Could not delete video project asset ${projectAssetUuid}: ${deleteError?.message}`,
@@ -195,15 +171,9 @@ export class VideoGenerationProcessor extends WorkerHost {
   ): Promise<void> {
     let pollErrors = 0;
     let pollCount = 0;
-    this.logger.log(
-      `[video-poll:${taskId}] started for asset=${projectAssetUuid}`,
-    );
 
     for (;;) {
       pollCount += 1;
-      this.logger.debug(
-        `[video-poll:${taskId}] cycle=${pollCount} checking local status`,
-      );
       const currentAsset = await this.prisma.projectAsset.findUnique({
         where: { uuid: projectAssetUuid },
         select: {
@@ -231,9 +201,6 @@ export class VideoGenerationProcessor extends WorkerHost {
       }
 
       try {
-        this.logger.debug(
-          `[video-poll:${taskId}] cycle=${pollCount} requesting provider status`,
-        );
         const statusResponse =
           await this.aimlApiService.video.getStatus(taskId);
         pollErrors = 0;
@@ -247,14 +214,8 @@ export class VideoGenerationProcessor extends WorkerHost {
           'cancelled',
           'canceled',
         ].includes(normalizedStatus);
-        this.logger.log(
-          `[video-poll:${taskId}] cycle=${pollCount} providerStatus=${statusResponse.status}`,
-        );
 
         if (isCompleted && statusResponse.video?.url) {
-          this.logger.log(
-            `[video-poll:${taskId}] completed with video url, uploading to storage`,
-          );
           const videoUuid = await this.documentsService.saveVideoFromUrl(
             statusResponse.video.url,
             `video_${projectAssetUuid}.mp4`,
@@ -300,10 +261,6 @@ export class VideoGenerationProcessor extends WorkerHost {
               );
             }
           }
-          this.logger.log(
-            `[video-poll:${taskId}] asset completed document_uuid=${videoUuid}`,
-          );
-
           return;
         }
 
@@ -333,18 +290,11 @@ export class VideoGenerationProcessor extends WorkerHost {
         const isInferenceNotFound = /inference not found/i.test(details);
         const isModelMaintenance =
           /model is under maintenance|under maintenance/i.test(details);
-        const isRateOrProviderUnavailable =
-          /status code 524|status code 502|status code 503|status code 504|temporarily unavailable/i.test(
-            details,
-          );
         pollErrors += 1;
         const shouldFail =
           isInferenceNotFound ||
           isModelMaintenance ||
           pollErrors >= this.MAX_POLL_ERRORS;
-        this.logger.warn(
-          `[video-poll:${taskId}] cycle=${pollCount} pollErrors=${pollErrors} shouldFail=${shouldFail}`,
-        );
 
         if (shouldFail) {
           await this.prisma.projectAsset.update({
@@ -357,17 +307,8 @@ export class VideoGenerationProcessor extends WorkerHost {
 
           throw new Error(details);
         }
-
-        if (isRateOrProviderUnavailable) {
-          this.logger.warn(
-            `[video-poll:${taskId}] transient provider timeout/unavailable, will retry`,
-          );
-        }
       }
 
-      this.logger.debug(
-        `[video-poll:${taskId}] sleeping ${this.POLL_INTERVAL_MS}ms before next cycle`,
-      );
       await this.sleep(this.POLL_INTERVAL_MS);
     }
   }

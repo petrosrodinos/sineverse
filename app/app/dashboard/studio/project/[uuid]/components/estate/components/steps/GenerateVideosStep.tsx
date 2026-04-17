@@ -66,11 +66,6 @@ export function GenerateVideosStep() {
       });
       if (assets.length) {
         hydrateEstateVideoAssetsFromApi(assets);
-        addToast({
-          title: "Video generation started",
-          description: "AI is generating your walkthrough clips.",
-          severity: "success",
-        });
       } else {
         addToast({
           title: "No clips queued",
