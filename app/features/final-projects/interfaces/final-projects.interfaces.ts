@@ -14,6 +14,7 @@ export interface FinalProject {
     updated_at: string;
     video?: Document;
     thumbnail?: Document;
+    render_history?: Document[];
 }
 
 export interface CreateFinalProjectDto {

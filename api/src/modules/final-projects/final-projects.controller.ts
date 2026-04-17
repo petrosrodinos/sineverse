@@ -132,4 +132,29 @@ export class FinalProjectsController {
     );
     return new StreamableFile(file.buffer);
   }
+
+  @Get(':uuid/download/:documentUuid')
+  @ApiOperation({ summary: 'Download a specific rendered video from history' })
+  @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
+  @ApiParam({ name: 'documentUuid', description: 'The UUID of the rendered video document' })
+  @ApiResponse({ status: 200, description: 'Rendered video downloaded.' })
+  @ApiResponse({ status: 404, description: 'Rendered video not found.' })
+  async downloadVideoByDocument(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+    @Param('documentUuid') documentUuid: string,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.finalProjectsService.downloadVideoByDocument(
+      user_uuid,
+      uuid,
+      documentUuid,
+    );
+    res.setHeader('Content-Type', file.mimetype);
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${file.filename}"`,
+    );
+    return new StreamableFile(file.buffer);
+  }
 }

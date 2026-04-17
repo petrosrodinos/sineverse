@@ -70,7 +70,14 @@ export class FinalProjectsService {
         },
       });
       if (!finalProject) throw new NotFoundException('Final project not found');
-      return finalProject;
+      const render_history = await this.prisma.document.findMany({
+        where: {
+          mimetype: 'video/mp4',
+          filename: { contains: `final-render-${uuid}-` },
+        },
+        orderBy: { created_at: 'desc' },
+      });
+      return { ...finalProject, render_history };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new InternalServerErrorException('Failed to retrieve final project', { cause: error });
@@ -176,6 +183,40 @@ export class FinalProjectsService {
         buffer: Buffer.from(response.data),
         filename,
         mimetype,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to download rendered video', {
+        cause: error,
+      });
+    }
+  }
+
+  async downloadVideoByDocument(
+    user_uuid: string,
+    final_project_uuid: string,
+    document_uuid: string,
+  ): Promise<{
+    buffer: Buffer;
+    filename: string;
+    mimetype: string;
+  }> {
+    try {
+      const finalProject = await this.findOne(user_uuid, final_project_uuid);
+      const history = (finalProject as { render_history?: Array<{ uuid: string; url: string; filename: string; mimetype: string }> }).render_history ?? [];
+      const target = history.find((item) => item.uuid === document_uuid);
+      if (!target?.url) {
+        throw new NotFoundException('Rendered video file not found');
+      }
+      const response = await axios.get<ArrayBuffer>(target.url, {
+        responseType: 'arraybuffer',
+      });
+      return {
+        buffer: Buffer.from(response.data),
+        filename: target.filename || `estate-render-${final_project_uuid}.mp4`,
+        mimetype: target.mimetype || 'video/mp4',
       };
     } catch (error) {
       if (error instanceof NotFoundException) {

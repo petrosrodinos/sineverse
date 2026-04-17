@@ -72,3 +72,21 @@ export const downloadFinalProjectVideo = async (uuid: string): Promise<Blob> => 
         throw error;
     }
 }
+
+export const downloadFinalProjectVideoByDocument = async (
+    finalProjectUuid: string,
+    documentUuid: string,
+): Promise<Blob> => {
+    try {
+        const response = await axiosInstance.get(
+            ApiRoutes.final_projects.download_document(finalProjectUuid, documentUuid),
+            {
+                responseType: "blob",
+            },
+        );
+        return response.data as Blob;
+    } catch (error: any) {
+        console.error(error?.response?.data?.message || "Failed to download rendered video");
+        throw error;
+    }
+}
