@@ -5,9 +5,19 @@ import type { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 import type { Project } from "@/features/projects/interfaces/projects.interfaces";
 import {
   ESTATE_DEFAULT_AUDIO_TRACK_ID,
+  ESTATE_DEFAULT_CAPTION_END_SEC,
+  ESTATE_DEFAULT_CAPTION_POSITION,
+  ESTATE_DEFAULT_CAPTION_START_SEC,
+  ESTATE_DEFAULT_CAPTION_STYLE,
+  ESTATE_DEFAULT_SPEED,
   ESTATE_DEFAULT_TRANSITION_ID,
+  ESTATE_DEFAULT_VOLUME,
   ESTATE_MOCK_FINAL_VIDEO_URL,
   ESTATE_TRIM_SEC_MAX,
+  ESTATE_SPEED_MAX,
+  ESTATE_SPEED_MIN,
+  ESTATE_VOLUME_MAX,
+  ESTATE_VOLUME_MIN,
   type WorkflowStep,
 } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import {
@@ -21,6 +31,7 @@ import {
 import { canNavigateToStep, moveIdInOrder } from "../utils/estate-workflow.utils";
 
 type VideoTrimRange = { start: number; end: number };
+type VideoCaption = { text: string; startSec: number; endSec: number; position: string; style: string };
 
 type EstateWorkflowState = {
   activeStep: WorkflowStep;
@@ -29,7 +40,11 @@ type EstateWorkflowState = {
   videoAssetsByUuid: Record<string, ProjectAsset>;
   videoOrder: string[];
   trimRangeByVideoUuid: Record<string, VideoTrimRange>;
+  videoDurationSecByVideoUuid: Record<string, number>;
   transitionByVideoUuid: Record<string, string>;
+  volumeByVideoUuid: Record<string, number>;
+  speedByVideoUuid: Record<string, number>;
+  captionByVideoUuid: Record<string, VideoCaption>;
   estateAudioTrackId: string;
   finalVideoAsset: ProjectAsset | null;
   objectUrlsToRevoke: string[];
@@ -52,7 +67,15 @@ type EstateWorkflowActions = {
   goNext: () => void;
   goBack: () => void;
   setTrimRange: (videoAssetUuid: string, start: number, end: number) => void;
+  setVideoDurationSec: (videoAssetUuid: string, durationSec: number) => void;
   setTransition: (videoAssetUuid: string, transitionId: string) => void;
+  setVolume: (videoAssetUuid: string, volume: number) => void;
+  setSpeed: (videoAssetUuid: string, speed: number) => void;
+  setCaptionText: (videoAssetUuid: string, text: string) => void;
+  setCaptionStartSec: (videoAssetUuid: string, startSec: number) => void;
+  setCaptionEndSec: (videoAssetUuid: string, endSec: number) => void;
+  setCaptionPosition: (videoAssetUuid: string, position: string) => void;
+  setCaptionStyle: (videoAssetUuid: string, style: string) => void;
   setEstateAudioTrack: (audioTrackId: string) => void;
   setVideoAssetStatus: (videoAssetUuid: string, status: ProjectAsset["status"]) => void;
   reorderVideoAssets: (fromIndex: number, toIndex: number) => void;
@@ -68,7 +91,11 @@ function buildInitialState(): EstateWorkflowState {
     videoAssetsByUuid: {},
     videoOrder: [],
     trimRangeByVideoUuid: {},
+    videoDurationSecByVideoUuid: {},
     transitionByVideoUuid: {},
+    volumeByVideoUuid: {},
+    speedByVideoUuid: {},
+    captionByVideoUuid: {},
     estateAudioTrackId: ESTATE_DEFAULT_AUDIO_TRACK_ID,
     finalVideoAsset: null,
     objectUrlsToRevoke: [],
@@ -179,10 +206,18 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       });
       const nextOrder = state.videoOrder.filter((id) => !removeIds.includes(id));
       const trimRangeByVideoUuid = { ...state.trimRangeByVideoUuid };
+      const videoDurationSecByVideoUuid = { ...state.videoDurationSecByVideoUuid };
       const transitionByVideoUuid = { ...state.transitionByVideoUuid };
+      const volumeByVideoUuid = { ...state.volumeByVideoUuid };
+      const speedByVideoUuid = { ...state.speedByVideoUuid };
+      const captionByVideoUuid = { ...state.captionByVideoUuid };
       removeIds.forEach((id) => {
         delete trimRangeByVideoUuid[id];
+        delete videoDurationSecByVideoUuid[id];
         delete transitionByVideoUuid[id];
+        delete volumeByVideoUuid[id];
+        delete speedByVideoUuid[id];
+        delete captionByVideoUuid[id];
       });
       return {
         promptImageAssets: nextPrompts,
@@ -192,7 +227,11 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         videoAssetsByUuid: nextVideos,
         videoOrder: nextOrder,
         trimRangeByVideoUuid,
+        videoDurationSecByVideoUuid,
         transitionByVideoUuid,
+        volumeByVideoUuid,
+        speedByVideoUuid,
+        captionByVideoUuid,
       };
     });
   },
@@ -207,7 +246,11 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         videoAssetsByUuid: {},
         videoOrder: [],
         trimRangeByVideoUuid: {},
+        videoDurationSecByVideoUuid: {},
         transitionByVideoUuid: {},
+        volumeByVideoUuid: {},
+        speedByVideoUuid: {},
+        captionByVideoUuid: {},
         estateAudioTrackId: ESTATE_DEFAULT_AUDIO_TRACK_ID,
         finalVideoAsset: state.finalVideoAsset,
       };
@@ -234,16 +277,33 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         videoOrder.push(a.uuid);
       });
       const trimRangeByVideoUuid: Record<string, VideoTrimRange> = {};
+      const videoDurationSecByVideoUuid: Record<string, number> = {};
       const transitionByVideoUuid: Record<string, string> = {};
+      const volumeByVideoUuid: Record<string, number> = {};
+      const speedByVideoUuid: Record<string, number> = {};
+      const captionByVideoUuid: Record<string, VideoCaption> = {};
       videoOrder.forEach((id) => {
         trimRangeByVideoUuid[id] = { start: 0, end: 5 };
         transitionByVideoUuid[id] = ESTATE_DEFAULT_TRANSITION_ID;
+        volumeByVideoUuid[id] = ESTATE_DEFAULT_VOLUME;
+        speedByVideoUuid[id] = ESTATE_DEFAULT_SPEED;
+        captionByVideoUuid[id] = {
+          text: "",
+          startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+          endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+          position: ESTATE_DEFAULT_CAPTION_POSITION,
+          style: ESTATE_DEFAULT_CAPTION_STYLE,
+        };
       });
       return {
         videoAssetsByUuid,
         videoOrder,
         trimRangeByVideoUuid,
+        videoDurationSecByVideoUuid,
         transitionByVideoUuid,
+        volumeByVideoUuid,
+        speedByVideoUuid,
+        captionByVideoUuid,
       };
     }),
   mergeEstateVideoAsset: (uuid, patch) =>
@@ -313,8 +373,9 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
       if (!state.videoAssetsByUuid[videoAssetUuid]) {
         return state;
       }
+      const maxTrimSec = state.videoDurationSecByVideoUuid[videoAssetUuid] ?? ESTATE_TRIM_SEC_MAX;
       const lo = Math.max(0, Math.min(start, end));
-      const hi = Math.min(ESTATE_TRIM_SEC_MAX, Math.max(start, end));
+      const hi = Math.min(maxTrimSec, Math.max(start, end));
       if (hi - lo < 0.1) {
         return state;
       }
@@ -322,6 +383,35 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         trimRangeByVideoUuid: {
           ...state.trimRangeByVideoUuid,
           [videoAssetUuid]: { start: lo, end: hi },
+        },
+      };
+    }),
+  setVideoDurationSec: (videoAssetUuid, durationSec) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid] || !Number.isFinite(durationSec) || durationSec <= 0) {
+        return state;
+      }
+      const normalized = Math.max(0.1, durationSec);
+      const previousTrim = state.trimRangeByVideoUuid[videoAssetUuid];
+      const shouldExpandToDuration =
+        !previousTrim || (previousTrim.start === 0 && previousTrim.end <= 5);
+      const nextTrim = shouldExpandToDuration
+        ? { start: 0, end: normalized }
+        : {
+            start: Math.max(0, Math.min(previousTrim.start, Math.max(0, normalized - 0.1))),
+            end: Math.min(normalized, Math.max(previousTrim.end, 0.1)),
+          };
+      if (nextTrim.end - nextTrim.start < 0.1) {
+        nextTrim.end = Math.min(normalized, nextTrim.start + 0.1);
+      }
+      return {
+        videoDurationSecByVideoUuid: {
+          ...state.videoDurationSecByVideoUuid,
+          [videoAssetUuid]: normalized,
+        },
+        trimRangeByVideoUuid: {
+          ...state.trimRangeByVideoUuid,
+          [videoAssetUuid]: nextTrim,
         },
       };
     }),
@@ -334,6 +424,144 @@ export const useEstateWorkflowStore = create<EstateWorkflowState & EstateWorkflo
         transitionByVideoUuid: {
           ...state.transitionByVideoUuid,
           [videoAssetUuid]: transitionId,
+        },
+      };
+    }),
+  setVolume: (videoAssetUuid, volume) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const clamped = Math.max(ESTATE_VOLUME_MIN, Math.min(ESTATE_VOLUME_MAX, volume));
+      return {
+        volumeByVideoUuid: {
+          ...state.volumeByVideoUuid,
+          [videoAssetUuid]: clamped,
+        },
+      };
+    }),
+  setSpeed: (videoAssetUuid, speed) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const clamped = Math.max(ESTATE_SPEED_MIN, Math.min(ESTATE_SPEED_MAX, speed));
+      return {
+        speedByVideoUuid: {
+          ...state.speedByVideoUuid,
+          [videoAssetUuid]: clamped,
+        },
+      };
+    }),
+  setCaptionText: (videoAssetUuid, text) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const prev = state.captionByVideoUuid[videoAssetUuid] ?? {
+        text: "",
+        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+        position: ESTATE_DEFAULT_CAPTION_POSITION,
+        style: ESTATE_DEFAULT_CAPTION_STYLE,
+      };
+      return {
+        captionByVideoUuid: {
+          ...state.captionByVideoUuid,
+          [videoAssetUuid]: {
+            ...prev,
+            text,
+          },
+        },
+      };
+    }),
+  setCaptionStartSec: (videoAssetUuid, startSec) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const prev = state.captionByVideoUuid[videoAssetUuid] ?? {
+        text: "",
+        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+        position: ESTATE_DEFAULT_CAPTION_POSITION,
+        style: ESTATE_DEFAULT_CAPTION_STYLE,
+      };
+      const nextStartSec = Number.isFinite(startSec) ? Math.max(0, startSec) : prev.startSec;
+      return {
+        captionByVideoUuid: {
+          ...state.captionByVideoUuid,
+          [videoAssetUuid]: {
+            ...prev,
+            startSec: nextStartSec,
+          },
+        },
+      };
+    }),
+  setCaptionEndSec: (videoAssetUuid, endSec) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const prev = state.captionByVideoUuid[videoAssetUuid] ?? {
+        text: "",
+        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+        position: ESTATE_DEFAULT_CAPTION_POSITION,
+        style: ESTATE_DEFAULT_CAPTION_STYLE,
+      };
+      const nextEndSec = Number.isFinite(endSec) ? Math.max(0, endSec) : prev.endSec;
+      return {
+        captionByVideoUuid: {
+          ...state.captionByVideoUuid,
+          [videoAssetUuid]: {
+            ...prev,
+            endSec: nextEndSec,
+          },
+        },
+      };
+    }),
+  setCaptionPosition: (videoAssetUuid, position) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const prev = state.captionByVideoUuid[videoAssetUuid] ?? {
+        text: "",
+        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+        position: ESTATE_DEFAULT_CAPTION_POSITION,
+        style: ESTATE_DEFAULT_CAPTION_STYLE,
+      };
+      return {
+        captionByVideoUuid: {
+          ...state.captionByVideoUuid,
+          [videoAssetUuid]: {
+            ...prev,
+            position,
+          },
+        },
+      };
+    }),
+  setCaptionStyle: (videoAssetUuid, style) =>
+    set((state) => {
+      if (!state.videoAssetsByUuid[videoAssetUuid]) {
+        return state;
+      }
+      const prev = state.captionByVideoUuid[videoAssetUuid] ?? {
+        text: "",
+        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
+        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
+        position: ESTATE_DEFAULT_CAPTION_POSITION,
+        style: ESTATE_DEFAULT_CAPTION_STYLE,
+      };
+      return {
+        captionByVideoUuid: {
+          ...state.captionByVideoUuid,
+          [videoAssetUuid]: {
+            ...prev,
+            style,
+          },
         },
       };
     }),

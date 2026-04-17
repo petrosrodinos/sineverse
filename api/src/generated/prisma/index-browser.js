@@ -203,21 +203,12 @@ exports.Prisma.FinalProjectScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.TimelineTrackScalarFieldEnum = {
-  id: 'id',
-  uuid: 'uuid',
-  final_project_uuid: 'final_project_uuid',
-  type: 'type',
-  order: 'order',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.TimelineClipScalarFieldEnum = {
   id: 'id',
   uuid: 'uuid',
-  track_uuid: 'track_uuid',
+  project_uuid: 'project_uuid',
   project_asset_uuid: 'project_asset_uuid',
+  final_project_uuid: 'final_project_uuid',
   start_sec: 'start_sec',
   end_sec: 'end_sec',
   trim_start: 'trim_start',
@@ -416,14 +407,6 @@ exports.AssetRole = exports.$Enums.AssetRole = {
   GENERATED_CAPTION: 'GENERATED_CAPTION'
 };
 
-exports.TimelineTrackType = exports.$Enums.TimelineTrackType = {
-  VIDEO: 'VIDEO',
-  AUDIO: 'AUDIO',
-  VOICEOVER: 'VOICEOVER',
-  MUSIC: 'MUSIC',
-  CAPTION: 'CAPTION'
-};
-
 exports.TimelineTransitionType = exports.$Enums.TimelineTransitionType = {
   FADE: 'FADE',
   CROSSFADE: 'CROSSFADE',
@@ -454,7 +437,6 @@ exports.Prisma.ModelName = {
   SceneVariation: 'SceneVariation',
   ProjectAsset: 'ProjectAsset',
   FinalProject: 'FinalProject',
-  TimelineTrack: 'TimelineTrack',
   TimelineClip: 'TimelineClip',
   TimelineTransition: 'TimelineTransition',
   TimelineCaption: 'TimelineCaption',

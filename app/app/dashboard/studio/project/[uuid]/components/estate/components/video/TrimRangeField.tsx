@@ -6,11 +6,12 @@ import { ESTATE_TRIM_SEC_MAX } from "../../../../../../../../../config/dropdowns
 type TrimRangeFieldProps = {
   start: number;
   end: number;
+  maxSec?: number;
   onChange: (start: number, end: number) => void;
   isDisabled?: boolean;
 };
 
-export function TrimRangeField({ start, end, onChange, isDisabled }: TrimRangeFieldProps) {
+export function TrimRangeField({ start, end, maxSec = ESTATE_TRIM_SEC_MAX, onChange, isDisabled }: TrimRangeFieldProps) {
   const handleChange = (raw: number | number[]) => {
     if (Array.isArray(raw) && raw.length >= 2) {
       const a = raw[0];
@@ -32,7 +33,7 @@ export function TrimRangeField({ start, end, onChange, isDisabled }: TrimRangeFi
       label="Trim (seconds)"
       size="sm"
       minValue={0}
-      maxValue={ESTATE_TRIM_SEC_MAX}
+      maxValue={maxSec}
       step={0.1}
       value={[start, end]}
       onChange={handleChange}

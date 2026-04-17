@@ -44,11 +44,6 @@ export type ProjectAsset = $Result.DefaultSelection<Prisma.$ProjectAssetPayload>
  */
 export type FinalProject = $Result.DefaultSelection<Prisma.$FinalProjectPayload>
 /**
- * Model TimelineTrack
- * 
- */
-export type TimelineTrack = $Result.DefaultSelection<Prisma.$TimelineTrackPayload>
-/**
  * Model TimelineClip
  * 
  */
@@ -410,16 +405,6 @@ export class PrismaClient<
     * ```
     */
   get finalProject(): Prisma.FinalProjectDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.timelineTrack`: Exposes CRUD operations for the **TimelineTrack** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more TimelineTracks
-    * const timelineTracks = await prisma.timelineTrack.findMany()
-    * ```
-    */
-  get timelineTrack(): Prisma.TimelineTrackDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.timelineClip`: Exposes CRUD operations for the **TimelineClip** model.
@@ -950,7 +935,6 @@ export namespace Prisma {
     SceneVariation: 'SceneVariation',
     ProjectAsset: 'ProjectAsset',
     FinalProject: 'FinalProject',
-    TimelineTrack: 'TimelineTrack',
     TimelineClip: 'TimelineClip',
     TimelineTransition: 'TimelineTransition',
     TimelineCaption: 'TimelineCaption',
@@ -975,7 +959,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "project" | "scene" | "sceneVariation" | "projectAsset" | "finalProject" | "timelineTrack" | "timelineClip" | "timelineTransition" | "timelineCaption" | "timelineMusic" | "document" | "creditPack" | "creditPurchase" | "creditLedgerEntry" | "currencyRateSnapshot"
+      modelProps: "user" | "project" | "scene" | "sceneVariation" | "projectAsset" | "finalProject" | "timelineClip" | "timelineTransition" | "timelineCaption" | "timelineMusic" | "document" | "creditPack" | "creditPurchase" | "creditLedgerEntry" | "currencyRateSnapshot"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1420,80 +1404,6 @@ export namespace Prisma {
           count: {
             args: Prisma.FinalProjectCountArgs<ExtArgs>
             result: $Utils.Optional<FinalProjectCountAggregateOutputType> | number
-          }
-        }
-      }
-      TimelineTrack: {
-        payload: Prisma.$TimelineTrackPayload<ExtArgs>
-        fields: Prisma.TimelineTrackFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.TimelineTrackFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.TimelineTrackFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          findFirst: {
-            args: Prisma.TimelineTrackFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.TimelineTrackFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          findMany: {
-            args: Prisma.TimelineTrackFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>[]
-          }
-          create: {
-            args: Prisma.TimelineTrackCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          createMany: {
-            args: Prisma.TimelineTrackCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.TimelineTrackCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>[]
-          }
-          delete: {
-            args: Prisma.TimelineTrackDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          update: {
-            args: Prisma.TimelineTrackUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          deleteMany: {
-            args: Prisma.TimelineTrackDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.TimelineTrackUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.TimelineTrackUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>[]
-          }
-          upsert: {
-            args: Prisma.TimelineTrackUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$TimelineTrackPayload>
-          }
-          aggregate: {
-            args: Prisma.TimelineTrackAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateTimelineTrack>
-          }
-          groupBy: {
-            args: Prisma.TimelineTrackGroupByArgs<ExtArgs>
-            result: $Utils.Optional<TimelineTrackGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.TimelineTrackCountArgs<ExtArgs>
-            result: $Utils.Optional<TimelineTrackCountAggregateOutputType> | number
           }
         }
       }
@@ -2277,7 +2187,6 @@ export namespace Prisma {
     sceneVariation?: SceneVariationOmit
     projectAsset?: ProjectAssetOmit
     finalProject?: FinalProjectOmit
-    timelineTrack?: TimelineTrackOmit
     timelineClip?: TimelineClipOmit
     timelineTransition?: TimelineTransitionOmit
     timelineCaption?: TimelineCaptionOmit
@@ -2455,12 +2364,14 @@ export namespace Prisma {
     scenes: number
     project_assets: number
     final_projects: number
+    timeline_clips: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     scenes?: boolean | ProjectCountOutputTypeCountScenesArgs
     project_assets?: boolean | ProjectCountOutputTypeCountProject_assetsArgs
     final_projects?: boolean | ProjectCountOutputTypeCountFinal_projectsArgs
+    timeline_clips?: boolean | ProjectCountOutputTypeCountTimeline_clipsArgs
   }
 
   // Custom InputTypes
@@ -2493,6 +2404,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountFinal_projectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FinalProjectWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountTimeline_clipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimelineClipWhereInput
   }
 
 
@@ -2621,12 +2539,12 @@ export namespace Prisma {
    */
 
   export type FinalProjectCountOutputType = {
-    tracks: number
+    timeline_clips: number
     timeline_music: number
   }
 
   export type FinalProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tracks?: boolean | FinalProjectCountOutputTypeCountTracksArgs
+    timeline_clips?: boolean | FinalProjectCountOutputTypeCountTimeline_clipsArgs
     timeline_music?: boolean | FinalProjectCountOutputTypeCountTimeline_musicArgs
   }
 
@@ -2644,8 +2562,8 @@ export namespace Prisma {
   /**
    * FinalProjectCountOutputType without action
    */
-  export type FinalProjectCountOutputTypeCountTracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TimelineTrackWhereInput
+  export type FinalProjectCountOutputTypeCountTimeline_clipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TimelineClipWhereInput
   }
 
   /**
@@ -2653,37 +2571,6 @@ export namespace Prisma {
    */
   export type FinalProjectCountOutputTypeCountTimeline_musicArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TimelineMusicWhereInput
-  }
-
-
-  /**
-   * Count Type TimelineTrackCountOutputType
-   */
-
-  export type TimelineTrackCountOutputType = {
-    clips: number
-  }
-
-  export type TimelineTrackCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    clips?: boolean | TimelineTrackCountOutputTypeCountClipsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * TimelineTrackCountOutputType without action
-   */
-  export type TimelineTrackCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrackCountOutputType
-     */
-    select?: TimelineTrackCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TimelineTrackCountOutputType without action
-   */
-  export type TimelineTrackCountOutputTypeCountClipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TimelineClipWhereInput
   }
 
 
@@ -4465,6 +4352,7 @@ export namespace Prisma {
     scenes?: boolean | Project$scenesArgs<ExtArgs>
     project_assets?: boolean | Project$project_assetsArgs<ExtArgs>
     final_projects?: boolean | Project$final_projectsArgs<ExtArgs>
+    timeline_clips?: boolean | Project$timeline_clipsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -4518,6 +4406,7 @@ export namespace Prisma {
     scenes?: boolean | Project$scenesArgs<ExtArgs>
     project_assets?: boolean | Project$project_assetsArgs<ExtArgs>
     final_projects?: boolean | Project$final_projectsArgs<ExtArgs>
+    timeline_clips?: boolean | Project$timeline_clipsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4534,6 +4423,7 @@ export namespace Prisma {
       scenes: Prisma.$ScenePayload<ExtArgs>[]
       project_assets: Prisma.$ProjectAssetPayload<ExtArgs>[]
       final_projects: Prisma.$FinalProjectPayload<ExtArgs>[]
+      timeline_clips: Prisma.$TimelineClipPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -4945,6 +4835,7 @@ export namespace Prisma {
     scenes<T extends Project$scenesArgs<ExtArgs> = {}>(args?: Subset<T, Project$scenesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScenePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     project_assets<T extends Project$project_assetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$project_assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     final_projects<T extends Project$final_projectsArgs<ExtArgs> = {}>(args?: Subset<T, Project$final_projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FinalProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    timeline_clips<T extends Project$timeline_clipsArgs<ExtArgs> = {}>(args?: Subset<T, Project$timeline_clipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineClipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5450,6 +5341,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FinalProjectScalarFieldEnum | FinalProjectScalarFieldEnum[]
+  }
+
+  /**
+   * Project.timeline_clips
+   */
+  export type Project$timeline_clipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TimelineClip
+     */
+    select?: TimelineClipSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TimelineClip
+     */
+    omit?: TimelineClipOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TimelineClipInclude<ExtArgs> | null
+    where?: TimelineClipWhereInput
+    orderBy?: TimelineClipOrderByWithRelationInput | TimelineClipOrderByWithRelationInput[]
+    cursor?: TimelineClipWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TimelineClipScalarFieldEnum | TimelineClipScalarFieldEnum[]
   }
 
   /**
@@ -9519,7 +9434,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     video?: boolean | FinalProject$videoArgs<ExtArgs>
     thumbnail?: boolean | FinalProject$thumbnailArgs<ExtArgs>
-    tracks?: boolean | FinalProject$tracksArgs<ExtArgs>
+    timeline_clips?: boolean | FinalProject$timeline_clipsArgs<ExtArgs>
     timeline_music?: boolean | FinalProject$timeline_musicArgs<ExtArgs>
     _count?: boolean | FinalProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["finalProject"]>
@@ -9577,7 +9492,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     video?: boolean | FinalProject$videoArgs<ExtArgs>
     thumbnail?: boolean | FinalProject$thumbnailArgs<ExtArgs>
-    tracks?: boolean | FinalProject$tracksArgs<ExtArgs>
+    timeline_clips?: boolean | FinalProject$timeline_clipsArgs<ExtArgs>
     timeline_music?: boolean | FinalProject$timeline_musicArgs<ExtArgs>
     _count?: boolean | FinalProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -9601,7 +9516,7 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       video: Prisma.$DocumentPayload<ExtArgs> | null
       thumbnail: Prisma.$DocumentPayload<ExtArgs> | null
-      tracks: Prisma.$TimelineTrackPayload<ExtArgs>[]
+      timeline_clips: Prisma.$TimelineClipPayload<ExtArgs>[]
       timeline_music: Prisma.$TimelineMusicPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -10013,7 +9928,7 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     video<T extends FinalProject$videoArgs<ExtArgs> = {}>(args?: Subset<T, FinalProject$videoArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     thumbnail<T extends FinalProject$thumbnailArgs<ExtArgs> = {}>(args?: Subset<T, FinalProject$thumbnailArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    tracks<T extends FinalProject$tracksArgs<ExtArgs> = {}>(args?: Subset<T, FinalProject$tracksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    timeline_clips<T extends FinalProject$timeline_clipsArgs<ExtArgs> = {}>(args?: Subset<T, FinalProject$timeline_clipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineClipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     timeline_music<T extends FinalProject$timeline_musicArgs<ExtArgs> = {}>(args?: Subset<T, FinalProject$timeline_musicArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineMusicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -10488,27 +10403,27 @@ export namespace Prisma {
   }
 
   /**
-   * FinalProject.tracks
+   * FinalProject.timeline_clips
    */
-  export type FinalProject$tracksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type FinalProject$timeline_clipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the TimelineTrack
+     * Select specific fields to fetch from the TimelineClip
      */
-    select?: TimelineTrackSelect<ExtArgs> | null
+    select?: TimelineClipSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the TimelineTrack
+     * Omit specific fields from the TimelineClip
      */
-    omit?: TimelineTrackOmit<ExtArgs> | null
+    omit?: TimelineClipOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    where?: TimelineTrackWhereInput
-    orderBy?: TimelineTrackOrderByWithRelationInput | TimelineTrackOrderByWithRelationInput[]
-    cursor?: TimelineTrackWhereUniqueInput
+    include?: TimelineClipInclude<ExtArgs> | null
+    where?: TimelineClipWhereInput
+    orderBy?: TimelineClipOrderByWithRelationInput | TimelineClipOrderByWithRelationInput[]
+    cursor?: TimelineClipWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: TimelineTrackScalarFieldEnum | TimelineTrackScalarFieldEnum[]
+    distinct?: TimelineClipScalarFieldEnum | TimelineClipScalarFieldEnum[]
   }
 
   /**
@@ -10555,1158 +10470,6 @@ export namespace Prisma {
 
 
   /**
-   * Model TimelineTrack
-   */
-
-  export type AggregateTimelineTrack = {
-    _count: TimelineTrackCountAggregateOutputType | null
-    _avg: TimelineTrackAvgAggregateOutputType | null
-    _sum: TimelineTrackSumAggregateOutputType | null
-    _min: TimelineTrackMinAggregateOutputType | null
-    _max: TimelineTrackMaxAggregateOutputType | null
-  }
-
-  export type TimelineTrackAvgAggregateOutputType = {
-    id: number | null
-    order: number | null
-  }
-
-  export type TimelineTrackSumAggregateOutputType = {
-    id: number | null
-    order: number | null
-  }
-
-  export type TimelineTrackMinAggregateOutputType = {
-    id: number | null
-    uuid: string | null
-    final_project_uuid: string | null
-    type: $Enums.TimelineTrackType | null
-    order: number | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type TimelineTrackMaxAggregateOutputType = {
-    id: number | null
-    uuid: string | null
-    final_project_uuid: string | null
-    type: $Enums.TimelineTrackType | null
-    order: number | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type TimelineTrackCountAggregateOutputType = {
-    id: number
-    uuid: number
-    final_project_uuid: number
-    type: number
-    order: number
-    created_at: number
-    updated_at: number
-    _all: number
-  }
-
-
-  export type TimelineTrackAvgAggregateInputType = {
-    id?: true
-    order?: true
-  }
-
-  export type TimelineTrackSumAggregateInputType = {
-    id?: true
-    order?: true
-  }
-
-  export type TimelineTrackMinAggregateInputType = {
-    id?: true
-    uuid?: true
-    final_project_uuid?: true
-    type?: true
-    order?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type TimelineTrackMaxAggregateInputType = {
-    id?: true
-    uuid?: true
-    final_project_uuid?: true
-    type?: true
-    order?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type TimelineTrackCountAggregateInputType = {
-    id?: true
-    uuid?: true
-    final_project_uuid?: true
-    type?: true
-    order?: true
-    created_at?: true
-    updated_at?: true
-    _all?: true
-  }
-
-  export type TimelineTrackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which TimelineTrack to aggregate.
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of TimelineTracks to fetch.
-     */
-    orderBy?: TimelineTrackOrderByWithRelationInput | TimelineTrackOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: TimelineTrackWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` TimelineTracks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` TimelineTracks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned TimelineTracks
-    **/
-    _count?: true | TimelineTrackCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: TimelineTrackAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: TimelineTrackSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: TimelineTrackMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: TimelineTrackMaxAggregateInputType
-  }
-
-  export type GetTimelineTrackAggregateType<T extends TimelineTrackAggregateArgs> = {
-        [P in keyof T & keyof AggregateTimelineTrack]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateTimelineTrack[P]>
-      : GetScalarType<T[P], AggregateTimelineTrack[P]>
-  }
-
-
-
-
-  export type TimelineTrackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TimelineTrackWhereInput
-    orderBy?: TimelineTrackOrderByWithAggregationInput | TimelineTrackOrderByWithAggregationInput[]
-    by: TimelineTrackScalarFieldEnum[] | TimelineTrackScalarFieldEnum
-    having?: TimelineTrackScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: TimelineTrackCountAggregateInputType | true
-    _avg?: TimelineTrackAvgAggregateInputType
-    _sum?: TimelineTrackSumAggregateInputType
-    _min?: TimelineTrackMinAggregateInputType
-    _max?: TimelineTrackMaxAggregateInputType
-  }
-
-  export type TimelineTrackGroupByOutputType = {
-    id: number
-    uuid: string
-    final_project_uuid: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at: Date
-    updated_at: Date
-    _count: TimelineTrackCountAggregateOutputType | null
-    _avg: TimelineTrackAvgAggregateOutputType | null
-    _sum: TimelineTrackSumAggregateOutputType | null
-    _min: TimelineTrackMinAggregateOutputType | null
-    _max: TimelineTrackMaxAggregateOutputType | null
-  }
-
-  type GetTimelineTrackGroupByPayload<T extends TimelineTrackGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<TimelineTrackGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof TimelineTrackGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], TimelineTrackGroupByOutputType[P]>
-            : GetScalarType<T[P], TimelineTrackGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type TimelineTrackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    final_project_uuid?: boolean
-    type?: boolean
-    order?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-    clips?: boolean | TimelineTrack$clipsArgs<ExtArgs>
-    _count?: boolean | TimelineTrackCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["timelineTrack"]>
-
-  export type TimelineTrackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    final_project_uuid?: boolean
-    type?: boolean
-    order?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["timelineTrack"]>
-
-  export type TimelineTrackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    uuid?: boolean
-    final_project_uuid?: boolean
-    type?: boolean
-    order?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["timelineTrack"]>
-
-  export type TimelineTrackSelectScalar = {
-    id?: boolean
-    uuid?: boolean
-    final_project_uuid?: boolean
-    type?: boolean
-    order?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-  }
-
-  export type TimelineTrackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "final_project_uuid" | "type" | "order" | "created_at" | "updated_at", ExtArgs["result"]["timelineTrack"]>
-  export type TimelineTrackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-    clips?: boolean | TimelineTrack$clipsArgs<ExtArgs>
-    _count?: boolean | TimelineTrackCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type TimelineTrackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-  }
-  export type TimelineTrackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
-  }
-
-  export type $TimelineTrackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "TimelineTrack"
-    objects: {
-      final_project: Prisma.$FinalProjectPayload<ExtArgs>
-      clips: Prisma.$TimelineClipPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      uuid: string
-      final_project_uuid: string
-      type: $Enums.TimelineTrackType
-      order: number
-      created_at: Date
-      updated_at: Date
-    }, ExtArgs["result"]["timelineTrack"]>
-    composites: {}
-  }
-
-  type TimelineTrackGetPayload<S extends boolean | null | undefined | TimelineTrackDefaultArgs> = $Result.GetResult<Prisma.$TimelineTrackPayload, S>
-
-  type TimelineTrackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<TimelineTrackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: TimelineTrackCountAggregateInputType | true
-    }
-
-  export interface TimelineTrackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TimelineTrack'], meta: { name: 'TimelineTrack' } }
-    /**
-     * Find zero or one TimelineTrack that matches the filter.
-     * @param {TimelineTrackFindUniqueArgs} args - Arguments to find a TimelineTrack
-     * @example
-     * // Get one TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends TimelineTrackFindUniqueArgs>(args: SelectSubset<T, TimelineTrackFindUniqueArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one TimelineTrack that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {TimelineTrackFindUniqueOrThrowArgs} args - Arguments to find a TimelineTrack
-     * @example
-     * // Get one TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends TimelineTrackFindUniqueOrThrowArgs>(args: SelectSubset<T, TimelineTrackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first TimelineTrack that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackFindFirstArgs} args - Arguments to find a TimelineTrack
-     * @example
-     * // Get one TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends TimelineTrackFindFirstArgs>(args?: SelectSubset<T, TimelineTrackFindFirstArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first TimelineTrack that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackFindFirstOrThrowArgs} args - Arguments to find a TimelineTrack
-     * @example
-     * // Get one TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends TimelineTrackFindFirstOrThrowArgs>(args?: SelectSubset<T, TimelineTrackFindFirstOrThrowArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more TimelineTracks that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all TimelineTracks
-     * const timelineTracks = await prisma.timelineTrack.findMany()
-     * 
-     * // Get first 10 TimelineTracks
-     * const timelineTracks = await prisma.timelineTrack.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const timelineTrackWithIdOnly = await prisma.timelineTrack.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends TimelineTrackFindManyArgs>(args?: SelectSubset<T, TimelineTrackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a TimelineTrack.
-     * @param {TimelineTrackCreateArgs} args - Arguments to create a TimelineTrack.
-     * @example
-     * // Create one TimelineTrack
-     * const TimelineTrack = await prisma.timelineTrack.create({
-     *   data: {
-     *     // ... data to create a TimelineTrack
-     *   }
-     * })
-     * 
-     */
-    create<T extends TimelineTrackCreateArgs>(args: SelectSubset<T, TimelineTrackCreateArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many TimelineTracks.
-     * @param {TimelineTrackCreateManyArgs} args - Arguments to create many TimelineTracks.
-     * @example
-     * // Create many TimelineTracks
-     * const timelineTrack = await prisma.timelineTrack.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends TimelineTrackCreateManyArgs>(args?: SelectSubset<T, TimelineTrackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many TimelineTracks and returns the data saved in the database.
-     * @param {TimelineTrackCreateManyAndReturnArgs} args - Arguments to create many TimelineTracks.
-     * @example
-     * // Create many TimelineTracks
-     * const timelineTrack = await prisma.timelineTrack.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many TimelineTracks and only return the `id`
-     * const timelineTrackWithIdOnly = await prisma.timelineTrack.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends TimelineTrackCreateManyAndReturnArgs>(args?: SelectSubset<T, TimelineTrackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a TimelineTrack.
-     * @param {TimelineTrackDeleteArgs} args - Arguments to delete one TimelineTrack.
-     * @example
-     * // Delete one TimelineTrack
-     * const TimelineTrack = await prisma.timelineTrack.delete({
-     *   where: {
-     *     // ... filter to delete one TimelineTrack
-     *   }
-     * })
-     * 
-     */
-    delete<T extends TimelineTrackDeleteArgs>(args: SelectSubset<T, TimelineTrackDeleteArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one TimelineTrack.
-     * @param {TimelineTrackUpdateArgs} args - Arguments to update one TimelineTrack.
-     * @example
-     * // Update one TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends TimelineTrackUpdateArgs>(args: SelectSubset<T, TimelineTrackUpdateArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more TimelineTracks.
-     * @param {TimelineTrackDeleteManyArgs} args - Arguments to filter TimelineTracks to delete.
-     * @example
-     * // Delete a few TimelineTracks
-     * const { count } = await prisma.timelineTrack.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends TimelineTrackDeleteManyArgs>(args?: SelectSubset<T, TimelineTrackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more TimelineTracks.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many TimelineTracks
-     * const timelineTrack = await prisma.timelineTrack.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends TimelineTrackUpdateManyArgs>(args: SelectSubset<T, TimelineTrackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more TimelineTracks and returns the data updated in the database.
-     * @param {TimelineTrackUpdateManyAndReturnArgs} args - Arguments to update many TimelineTracks.
-     * @example
-     * // Update many TimelineTracks
-     * const timelineTrack = await prisma.timelineTrack.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more TimelineTracks and only return the `id`
-     * const timelineTrackWithIdOnly = await prisma.timelineTrack.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends TimelineTrackUpdateManyAndReturnArgs>(args: SelectSubset<T, TimelineTrackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one TimelineTrack.
-     * @param {TimelineTrackUpsertArgs} args - Arguments to update or create a TimelineTrack.
-     * @example
-     * // Update or create a TimelineTrack
-     * const timelineTrack = await prisma.timelineTrack.upsert({
-     *   create: {
-     *     // ... data to create a TimelineTrack
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the TimelineTrack we want to update
-     *   }
-     * })
-     */
-    upsert<T extends TimelineTrackUpsertArgs>(args: SelectSubset<T, TimelineTrackUpsertArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of TimelineTracks.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackCountArgs} args - Arguments to filter TimelineTracks to count.
-     * @example
-     * // Count the number of TimelineTracks
-     * const count = await prisma.timelineTrack.count({
-     *   where: {
-     *     // ... the filter for the TimelineTracks we want to count
-     *   }
-     * })
-    **/
-    count<T extends TimelineTrackCountArgs>(
-      args?: Subset<T, TimelineTrackCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], TimelineTrackCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a TimelineTrack.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends TimelineTrackAggregateArgs>(args: Subset<T, TimelineTrackAggregateArgs>): Prisma.PrismaPromise<GetTimelineTrackAggregateType<T>>
-
-    /**
-     * Group by TimelineTrack.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {TimelineTrackGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends TimelineTrackGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: TimelineTrackGroupByArgs['orderBy'] }
-        : { orderBy?: TimelineTrackGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, TimelineTrackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTimelineTrackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the TimelineTrack model
-   */
-  readonly fields: TimelineTrackFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for TimelineTrack.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__TimelineTrackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    final_project<T extends FinalProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FinalProjectDefaultArgs<ExtArgs>>): Prisma__FinalProjectClient<$Result.GetResult<Prisma.$FinalProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    clips<T extends TimelineTrack$clipsArgs<ExtArgs> = {}>(args?: Subset<T, TimelineTrack$clipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineClipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the TimelineTrack model
-   */
-  interface TimelineTrackFieldRefs {
-    readonly id: FieldRef<"TimelineTrack", 'Int'>
-    readonly uuid: FieldRef<"TimelineTrack", 'String'>
-    readonly final_project_uuid: FieldRef<"TimelineTrack", 'String'>
-    readonly type: FieldRef<"TimelineTrack", 'TimelineTrackType'>
-    readonly order: FieldRef<"TimelineTrack", 'Int'>
-    readonly created_at: FieldRef<"TimelineTrack", 'DateTime'>
-    readonly updated_at: FieldRef<"TimelineTrack", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * TimelineTrack findUnique
-   */
-  export type TimelineTrackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter, which TimelineTrack to fetch.
-     */
-    where: TimelineTrackWhereUniqueInput
-  }
-
-  /**
-   * TimelineTrack findUniqueOrThrow
-   */
-  export type TimelineTrackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter, which TimelineTrack to fetch.
-     */
-    where: TimelineTrackWhereUniqueInput
-  }
-
-  /**
-   * TimelineTrack findFirst
-   */
-  export type TimelineTrackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter, which TimelineTrack to fetch.
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of TimelineTracks to fetch.
-     */
-    orderBy?: TimelineTrackOrderByWithRelationInput | TimelineTrackOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for TimelineTracks.
-     */
-    cursor?: TimelineTrackWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` TimelineTracks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` TimelineTracks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of TimelineTracks.
-     */
-    distinct?: TimelineTrackScalarFieldEnum | TimelineTrackScalarFieldEnum[]
-  }
-
-  /**
-   * TimelineTrack findFirstOrThrow
-   */
-  export type TimelineTrackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter, which TimelineTrack to fetch.
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of TimelineTracks to fetch.
-     */
-    orderBy?: TimelineTrackOrderByWithRelationInput | TimelineTrackOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for TimelineTracks.
-     */
-    cursor?: TimelineTrackWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` TimelineTracks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` TimelineTracks.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of TimelineTracks.
-     */
-    distinct?: TimelineTrackScalarFieldEnum | TimelineTrackScalarFieldEnum[]
-  }
-
-  /**
-   * TimelineTrack findMany
-   */
-  export type TimelineTrackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter, which TimelineTracks to fetch.
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of TimelineTracks to fetch.
-     */
-    orderBy?: TimelineTrackOrderByWithRelationInput | TimelineTrackOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing TimelineTracks.
-     */
-    cursor?: TimelineTrackWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` TimelineTracks from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` TimelineTracks.
-     */
-    skip?: number
-    distinct?: TimelineTrackScalarFieldEnum | TimelineTrackScalarFieldEnum[]
-  }
-
-  /**
-   * TimelineTrack create
-   */
-  export type TimelineTrackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * The data needed to create a TimelineTrack.
-     */
-    data: XOR<TimelineTrackCreateInput, TimelineTrackUncheckedCreateInput>
-  }
-
-  /**
-   * TimelineTrack createMany
-   */
-  export type TimelineTrackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many TimelineTracks.
-     */
-    data: TimelineTrackCreateManyInput | TimelineTrackCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * TimelineTrack createManyAndReturn
-   */
-  export type TimelineTrackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * The data used to create many TimelineTracks.
-     */
-    data: TimelineTrackCreateManyInput | TimelineTrackCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * TimelineTrack update
-   */
-  export type TimelineTrackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * The data needed to update a TimelineTrack.
-     */
-    data: XOR<TimelineTrackUpdateInput, TimelineTrackUncheckedUpdateInput>
-    /**
-     * Choose, which TimelineTrack to update.
-     */
-    where: TimelineTrackWhereUniqueInput
-  }
-
-  /**
-   * TimelineTrack updateMany
-   */
-  export type TimelineTrackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update TimelineTracks.
-     */
-    data: XOR<TimelineTrackUpdateManyMutationInput, TimelineTrackUncheckedUpdateManyInput>
-    /**
-     * Filter which TimelineTracks to update
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * Limit how many TimelineTracks to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * TimelineTrack updateManyAndReturn
-   */
-  export type TimelineTrackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * The data used to update TimelineTracks.
-     */
-    data: XOR<TimelineTrackUpdateManyMutationInput, TimelineTrackUncheckedUpdateManyInput>
-    /**
-     * Filter which TimelineTracks to update
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * Limit how many TimelineTracks to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * TimelineTrack upsert
-   */
-  export type TimelineTrackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * The filter to search for the TimelineTrack to update in case it exists.
-     */
-    where: TimelineTrackWhereUniqueInput
-    /**
-     * In case the TimelineTrack found by the `where` argument doesn't exist, create a new TimelineTrack with this data.
-     */
-    create: XOR<TimelineTrackCreateInput, TimelineTrackUncheckedCreateInput>
-    /**
-     * In case the TimelineTrack was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<TimelineTrackUpdateInput, TimelineTrackUncheckedUpdateInput>
-  }
-
-  /**
-   * TimelineTrack delete
-   */
-  export type TimelineTrackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-    /**
-     * Filter which TimelineTrack to delete.
-     */
-    where: TimelineTrackWhereUniqueInput
-  }
-
-  /**
-   * TimelineTrack deleteMany
-   */
-  export type TimelineTrackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which TimelineTracks to delete
-     */
-    where?: TimelineTrackWhereInput
-    /**
-     * Limit how many TimelineTracks to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * TimelineTrack.clips
-   */
-  export type TimelineTrack$clipsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineClip
-     */
-    select?: TimelineClipSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineClip
-     */
-    omit?: TimelineClipOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineClipInclude<ExtArgs> | null
-    where?: TimelineClipWhereInput
-    orderBy?: TimelineClipOrderByWithRelationInput | TimelineClipOrderByWithRelationInput[]
-    cursor?: TimelineClipWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TimelineClipScalarFieldEnum | TimelineClipScalarFieldEnum[]
-  }
-
-  /**
-   * TimelineTrack without action
-   */
-  export type TimelineTrackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TimelineTrack
-     */
-    select?: TimelineTrackSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TimelineTrack
-     */
-    omit?: TimelineTrackOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TimelineTrackInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model TimelineClip
    */
 
@@ -11741,8 +10504,9 @@ export namespace Prisma {
   export type TimelineClipMinAggregateOutputType = {
     id: number | null
     uuid: string | null
-    track_uuid: string | null
+    project_uuid: string | null
     project_asset_uuid: string | null
+    final_project_uuid: string | null
     start_sec: number | null
     end_sec: number | null
     trim_start: number | null
@@ -11758,8 +10522,9 @@ export namespace Prisma {
   export type TimelineClipMaxAggregateOutputType = {
     id: number | null
     uuid: string | null
-    track_uuid: string | null
+    project_uuid: string | null
     project_asset_uuid: string | null
+    final_project_uuid: string | null
     start_sec: number | null
     end_sec: number | null
     trim_start: number | null
@@ -11775,8 +10540,9 @@ export namespace Prisma {
   export type TimelineClipCountAggregateOutputType = {
     id: number
     uuid: number
-    track_uuid: number
+    project_uuid: number
     project_asset_uuid: number
+    final_project_uuid: number
     start_sec: number
     end_sec: number
     trim_start: number
@@ -11814,8 +10580,9 @@ export namespace Prisma {
   export type TimelineClipMinAggregateInputType = {
     id?: true
     uuid?: true
-    track_uuid?: true
+    project_uuid?: true
     project_asset_uuid?: true
+    final_project_uuid?: true
     start_sec?: true
     end_sec?: true
     trim_start?: true
@@ -11831,8 +10598,9 @@ export namespace Prisma {
   export type TimelineClipMaxAggregateInputType = {
     id?: true
     uuid?: true
-    track_uuid?: true
+    project_uuid?: true
     project_asset_uuid?: true
+    final_project_uuid?: true
     start_sec?: true
     end_sec?: true
     trim_start?: true
@@ -11848,8 +10616,9 @@ export namespace Prisma {
   export type TimelineClipCountAggregateInputType = {
     id?: true
     uuid?: true
-    track_uuid?: true
+    project_uuid?: true
     project_asset_uuid?: true
+    final_project_uuid?: true
     start_sec?: true
     end_sec?: true
     trim_start?: true
@@ -11952,8 +10721,9 @@ export namespace Prisma {
   export type TimelineClipGroupByOutputType = {
     id: number
     uuid: string
-    track_uuid: string
-    project_asset_uuid: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start: number | null
@@ -11988,8 +10758,9 @@ export namespace Prisma {
   export type TimelineClipSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    track_uuid?: boolean
+    project_uuid?: boolean
     project_asset_uuid?: boolean
+    final_project_uuid?: boolean
     start_sec?: boolean
     end_sec?: boolean
     trim_start?: boolean
@@ -12000,8 +10771,9 @@ export namespace Prisma {
     transition_out_uuid?: boolean
     created_at?: boolean
     updated_at?: boolean
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
     captions?: boolean | TimelineClip$captionsArgs<ExtArgs>
@@ -12011,8 +10783,9 @@ export namespace Prisma {
   export type TimelineClipSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    track_uuid?: boolean
+    project_uuid?: boolean
     project_asset_uuid?: boolean
+    final_project_uuid?: boolean
     start_sec?: boolean
     end_sec?: boolean
     trim_start?: boolean
@@ -12023,8 +10796,9 @@ export namespace Prisma {
     transition_out_uuid?: boolean
     created_at?: boolean
     updated_at?: boolean
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
   }, ExtArgs["result"]["timelineClip"]>
@@ -12032,8 +10806,9 @@ export namespace Prisma {
   export type TimelineClipSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     uuid?: boolean
-    track_uuid?: boolean
+    project_uuid?: boolean
     project_asset_uuid?: boolean
+    final_project_uuid?: boolean
     start_sec?: boolean
     end_sec?: boolean
     trim_start?: boolean
@@ -12044,8 +10819,9 @@ export namespace Prisma {
     transition_out_uuid?: boolean
     created_at?: boolean
     updated_at?: boolean
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
   }, ExtArgs["result"]["timelineClip"]>
@@ -12053,8 +10829,9 @@ export namespace Prisma {
   export type TimelineClipSelectScalar = {
     id?: boolean
     uuid?: boolean
-    track_uuid?: boolean
+    project_uuid?: boolean
     project_asset_uuid?: boolean
+    final_project_uuid?: boolean
     start_sec?: boolean
     end_sec?: boolean
     trim_start?: boolean
@@ -12067,24 +10844,27 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type TimelineClipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "track_uuid" | "project_asset_uuid" | "start_sec" | "end_sec" | "trim_start" | "trim_end" | "volume" | "speed" | "transition_in_uuid" | "transition_out_uuid" | "created_at" | "updated_at", ExtArgs["result"]["timelineClip"]>
+  export type TimelineClipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "project_uuid" | "project_asset_uuid" | "final_project_uuid" | "start_sec" | "end_sec" | "trim_start" | "trim_end" | "volume" | "speed" | "transition_in_uuid" | "transition_out_uuid" | "created_at" | "updated_at", ExtArgs["result"]["timelineClip"]>
   export type TimelineClipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
     captions?: boolean | TimelineClip$captionsArgs<ExtArgs>
     _count?: boolean | TimelineClipCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TimelineClipIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
   }
   export type TimelineClipIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    track?: boolean | TimelineTrackDefaultArgs<ExtArgs>
-    project_asset?: boolean | TimelineClip$project_assetArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    final_project?: boolean | FinalProjectDefaultArgs<ExtArgs>
+    project_asset?: boolean | ProjectAssetDefaultArgs<ExtArgs>
     transition_in?: boolean | TimelineClip$transition_inArgs<ExtArgs>
     transition_out?: boolean | TimelineClip$transition_outArgs<ExtArgs>
   }
@@ -12092,8 +10872,9 @@ export namespace Prisma {
   export type $TimelineClipPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TimelineClip"
     objects: {
-      track: Prisma.$TimelineTrackPayload<ExtArgs>
-      project_asset: Prisma.$ProjectAssetPayload<ExtArgs> | null
+      project: Prisma.$ProjectPayload<ExtArgs>
+      final_project: Prisma.$FinalProjectPayload<ExtArgs>
+      project_asset: Prisma.$ProjectAssetPayload<ExtArgs>
       transition_in: Prisma.$TimelineTransitionPayload<ExtArgs> | null
       transition_out: Prisma.$TimelineTransitionPayload<ExtArgs> | null
       captions: Prisma.$TimelineCaptionPayload<ExtArgs>[]
@@ -12101,8 +10882,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       uuid: string
-      track_uuid: string
-      project_asset_uuid: string | null
+      project_uuid: string
+      project_asset_uuid: string
+      final_project_uuid: string
       start_sec: number
       end_sec: number
       trim_start: number | null
@@ -12507,8 +11289,9 @@ export namespace Prisma {
    */
   export interface Prisma__TimelineClipClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    track<T extends TimelineTrackDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TimelineTrackDefaultArgs<ExtArgs>>): Prisma__TimelineTrackClient<$Result.GetResult<Prisma.$TimelineTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    project_asset<T extends TimelineClip$project_assetArgs<ExtArgs> = {}>(args?: Subset<T, TimelineClip$project_assetArgs<ExtArgs>>): Prisma__ProjectAssetClient<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    final_project<T extends FinalProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FinalProjectDefaultArgs<ExtArgs>>): Prisma__FinalProjectClient<$Result.GetResult<Prisma.$FinalProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    project_asset<T extends ProjectAssetDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectAssetDefaultArgs<ExtArgs>>): Prisma__ProjectAssetClient<$Result.GetResult<Prisma.$ProjectAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     transition_in<T extends TimelineClip$transition_inArgs<ExtArgs> = {}>(args?: Subset<T, TimelineClip$transition_inArgs<ExtArgs>>): Prisma__TimelineTransitionClient<$Result.GetResult<Prisma.$TimelineTransitionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     transition_out<T extends TimelineClip$transition_outArgs<ExtArgs> = {}>(args?: Subset<T, TimelineClip$transition_outArgs<ExtArgs>>): Prisma__TimelineTransitionClient<$Result.GetResult<Prisma.$TimelineTransitionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     captions<T extends TimelineClip$captionsArgs<ExtArgs> = {}>(args?: Subset<T, TimelineClip$captionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimelineCaptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -12543,8 +11326,9 @@ export namespace Prisma {
   interface TimelineClipFieldRefs {
     readonly id: FieldRef<"TimelineClip", 'Int'>
     readonly uuid: FieldRef<"TimelineClip", 'String'>
-    readonly track_uuid: FieldRef<"TimelineClip", 'String'>
+    readonly project_uuid: FieldRef<"TimelineClip", 'String'>
     readonly project_asset_uuid: FieldRef<"TimelineClip", 'String'>
+    readonly final_project_uuid: FieldRef<"TimelineClip", 'String'>
     readonly start_sec: FieldRef<"TimelineClip", 'Float'>
     readonly end_sec: FieldRef<"TimelineClip", 'Float'>
     readonly trim_start: FieldRef<"TimelineClip", 'Float'>
@@ -12948,25 +11732,6 @@ export namespace Prisma {
      * Limit how many TimelineClips to delete.
      */
     limit?: number
-  }
-
-  /**
-   * TimelineClip.project_asset
-   */
-  export type TimelineClip$project_assetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProjectAsset
-     */
-    select?: ProjectAssetSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProjectAsset
-     */
-    omit?: ProjectAssetOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProjectAssetInclude<ExtArgs> | null
-    where?: ProjectAssetWhereInput
   }
 
   /**
@@ -14230,6 +12995,8 @@ export namespace Prisma {
     text: string | null
     start_sec: number | null
     end_sec: number | null
+    position: string | null
+    style: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -14241,6 +13008,8 @@ export namespace Prisma {
     text: string | null
     start_sec: number | null
     end_sec: number | null
+    position: string | null
+    style: string | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -14279,6 +13048,8 @@ export namespace Prisma {
     text?: true
     start_sec?: true
     end_sec?: true
+    position?: true
+    style?: true
     created_at?: true
     updated_at?: true
   }
@@ -14290,6 +13061,8 @@ export namespace Prisma {
     text?: true
     start_sec?: true
     end_sec?: true
+    position?: true
+    style?: true
     created_at?: true
     updated_at?: true
   }
@@ -14401,8 +13174,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position: JsonValue | null
-    style: JsonValue | null
+    position: string | null
+    style: string | null
     created_at: Date
     updated_at: Date
     _count: TimelineCaptionCountAggregateOutputType | null
@@ -14504,8 +13277,8 @@ export namespace Prisma {
       text: string
       start_sec: number
       end_sec: number
-      position: Prisma.JsonValue | null
-      style: Prisma.JsonValue | null
+      position: string | null
+      style: string | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["timelineCaption"]>
@@ -14938,8 +13711,8 @@ export namespace Prisma {
     readonly text: FieldRef<"TimelineCaption", 'String'>
     readonly start_sec: FieldRef<"TimelineCaption", 'Float'>
     readonly end_sec: FieldRef<"TimelineCaption", 'Float'>
-    readonly position: FieldRef<"TimelineCaption", 'Json'>
-    readonly style: FieldRef<"TimelineCaption", 'Json'>
+    readonly position: FieldRef<"TimelineCaption", 'String'>
+    readonly style: FieldRef<"TimelineCaption", 'String'>
     readonly created_at: FieldRef<"TimelineCaption", 'DateTime'>
     readonly updated_at: FieldRef<"TimelineCaption", 'DateTime'>
   }
@@ -22867,24 +21640,12 @@ export namespace Prisma {
   export type FinalProjectScalarFieldEnum = (typeof FinalProjectScalarFieldEnum)[keyof typeof FinalProjectScalarFieldEnum]
 
 
-  export const TimelineTrackScalarFieldEnum: {
-    id: 'id',
-    uuid: 'uuid',
-    final_project_uuid: 'final_project_uuid',
-    type: 'type',
-    order: 'order',
-    created_at: 'created_at',
-    updated_at: 'updated_at'
-  };
-
-  export type TimelineTrackScalarFieldEnum = (typeof TimelineTrackScalarFieldEnum)[keyof typeof TimelineTrackScalarFieldEnum]
-
-
   export const TimelineClipScalarFieldEnum: {
     id: 'id',
     uuid: 'uuid',
-    track_uuid: 'track_uuid',
+    project_uuid: 'project_uuid',
     project_asset_uuid: 'project_asset_uuid',
+    final_project_uuid: 'final_project_uuid',
     start_sec: 'start_sec',
     end_sec: 'end_sec',
     trim_start: 'trim_start',
@@ -23224,20 +21985,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'TimelineTrackType'
-   */
-  export type EnumTimelineTrackTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimelineTrackType'>
-    
-
-
-  /**
-   * Reference to a field of type 'TimelineTrackType[]'
-   */
-  export type ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimelineTrackType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -23429,6 +22176,7 @@ export namespace Prisma {
     scenes?: SceneListRelationFilter
     project_assets?: ProjectAssetListRelationFilter
     final_projects?: FinalProjectListRelationFilter
+    timeline_clips?: TimelineClipListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -23447,6 +22195,7 @@ export namespace Prisma {
     scenes?: SceneOrderByRelationAggregateInput
     project_assets?: ProjectAssetOrderByRelationAggregateInput
     final_projects?: FinalProjectOrderByRelationAggregateInput
+    timeline_clips?: TimelineClipOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -23468,6 +22217,7 @@ export namespace Prisma {
     scenes?: SceneListRelationFilter
     project_assets?: ProjectAssetListRelationFilter
     final_projects?: FinalProjectListRelationFilter
+    timeline_clips?: TimelineClipListRelationFilter
   }, "id" | "uuid">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -23827,7 +22577,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     video?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
     thumbnail?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    tracks?: TimelineTrackListRelationFilter
+    timeline_clips?: TimelineClipListRelationFilter
     timeline_music?: TimelineMusicListRelationFilter
   }
 
@@ -23846,7 +22596,7 @@ export namespace Prisma {
     project?: ProjectOrderByWithRelationInput
     video?: DocumentOrderByWithRelationInput
     thumbnail?: DocumentOrderByWithRelationInput
-    tracks?: TimelineTrackOrderByRelationAggregateInput
+    timeline_clips?: TimelineClipOrderByRelationAggregateInput
     timeline_music?: TimelineMusicOrderByRelationAggregateInput
   }
 
@@ -23868,7 +22618,7 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     video?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
     thumbnail?: XOR<DocumentNullableScalarRelationFilter, DocumentWhereInput> | null
-    tracks?: TimelineTrackListRelationFilter
+    timeline_clips?: TimelineClipListRelationFilter
     timeline_music?: TimelineMusicListRelationFilter
   }, "id" | "uuid">
 
@@ -23906,85 +22656,15 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"FinalProject"> | Date | string
   }
 
-  export type TimelineTrackWhereInput = {
-    AND?: TimelineTrackWhereInput | TimelineTrackWhereInput[]
-    OR?: TimelineTrackWhereInput[]
-    NOT?: TimelineTrackWhereInput | TimelineTrackWhereInput[]
-    id?: IntFilter<"TimelineTrack"> | number
-    uuid?: StringFilter<"TimelineTrack"> | string
-    final_project_uuid?: StringFilter<"TimelineTrack"> | string
-    type?: EnumTimelineTrackTypeFilter<"TimelineTrack"> | $Enums.TimelineTrackType
-    order?: IntFilter<"TimelineTrack"> | number
-    created_at?: DateTimeFilter<"TimelineTrack"> | Date | string
-    updated_at?: DateTimeFilter<"TimelineTrack"> | Date | string
-    final_project?: XOR<FinalProjectScalarRelationFilter, FinalProjectWhereInput>
-    clips?: TimelineClipListRelationFilter
-  }
-
-  export type TimelineTrackOrderByWithRelationInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    final_project_uuid?: SortOrder
-    type?: SortOrder
-    order?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    final_project?: FinalProjectOrderByWithRelationInput
-    clips?: TimelineClipOrderByRelationAggregateInput
-  }
-
-  export type TimelineTrackWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    uuid?: string
-    final_project_uuid_order?: TimelineTrackFinal_project_uuidOrderCompoundUniqueInput
-    AND?: TimelineTrackWhereInput | TimelineTrackWhereInput[]
-    OR?: TimelineTrackWhereInput[]
-    NOT?: TimelineTrackWhereInput | TimelineTrackWhereInput[]
-    final_project_uuid?: StringFilter<"TimelineTrack"> | string
-    type?: EnumTimelineTrackTypeFilter<"TimelineTrack"> | $Enums.TimelineTrackType
-    order?: IntFilter<"TimelineTrack"> | number
-    created_at?: DateTimeFilter<"TimelineTrack"> | Date | string
-    updated_at?: DateTimeFilter<"TimelineTrack"> | Date | string
-    final_project?: XOR<FinalProjectScalarRelationFilter, FinalProjectWhereInput>
-    clips?: TimelineClipListRelationFilter
-  }, "id" | "uuid" | "final_project_uuid_order">
-
-  export type TimelineTrackOrderByWithAggregationInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    final_project_uuid?: SortOrder
-    type?: SortOrder
-    order?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    _count?: TimelineTrackCountOrderByAggregateInput
-    _avg?: TimelineTrackAvgOrderByAggregateInput
-    _max?: TimelineTrackMaxOrderByAggregateInput
-    _min?: TimelineTrackMinOrderByAggregateInput
-    _sum?: TimelineTrackSumOrderByAggregateInput
-  }
-
-  export type TimelineTrackScalarWhereWithAggregatesInput = {
-    AND?: TimelineTrackScalarWhereWithAggregatesInput | TimelineTrackScalarWhereWithAggregatesInput[]
-    OR?: TimelineTrackScalarWhereWithAggregatesInput[]
-    NOT?: TimelineTrackScalarWhereWithAggregatesInput | TimelineTrackScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"TimelineTrack"> | number
-    uuid?: StringWithAggregatesFilter<"TimelineTrack"> | string
-    final_project_uuid?: StringWithAggregatesFilter<"TimelineTrack"> | string
-    type?: EnumTimelineTrackTypeWithAggregatesFilter<"TimelineTrack"> | $Enums.TimelineTrackType
-    order?: IntWithAggregatesFilter<"TimelineTrack"> | number
-    created_at?: DateTimeWithAggregatesFilter<"TimelineTrack"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"TimelineTrack"> | Date | string
-  }
-
   export type TimelineClipWhereInput = {
     AND?: TimelineClipWhereInput | TimelineClipWhereInput[]
     OR?: TimelineClipWhereInput[]
     NOT?: TimelineClipWhereInput | TimelineClipWhereInput[]
     id?: IntFilter<"TimelineClip"> | number
     uuid?: StringFilter<"TimelineClip"> | string
-    track_uuid?: StringFilter<"TimelineClip"> | string
-    project_asset_uuid?: StringNullableFilter<"TimelineClip"> | string | null
+    project_uuid?: StringFilter<"TimelineClip"> | string
+    project_asset_uuid?: StringFilter<"TimelineClip"> | string
+    final_project_uuid?: StringFilter<"TimelineClip"> | string
     start_sec?: FloatFilter<"TimelineClip"> | number
     end_sec?: FloatFilter<"TimelineClip"> | number
     trim_start?: FloatNullableFilter<"TimelineClip"> | number | null
@@ -23995,8 +22675,9 @@ export namespace Prisma {
     transition_out_uuid?: StringNullableFilter<"TimelineClip"> | string | null
     created_at?: DateTimeFilter<"TimelineClip"> | Date | string
     updated_at?: DateTimeFilter<"TimelineClip"> | Date | string
-    track?: XOR<TimelineTrackScalarRelationFilter, TimelineTrackWhereInput>
-    project_asset?: XOR<ProjectAssetNullableScalarRelationFilter, ProjectAssetWhereInput> | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    final_project?: XOR<FinalProjectScalarRelationFilter, FinalProjectWhereInput>
+    project_asset?: XOR<ProjectAssetScalarRelationFilter, ProjectAssetWhereInput>
     transition_in?: XOR<TimelineTransitionNullableScalarRelationFilter, TimelineTransitionWhereInput> | null
     transition_out?: XOR<TimelineTransitionNullableScalarRelationFilter, TimelineTransitionWhereInput> | null
     captions?: TimelineCaptionListRelationFilter
@@ -24005,8 +22686,9 @@ export namespace Prisma {
   export type TimelineClipOrderByWithRelationInput = {
     id?: SortOrder
     uuid?: SortOrder
-    track_uuid?: SortOrder
-    project_asset_uuid?: SortOrderInput | SortOrder
+    project_uuid?: SortOrder
+    project_asset_uuid?: SortOrder
+    final_project_uuid?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
     trim_start?: SortOrderInput | SortOrder
@@ -24017,7 +22699,8 @@ export namespace Prisma {
     transition_out_uuid?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-    track?: TimelineTrackOrderByWithRelationInput
+    project?: ProjectOrderByWithRelationInput
+    final_project?: FinalProjectOrderByWithRelationInput
     project_asset?: ProjectAssetOrderByWithRelationInput
     transition_in?: TimelineTransitionOrderByWithRelationInput
     transition_out?: TimelineTransitionOrderByWithRelationInput
@@ -24030,8 +22713,9 @@ export namespace Prisma {
     AND?: TimelineClipWhereInput | TimelineClipWhereInput[]
     OR?: TimelineClipWhereInput[]
     NOT?: TimelineClipWhereInput | TimelineClipWhereInput[]
-    track_uuid?: StringFilter<"TimelineClip"> | string
-    project_asset_uuid?: StringNullableFilter<"TimelineClip"> | string | null
+    project_uuid?: StringFilter<"TimelineClip"> | string
+    project_asset_uuid?: StringFilter<"TimelineClip"> | string
+    final_project_uuid?: StringFilter<"TimelineClip"> | string
     start_sec?: FloatFilter<"TimelineClip"> | number
     end_sec?: FloatFilter<"TimelineClip"> | number
     trim_start?: FloatNullableFilter<"TimelineClip"> | number | null
@@ -24042,8 +22726,9 @@ export namespace Prisma {
     transition_out_uuid?: StringNullableFilter<"TimelineClip"> | string | null
     created_at?: DateTimeFilter<"TimelineClip"> | Date | string
     updated_at?: DateTimeFilter<"TimelineClip"> | Date | string
-    track?: XOR<TimelineTrackScalarRelationFilter, TimelineTrackWhereInput>
-    project_asset?: XOR<ProjectAssetNullableScalarRelationFilter, ProjectAssetWhereInput> | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    final_project?: XOR<FinalProjectScalarRelationFilter, FinalProjectWhereInput>
+    project_asset?: XOR<ProjectAssetScalarRelationFilter, ProjectAssetWhereInput>
     transition_in?: XOR<TimelineTransitionNullableScalarRelationFilter, TimelineTransitionWhereInput> | null
     transition_out?: XOR<TimelineTransitionNullableScalarRelationFilter, TimelineTransitionWhereInput> | null
     captions?: TimelineCaptionListRelationFilter
@@ -24052,8 +22737,9 @@ export namespace Prisma {
   export type TimelineClipOrderByWithAggregationInput = {
     id?: SortOrder
     uuid?: SortOrder
-    track_uuid?: SortOrder
-    project_asset_uuid?: SortOrderInput | SortOrder
+    project_uuid?: SortOrder
+    project_asset_uuid?: SortOrder
+    final_project_uuid?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
     trim_start?: SortOrderInput | SortOrder
@@ -24077,8 +22763,9 @@ export namespace Prisma {
     NOT?: TimelineClipScalarWhereWithAggregatesInput | TimelineClipScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"TimelineClip"> | number
     uuid?: StringWithAggregatesFilter<"TimelineClip"> | string
-    track_uuid?: StringWithAggregatesFilter<"TimelineClip"> | string
-    project_asset_uuid?: StringNullableWithAggregatesFilter<"TimelineClip"> | string | null
+    project_uuid?: StringWithAggregatesFilter<"TimelineClip"> | string
+    project_asset_uuid?: StringWithAggregatesFilter<"TimelineClip"> | string
+    final_project_uuid?: StringWithAggregatesFilter<"TimelineClip"> | string
     start_sec?: FloatWithAggregatesFilter<"TimelineClip"> | number
     end_sec?: FloatWithAggregatesFilter<"TimelineClip"> | number
     trim_start?: FloatNullableWithAggregatesFilter<"TimelineClip"> | number | null
@@ -24166,8 +22853,8 @@ export namespace Prisma {
     text?: StringFilter<"TimelineCaption"> | string
     start_sec?: FloatFilter<"TimelineCaption"> | number
     end_sec?: FloatFilter<"TimelineCaption"> | number
-    position?: JsonNullableFilter<"TimelineCaption">
-    style?: JsonNullableFilter<"TimelineCaption">
+    position?: StringNullableFilter<"TimelineCaption"> | string | null
+    style?: StringNullableFilter<"TimelineCaption"> | string | null
     created_at?: DateTimeFilter<"TimelineCaption"> | Date | string
     updated_at?: DateTimeFilter<"TimelineCaption"> | Date | string
     clip?: XOR<TimelineClipScalarRelationFilter, TimelineClipWhereInput>
@@ -24197,8 +22884,8 @@ export namespace Prisma {
     text?: StringFilter<"TimelineCaption"> | string
     start_sec?: FloatFilter<"TimelineCaption"> | number
     end_sec?: FloatFilter<"TimelineCaption"> | number
-    position?: JsonNullableFilter<"TimelineCaption">
-    style?: JsonNullableFilter<"TimelineCaption">
+    position?: StringNullableFilter<"TimelineCaption"> | string | null
+    style?: StringNullableFilter<"TimelineCaption"> | string | null
     created_at?: DateTimeFilter<"TimelineCaption"> | Date | string
     updated_at?: DateTimeFilter<"TimelineCaption"> | Date | string
     clip?: XOR<TimelineClipScalarRelationFilter, TimelineClipWhereInput>
@@ -24232,8 +22919,8 @@ export namespace Prisma {
     text?: StringWithAggregatesFilter<"TimelineCaption"> | string
     start_sec?: FloatWithAggregatesFilter<"TimelineCaption"> | number
     end_sec?: FloatWithAggregatesFilter<"TimelineCaption"> | number
-    position?: JsonNullableWithAggregatesFilter<"TimelineCaption">
-    style?: JsonNullableWithAggregatesFilter<"TimelineCaption">
+    position?: StringNullableWithAggregatesFilter<"TimelineCaption"> | string | null
+    style?: StringNullableWithAggregatesFilter<"TimelineCaption"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"TimelineCaption"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"TimelineCaption"> | Date | string
   }
@@ -24978,6 +23665,7 @@ export namespace Prisma {
     scenes?: SceneCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -24995,6 +23683,7 @@ export namespace Prisma {
     scenes?: SceneUncheckedCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectUncheckedCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -25011,6 +23700,7 @@ export namespace Prisma {
     scenes?: SceneUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -25028,6 +23718,7 @@ export namespace Prisma {
     scenes?: SceneUncheckedUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUncheckedUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -25387,7 +24078,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
     video?: DocumentCreateNestedOneWithoutFinal_project_videosInput
     thumbnail?: DocumentCreateNestedOneWithoutFinal_project_thumbnailsInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -25402,7 +24093,7 @@ export namespace Prisma {
     thumbnail_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -25416,7 +24107,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
     video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
     thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -25431,7 +24122,7 @@ export namespace Prisma {
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -25469,76 +24160,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TimelineTrackCreateInput = {
-    uuid?: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    final_project: FinalProjectCreateNestedOneWithoutTracksInput
-    clips?: TimelineClipCreateNestedManyWithoutTrackInput
-  }
-
-  export type TimelineTrackUncheckedCreateInput = {
-    id?: number
-    uuid?: string
-    final_project_uuid: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    clips?: TimelineClipUncheckedCreateNestedManyWithoutTrackInput
-  }
-
-  export type TimelineTrackUpdateInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    final_project?: FinalProjectUpdateOneRequiredWithoutTracksNestedInput
-    clips?: TimelineClipUpdateManyWithoutTrackNestedInput
-  }
-
-  export type TimelineTrackUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    final_project_uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    clips?: TimelineClipUncheckedUpdateManyWithoutTrackNestedInput
-  }
-
-  export type TimelineTrackCreateManyInput = {
-    id?: number
-    uuid?: string
-    final_project_uuid: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type TimelineTrackUpdateManyMutationInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TimelineTrackUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    final_project_uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type TimelineClipCreateInput = {
     uuid?: string
     start_sec: number
@@ -25549,8 +24170,9 @@ export namespace Prisma {
     speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    track: TimelineTrackCreateNestedOneWithoutClipsInput
-    project_asset?: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
     transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
     transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
     captions?: TimelineCaptionCreateNestedManyWithoutClipInput
@@ -25559,8 +24181,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedCreateInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -25584,8 +24207,9 @@ export namespace Prisma {
     speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    track?: TimelineTrackUpdateOneRequiredWithoutClipsNestedInput
-    project_asset?: ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
     transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
     transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
     captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
@@ -25594,8 +24218,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -25612,8 +24237,9 @@ export namespace Prisma {
   export type TimelineClipCreateManyInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -25641,8 +24267,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -25728,8 +24355,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     clip: TimelineClipCreateNestedOneWithoutCaptionsInput
@@ -25742,8 +24369,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25753,8 +24380,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     clip?: TimelineClipUpdateOneRequiredWithoutCaptionsNestedInput
@@ -25767,8 +24394,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25780,8 +24407,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -25791,8 +24418,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25804,8 +24431,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26790,6 +25417,16 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
+  export type TimelineClipListRelationFilter = {
+    every?: TimelineClipWhereInput
+    some?: TimelineClipWhereInput
+    none?: TimelineClipWhereInput
+  }
+
+  export type TimelineClipOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProjectCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
@@ -27026,16 +25663,6 @@ export namespace Prisma {
     isNot?: DocumentWhereInput | null
   }
 
-  export type TimelineClipListRelationFilter = {
-    every?: TimelineClipWhereInput
-    some?: TimelineClipWhereInput
-    none?: TimelineClipWhereInput
-  }
-
-  export type TimelineClipOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type ProjectAssetCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
@@ -27140,20 +25767,10 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type TimelineTrackListRelationFilter = {
-    every?: TimelineTrackWhereInput
-    some?: TimelineTrackWhereInput
-    none?: TimelineTrackWhereInput
-  }
-
   export type TimelineMusicListRelationFilter = {
     every?: TimelineMusicWhereInput
     some?: TimelineMusicWhereInput
     none?: TimelineMusicWhereInput
-  }
-
-  export type TimelineTrackOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type TimelineMusicOrderByRelationAggregateInput = {
@@ -27225,73 +25842,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type EnumTimelineTrackTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.TimelineTrackType | EnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTimelineTrackTypeFilter<$PrismaModel> | $Enums.TimelineTrackType
-  }
-
-  export type FinalProjectScalarRelationFilter = {
-    is?: FinalProjectWhereInput
-    isNot?: FinalProjectWhereInput
-  }
-
-  export type TimelineTrackFinal_project_uuidOrderCompoundUniqueInput = {
-    final_project_uuid: string
-    order: number
-  }
-
-  export type TimelineTrackCountOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    final_project_uuid?: SortOrder
-    type?: SortOrder
-    order?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type TimelineTrackAvgOrderByAggregateInput = {
-    id?: SortOrder
-    order?: SortOrder
-  }
-
-  export type TimelineTrackMaxOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    final_project_uuid?: SortOrder
-    type?: SortOrder
-    order?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type TimelineTrackMinOrderByAggregateInput = {
-    id?: SortOrder
-    uuid?: SortOrder
-    final_project_uuid?: SortOrder
-    type?: SortOrder
-    order?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type TimelineTrackSumOrderByAggregateInput = {
-    id?: SortOrder
-    order?: SortOrder
-  }
-
-  export type EnumTimelineTrackTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TimelineTrackType | EnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTimelineTrackTypeWithAggregatesFilter<$PrismaModel> | $Enums.TimelineTrackType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTimelineTrackTypeFilter<$PrismaModel>
-    _max?: NestedEnumTimelineTrackTypeFilter<$PrismaModel>
-  }
-
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -27314,14 +25864,14 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type TimelineTrackScalarRelationFilter = {
-    is?: TimelineTrackWhereInput
-    isNot?: TimelineTrackWhereInput
+  export type FinalProjectScalarRelationFilter = {
+    is?: FinalProjectWhereInput
+    isNot?: FinalProjectWhereInput
   }
 
-  export type ProjectAssetNullableScalarRelationFilter = {
-    is?: ProjectAssetWhereInput | null
-    isNot?: ProjectAssetWhereInput | null
+  export type ProjectAssetScalarRelationFilter = {
+    is?: ProjectAssetWhereInput
+    isNot?: ProjectAssetWhereInput
   }
 
   export type TimelineTransitionNullableScalarRelationFilter = {
@@ -27342,8 +25892,9 @@ export namespace Prisma {
   export type TimelineClipCountOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
-    track_uuid?: SortOrder
+    project_uuid?: SortOrder
     project_asset_uuid?: SortOrder
+    final_project_uuid?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
     trim_start?: SortOrder
@@ -27369,8 +25920,9 @@ export namespace Prisma {
   export type TimelineClipMaxOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
-    track_uuid?: SortOrder
+    project_uuid?: SortOrder
     project_asset_uuid?: SortOrder
+    final_project_uuid?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
     trim_start?: SortOrder
@@ -27386,8 +25938,9 @@ export namespace Prisma {
   export type TimelineClipMinOrderByAggregateInput = {
     id?: SortOrder
     uuid?: SortOrder
-    track_uuid?: SortOrder
+    project_uuid?: SortOrder
     project_asset_uuid?: SortOrder
+    final_project_uuid?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
     trim_start?: SortOrder
@@ -27527,6 +26080,8 @@ export namespace Prisma {
     text?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
+    position?: SortOrder
+    style?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -27538,6 +26093,8 @@ export namespace Prisma {
     text?: SortOrder
     start_sec?: SortOrder
     end_sec?: SortOrder
+    position?: SortOrder
+    style?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28418,6 +26975,13 @@ export namespace Prisma {
     connect?: FinalProjectWhereUniqueInput | FinalProjectWhereUniqueInput[]
   }
 
+  export type TimelineClipCreateNestedManyWithoutProjectInput = {
+    create?: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput> | TimelineClipCreateWithoutProjectInput[] | TimelineClipUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutProjectInput | TimelineClipCreateOrConnectWithoutProjectInput[]
+    createMany?: TimelineClipCreateManyProjectInputEnvelope
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+  }
+
   export type SceneUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<SceneCreateWithoutProjectInput, SceneUncheckedCreateWithoutProjectInput> | SceneCreateWithoutProjectInput[] | SceneUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: SceneCreateOrConnectWithoutProjectInput | SceneCreateOrConnectWithoutProjectInput[]
@@ -28437,6 +27001,13 @@ export namespace Prisma {
     connectOrCreate?: FinalProjectCreateOrConnectWithoutProjectInput | FinalProjectCreateOrConnectWithoutProjectInput[]
     createMany?: FinalProjectCreateManyProjectInputEnvelope
     connect?: FinalProjectWhereUniqueInput | FinalProjectWhereUniqueInput[]
+  }
+
+  export type TimelineClipUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput> | TimelineClipCreateWithoutProjectInput[] | TimelineClipUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutProjectInput | TimelineClipCreateOrConnectWithoutProjectInput[]
+    createMany?: TimelineClipCreateManyProjectInputEnvelope
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
   }
 
   export type EnumProjectTypeFieldUpdateOperationsInput = {
@@ -28493,6 +27064,20 @@ export namespace Prisma {
     deleteMany?: FinalProjectScalarWhereInput | FinalProjectScalarWhereInput[]
   }
 
+  export type TimelineClipUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput> | TimelineClipCreateWithoutProjectInput[] | TimelineClipUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutProjectInput | TimelineClipCreateOrConnectWithoutProjectInput[]
+    upsert?: TimelineClipUpsertWithWhereUniqueWithoutProjectInput | TimelineClipUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: TimelineClipCreateManyProjectInputEnvelope
+    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    update?: TimelineClipUpdateWithWhereUniqueWithoutProjectInput | TimelineClipUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: TimelineClipUpdateManyWithWhereWithoutProjectInput | TimelineClipUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
+  }
+
   export type SceneUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<SceneCreateWithoutProjectInput, SceneUncheckedCreateWithoutProjectInput> | SceneCreateWithoutProjectInput[] | SceneUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: SceneCreateOrConnectWithoutProjectInput | SceneCreateOrConnectWithoutProjectInput[]
@@ -28533,6 +27118,20 @@ export namespace Prisma {
     update?: FinalProjectUpdateWithWhereUniqueWithoutProjectInput | FinalProjectUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: FinalProjectUpdateManyWithWhereWithoutProjectInput | FinalProjectUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: FinalProjectScalarWhereInput | FinalProjectScalarWhereInput[]
+  }
+
+  export type TimelineClipUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput> | TimelineClipCreateWithoutProjectInput[] | TimelineClipUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutProjectInput | TimelineClipCreateOrConnectWithoutProjectInput[]
+    upsert?: TimelineClipUpsertWithWhereUniqueWithoutProjectInput | TimelineClipUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: TimelineClipCreateManyProjectInputEnvelope
+    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    update?: TimelineClipUpdateWithWhereUniqueWithoutProjectInput | TimelineClipUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: TimelineClipUpdateManyWithWhereWithoutProjectInput | TimelineClipUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutScenesInput = {
@@ -28951,11 +27550,11 @@ export namespace Prisma {
     connect?: DocumentWhereUniqueInput
   }
 
-  export type TimelineTrackCreateNestedManyWithoutFinal_projectInput = {
-    create?: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput> | TimelineTrackCreateWithoutFinal_projectInput[] | TimelineTrackUncheckedCreateWithoutFinal_projectInput[]
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutFinal_projectInput | TimelineTrackCreateOrConnectWithoutFinal_projectInput[]
-    createMany?: TimelineTrackCreateManyFinal_projectInputEnvelope
-    connect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
+  export type TimelineClipCreateNestedManyWithoutFinal_projectInput = {
+    create?: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput> | TimelineClipCreateWithoutFinal_projectInput[] | TimelineClipUncheckedCreateWithoutFinal_projectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutFinal_projectInput | TimelineClipCreateOrConnectWithoutFinal_projectInput[]
+    createMany?: TimelineClipCreateManyFinal_projectInputEnvelope
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
   }
 
   export type TimelineMusicCreateNestedManyWithoutFinal_projectInput = {
@@ -28965,11 +27564,11 @@ export namespace Prisma {
     connect?: TimelineMusicWhereUniqueInput | TimelineMusicWhereUniqueInput[]
   }
 
-  export type TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput = {
-    create?: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput> | TimelineTrackCreateWithoutFinal_projectInput[] | TimelineTrackUncheckedCreateWithoutFinal_projectInput[]
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutFinal_projectInput | TimelineTrackCreateOrConnectWithoutFinal_projectInput[]
-    createMany?: TimelineTrackCreateManyFinal_projectInputEnvelope
-    connect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
+  export type TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput = {
+    create?: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput> | TimelineClipCreateWithoutFinal_projectInput[] | TimelineClipUncheckedCreateWithoutFinal_projectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutFinal_projectInput | TimelineClipCreateOrConnectWithoutFinal_projectInput[]
+    createMany?: TimelineClipCreateManyFinal_projectInputEnvelope
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
   }
 
   export type TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput = {
@@ -29023,18 +27622,18 @@ export namespace Prisma {
     update?: XOR<XOR<DocumentUpdateToOneWithWhereWithoutFinal_project_thumbnailsInput, DocumentUpdateWithoutFinal_project_thumbnailsInput>, DocumentUncheckedUpdateWithoutFinal_project_thumbnailsInput>
   }
 
-  export type TimelineTrackUpdateManyWithoutFinal_projectNestedInput = {
-    create?: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput> | TimelineTrackCreateWithoutFinal_projectInput[] | TimelineTrackUncheckedCreateWithoutFinal_projectInput[]
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutFinal_projectInput | TimelineTrackCreateOrConnectWithoutFinal_projectInput[]
-    upsert?: TimelineTrackUpsertWithWhereUniqueWithoutFinal_projectInput | TimelineTrackUpsertWithWhereUniqueWithoutFinal_projectInput[]
-    createMany?: TimelineTrackCreateManyFinal_projectInputEnvelope
-    set?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    disconnect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    delete?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    connect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    update?: TimelineTrackUpdateWithWhereUniqueWithoutFinal_projectInput | TimelineTrackUpdateWithWhereUniqueWithoutFinal_projectInput[]
-    updateMany?: TimelineTrackUpdateManyWithWhereWithoutFinal_projectInput | TimelineTrackUpdateManyWithWhereWithoutFinal_projectInput[]
-    deleteMany?: TimelineTrackScalarWhereInput | TimelineTrackScalarWhereInput[]
+  export type TimelineClipUpdateManyWithoutFinal_projectNestedInput = {
+    create?: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput> | TimelineClipCreateWithoutFinal_projectInput[] | TimelineClipUncheckedCreateWithoutFinal_projectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutFinal_projectInput | TimelineClipCreateOrConnectWithoutFinal_projectInput[]
+    upsert?: TimelineClipUpsertWithWhereUniqueWithoutFinal_projectInput | TimelineClipUpsertWithWhereUniqueWithoutFinal_projectInput[]
+    createMany?: TimelineClipCreateManyFinal_projectInputEnvelope
+    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    update?: TimelineClipUpdateWithWhereUniqueWithoutFinal_projectInput | TimelineClipUpdateWithWhereUniqueWithoutFinal_projectInput[]
+    updateMany?: TimelineClipUpdateManyWithWhereWithoutFinal_projectInput | TimelineClipUpdateManyWithWhereWithoutFinal_projectInput[]
+    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
   }
 
   export type TimelineMusicUpdateManyWithoutFinal_projectNestedInput = {
@@ -29051,18 +27650,18 @@ export namespace Prisma {
     deleteMany?: TimelineMusicScalarWhereInput | TimelineMusicScalarWhereInput[]
   }
 
-  export type TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput = {
-    create?: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput> | TimelineTrackCreateWithoutFinal_projectInput[] | TimelineTrackUncheckedCreateWithoutFinal_projectInput[]
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutFinal_projectInput | TimelineTrackCreateOrConnectWithoutFinal_projectInput[]
-    upsert?: TimelineTrackUpsertWithWhereUniqueWithoutFinal_projectInput | TimelineTrackUpsertWithWhereUniqueWithoutFinal_projectInput[]
-    createMany?: TimelineTrackCreateManyFinal_projectInputEnvelope
-    set?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    disconnect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    delete?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    connect?: TimelineTrackWhereUniqueInput | TimelineTrackWhereUniqueInput[]
-    update?: TimelineTrackUpdateWithWhereUniqueWithoutFinal_projectInput | TimelineTrackUpdateWithWhereUniqueWithoutFinal_projectInput[]
-    updateMany?: TimelineTrackUpdateManyWithWhereWithoutFinal_projectInput | TimelineTrackUpdateManyWithWhereWithoutFinal_projectInput[]
-    deleteMany?: TimelineTrackScalarWhereInput | TimelineTrackScalarWhereInput[]
+  export type TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput = {
+    create?: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput> | TimelineClipCreateWithoutFinal_projectInput[] | TimelineClipUncheckedCreateWithoutFinal_projectInput[]
+    connectOrCreate?: TimelineClipCreateOrConnectWithoutFinal_projectInput | TimelineClipCreateOrConnectWithoutFinal_projectInput[]
+    upsert?: TimelineClipUpsertWithWhereUniqueWithoutFinal_projectInput | TimelineClipUpsertWithWhereUniqueWithoutFinal_projectInput[]
+    createMany?: TimelineClipCreateManyFinal_projectInputEnvelope
+    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
+    update?: TimelineClipUpdateWithWhereUniqueWithoutFinal_projectInput | TimelineClipUpdateWithWhereUniqueWithoutFinal_projectInput[]
+    updateMany?: TimelineClipUpdateManyWithWhereWithoutFinal_projectInput | TimelineClipUpdateManyWithWhereWithoutFinal_projectInput[]
+    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
   }
 
   export type TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput = {
@@ -29079,70 +27678,16 @@ export namespace Prisma {
     deleteMany?: TimelineMusicScalarWhereInput | TimelineMusicScalarWhereInput[]
   }
 
-  export type FinalProjectCreateNestedOneWithoutTracksInput = {
-    create?: XOR<FinalProjectCreateWithoutTracksInput, FinalProjectUncheckedCreateWithoutTracksInput>
-    connectOrCreate?: FinalProjectCreateOrConnectWithoutTracksInput
+  export type ProjectCreateNestedOneWithoutTimeline_clipsInput = {
+    create?: XOR<ProjectCreateWithoutTimeline_clipsInput, ProjectUncheckedCreateWithoutTimeline_clipsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutTimeline_clipsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type FinalProjectCreateNestedOneWithoutTimeline_clipsInput = {
+    create?: XOR<FinalProjectCreateWithoutTimeline_clipsInput, FinalProjectUncheckedCreateWithoutTimeline_clipsInput>
+    connectOrCreate?: FinalProjectCreateOrConnectWithoutTimeline_clipsInput
     connect?: FinalProjectWhereUniqueInput
-  }
-
-  export type TimelineClipCreateNestedManyWithoutTrackInput = {
-    create?: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput> | TimelineClipCreateWithoutTrackInput[] | TimelineClipUncheckedCreateWithoutTrackInput[]
-    connectOrCreate?: TimelineClipCreateOrConnectWithoutTrackInput | TimelineClipCreateOrConnectWithoutTrackInput[]
-    createMany?: TimelineClipCreateManyTrackInputEnvelope
-    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-  }
-
-  export type TimelineClipUncheckedCreateNestedManyWithoutTrackInput = {
-    create?: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput> | TimelineClipCreateWithoutTrackInput[] | TimelineClipUncheckedCreateWithoutTrackInput[]
-    connectOrCreate?: TimelineClipCreateOrConnectWithoutTrackInput | TimelineClipCreateOrConnectWithoutTrackInput[]
-    createMany?: TimelineClipCreateManyTrackInputEnvelope
-    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-  }
-
-  export type EnumTimelineTrackTypeFieldUpdateOperationsInput = {
-    set?: $Enums.TimelineTrackType
-  }
-
-  export type FinalProjectUpdateOneRequiredWithoutTracksNestedInput = {
-    create?: XOR<FinalProjectCreateWithoutTracksInput, FinalProjectUncheckedCreateWithoutTracksInput>
-    connectOrCreate?: FinalProjectCreateOrConnectWithoutTracksInput
-    upsert?: FinalProjectUpsertWithoutTracksInput
-    connect?: FinalProjectWhereUniqueInput
-    update?: XOR<XOR<FinalProjectUpdateToOneWithWhereWithoutTracksInput, FinalProjectUpdateWithoutTracksInput>, FinalProjectUncheckedUpdateWithoutTracksInput>
-  }
-
-  export type TimelineClipUpdateManyWithoutTrackNestedInput = {
-    create?: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput> | TimelineClipCreateWithoutTrackInput[] | TimelineClipUncheckedCreateWithoutTrackInput[]
-    connectOrCreate?: TimelineClipCreateOrConnectWithoutTrackInput | TimelineClipCreateOrConnectWithoutTrackInput[]
-    upsert?: TimelineClipUpsertWithWhereUniqueWithoutTrackInput | TimelineClipUpsertWithWhereUniqueWithoutTrackInput[]
-    createMany?: TimelineClipCreateManyTrackInputEnvelope
-    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    update?: TimelineClipUpdateWithWhereUniqueWithoutTrackInput | TimelineClipUpdateWithWhereUniqueWithoutTrackInput[]
-    updateMany?: TimelineClipUpdateManyWithWhereWithoutTrackInput | TimelineClipUpdateManyWithWhereWithoutTrackInput[]
-    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
-  }
-
-  export type TimelineClipUncheckedUpdateManyWithoutTrackNestedInput = {
-    create?: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput> | TimelineClipCreateWithoutTrackInput[] | TimelineClipUncheckedCreateWithoutTrackInput[]
-    connectOrCreate?: TimelineClipCreateOrConnectWithoutTrackInput | TimelineClipCreateOrConnectWithoutTrackInput[]
-    upsert?: TimelineClipUpsertWithWhereUniqueWithoutTrackInput | TimelineClipUpsertWithWhereUniqueWithoutTrackInput[]
-    createMany?: TimelineClipCreateManyTrackInputEnvelope
-    set?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    disconnect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    delete?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    connect?: TimelineClipWhereUniqueInput | TimelineClipWhereUniqueInput[]
-    update?: TimelineClipUpdateWithWhereUniqueWithoutTrackInput | TimelineClipUpdateWithWhereUniqueWithoutTrackInput[]
-    updateMany?: TimelineClipUpdateManyWithWhereWithoutTrackInput | TimelineClipUpdateManyWithWhereWithoutTrackInput[]
-    deleteMany?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
-  }
-
-  export type TimelineTrackCreateNestedOneWithoutClipsInput = {
-    create?: XOR<TimelineTrackCreateWithoutClipsInput, TimelineTrackUncheckedCreateWithoutClipsInput>
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutClipsInput
-    connect?: TimelineTrackWhereUniqueInput
   }
 
   export type ProjectAssetCreateNestedOneWithoutTimeline_clipsInput = {
@@ -29193,20 +27738,26 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type TimelineTrackUpdateOneRequiredWithoutClipsNestedInput = {
-    create?: XOR<TimelineTrackCreateWithoutClipsInput, TimelineTrackUncheckedCreateWithoutClipsInput>
-    connectOrCreate?: TimelineTrackCreateOrConnectWithoutClipsInput
-    upsert?: TimelineTrackUpsertWithoutClipsInput
-    connect?: TimelineTrackWhereUniqueInput
-    update?: XOR<XOR<TimelineTrackUpdateToOneWithWhereWithoutClipsInput, TimelineTrackUpdateWithoutClipsInput>, TimelineTrackUncheckedUpdateWithoutClipsInput>
+  export type ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput = {
+    create?: XOR<ProjectCreateWithoutTimeline_clipsInput, ProjectUncheckedCreateWithoutTimeline_clipsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutTimeline_clipsInput
+    upsert?: ProjectUpsertWithoutTimeline_clipsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutTimeline_clipsInput, ProjectUpdateWithoutTimeline_clipsInput>, ProjectUncheckedUpdateWithoutTimeline_clipsInput>
   }
 
-  export type ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput = {
+  export type FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput = {
+    create?: XOR<FinalProjectCreateWithoutTimeline_clipsInput, FinalProjectUncheckedCreateWithoutTimeline_clipsInput>
+    connectOrCreate?: FinalProjectCreateOrConnectWithoutTimeline_clipsInput
+    upsert?: FinalProjectUpsertWithoutTimeline_clipsInput
+    connect?: FinalProjectWhereUniqueInput
+    update?: XOR<XOR<FinalProjectUpdateToOneWithWhereWithoutTimeline_clipsInput, FinalProjectUpdateWithoutTimeline_clipsInput>, FinalProjectUncheckedUpdateWithoutTimeline_clipsInput>
+  }
+
+  export type ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput = {
     create?: XOR<ProjectAssetCreateWithoutTimeline_clipsInput, ProjectAssetUncheckedCreateWithoutTimeline_clipsInput>
     connectOrCreate?: ProjectAssetCreateOrConnectWithoutTimeline_clipsInput
     upsert?: ProjectAssetUpsertWithoutTimeline_clipsInput
-    disconnect?: ProjectAssetWhereInput | boolean
-    delete?: ProjectAssetWhereInput | boolean
     connect?: ProjectAssetWhereUniqueInput
     update?: XOR<XOR<ProjectAssetUpdateToOneWithWhereWithoutTimeline_clipsInput, ProjectAssetUpdateWithoutTimeline_clipsInput>, ProjectAssetUncheckedUpdateWithoutTimeline_clipsInput>
   }
@@ -30015,23 +28566,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnumTimelineTrackTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.TimelineTrackType | EnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTimelineTrackTypeFilter<$PrismaModel> | $Enums.TimelineTrackType
-  }
-
-  export type NestedEnumTimelineTrackTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TimelineTrackType | EnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TimelineTrackType[] | ListEnumTimelineTrackTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTimelineTrackTypeWithAggregatesFilter<$PrismaModel> | $Enums.TimelineTrackType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTimelineTrackTypeFilter<$PrismaModel>
-    _max?: NestedEnumTimelineTrackTypeFilter<$PrismaModel>
-  }
-
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -30224,6 +28758,7 @@ export namespace Prisma {
     scenes?: SceneCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutUserInput = {
@@ -30240,6 +28775,7 @@ export namespace Prisma {
     scenes?: SceneUncheckedCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectUncheckedCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutUserInput = {
@@ -30380,7 +28916,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
     video?: DocumentCreateNestedOneWithoutFinal_project_videosInput
     thumbnail?: DocumentCreateNestedOneWithoutFinal_project_thumbnailsInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -30394,7 +28930,7 @@ export namespace Prisma {
     thumbnail_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -30902,7 +29438,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutFinal_projectsInput
     video?: DocumentCreateNestedOneWithoutFinal_project_videosInput
     thumbnail?: DocumentCreateNestedOneWithoutFinal_project_thumbnailsInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -30916,7 +29452,7 @@ export namespace Prisma {
     thumbnail_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -30927,6 +29463,51 @@ export namespace Prisma {
 
   export type FinalProjectCreateManyProjectInputEnvelope = {
     data: FinalProjectCreateManyProjectInput | FinalProjectCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TimelineClipCreateWithoutProjectInput = {
+    uuid?: string
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
+    transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
+    captions?: TimelineCaptionCreateNestedManyWithoutClipInput
+  }
+
+  export type TimelineClipUncheckedCreateWithoutProjectInput = {
+    id?: number
+    uuid?: string
+    project_asset_uuid: string
+    final_project_uuid: string
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
+    transition_in_uuid?: string | null
+    transition_out_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    captions?: TimelineCaptionUncheckedCreateNestedManyWithoutClipInput
+  }
+
+  export type TimelineClipCreateOrConnectWithoutProjectInput = {
+    where: TimelineClipWhereUniqueInput
+    create: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput>
+  }
+
+  export type TimelineClipCreateManyProjectInputEnvelope = {
+    data: TimelineClipCreateManyProjectInput | TimelineClipCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -31026,6 +29607,43 @@ export namespace Prisma {
     data: XOR<FinalProjectUpdateManyMutationInput, FinalProjectUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type TimelineClipUpsertWithWhereUniqueWithoutProjectInput = {
+    where: TimelineClipWhereUniqueInput
+    update: XOR<TimelineClipUpdateWithoutProjectInput, TimelineClipUncheckedUpdateWithoutProjectInput>
+    create: XOR<TimelineClipCreateWithoutProjectInput, TimelineClipUncheckedCreateWithoutProjectInput>
+  }
+
+  export type TimelineClipUpdateWithWhereUniqueWithoutProjectInput = {
+    where: TimelineClipWhereUniqueInput
+    data: XOR<TimelineClipUpdateWithoutProjectInput, TimelineClipUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type TimelineClipUpdateManyWithWhereWithoutProjectInput = {
+    where: TimelineClipScalarWhereInput
+    data: XOR<TimelineClipUpdateManyMutationInput, TimelineClipUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type TimelineClipScalarWhereInput = {
+    AND?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
+    OR?: TimelineClipScalarWhereInput[]
+    NOT?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
+    id?: IntFilter<"TimelineClip"> | number
+    uuid?: StringFilter<"TimelineClip"> | string
+    project_uuid?: StringFilter<"TimelineClip"> | string
+    project_asset_uuid?: StringFilter<"TimelineClip"> | string
+    final_project_uuid?: StringFilter<"TimelineClip"> | string
+    start_sec?: FloatFilter<"TimelineClip"> | number
+    end_sec?: FloatFilter<"TimelineClip"> | number
+    trim_start?: FloatNullableFilter<"TimelineClip"> | number | null
+    trim_end?: FloatNullableFilter<"TimelineClip"> | number | null
+    volume?: FloatNullableFilter<"TimelineClip"> | number | null
+    speed?: FloatNullableFilter<"TimelineClip"> | number | null
+    transition_in_uuid?: StringNullableFilter<"TimelineClip"> | string | null
+    transition_out_uuid?: StringNullableFilter<"TimelineClip"> | string | null
+    created_at?: DateTimeFilter<"TimelineClip"> | Date | string
+    updated_at?: DateTimeFilter<"TimelineClip"> | Date | string
+  }
+
   export type UserCreateWithoutScenesInput = {
     uuid?: string
     email: string
@@ -31081,6 +29699,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutProjectsInput
     project_assets?: ProjectAssetCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutScenesInput = {
@@ -31097,6 +29716,7 @@ export namespace Prisma {
     updated_at?: Date | string
     project_assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectUncheckedCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutScenesInput = {
@@ -31260,6 +29880,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     project_assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutScenesInput = {
@@ -31276,6 +29897,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     project_assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUncheckedUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type SceneVariationUpsertWithWhereUniqueWithoutSceneInput = {
@@ -31588,6 +30210,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutProjectsInput
     scenes?: SceneCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutProject_assetsInput = {
@@ -31604,6 +30227,7 @@ export namespace Prisma {
     updated_at?: Date | string
     scenes?: SceneUncheckedCreateNestedManyWithoutProjectInput
     final_projects?: FinalProjectUncheckedCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutProject_assetsInput = {
@@ -31807,7 +30431,8 @@ export namespace Prisma {
     speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    track: TimelineTrackCreateNestedOneWithoutClipsInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
     transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
     transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
     captions?: TimelineCaptionCreateNestedManyWithoutClipInput
@@ -31816,7 +30441,8 @@ export namespace Prisma {
   export type TimelineClipUncheckedCreateWithoutProject_assetInput = {
     id?: number
     uuid?: string
-    track_uuid: string
+    project_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -31912,6 +30538,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     scenes?: SceneUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutProject_assetsInput = {
@@ -31928,6 +30555,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scenes?: SceneUncheckedUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUncheckedUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type SceneUpsertWithoutProject_assetsInput = {
@@ -32090,26 +30718,6 @@ export namespace Prisma {
     data: XOR<TimelineClipUpdateManyMutationInput, TimelineClipUncheckedUpdateManyWithoutProject_assetInput>
   }
 
-  export type TimelineClipScalarWhereInput = {
-    AND?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
-    OR?: TimelineClipScalarWhereInput[]
-    NOT?: TimelineClipScalarWhereInput | TimelineClipScalarWhereInput[]
-    id?: IntFilter<"TimelineClip"> | number
-    uuid?: StringFilter<"TimelineClip"> | string
-    track_uuid?: StringFilter<"TimelineClip"> | string
-    project_asset_uuid?: StringNullableFilter<"TimelineClip"> | string | null
-    start_sec?: FloatFilter<"TimelineClip"> | number
-    end_sec?: FloatFilter<"TimelineClip"> | number
-    trim_start?: FloatNullableFilter<"TimelineClip"> | number | null
-    trim_end?: FloatNullableFilter<"TimelineClip"> | number | null
-    volume?: FloatNullableFilter<"TimelineClip"> | number | null
-    speed?: FloatNullableFilter<"TimelineClip"> | number | null
-    transition_in_uuid?: StringNullableFilter<"TimelineClip"> | string | null
-    transition_out_uuid?: StringNullableFilter<"TimelineClip"> | string | null
-    created_at?: DateTimeFilter<"TimelineClip"> | Date | string
-    updated_at?: DateTimeFilter<"TimelineClip"> | Date | string
-  }
-
   export type UserCreateWithoutFinal_projectsInput = {
     uuid?: string
     email: string
@@ -32165,6 +30773,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutProjectsInput
     scenes?: SceneCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutFinal_projectsInput = {
@@ -32181,6 +30790,7 @@ export namespace Prisma {
     updated_at?: Date | string
     scenes?: SceneUncheckedCreateNestedManyWithoutProjectInput
     project_assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutFinal_projectsInput = {
@@ -32260,32 +30870,48 @@ export namespace Prisma {
     create: XOR<DocumentCreateWithoutFinal_project_thumbnailsInput, DocumentUncheckedCreateWithoutFinal_project_thumbnailsInput>
   }
 
-  export type TimelineTrackCreateWithoutFinal_projectInput = {
+  export type TimelineClipCreateWithoutFinal_projectInput = {
     uuid?: string
-    type: $Enums.TimelineTrackType
-    order: number
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    clips?: TimelineClipCreateNestedManyWithoutTrackInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
+    transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
+    captions?: TimelineCaptionCreateNestedManyWithoutClipInput
   }
 
-  export type TimelineTrackUncheckedCreateWithoutFinal_projectInput = {
+  export type TimelineClipUncheckedCreateWithoutFinal_projectInput = {
     id?: number
     uuid?: string
-    type: $Enums.TimelineTrackType
-    order: number
+    project_uuid: string
+    project_asset_uuid: string
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
+    transition_in_uuid?: string | null
+    transition_out_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    clips?: TimelineClipUncheckedCreateNestedManyWithoutTrackInput
+    captions?: TimelineCaptionUncheckedCreateNestedManyWithoutClipInput
   }
 
-  export type TimelineTrackCreateOrConnectWithoutFinal_projectInput = {
-    where: TimelineTrackWhereUniqueInput
-    create: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput>
+  export type TimelineClipCreateOrConnectWithoutFinal_projectInput = {
+    where: TimelineClipWhereUniqueInput
+    create: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput>
   }
 
-  export type TimelineTrackCreateManyFinal_projectInputEnvelope = {
-    data: TimelineTrackCreateManyFinal_projectInput | TimelineTrackCreateManyFinal_projectInput[]
+  export type TimelineClipCreateManyFinal_projectInputEnvelope = {
+    data: TimelineClipCreateManyFinal_projectInput | TimelineClipCreateManyFinal_projectInput[]
     skipDuplicates?: boolean
   }
 
@@ -32392,6 +31018,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     scenes?: SceneUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutFinal_projectsInput = {
@@ -32408,6 +31035,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scenes?: SceneUncheckedUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type DocumentUpsertWithoutFinal_project_videosInput = {
@@ -32494,33 +31122,20 @@ export namespace Prisma {
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutAudioNestedInput
   }
 
-  export type TimelineTrackUpsertWithWhereUniqueWithoutFinal_projectInput = {
-    where: TimelineTrackWhereUniqueInput
-    update: XOR<TimelineTrackUpdateWithoutFinal_projectInput, TimelineTrackUncheckedUpdateWithoutFinal_projectInput>
-    create: XOR<TimelineTrackCreateWithoutFinal_projectInput, TimelineTrackUncheckedCreateWithoutFinal_projectInput>
+  export type TimelineClipUpsertWithWhereUniqueWithoutFinal_projectInput = {
+    where: TimelineClipWhereUniqueInput
+    update: XOR<TimelineClipUpdateWithoutFinal_projectInput, TimelineClipUncheckedUpdateWithoutFinal_projectInput>
+    create: XOR<TimelineClipCreateWithoutFinal_projectInput, TimelineClipUncheckedCreateWithoutFinal_projectInput>
   }
 
-  export type TimelineTrackUpdateWithWhereUniqueWithoutFinal_projectInput = {
-    where: TimelineTrackWhereUniqueInput
-    data: XOR<TimelineTrackUpdateWithoutFinal_projectInput, TimelineTrackUncheckedUpdateWithoutFinal_projectInput>
+  export type TimelineClipUpdateWithWhereUniqueWithoutFinal_projectInput = {
+    where: TimelineClipWhereUniqueInput
+    data: XOR<TimelineClipUpdateWithoutFinal_projectInput, TimelineClipUncheckedUpdateWithoutFinal_projectInput>
   }
 
-  export type TimelineTrackUpdateManyWithWhereWithoutFinal_projectInput = {
-    where: TimelineTrackScalarWhereInput
-    data: XOR<TimelineTrackUpdateManyMutationInput, TimelineTrackUncheckedUpdateManyWithoutFinal_projectInput>
-  }
-
-  export type TimelineTrackScalarWhereInput = {
-    AND?: TimelineTrackScalarWhereInput | TimelineTrackScalarWhereInput[]
-    OR?: TimelineTrackScalarWhereInput[]
-    NOT?: TimelineTrackScalarWhereInput | TimelineTrackScalarWhereInput[]
-    id?: IntFilter<"TimelineTrack"> | number
-    uuid?: StringFilter<"TimelineTrack"> | string
-    final_project_uuid?: StringFilter<"TimelineTrack"> | string
-    type?: EnumTimelineTrackTypeFilter<"TimelineTrack"> | $Enums.TimelineTrackType
-    order?: IntFilter<"TimelineTrack"> | number
-    created_at?: DateTimeFilter<"TimelineTrack"> | Date | string
-    updated_at?: DateTimeFilter<"TimelineTrack"> | Date | string
+  export type TimelineClipUpdateManyWithWhereWithoutFinal_projectInput = {
+    where: TimelineClipScalarWhereInput
+    data: XOR<TimelineClipUpdateManyMutationInput, TimelineClipUncheckedUpdateManyWithoutFinal_projectInput>
   }
 
   export type TimelineMusicUpsertWithWhereUniqueWithoutFinal_projectInput = {
@@ -32554,7 +31169,45 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"TimelineMusic"> | Date | string
   }
 
-  export type FinalProjectCreateWithoutTracksInput = {
+  export type ProjectCreateWithoutTimeline_clipsInput = {
+    uuid?: string
+    title: string
+    type?: $Enums.ProjectType
+    original_concept?: string | null
+    enriched_concept?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UserCreateNestedOneWithoutProjectsInput
+    scenes?: SceneCreateNestedManyWithoutProjectInput
+    project_assets?: ProjectAssetCreateNestedManyWithoutProjectInput
+    final_projects?: FinalProjectCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutTimeline_clipsInput = {
+    id?: number
+    uuid?: string
+    user_uuid: string
+    title: string
+    type?: $Enums.ProjectType
+    original_concept?: string | null
+    enriched_concept?: string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    scenes?: SceneUncheckedCreateNestedManyWithoutProjectInput
+    project_assets?: ProjectAssetUncheckedCreateNestedManyWithoutProjectInput
+    final_projects?: FinalProjectUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutTimeline_clipsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutTimeline_clipsInput, ProjectUncheckedCreateWithoutTimeline_clipsInput>
+  }
+
+  export type FinalProjectCreateWithoutTimeline_clipsInput = {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
@@ -32567,7 +31220,7 @@ export namespace Prisma {
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
-  export type FinalProjectUncheckedCreateWithoutTracksInput = {
+  export type FinalProjectUncheckedCreateWithoutTimeline_clipsInput = {
     id?: number
     uuid?: string
     user_uuid: string
@@ -32581,130 +31234,9 @@ export namespace Prisma {
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
-  export type FinalProjectCreateOrConnectWithoutTracksInput = {
+  export type FinalProjectCreateOrConnectWithoutTimeline_clipsInput = {
     where: FinalProjectWhereUniqueInput
-    create: XOR<FinalProjectCreateWithoutTracksInput, FinalProjectUncheckedCreateWithoutTracksInput>
-  }
-
-  export type TimelineClipCreateWithoutTrackInput = {
-    uuid?: string
-    start_sec: number
-    end_sec: number
-    trim_start?: number | null
-    trim_end?: number | null
-    volume?: number | null
-    speed?: number | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    project_asset?: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
-    transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
-    transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
-    captions?: TimelineCaptionCreateNestedManyWithoutClipInput
-  }
-
-  export type TimelineClipUncheckedCreateWithoutTrackInput = {
-    id?: number
-    uuid?: string
-    project_asset_uuid?: string | null
-    start_sec: number
-    end_sec: number
-    trim_start?: number | null
-    trim_end?: number | null
-    volume?: number | null
-    speed?: number | null
-    transition_in_uuid?: string | null
-    transition_out_uuid?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    captions?: TimelineCaptionUncheckedCreateNestedManyWithoutClipInput
-  }
-
-  export type TimelineClipCreateOrConnectWithoutTrackInput = {
-    where: TimelineClipWhereUniqueInput
-    create: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput>
-  }
-
-  export type TimelineClipCreateManyTrackInputEnvelope = {
-    data: TimelineClipCreateManyTrackInput | TimelineClipCreateManyTrackInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type FinalProjectUpsertWithoutTracksInput = {
-    update: XOR<FinalProjectUpdateWithoutTracksInput, FinalProjectUncheckedUpdateWithoutTracksInput>
-    create: XOR<FinalProjectCreateWithoutTracksInput, FinalProjectUncheckedCreateWithoutTracksInput>
-    where?: FinalProjectWhereInput
-  }
-
-  export type FinalProjectUpdateToOneWithWhereWithoutTracksInput = {
-    where?: FinalProjectWhereInput
-    data: XOR<FinalProjectUpdateWithoutTracksInput, FinalProjectUncheckedUpdateWithoutTracksInput>
-  }
-
-  export type FinalProjectUpdateWithoutTracksInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
-    project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
-    video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
-    thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
-  }
-
-  export type FinalProjectUncheckedUpdateWithoutTracksInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    user_uuid?: StringFieldUpdateOperationsInput | string
-    project_uuid?: StringFieldUpdateOperationsInput | string
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
-    video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
-  }
-
-  export type TimelineClipUpsertWithWhereUniqueWithoutTrackInput = {
-    where: TimelineClipWhereUniqueInput
-    update: XOR<TimelineClipUpdateWithoutTrackInput, TimelineClipUncheckedUpdateWithoutTrackInput>
-    create: XOR<TimelineClipCreateWithoutTrackInput, TimelineClipUncheckedCreateWithoutTrackInput>
-  }
-
-  export type TimelineClipUpdateWithWhereUniqueWithoutTrackInput = {
-    where: TimelineClipWhereUniqueInput
-    data: XOR<TimelineClipUpdateWithoutTrackInput, TimelineClipUncheckedUpdateWithoutTrackInput>
-  }
-
-  export type TimelineClipUpdateManyWithWhereWithoutTrackInput = {
-    where: TimelineClipScalarWhereInput
-    data: XOR<TimelineClipUpdateManyMutationInput, TimelineClipUncheckedUpdateManyWithoutTrackInput>
-  }
-
-  export type TimelineTrackCreateWithoutClipsInput = {
-    uuid?: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at?: Date | string
-    updated_at?: Date | string
-    final_project: FinalProjectCreateNestedOneWithoutTracksInput
-  }
-
-  export type TimelineTrackUncheckedCreateWithoutClipsInput = {
-    id?: number
-    uuid?: string
-    final_project_uuid: string
-    type: $Enums.TimelineTrackType
-    order: number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type TimelineTrackCreateOrConnectWithoutClipsInput = {
-    where: TimelineTrackWhereUniqueInput
-    create: XOR<TimelineTrackCreateWithoutClipsInput, TimelineTrackUncheckedCreateWithoutClipsInput>
+    create: XOR<FinalProjectCreateWithoutTimeline_clipsInput, FinalProjectUncheckedCreateWithoutTimeline_clipsInput>
   }
 
   export type ProjectAssetCreateWithoutTimeline_clipsInput = {
@@ -32806,8 +31338,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -32818,8 +31350,8 @@ export namespace Prisma {
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -32834,34 +31366,86 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type TimelineTrackUpsertWithoutClipsInput = {
-    update: XOR<TimelineTrackUpdateWithoutClipsInput, TimelineTrackUncheckedUpdateWithoutClipsInput>
-    create: XOR<TimelineTrackCreateWithoutClipsInput, TimelineTrackUncheckedCreateWithoutClipsInput>
-    where?: TimelineTrackWhereInput
+  export type ProjectUpsertWithoutTimeline_clipsInput = {
+    update: XOR<ProjectUpdateWithoutTimeline_clipsInput, ProjectUncheckedUpdateWithoutTimeline_clipsInput>
+    create: XOR<ProjectCreateWithoutTimeline_clipsInput, ProjectUncheckedCreateWithoutTimeline_clipsInput>
+    where?: ProjectWhereInput
   }
 
-  export type TimelineTrackUpdateToOneWithWhereWithoutClipsInput = {
-    where?: TimelineTrackWhereInput
-    data: XOR<TimelineTrackUpdateWithoutClipsInput, TimelineTrackUncheckedUpdateWithoutClipsInput>
+  export type ProjectUpdateToOneWithWhereWithoutTimeline_clipsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutTimeline_clipsInput, ProjectUncheckedUpdateWithoutTimeline_clipsInput>
   }
 
-  export type TimelineTrackUpdateWithoutClipsInput = {
+  export type ProjectUpdateWithoutTimeline_clipsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumProjectTypeFieldUpdateOperationsInput | $Enums.ProjectType
+    original_concept?: NullableStringFieldUpdateOperationsInput | string | null
+    enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    final_project?: FinalProjectUpdateOneRequiredWithoutTracksNestedInput
+    user?: UserUpdateOneRequiredWithoutProjectsNestedInput
+    scenes?: SceneUpdateManyWithoutProjectNestedInput
+    project_assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
+    final_projects?: FinalProjectUpdateManyWithoutProjectNestedInput
   }
 
-  export type TimelineTrackUncheckedUpdateWithoutClipsInput = {
+  export type ProjectUncheckedUpdateWithoutTimeline_clipsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    final_project_uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    type?: EnumProjectTypeFieldUpdateOperationsInput | $Enums.ProjectType
+    original_concept?: NullableStringFieldUpdateOperationsInput | string | null
+    enriched_concept?: NullableStringFieldUpdateOperationsInput | string | null
+    genres?: NullableJsonNullValueInput | InputJsonValue
+    tones?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    scenes?: SceneUncheckedUpdateManyWithoutProjectNestedInput
+    project_assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
+    final_projects?: FinalProjectUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type FinalProjectUpsertWithoutTimeline_clipsInput = {
+    update: XOR<FinalProjectUpdateWithoutTimeline_clipsInput, FinalProjectUncheckedUpdateWithoutTimeline_clipsInput>
+    create: XOR<FinalProjectCreateWithoutTimeline_clipsInput, FinalProjectUncheckedCreateWithoutTimeline_clipsInput>
+    where?: FinalProjectWhereInput
+  }
+
+  export type FinalProjectUpdateToOneWithWhereWithoutTimeline_clipsInput = {
+    where?: FinalProjectWhereInput
+    data: XOR<FinalProjectUpdateWithoutTimeline_clipsInput, FinalProjectUncheckedUpdateWithoutTimeline_clipsInput>
+  }
+
+  export type FinalProjectUpdateWithoutTimeline_clipsInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
+    video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
+    thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
+    timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
+  }
+
+  export type FinalProjectUncheckedUpdateWithoutTimeline_clipsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    user_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
   export type ProjectAssetUpsertWithoutTimeline_clipsInput = {
@@ -33002,8 +31586,8 @@ export namespace Prisma {
     text?: StringFilter<"TimelineCaption"> | string
     start_sec?: FloatFilter<"TimelineCaption"> | number
     end_sec?: FloatFilter<"TimelineCaption"> | number
-    position?: JsonNullableFilter<"TimelineCaption">
-    style?: JsonNullableFilter<"TimelineCaption">
+    position?: StringNullableFilter<"TimelineCaption"> | string | null
+    style?: StringNullableFilter<"TimelineCaption"> | string | null
     created_at?: DateTimeFilter<"TimelineCaption"> | Date | string
     updated_at?: DateTimeFilter<"TimelineCaption"> | Date | string
   }
@@ -33018,8 +31602,9 @@ export namespace Prisma {
     speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    track: TimelineTrackCreateNestedOneWithoutClipsInput
-    project_asset?: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
     transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
     captions?: TimelineCaptionCreateNestedManyWithoutClipInput
   }
@@ -33027,8 +31612,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedCreateWithoutTransition_inInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -33061,8 +31647,9 @@ export namespace Prisma {
     speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    track: TimelineTrackCreateNestedOneWithoutClipsInput
-    project_asset?: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
     transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
     captions?: TimelineCaptionCreateNestedManyWithoutClipInput
   }
@@ -33070,8 +31657,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedCreateWithoutTransition_outInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -33136,8 +31724,9 @@ export namespace Prisma {
     speed?: number | null
     created_at?: Date | string
     updated_at?: Date | string
-    track: TimelineTrackCreateNestedOneWithoutClipsInput
-    project_asset?: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
+    project: ProjectCreateNestedOneWithoutTimeline_clipsInput
+    final_project: FinalProjectCreateNestedOneWithoutTimeline_clipsInput
+    project_asset: ProjectAssetCreateNestedOneWithoutTimeline_clipsInput
     transition_in?: TimelineTransitionCreateNestedOneWithoutClip_inInput
     transition_out?: TimelineTransitionCreateNestedOneWithoutClip_outInput
   }
@@ -33145,8 +31734,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedCreateWithoutCaptionsInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -33185,8 +31775,9 @@ export namespace Prisma {
     speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    track?: TimelineTrackUpdateOneRequiredWithoutClipsNestedInput
-    project_asset?: ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
     transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
     transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
   }
@@ -33194,8 +31785,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateWithoutCaptionsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -33218,7 +31810,7 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
     video?: DocumentCreateNestedOneWithoutFinal_project_videosInput
     thumbnail?: DocumentCreateNestedOneWithoutFinal_project_thumbnailsInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
   }
 
   export type FinalProjectUncheckedCreateWithoutTimeline_musicInput = {
@@ -33232,7 +31824,7 @@ export namespace Prisma {
     thumbnail_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
   export type FinalProjectCreateOrConnectWithoutTimeline_musicInput = {
@@ -33297,7 +31889,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
     video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
     thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
   }
 
   export type FinalProjectUncheckedUpdateWithoutTimeline_musicInput = {
@@ -33311,7 +31903,7 @@ export namespace Prisma {
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
   export type DocumentUpsertWithoutTimeline_musicInput = {
@@ -33365,7 +31957,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutFinal_projectsInput
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
     thumbnail?: DocumentCreateNestedOneWithoutFinal_project_thumbnailsInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -33379,7 +31971,7 @@ export namespace Prisma {
     thumbnail_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -33402,7 +31994,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutFinal_projectsInput
     project: ProjectCreateNestedOneWithoutFinal_projectsInput
     video?: DocumentCreateNestedOneWithoutFinal_project_videosInput
-    tracks?: TimelineTrackCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -33416,7 +32008,7 @@ export namespace Prisma {
     video_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    tracks?: TimelineTrackUncheckedCreateNestedManyWithoutFinal_projectInput
+    timeline_clips?: TimelineClipUncheckedCreateNestedManyWithoutFinal_projectInput
     timeline_music?: TimelineMusicUncheckedCreateNestedManyWithoutFinal_projectInput
   }
 
@@ -34190,6 +32782,7 @@ export namespace Prisma {
     scenes?: SceneUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutUserInput = {
@@ -34206,6 +32799,7 @@ export namespace Prisma {
     scenes?: SceneUncheckedUpdateManyWithoutProjectNestedInput
     project_assets?: ProjectAssetUncheckedUpdateManyWithoutProjectNestedInput
     final_projects?: FinalProjectUncheckedUpdateManyWithoutProjectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutUserInput = {
@@ -34359,7 +32953,7 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
     video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
     thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -34373,7 +32967,7 @@ export namespace Prisma {
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -34562,6 +33156,23 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type TimelineClipCreateManyProjectInput = {
+    id?: number
+    uuid?: string
+    project_asset_uuid: string
+    final_project_uuid: string
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
+    transition_in_uuid?: string | null
+    transition_out_uuid?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type SceneUpdateWithoutProjectInput = {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -34666,7 +33277,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
     video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
     thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -34680,7 +33291,7 @@ export namespace Prisma {
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -34692,6 +33303,58 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TimelineClipUpdateWithoutProjectInput = {
+    uuid?: StringFieldUpdateOperationsInput | string
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
+    transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
+    captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
+  }
+
+  export type TimelineClipUncheckedUpdateWithoutProjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
+    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    captions?: TimelineCaptionUncheckedUpdateManyWithoutClipNestedInput
+  }
+
+  export type TimelineClipUncheckedUpdateManyWithoutProjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
+    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34898,7 +33561,8 @@ export namespace Prisma {
   export type TimelineClipCreateManyProject_assetInput = {
     id?: number
     uuid?: string
-    track_uuid: string
+    project_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -35041,7 +33705,8 @@ export namespace Prisma {
     speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    track?: TimelineTrackUpdateOneRequiredWithoutClipsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
     transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
     transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
     captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
@@ -35050,7 +33715,8 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateWithoutProject_assetInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35067,7 +33733,8 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateManyWithoutProject_assetInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35080,11 +33747,19 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TimelineTrackCreateManyFinal_projectInput = {
+  export type TimelineClipCreateManyFinal_projectInput = {
     id?: number
     uuid?: string
-    type: $Enums.TimelineTrackType
-    order: number
+    project_uuid: string
+    project_asset_uuid: string
+    start_sec: number
+    end_sec: number
+    trim_start?: number | null
+    trim_end?: number | null
+    volume?: number | null
+    speed?: number | null
+    transition_in_uuid?: string | null
+    transition_out_uuid?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -35100,30 +33775,54 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-  export type TimelineTrackUpdateWithoutFinal_projectInput = {
+  export type TimelineClipUpdateWithoutFinal_projectInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    clips?: TimelineClipUpdateManyWithoutTrackNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
+    transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
+    captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
   }
 
-  export type TimelineTrackUncheckedUpdateWithoutFinal_projectInput = {
+  export type TimelineClipUncheckedUpdateWithoutFinal_projectInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
+    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    clips?: TimelineClipUncheckedUpdateManyWithoutTrackNestedInput
+    captions?: TimelineCaptionUncheckedUpdateManyWithoutClipNestedInput
   }
 
-  export type TimelineTrackUncheckedUpdateManyWithoutFinal_projectInput = {
+  export type TimelineClipUncheckedUpdateManyWithoutFinal_projectInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    type?: EnumTimelineTrackTypeFieldUpdateOperationsInput | $Enums.TimelineTrackType
-    order?: IntFieldUpdateOperationsInput | number
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    start_sec?: FloatFieldUpdateOperationsInput | number
+    end_sec?: FloatFieldUpdateOperationsInput | number
+    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
+    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
+    volume?: NullableFloatFieldUpdateOperationsInput | number | null
+    speed?: NullableFloatFieldUpdateOperationsInput | number | null
+    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35160,79 +33859,14 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TimelineClipCreateManyTrackInput = {
-    id?: number
-    uuid?: string
-    project_asset_uuid?: string | null
-    start_sec: number
-    end_sec: number
-    trim_start?: number | null
-    trim_end?: number | null
-    volume?: number | null
-    speed?: number | null
-    transition_in_uuid?: string | null
-    transition_out_uuid?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type TimelineClipUpdateWithoutTrackInput = {
-    uuid?: StringFieldUpdateOperationsInput | string
-    start_sec?: FloatFieldUpdateOperationsInput | number
-    end_sec?: FloatFieldUpdateOperationsInput | number
-    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
-    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
-    volume?: NullableFloatFieldUpdateOperationsInput | number | null
-    speed?: NullableFloatFieldUpdateOperationsInput | number | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    project_asset?: ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput
-    transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
-    transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
-    captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
-  }
-
-  export type TimelineClipUncheckedUpdateWithoutTrackInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    start_sec?: FloatFieldUpdateOperationsInput | number
-    end_sec?: FloatFieldUpdateOperationsInput | number
-    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
-    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
-    volume?: NullableFloatFieldUpdateOperationsInput | number | null
-    speed?: NullableFloatFieldUpdateOperationsInput | number | null
-    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    captions?: TimelineCaptionUncheckedUpdateManyWithoutClipNestedInput
-  }
-
-  export type TimelineClipUncheckedUpdateManyWithoutTrackInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    start_sec?: FloatFieldUpdateOperationsInput | number
-    end_sec?: FloatFieldUpdateOperationsInput | number
-    trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
-    trim_end?: NullableFloatFieldUpdateOperationsInput | number | null
-    volume?: NullableFloatFieldUpdateOperationsInput | number | null
-    speed?: NullableFloatFieldUpdateOperationsInput | number | null
-    transition_in_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    transition_out_uuid?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type TimelineCaptionCreateManyClipInput = {
     id?: number
     uuid?: string
     text: string
     start_sec: number
     end_sec: number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: string | null
+    style?: string | null
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -35242,8 +33876,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35254,8 +33888,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35266,8 +33900,8 @@ export namespace Prisma {
     text?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
-    position?: NullableJsonNullValueInput | InputJsonValue
-    style?: NullableJsonNullValueInput | InputJsonValue
+    position?: NullableStringFieldUpdateOperationsInput | string | null
+    style?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35275,8 +33909,9 @@ export namespace Prisma {
   export type TimelineClipCreateManyTransition_inInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -35291,8 +33926,9 @@ export namespace Prisma {
   export type TimelineClipCreateManyTransition_outInput = {
     id?: number
     uuid?: string
-    track_uuid: string
-    project_asset_uuid?: string | null
+    project_uuid: string
+    project_asset_uuid: string
+    final_project_uuid: string
     start_sec: number
     end_sec: number
     trim_start?: number | null
@@ -35314,8 +33950,9 @@ export namespace Prisma {
     speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    track?: TimelineTrackUpdateOneRequiredWithoutClipsNestedInput
-    project_asset?: ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
     transition_out?: TimelineTransitionUpdateOneWithoutClip_outNestedInput
     captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
   }
@@ -35323,8 +33960,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateWithoutTransition_inInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35340,8 +33978,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateManyWithoutTransition_inInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35363,8 +34002,9 @@ export namespace Prisma {
     speed?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    track?: TimelineTrackUpdateOneRequiredWithoutClipsNestedInput
-    project_asset?: ProjectAssetUpdateOneWithoutTimeline_clipsNestedInput
+    project?: ProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    final_project?: FinalProjectUpdateOneRequiredWithoutTimeline_clipsNestedInput
+    project_asset?: ProjectAssetUpdateOneRequiredWithoutTimeline_clipsNestedInput
     transition_in?: TimelineTransitionUpdateOneWithoutClip_inNestedInput
     captions?: TimelineCaptionUpdateManyWithoutClipNestedInput
   }
@@ -35372,8 +34012,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateWithoutTransition_outInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35389,8 +34030,9 @@ export namespace Prisma {
   export type TimelineClipUncheckedUpdateManyWithoutTransition_outInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    track_uuid?: StringFieldUpdateOperationsInput | string
-    project_asset_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    project_uuid?: StringFieldUpdateOperationsInput | string
+    project_asset_uuid?: StringFieldUpdateOperationsInput | string
+    final_project_uuid?: StringFieldUpdateOperationsInput | string
     start_sec?: FloatFieldUpdateOperationsInput | number
     end_sec?: FloatFieldUpdateOperationsInput | number
     trim_start?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -35464,7 +34106,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
     thumbnail?: DocumentUpdateOneWithoutFinal_project_thumbnailsNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -35478,7 +34120,7 @@ export namespace Prisma {
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -35503,7 +34145,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutFinal_projectsNestedInput
     project?: ProjectUpdateOneRequiredWithoutFinal_projectsNestedInput
     video?: DocumentUpdateOneWithoutFinal_project_videosNestedInput
-    tracks?: TimelineTrackUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUpdateManyWithoutFinal_projectNestedInput
   }
 
@@ -35517,7 +34159,7 @@ export namespace Prisma {
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    tracks?: TimelineTrackUncheckedUpdateManyWithoutFinal_projectNestedInput
+    timeline_clips?: TimelineClipUncheckedUpdateManyWithoutFinal_projectNestedInput
     timeline_music?: TimelineMusicUncheckedUpdateManyWithoutFinal_projectNestedInput
   }
 

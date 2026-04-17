@@ -122,6 +122,7 @@ model Project {
   scenes         Scene[]
   project_assets ProjectAsset[]
   final_projects FinalProject[]
+  timeline_clips TimelineClip[]
 
   @@index([uuid])
   @@index([user_uuid])
@@ -223,7 +224,7 @@ model FinalProject {
   project        Project         @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
   video          Document?       @relation("FinalProjectVideo", fields: [video_uuid], references: [uuid], onDelete: Cascade)
   thumbnail      Document?       @relation("FinalProjectThumbnail", fields: [thumbnail_uuid], references: [uuid], onDelete: Cascade)
-  tracks         TimelineTrack[]
+  timeline_clips TimelineClip[]
   timeline_music TimelineMusic[]
 
   @@index([uuid])
@@ -232,28 +233,12 @@ model FinalProject {
   @@map("final_projects")
 }
 
-model TimelineTrack {
-  id                 Int               @id @default(autoincrement())
-  uuid               String            @unique @default(uuid())
-  final_project_uuid String
-  type               TimelineTrackType
-  order              Int
-  created_at         DateTime          @default(now())
-  updated_at         DateTime          @updatedAt
-
-  final_project FinalProject   @relation(fields: [final_project_uuid], references: [uuid], onDelete: Cascade)
-  clips         TimelineClip[]
-
-  @@unique([final_project_uuid, order])
-  @@index([uuid])
-  @@map("timeline_tracks")
-}
-
 model TimelineClip {
   id                  Int      @id @default(autoincrement())
   uuid                String   @unique @default(uuid())
-  track_uuid          String
-  project_asset_uuid  String?
+  project_uuid        String
+  project_asset_uuid  String
+  final_project_uuid  String
   start_sec           Float
   end_sec             Float
   trim_start          Float?
@@ -265,14 +250,14 @@ model TimelineClip {
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
 
-  track          TimelineTrack       @relation(fields: [track_uuid], references: [uuid], onDelete: Cascade)
-  project_asset  ProjectAsset?       @relation("ProjectAssetTimelineClips", fields: [project_asset_uuid], references: [uuid], onDelete: SetNull)
+  project        Project             @relation(fields: [project_uuid], references: [uuid], onDelete: Cascade)
+  final_project  FinalProject        @relation(fields: [final_project_uuid], references: [uuid], onDelete: Cascade)
+  project_asset  ProjectAsset        @relation("ProjectAssetTimelineClips", fields: [project_asset_uuid], references: [uuid], onDelete: Cascade)
   transition_in  TimelineTransition? @relation("TransitionIn", fields: [transition_in_uuid], references: [uuid])
   transition_out TimelineTransition? @relation("TransitionOut", fields: [transition_out_uuid], references: [uuid])
   captions       TimelineCaption[]
 
   @@index([uuid])
-  @@index([track_uuid])
   @@map("timeline_clips")
 }
 
@@ -298,8 +283,8 @@ model TimelineCaption {
   text       String   @db.Text
   start_sec  Float
   end_sec    Float
-  position   Json?
-  style      Json?
+  position   String?
+  style      String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
