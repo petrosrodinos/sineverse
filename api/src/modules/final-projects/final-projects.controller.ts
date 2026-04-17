@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,9 +18,11 @@ import {
 } from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { FinalProjectsService } from './final-projects.service';
 import { CreateFinalProjectDto } from './dto/create-final-project.dto';
 import { UpdateFinalProjectDto } from './dto/update-final-project.dto';
+import { FinalProjectQuerySchema, FinalProjectQueryDto } from './dto/query-final-project.dto';
 
 @ApiTags('Final Projects')
 @Controller('final-projects')
@@ -47,8 +50,11 @@ export class FinalProjectsController {
     status: 200,
     description: 'Returned all final projects successfully.',
   })
-  findAll(@CurrentUser('uuid') uuid: string) {
-    return this.finalProjectsService.findAll(uuid);
+  findAll(
+    @CurrentUser('uuid') uuid: string,
+    @Query(new ZodValidationPipe(FinalProjectQuerySchema)) query: FinalProjectQueryDto,
+  ) {
+    return this.finalProjectsService.findAll(uuid, query);
   }
 
   @Get(':uuid')

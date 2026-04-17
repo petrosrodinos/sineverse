@@ -306,7 +306,7 @@ model TimelineMusic {
   audio_uuid    String
   start_sec Float
   end_sec   Float
-  volume Float?
+  volume Float? @default(1.0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

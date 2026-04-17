@@ -5,54 +5,54 @@ import { Skeleton } from "@heroui/skeleton";
 import { addToast } from "@heroui/toast";
 import { Clapperboard } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useCreateEstateWalkthroughVideos } from "@/features/project-assets/hooks/use-project-assets";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useProjectAssets, useCreateEstateWalkthroughVideos } from "@/features/project-assets/hooks/use-project-assets";
+import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import type { VideoCardReorderProps } from "../video/VideoCard";
 import { VideoCard } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
 import { VideoReorderList } from "../video/VideoReorderList";
+import { moveIdInOrder } from "../../utils/estate-workflow.utils";
 
-function ClipRow({ videoAssetUuid, index, reorderCtx }: { videoAssetUuid: string; index: number; reorderCtx: VideoReorderListRenderContext }) {
-  const asset = useEstateWorkflowStore((s) => s.videoAssetsByUuid[videoAssetUuid]);
+type GenerateVideosStepProps = {
+  finalProjectUuid: string | null;
+  hasPromptImages: boolean;
+};
 
-  if (!asset) {
-    return null;
-  }
-
-  const reorder: VideoCardReorderProps = {
-    index,
-    canReorder: reorderCtx.canReorder,
-    onReorder: reorderCtx.onReorder,
-    dragIndex: reorderCtx.dragIndex,
-    setDragIndex: reorderCtx.setDragIndex,
-  };
-
-  return <VideoCard asset={asset} compact videoAssetUuid={videoAssetUuid} reorder={reorder} />;
-}
-
-export function GenerateVideosStep() {
+export function GenerateVideosStep({ finalProjectUuid, hasPromptImages }: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
 
-  const activeStep = useEstateWorkflowStore((s) => s.activeStep);
-  const promptImageAssets = useEstateWorkflowStore((s) => s.promptImageAssets);
-  const videoOrder = useEstateWorkflowStore((s) => s.videoOrder);
-  const videoAssetsByUuid = useEstateWorkflowStore((s) => s.videoAssetsByUuid);
-  const hydrateEstateVideoAssetsFromApi = useEstateWorkflowStore((s) => s.hydrateEstateVideoAssetsFromApi);
-  const reorderVideoAssets = useEstateWorkflowStore((s) => s.reorderVideoAssets);
+  const { data: assetsResponse, isLoading } = useProjectAssets({ project_uuid: projectUuid, role: AssetRoles.GENERATED_VIDEO, limit: 100 }, { enabled: !!projectUuid });
+  const videoAssets = assetsResponse?.data ?? [];
+
+  const [videoOrder, setVideoOrder] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (videoAssets.length === 0) return;
+    setVideoOrder((prev) => {
+      const newUuids = videoAssets.map((a) => a.uuid);
+      if (prev.length === newUuids.length && prev.every((id, i) => id === newUuids[i])) {
+        return prev;
+      }
+      return newUuids;
+    });
+  }, [videoAssets]);
+
+  const videoAssetsByUuid = useMemo(() => {
+    const map: Record<string, (typeof videoAssets)[number] | undefined> = {};
+    for (const a of videoAssets) {
+      map[a.uuid] = a;
+    }
+    return map;
+  }, [videoAssets]);
 
   const { mutateAsync: createWalkthroughVideos, isPending: isCreatingWalkthrough } = useCreateEstateWalkthroughVideos();
 
   const autoWalkthroughAttemptedRef = useRef(false);
 
   const runWalkthroughGeneration = useCallback(async () => {
-    if (!projectUuid) {
-      return;
-    }
-    const { promptImageAssets: prompts } = useEstateWorkflowStore.getState();
-    if (!prompts.length) {
+    if (!projectUuid || !hasPromptImages) {
       addToast({
         title: "Add photos first",
         description: "Upload listing photos in step 1 before generating walkthrough clips.",
@@ -61,18 +61,7 @@ export function GenerateVideosStep() {
       return;
     }
     try {
-      const assets = await createWalkthroughVideos({
-        project_uuid: projectUuid,
-      });
-      if (assets.length) {
-        hydrateEstateVideoAssetsFromApi(assets);
-      } else {
-        addToast({
-          title: "No clips queued",
-          description: "No prompt images were found for this project.",
-          severity: "warning",
-        });
-      }
+      await createWalkthroughVideos({ project_uuid: projectUuid });
     } catch {
       addToast({
         title: "Could not start walkthrough clips",
@@ -80,42 +69,40 @@ export function GenerateVideosStep() {
         severity: "danger",
       });
     }
-  }, [projectUuid, createWalkthroughVideos, hydrateEstateVideoAssetsFromApi]);
+  }, [projectUuid, hasPromptImages, createWalkthroughVideos]);
 
   useEffect(() => {
-    if (activeStep !== 2) {
-      autoWalkthroughAttemptedRef.current = false;
-    }
-  }, [activeStep]);
-
-  useEffect(() => {
-    if (activeStep !== 2 || !projectUuid) {
-      return;
-    }
-    if (autoWalkthroughAttemptedRef.current) {
-      return;
-    }
-    if (!promptImageAssets.length || videoOrder.length > 0) {
-      return;
-    }
+    if (!projectUuid || !hasPromptImages || videoOrder.length > 0 || isLoading) return;
+    if (autoWalkthroughAttemptedRef.current) return;
     autoWalkthroughAttemptedRef.current = true;
     void runWalkthroughGeneration();
-  }, [activeStep, projectUuid, promptImageAssets.length, videoOrder.length, runWalkthroughGeneration]);
+  }, [projectUuid, hasPromptImages, videoOrder.length, isLoading, runWalkthroughGeneration]);
 
   const canReorder = useMemo(() => videoOrder.every((id) => videoAssetsByUuid[id]?.status === ProjectAssetStatuses.COMPLETED), [videoOrder, videoAssetsByUuid]);
 
-  const handleReorder = useCallback(
-    (fromIndex: number, toIndex: number) => {
-      reorderVideoAssets(fromIndex, toIndex);
-    },
-    [reorderVideoAssets],
-  );
-
-  const renderItem = useCallback((clipId: string, index: number, reorderCtx: VideoReorderListRenderContext) => {
-    return <ClipRow videoAssetUuid={clipId} index={index} reorderCtx={reorderCtx} />;
+  const handleReorder = useCallback((fromIndex: number, toIndex: number) => {
+    setVideoOrder((prev) => moveIdInOrder(prev, fromIndex, toIndex));
   }, []);
 
-  const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && promptImageAssets.length > 0;
+  const renderItem = useCallback(
+    (clipId: string, index: number, reorderCtx: VideoReorderListRenderContext) => {
+      const assetItem = videoAssetsByUuid[clipId];
+      if (!assetItem || !finalProjectUuid) return null;
+
+      const reorder: VideoCardReorderProps = {
+        index,
+        canReorder: reorderCtx.canReorder,
+        onReorder: reorderCtx.onReorder,
+        dragIndex: reorderCtx.dragIndex,
+        setDragIndex: reorderCtx.setDragIndex,
+      };
+
+      return <VideoCard asset={assetItem} compact finalProjectUuid={finalProjectUuid} reorder={reorder} />;
+    },
+    [videoAssetsByUuid, finalProjectUuid],
+  );
+
+  const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && hasPromptImages;
 
   return (
     <div className="flex flex-col gap-6">
@@ -128,12 +115,11 @@ export function GenerateVideosStep() {
               </span>
               <div>
                 <p className="text-base font-semibold text-foreground">Walkthrough clips</p>
-                <p className="text-small text-default-500">Each photo becomes a short AI clip with smooth camera motion for your listing tour.</p>
+                <p className="text-small text-default-500">Each photo becomes a short clip with smooth camera motion for your listing tour.</p>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">{!promptImageAssets.length && <p className="text-tiny text-default-500">Add photos in step 1 to enable generation.</p>}</div>
+          <div className="flex flex-wrap items-center gap-2">{!hasPromptImages && <p className="text-tiny text-default-500">Add photos in step 1 to enable generation.</p>}</div>
         </CardBody>
       </Card>
 

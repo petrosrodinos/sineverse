@@ -16,9 +16,30 @@ import type { ProjectAsset } from "@/features/project-assets/interfaces/project-
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { useDeleteScene } from "@/features/scenes/hooks/use-scenes";
-import { ESTATE_CAPTION_POSITION_OPTIONS, ESTATE_CAPTION_STYLE_OPTIONS, ESTATE_DEFAULT_CAPTION_END_SEC, ESTATE_DEFAULT_CAPTION_POSITION, ESTATE_DEFAULT_CAPTION_START_SEC, ESTATE_DEFAULT_CAPTION_STYLE, ESTATE_DEFAULT_SPEED, ESTATE_DEFAULT_TRANSITION_ID, ESTATE_DEFAULT_VOLUME, ESTATE_SPEED_MAX, ESTATE_SPEED_MIN, ESTATE_SPEED_STEP, ESTATE_TRANSITION_OPTIONS, ESTATE_TRIM_SEC_MAX, ESTATE_VOLUME_MAX, ESTATE_VOLUME_MIN, ESTATE_VOLUME_STEP } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { useTimelineClips, useCreateTimelineClip, useUpdateTimelineClip } from "@/features/timeline-clips/hooks/use-timeline-clips";
+import { useTimelineCaptions, useCreateTimelineCaption, useUpdateTimelineCaption } from "@/features/timeline-captions/hooks/use-timeline-captions";
+import type { UpdateTimelineClipDto } from "@/features/timeline-clips/interfaces/timeline-clips.interfaces";
+import type { UpdateTimelineCaptionDto } from "@/features/timeline-captions/interfaces/timeline-captions.interfaces";
+import {
+  ESTATE_CAPTION_POSITION_OPTIONS,
+  ESTATE_CAPTION_STYLE_OPTIONS,
+  ESTATE_DEFAULT_CAPTION_END_SEC,
+  ESTATE_DEFAULT_CAPTION_POSITION,
+  ESTATE_DEFAULT_CAPTION_START_SEC,
+  ESTATE_DEFAULT_CAPTION_STYLE,
+  ESTATE_DEFAULT_SPEED,
+  ESTATE_DEFAULT_TRANSITION_ID,
+  ESTATE_DEFAULT_VOLUME,
+  ESTATE_SPEED_MAX,
+  ESTATE_SPEED_MIN,
+  ESTATE_SPEED_STEP,
+  ESTATE_TRANSITION_OPTIONS,
+  ESTATE_VOLUME_MAX,
+  ESTATE_VOLUME_MIN,
+  ESTATE_VOLUME_STEP,
+} from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import type { TimelineTransitionType } from "@/features/timeline-transitions/interfaces/timeline-transitions.interfaces";
 import { useVideoReorderItem } from "../../hooks/useVideoReorderItem";
-import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
 import { TrimRangeField } from "./TrimRangeField";
 
 export type VideoCardReorderProps = {
@@ -32,13 +53,13 @@ export type VideoCardReorderProps = {
 type VideoCardProps = {
   asset: ProjectAsset;
   compact?: boolean;
-  videoAssetUuid: string;
+  finalProjectUuid: string;
   reorder?: VideoCardReorderProps;
 };
 
-export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: VideoCardProps) {
-  const mergeEstateVideoAsset = useEstateWorkflowStore((s) => s.mergeEstateVideoAsset);
-  const removePromptImageAsset = useEstateWorkflowStore((s) => s.removePromptImageAsset);
+export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }: VideoCardProps) {
+  const videoAssetUuid = asset.uuid;
+
   const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -49,13 +70,6 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
     },
   });
 
-  useEffect(() => {
-    if (!polled) {
-      return;
-    }
-    mergeEstateVideoAsset(videoAssetUuid, polled);
-  }, [polled, videoAssetUuid, mergeEstateVideoAsset]);
-
   const display = polled ?? asset;
   const sceneOrder = display.scene?.order ?? asset.scene?.order ?? display.scene_variation?.scene?.order ?? asset.scene_variation?.scene?.order;
   const thumbUrl = display.prompt_images?.[0]?.document.url ?? "";
@@ -65,144 +79,186 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
   const sceneUuid = display.scene_uuid ?? display.scene?.uuid ?? asset.scene_uuid ?? asset.scene?.uuid ?? null;
   const promptImageUuid = useMemo(() => display.prompt_images?.[0]?.uuid ?? asset.prompt_images?.[0]?.uuid ?? null, [display.prompt_images, asset.prompt_images]);
 
-  const trimRange = useEstateWorkflowStore((s) => s.trimRangeByVideoUuid[videoAssetUuid] ?? { start: 0, end: 5 });
-  const videoDurationSec = useEstateWorkflowStore((s) => s.videoDurationSecByVideoUuid[videoAssetUuid] ?? ESTATE_TRIM_SEC_MAX);
-  const transitionId = useEstateWorkflowStore((s) => s.transitionByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_TRANSITION_ID);
-  const volume = useEstateWorkflowStore((s) => s.volumeByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_VOLUME);
-  const speed = useEstateWorkflowStore((s) => s.speedByVideoUuid[videoAssetUuid] ?? ESTATE_DEFAULT_SPEED);
-  const caption = useEstateWorkflowStore(
-    (s) =>
-      s.captionByVideoUuid[videoAssetUuid] ?? {
-        text: "",
-        startSec: ESTATE_DEFAULT_CAPTION_START_SEC,
-        endSec: ESTATE_DEFAULT_CAPTION_END_SEC,
-        position: ESTATE_DEFAULT_CAPTION_POSITION,
-        style: ESTATE_DEFAULT_CAPTION_STYLE,
-      },
+  const { data: clips } = useTimelineClips(
+    { final_project_uuid: finalProjectUuid, project_asset_uuid: videoAssetUuid },
+    { enabled: showEditor && !!finalProjectUuid },
   );
-  const setTrimRange = useEstateWorkflowStore((s) => s.setTrimRange);
-  const setVideoDurationSec = useEstateWorkflowStore((s) => s.setVideoDurationSec);
-  const setTransition = useEstateWorkflowStore((s) => s.setTransition);
-  const setVolume = useEstateWorkflowStore((s) => s.setVolume);
-  const setSpeed = useEstateWorkflowStore((s) => s.setSpeed);
-  const setCaptionText = useEstateWorkflowStore((s) => s.setCaptionText);
-  const setCaptionStartSec = useEstateWorkflowStore((s) => s.setCaptionStartSec);
-  const setCaptionEndSec = useEstateWorkflowStore((s) => s.setCaptionEndSec);
-  const setCaptionPosition = useEstateWorkflowStore((s) => s.setCaptionPosition);
-  const setCaptionStyle = useEstateWorkflowStore((s) => s.setCaptionStyle);
+  const clip = clips?.[0] ?? null;
 
-  const handleTrimChange = useCallback(
-    (start: number, end: number) => {
-      setTrimRange(videoAssetUuid, start, end);
-    },
-    [videoAssetUuid, setTrimRange],
-  );
+  const { mutate: createClip } = useCreateTimelineClip();
+  const { mutate: updateClip } = useUpdateTimelineClip();
 
-  const handleTransitionChange = useCallback(
-    (keys: "all" | Iterable<Key>) => {
-      if (keys === "all") {
-        return;
-      }
-      const first = Array.from(keys)[0];
-      if (typeof first === "string") {
-        setTransition(videoAssetUuid, first);
-      }
-    },
-    [videoAssetUuid, setTransition],
-  );
+  const [videoDurationSec, setVideoDurationSec] = useState(5);
+  const clipInitializedRef = useRef(false);
 
-  const handleVolumeChange = useCallback(
-    (raw: number | number[]) => {
-      if (typeof raw === "number") {
-        setVolume(videoAssetUuid, raw);
-      }
-    },
-    [videoAssetUuid, setVolume],
-  );
+  useEffect(() => {
+    if (!showEditor || !finalProjectUuid || clip !== null || clips === undefined || clipInitializedRef.current) return;
+    clipInitializedRef.current = true;
+    createClip({
+      project_uuid: asset.project_uuid,
+      project_asset_uuid: videoAssetUuid,
+      final_project_uuid: finalProjectUuid,
+      start_sec: 0,
+      end_sec: videoDurationSec,
+      trim_start: 0,
+      trim_end: videoDurationSec,
+      volume: ESTATE_DEFAULT_VOLUME,
+      speed: ESTATE_DEFAULT_SPEED,
+    });
+  }, [showEditor, finalProjectUuid, clip, clips, asset.project_uuid, videoAssetUuid, videoDurationSec, createClip]);
 
-  const handleSpeedChange = useCallback(
-    (raw: number | number[]) => {
-      if (typeof raw === "number") {
-        setSpeed(videoAssetUuid, raw);
-      }
-    },
-    [videoAssetUuid, setSpeed],
-  );
+  const [trimStart, setTrimStart] = useState(0);
+  const [trimEnd, setTrimEnd] = useState(5);
+  const [volume, setVolume] = useState(ESTATE_DEFAULT_VOLUME);
+  const [speed, setSpeed] = useState(ESTATE_DEFAULT_SPEED);
+  const [transitionType, setTransitionType] = useState<TimelineTransitionType>(ESTATE_DEFAULT_TRANSITION_ID as TimelineTransitionType);
 
-  const handleCaptionTextChange = useCallback(
-    (value: string) => {
-      setCaptionText(videoAssetUuid, value);
-    },
-    [videoAssetUuid, setCaptionText],
-  );
+  const clipLoadedRef = useRef(false);
+  useEffect(() => {
+    if (!clip || clipLoadedRef.current) return;
+    clipLoadedRef.current = true;
+    setTrimStart(clip.trim_start ?? 0);
+    setTrimEnd(clip.trim_end ?? videoDurationSec);
+    setVolume(clip.volume ?? ESTATE_DEFAULT_VOLUME);
+    setSpeed(clip.speed ?? ESTATE_DEFAULT_SPEED);
+    if (clip.transition_out?.type) {
+      setTransitionType(clip.transition_out.type as TimelineTransitionType);
+    }
+  }, [clip, videoDurationSec]);
 
-  const handleCaptionStartSecChange = useCallback(
-    (value: string) => {
-      const parsed = Number(value);
-      if (Number.isFinite(parsed)) {
-        setCaptionStartSec(videoAssetUuid, parsed);
-      }
-    },
-    [videoAssetUuid, setCaptionStartSec],
-  );
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const scheduleClipUpdate = useCallback((dto: UpdateTimelineClipDto) => {
+    if (!clip) return;
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      updateClip({ uuid: clip.uuid, dto });
+    }, 600);
+  }, [clip, updateClip]);
 
-  const handleCaptionEndSecChange = useCallback(
-    (value: string) => {
-      const parsed = Number(value);
-      if (Number.isFinite(parsed)) {
-        setCaptionEndSec(videoAssetUuid, parsed);
-      }
-    },
-    [videoAssetUuid, setCaptionEndSec],
+  const { data: captions } = useTimelineCaptions(
+    { clip_uuid: clip?.uuid ?? "" },
+    { enabled: !!clip?.uuid },
   );
+  const caption = captions?.[0] ?? null;
+  const { mutate: createCaption } = useCreateTimelineCaption();
+  const { mutate: updateCaption } = useUpdateTimelineCaption();
 
-  const handleCaptionPositionChange = useCallback(
-    (keys: "all" | Iterable<Key>) => {
-      if (keys === "all") {
-        return;
-      }
-      const first = Array.from(keys)[0];
-      if (typeof first === "string") {
-        setCaptionPosition(videoAssetUuid, first);
-      }
-    },
-    [videoAssetUuid, setCaptionPosition],
-  );
+  const [captionText, setCaptionText] = useState("");
+  const [captionStartSec, setCaptionStartSec] = useState(ESTATE_DEFAULT_CAPTION_START_SEC);
+  const [captionEndSec, setCaptionEndSec] = useState(ESTATE_DEFAULT_CAPTION_END_SEC);
+  const [captionPosition, setCaptionPosition] = useState<string>(ESTATE_DEFAULT_CAPTION_POSITION);
+  const [captionStyle, setCaptionStyle] = useState<string>(ESTATE_DEFAULT_CAPTION_STYLE);
 
-  const handleCaptionStyleChange = useCallback(
-    (keys: "all" | Iterable<Key>) => {
-      if (keys === "all") {
-        return;
-      }
-      const first = Array.from(keys)[0];
-      if (typeof first === "string") {
-        setCaptionStyle(videoAssetUuid, first);
-      }
-    },
-    [videoAssetUuid, setCaptionStyle],
-  );
+  const captionLoadedRef = useRef(false);
+  useEffect(() => {
+    if (!caption || captionLoadedRef.current) return;
+    captionLoadedRef.current = true;
+    setCaptionText(caption.text);
+    setCaptionStartSec(caption.start_sec);
+    setCaptionEndSec(caption.end_sec);
+    setCaptionPosition(caption.position ?? ESTATE_DEFAULT_CAPTION_POSITION);
+    setCaptionStyle(caption.style ?? ESTATE_DEFAULT_CAPTION_STYLE);
+  }, [caption]);
 
-  const handleVideoLoadedMetadata = useCallback(
-    (event: SyntheticEvent<HTMLVideoElement>) => {
-      const durationSec = event.currentTarget.duration;
-      if (Number.isFinite(durationSec) && durationSec > 0) {
-        setVideoDurationSec(videoAssetUuid, durationSec);
+  const captionDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const scheduleCaptionUpsert = useCallback((dto: UpdateTimelineCaptionDto & { text: string; start_sec: number; end_sec: number }) => {
+    if (!clip) return;
+    clearTimeout(captionDebounceRef.current);
+    captionDebounceRef.current = setTimeout(() => {
+      if (caption) {
+        updateCaption({ uuid: caption.uuid, dto, clip_uuid: clip.uuid });
+      } else {
+        createCaption({ clip_uuid: clip.uuid, ...dto });
       }
-    },
-    [videoAssetUuid, setVideoDurationSec],
-  );
+    }, 600);
+  }, [clip, caption, createCaption, updateCaption]);
+
+  const handleTrimChange = useCallback((start: number, end: number) => {
+    setTrimStart(start);
+    setTrimEnd(end);
+    scheduleClipUpdate({ trim_start: start, trim_end: end });
+  }, [scheduleClipUpdate]);
+
+  const handleTransitionChange = useCallback((keys: "all" | Iterable<Key>) => {
+    if (keys === "all") return;
+    const first = Array.from(keys)[0];
+    if (typeof first === "string") {
+      const type = first as TimelineTransitionType;
+      setTransitionType(type);
+      scheduleClipUpdate({ transition_out_type: type, transition_out_duration: 0.5 });
+    }
+  }, [scheduleClipUpdate]);
+
+  const handleVolumeChange = useCallback((raw: number | number[]) => {
+    if (typeof raw === "number") {
+      setVolume(raw);
+      scheduleClipUpdate({ volume: raw });
+    }
+  }, [scheduleClipUpdate]);
+
+  const handleSpeedChange = useCallback((raw: number | number[]) => {
+    if (typeof raw === "number") {
+      setSpeed(raw);
+      scheduleClipUpdate({ speed: raw });
+    }
+  }, [scheduleClipUpdate]);
+
+  const handleCaptionTextChange = useCallback((value: string) => {
+    setCaptionText(value);
+    scheduleCaptionUpsert({ text: value, start_sec: captionStartSec, end_sec: captionEndSec, position: captionPosition, style: captionStyle });
+  }, [scheduleCaptionUpsert, captionStartSec, captionEndSec, captionPosition, captionStyle]);
+
+  const handleCaptionStartSecChange = useCallback((value: string) => {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      setCaptionStartSec(parsed);
+      scheduleCaptionUpsert({ text: captionText, start_sec: parsed, end_sec: captionEndSec, position: captionPosition, style: captionStyle });
+    }
+  }, [scheduleCaptionUpsert, captionText, captionEndSec, captionPosition, captionStyle]);
+
+  const handleCaptionEndSecChange = useCallback((value: string) => {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      setCaptionEndSec(parsed);
+      scheduleCaptionUpsert({ text: captionText, start_sec: captionStartSec, end_sec: parsed, position: captionPosition, style: captionStyle });
+    }
+  }, [scheduleCaptionUpsert, captionText, captionStartSec, captionPosition, captionStyle]);
+
+  const handleCaptionPositionChange = useCallback((keys: "all" | Iterable<Key>) => {
+    if (keys === "all") return;
+    const first = Array.from(keys)[0];
+    if (typeof first === "string") {
+      setCaptionPosition(first);
+      scheduleCaptionUpsert({ text: captionText, start_sec: captionStartSec, end_sec: captionEndSec, position: first, style: captionStyle });
+    }
+  }, [scheduleCaptionUpsert, captionText, captionStartSec, captionEndSec, captionStyle]);
+
+  const handleCaptionStyleChange = useCallback((keys: "all" | Iterable<Key>) => {
+    if (keys === "all") return;
+    const first = Array.from(keys)[0];
+    if (typeof first === "string") {
+      setCaptionStyle(first);
+      scheduleCaptionUpsert({ text: captionText, start_sec: captionStartSec, end_sec: captionEndSec, position: captionPosition, style: first });
+    }
+  }, [scheduleCaptionUpsert, captionText, captionStartSec, captionEndSec, captionPosition]);
+
+  const handleVideoLoadedMetadata = useCallback((event: SyntheticEvent<HTMLVideoElement>) => {
+    const durationSec = event.currentTarget.duration;
+    if (Number.isFinite(durationSec) && durationSec > 0) {
+      setVideoDurationSec(durationSec);
+      if (!clipLoadedRef.current) {
+        setTrimEnd(durationSec);
+      }
+    }
+  }, []);
 
   const handleOpenDeleteModal = useCallback(() => {
-    if (!sceneUuid) {
-      return;
-    }
+    if (!sceneUuid) return;
     setIsDeleteModalOpen(true);
   }, [sceneUuid]);
 
   const handleCloseDeleteModal = useCallback(() => {
-    if (isDeletingScene) {
-      return;
-    }
+    if (isDeletingScene) return;
     setIsDeleteModalOpen(false);
   }, [isDeletingScene]);
 
@@ -218,49 +274,29 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
 
   useEffect(() => {
     const el = videoRef.current;
-    if (!el) {
-      return;
-    }
+    if (!el) return;
     el.volume = volume;
     el.playbackRate = speed;
   }, [volume, speed, videoUrl]);
 
-  const handlePreviewMouseDown = useCallback(
-    (event: ReactMouseEvent) => {
-      if (reorder?.canReorder) {
-        event.stopPropagation();
-      }
-    },
-    [reorder?.canReorder],
-  );
+  const handlePreviewMouseDown = useCallback((event: ReactMouseEvent) => {
+    if (reorder?.canReorder) {
+      event.stopPropagation();
+    }
+  }, [reorder?.canReorder]);
 
   const handleConfirmDeleteScene = useCallback(async () => {
-    if (!sceneUuid) {
-      return;
-    }
+    if (!sceneUuid) return;
     await deleteScene(sceneUuid);
-    if (promptImageUuid) {
-      removePromptImageAsset(promptImageUuid);
-    }
     setIsDeleteModalOpen(false);
-  }, [sceneUuid, deleteScene, promptImageUuid, removePromptImageAsset]);
+  }, [sceneUuid, deleteScene]);
 
   const previewShell = compact ? "relative h-24 w-full overflow-hidden rounded-lg bg-default-200/40 sm:h-28" : "relative aspect-video w-full overflow-hidden rounded-xl bg-default-200/40";
 
   const reorderHandlers = useVideoReorderItem(
     reorder
-      ? {
-          index: reorder.index,
-          canReorder: reorder.canReorder,
-          onReorder: reorder.onReorder,
-          setDragIndex: reorder.setDragIndex,
-        }
-      : {
-          index: 0,
-          canReorder: false,
-          onReorder: () => {},
-          setDragIndex: () => {},
-        },
+      ? { index: reorder.index, canReorder: reorder.canReorder, onReorder: reorder.onReorder, setDragIndex: reorder.setDragIndex }
+      : { index: 0, canReorder: false, onReorder: () => {}, setDragIndex: () => {} },
   );
 
   const card = (
@@ -269,21 +305,15 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
         <span className={compact ? "text-tiny font-semibold text-foreground" : "text-small font-semibold text-foreground"}>Scene {sceneOrder ?? "—"}</span>
         <div className="flex items-center gap-2">
           {display.status === ProjectAssetStatuses.FAILED ? (
-            <Chip size="sm" variant="flat" color="danger">
-              Failed
-            </Chip>
+            <Chip size="sm" variant="flat" color="danger">Failed</Chip>
           ) : display.status === ProjectAssetStatuses.COMPLETED ? (
-            <Chip size="sm" variant="flat" color="success">
-              Complete
-            </Chip>
+            <Chip size="sm" variant="flat" color="success">Complete</Chip>
           ) : display.status === ProjectAssetStatuses.PENDING || display.status === ProjectAssetStatuses.PROCESSING ? (
             <Chip size="sm" variant="flat" color="success">
               {display.status === ProjectAssetStatuses.PENDING ? "Queued" : "Processing"}
             </Chip>
           ) : (
-            <Chip size="sm" variant="flat">
-              {display.status}
-            </Chip>
+            <Chip size="sm" variant="flat">{display.status}</Chip>
           )}
           {isDevelopment && !!sceneUuid && (
             <Button size="sm" color="danger" variant="flat" isIconOnly onPress={handleOpenDeleteModal} aria-label="Delete scene">
@@ -308,7 +338,11 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
           )}
           {display.status === ProjectAssetStatuses.COMPLETED && (
             <div className="relative h-full w-full" onMouseDown={videoUrl ? handlePreviewMouseDown : undefined}>
-              {videoUrl ? <video ref={videoRef} src={videoUrl} className="h-full w-full object-cover" onLoadedMetadata={handleVideoLoadedMetadata} controls muted playsInline loop preload="metadata" /> : <img alt="" src={thumbUrl} className="h-full w-full object-cover" />}
+              {videoUrl ? (
+                <video ref={videoRef} src={videoUrl} className="h-full w-full object-cover" onLoadedMetadata={handleVideoLoadedMetadata} controls muted playsInline loop preload="metadata" />
+              ) : (
+                <img alt="" src={thumbUrl} className="h-full w-full object-cover" />
+              )}
             </div>
           )}
         </div>
@@ -317,17 +351,17 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
             <Accordion className="px-0 gap-0 border border-default-200 dark:border-default-100/20 rounded-xl overflow-hidden">
               <AccordionItem key="caption-options" aria-label="Caption options" title={<span className="text-sm font-medium">Captions</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
                 <div className="flex flex-col gap-4">
-                  <Input label="Captions" size="sm" value={caption.text} onValueChange={handleCaptionTextChange} />
+                  <Input label="Captions" size="sm" value={captionText} onValueChange={handleCaptionTextChange} />
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <Input label="Caption Start (sec)" type="number" size="sm" value={caption.startSec.toString()} onValueChange={handleCaptionStartSecChange} />
-                    <Input label="Caption End (sec)" type="number" size="sm" value={caption.endSec.toString()} onValueChange={handleCaptionEndSecChange} />
+                    <Input label="Caption Start (sec)" type="number" size="sm" value={captionStartSec.toString()} onValueChange={handleCaptionStartSecChange} />
+                    <Input label="Caption End (sec)" type="number" size="sm" value={captionEndSec.toString()} onValueChange={handleCaptionEndSecChange} />
                   </div>
-                  <Select label="Caption Position" size="sm" selectedKeys={new Set([caption.position])} onSelectionChange={handleCaptionPositionChange} classNames={{ trigger: "min-h-10" }}>
+                  <Select label="Caption Position" size="sm" selectedKeys={new Set([captionPosition])} onSelectionChange={handleCaptionPositionChange} classNames={{ trigger: "min-h-10" }}>
                     {ESTATE_CAPTION_POSITION_OPTIONS.map((opt) => (
                       <SelectItem key={opt.id}>{opt.label}</SelectItem>
                     ))}
                   </Select>
-                  <Select label="Caption Style" size="sm" selectedKeys={new Set([caption.style])} onSelectionChange={handleCaptionStyleChange} classNames={{ trigger: "min-h-10" }}>
+                  <Select label="Caption Style" size="sm" selectedKeys={new Set([captionStyle])} onSelectionChange={handleCaptionStyleChange} classNames={{ trigger: "min-h-10" }}>
                     {ESTATE_CAPTION_STYLE_OPTIONS.map((opt) => (
                       <SelectItem key={opt.id}>{opt.label}</SelectItem>
                     ))}
@@ -336,12 +370,12 @@ export function VideoCard({ asset, compact = false, videoAssetUuid, reorder }: V
               </AccordionItem>
               <AccordionItem key="advanced-video-options" aria-label="Advanced video options" title={<span className="text-sm font-medium">Advanced</span>} classNames={{ trigger: "py-3 px-4", content: "px-4 pb-4" }}>
                 <div className="flex flex-col gap-4">
-                  <Select label="Transition" size="sm" selectedKeys={new Set([transitionId])} onSelectionChange={handleTransitionChange} classNames={{ trigger: "min-h-10" }}>
+                  <Select label="Transition" size="sm" selectedKeys={new Set([transitionType])} onSelectionChange={handleTransitionChange} classNames={{ trigger: "min-h-10" }}>
                     {ESTATE_TRANSITION_OPTIONS.map((opt) => (
                       <SelectItem key={opt.id}>{opt.label}</SelectItem>
                     ))}
                   </Select>
-                  <TrimRangeField start={trimRange.start} end={trimRange.end} maxSec={videoDurationSec} onChange={handleTrimChange} />
+                  <TrimRangeField start={trimStart} end={trimEnd} maxSec={videoDurationSec} onChange={handleTrimChange} />
                   <Slider aria-label="Volume" label="Volume" size="sm" minValue={ESTATE_VOLUME_MIN} maxValue={ESTATE_VOLUME_MAX} step={ESTATE_VOLUME_STEP} value={volume} onChange={handleVolumeChange} getValue={(value) => `${Math.round(Number(value) * 100)}%`} />
                   <Slider aria-label="Speed" label="Speed" size="sm" minValue={ESTATE_SPEED_MIN} maxValue={ESTATE_SPEED_MAX} step={ESTATE_SPEED_STEP} value={speed} onChange={handleSpeedChange} getValue={(value) => `${Number(value).toFixed(1)}x`} />
                 </div>

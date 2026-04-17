@@ -1,10 +1,10 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
-import { FinalProject, CreateFinalProjectDto, UpdateFinalProjectDto } from "../interfaces/final-projects.interfaces";
+import { FinalProject, CreateFinalProjectDto, UpdateFinalProjectDto, FinalProjectQueryDto } from "../interfaces/final-projects.interfaces";
 
-export const getFinalProjects = async (): Promise<FinalProject[]> => {
+export const getFinalProjects = async (query?: FinalProjectQueryDto): Promise<FinalProject[]> => {
     try {
-        const response = await axiosInstance.get<FinalProject[]>(ApiRoutes.final_projects.prefix);
+        const response = await axiosInstance.get<FinalProject[]>(ApiRoutes.final_projects.prefix, { params: query });
         return response.data;
     } catch (error: any) {
         console.error(error?.response?.data?.message || "Failed to fetch final projects");

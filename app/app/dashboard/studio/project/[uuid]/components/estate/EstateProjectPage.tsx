@@ -1,24 +1,8 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
 import { EstateStepper } from "./components/EstateStepper";
-import { useMockVideoGeneration } from "./hooks/useMockVideoGeneration";
-import { useEstateWorkflowStore } from "./stores/estate-workflow.store";
 
 export function EstateProjectPage() {
-  const params = useParams<{ uuid: string }>();
-  const projectUuid = params?.uuid ?? "";
-  const reset = useEstateWorkflowStore((s) => s.reset);
-  useMockVideoGeneration();
-
-  useEffect(() => {
-    reset();
-    return () => {
-      reset();
-    };
-  }, [reset, projectUuid]);
-
   return (
     <div className="flex flex-1 min-h-0 flex-col overflow-auto p-4 lg:p-6">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">

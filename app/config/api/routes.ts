@@ -68,4 +68,20 @@ export const ApiRoutes = {
     google_maps: {
         timezone: "/google-maps/timezone",
     },
+    timeline_clips: {
+        prefix: "/timeline-clips",
+        timeline_clip: (uuid: string) => `/timeline-clips/${uuid}`,
+    },
+    timeline_captions: {
+        prefix: "/timeline-captions",
+        timeline_caption: (uuid: string) => `/timeline-captions/${uuid}`,
+    },
+    timeline_transitions: {
+        prefix: "/timeline-transitions",
+        timeline_transition: (uuid: string) => `/timeline-transitions/${uuid}`,
+    },
+    timeline_music: {
+        prefix: "/timeline-music",
+        final_project_music: (final_project_uuid: string) => `/timeline-music/final-projects/${final_project_uuid}`,
+    },
 }

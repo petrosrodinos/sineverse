@@ -31,6 +31,7 @@ import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
 import {
   ESTATE_WALKTHROUGH_VIDEO_MODEL,
   ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
+  ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
 } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 @Injectable()
@@ -66,13 +67,16 @@ export class ProjectAssetsService {
   async findAll(user_uuid: string, query: ProjectAssetQueryDto) {
     try {
       const {
-        page = 1,
-        limit = 10,
+        page: rawPage = 1,
+        limit: rawLimit = 10,
         type,
         role,
         selected,
         ...filterQuery
       } = query;
+
+      const page = Number(rawPage) || 1;
+      const limit = Number(rawLimit) || 10;
 
       const where: any = {
         user_uuid,
@@ -117,8 +121,8 @@ export class ProjectAssetsService {
         data,
         pagination: {
           total,
-          page,
-          limit,
+          page: Number(page),
+          limit: Number(limit),
         },
       };
     } catch (error) {
@@ -418,6 +422,7 @@ export class ProjectAssetsService {
               scene_uuid: r.task.scene.uuid,
               scene_variation_uuid: r.task.variation.uuid,
               ai_model: ESTATE_WALKTHROUGH_VIDEO_MODEL,
+              duration_sec: ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
               prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
               prompt_image_uuids: [r.task.promptAsset.uuid],
               include_sound: false,

@@ -1,6 +1,7 @@
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
 
 export const ESTATE_WALKTHROUGH_VIDEO_MODEL = VideoModels.VEO_2_IMAGE;
+export const ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC = 4;
 
 export const ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT = [
   'Premium real-estate and short-term rental walkthrough from the reference interior photo.',

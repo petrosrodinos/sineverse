@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateFinalProjectDto } from './dto/create-final-project.dto';
 import { UpdateFinalProjectDto } from './dto/update-final-project.dto';
+import { FinalProjectQueryDto } from './dto/query-final-project.dto';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 
 @Injectable()
@@ -35,9 +36,13 @@ export class FinalProjectsService {
     }
   }
 
-  async findAll(user_uuid: string) {
+  async findAll(user_uuid: string, query?: FinalProjectQueryDto) {
     try {
-      return await this.prisma.finalProject.findMany({ where: { user_uuid } });
+      const where: Record<string, unknown> = { user_uuid };
+      if (query?.project_uuid) {
+        where.project_uuid = query.project_uuid;
+      }
+      return await this.prisma.finalProject.findMany({ where, orderBy: { created_at: 'desc' } });
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to retrieve final projects',
@@ -50,6 +55,12 @@ export class FinalProjectsService {
     try {
       const finalProject = await this.prisma.finalProject.findFirst({
         where: { uuid, user_uuid },
+        include: {
+          timeline_clips: {
+            include: { transition_in: true, transition_out: true, captions: true },
+            orderBy: { start_sec: 'asc' },
+          },
+        },
       });
       if (!finalProject) throw new NotFoundException('Final project not found');
       return finalProject;

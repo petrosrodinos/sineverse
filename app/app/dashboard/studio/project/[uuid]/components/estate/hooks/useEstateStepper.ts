@@ -2,9 +2,15 @@
 
 import { useMemo } from "react";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
-import { useEstateWorkflowStore } from "../stores/estate-workflow.store";
-import { canNavigateToStep } from "../utils/estate-workflow.utils";
+
+type EstateStepperInput = {
+  activeStep: WorkflowStep;
+  promptImageAssets: ProjectAsset[];
+  videoAssets: ProjectAsset[];
+  pendingFilesCount: number;
+};
 
 const STEP_LABELS: readonly { step: WorkflowStep; title: string; subtitle: string }[] = [
   { step: 1, title: "Upload Photos", subtitle: "Add listing images" },
@@ -12,60 +18,47 @@ const STEP_LABELS: readonly { step: WorkflowStep; title: string; subtitle: strin
   { step: 3, title: "Generate Final Video", subtitle: "Review and render" },
 ];
 
-export function useEstateStepper() {
-  const activeStep = useEstateWorkflowStore((s) => s.activeStep);
-  const promptImageAssets = useEstateWorkflowStore((s) => s.promptImageAssets);
-  const videoAssetsByUuid = useEstateWorkflowStore((s) => s.videoAssetsByUuid);
-  const videoOrder = useEstateWorkflowStore((s) => s.videoOrder);
-  const goNext = useEstateWorkflowStore((s) => s.goNext);
-  const goBack = useEstateWorkflowStore((s) => s.goBack);
-  const goToStep = useEstateWorkflowStore((s) => s.goToStep);
-
-  const navSlice = useMemo(
-    () => ({
-      promptImageAssets,
-      videoAssetsByUuid,
-      videoOrder,
-    }),
-    [promptImageAssets, videoAssetsByUuid, videoOrder],
-  );
-
-  const canGoNextFromStep1 = useMemo(
+export function useEstateStepper({
+  activeStep,
+  promptImageAssets,
+  videoAssets,
+  pendingFilesCount,
+}: EstateStepperInput) {
+  const uploadsReady = useMemo(
     () =>
       promptImageAssets.length > 0 &&
       promptImageAssets.every((a) => a.status === ProjectAssetStatuses.COMPLETED),
     [promptImageAssets],
   );
 
-  const canGoNextFromStep2 = useMemo(
+  const videosReady = useMemo(
     () =>
-      videoOrder.length > 0 &&
-      videoOrder.every((id) => videoAssetsByUuid[id]?.status === ProjectAssetStatuses.COMPLETED),
-    [videoOrder, videoAssetsByUuid],
+      videoAssets.length > 0 &&
+      videoAssets.every((a) => a.status === ProjectAssetStatuses.COMPLETED),
+    [videoAssets],
   );
+
+  const canGoNextFromStep1 = uploadsReady || pendingFilesCount > 0;
+  const canGoNextFromStep2 = videosReady;
 
   const canGoNext =
     activeStep === 1 ? canGoNextFromStep1 : activeStep === 2 ? canGoNextFromStep2 : false;
 
   const canGoBack = activeStep > 1;
 
-  const stepReachable = useMemo(
+  const stepReachable: Record<WorkflowStep, boolean> = useMemo(
     () => ({
-      1: canNavigateToStep(navSlice, 1),
-      2: canNavigateToStep(navSlice, 2),
-      3: canNavigateToStep(navSlice, 3),
+      1: true,
+      2: uploadsReady,
+      3: uploadsReady && videosReady,
     }),
-    [navSlice],
+    [uploadsReady, videosReady],
   );
 
   return {
-    activeStep,
     stepLabels: STEP_LABELS,
     canGoNext,
     canGoBack,
-    goNext,
-    goBack,
-    goToStep,
     stepReachable,
   };
 }

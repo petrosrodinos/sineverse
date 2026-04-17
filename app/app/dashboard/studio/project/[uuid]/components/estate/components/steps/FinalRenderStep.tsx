@@ -2,76 +2,122 @@
 
 import { Button } from "@heroui/button";
 import { Select, SelectItem } from "@heroui/select";
-import { Spinner } from "@heroui/spinner";
 import type { Key } from "react";
-import { Download, ExternalLink } from "lucide-react";
-import { useCallback } from "react";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
-import { useEstateWorkflowStore } from "../../stores/estate-workflow.store";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTimelineMusic, useUpsertTimelineMusic } from "@/features/timeline-music/hooks/use-timeline-music";
+import {
+  ESTATE_AUDIO_TRACK_OPTIONS,
+  ESTATE_DEFAULT_AUDIO_TRACK_ID,
+} from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
-export function FinalRenderStep() {
-  const finalVideoAsset = useEstateWorkflowStore((s) => s.finalVideoAsset);
-  const audioTrackId = useEstateWorkflowStore((s) => s.estateAudioTrackId ?? ESTATE_DEFAULT_AUDIO_TRACK_ID);
-  const setEstateAudioTrack = useEstateWorkflowStore((s) => s.setEstateAudioTrack);
-  const startFinalRender = useEstateWorkflowStore((s) => s.startFinalRender);
+const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
+  "soft-ambient.mp3": "soft_ambient",
+  "minimal-piano.mp3": "minimal_piano",
+  "light-upbeat.mp3": "light_upbeat",
+  "cinematic-pad.mp3": "cinematic_pad",
+  "nostalgic-soft.mp3": "nostalgic_soft",
+};
 
-  const handleGenerate = useCallback(() => {
-    startFinalRender();
-  }, [startFinalRender]);
+type FinalRenderStepProps = {
+  finalProjectUuid: string | null;
+};
 
-  const handleAudioChange = useCallback(
-    (keys: "all" | Iterable<Key>) => {
-      if (keys === "all") {
-        return;
-      }
-      const first = Array.from(keys)[0];
-      if (typeof first === "string") {
-        setEstateAudioTrack(first);
-      }
-    },
-    [setEstateAudioTrack],
+export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
+  const [audioTrackId, setAudioTrackId] = useState<string>(ESTATE_DEFAULT_AUDIO_TRACK_ID);
+  const [volume, setVolume] = useState(1);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const { data: timelineMusic } = useTimelineMusic(finalProjectUuid ?? "");
+  const { mutate: upsertTimelineMusic } = useUpsertTimelineMusic();
+
+  const selectedAudioOption = useMemo(
+    () => ESTATE_AUDIO_TRACK_OPTIONS.find((opt) => opt.id === audioTrackId) ?? ESTATE_AUDIO_TRACK_OPTIONS[0],
+    [audioTrackId],
   );
 
-  const isRendering = finalVideoAsset?.status === ProjectAssetStatuses.PROCESSING;
-  const isDone = finalVideoAsset?.status === ProjectAssetStatuses.COMPLETED;
+  const currentMusic = timelineMusic?.[0] ?? null;
 
-  const videoUrl = finalVideoAsset?.document.url ?? "";
-  const fileName = finalVideoAsset?.document.filename ?? "video.mp4";
+  useEffect(() => {
+    if (!currentMusic?.audio?.filename) {
+      return;
+    }
+    const mappedTrackId = ESTATE_AUDIO_TRACK_ID_BY_FILENAME[currentMusic.audio.filename];
+    if (mappedTrackId) {
+      setAudioTrackId(mappedTrackId);
+    }
+    setVolume(currentMusic.volume ?? 1);
+  }, [currentMusic]);
+
+  useEffect(() => {
+    if (!audioRef.current) {
+      return;
+    }
+    audioRef.current.volume = volume;
+  }, [volume]);
+
+  const handleAudioChange = useCallback((keys: "all" | Iterable<Key>) => {
+    if (keys === "all") return;
+    const first = Array.from(keys)[0];
+    if (typeof first === "string") {
+      setAudioTrackId(first);
+      if (!finalProjectUuid) {
+        return;
+      }
+      upsertTimelineMusic({
+        finalProjectUuid,
+        dto: {
+          track_id: first,
+          volume,
+          start_sec: 0,
+          end_sec: currentMusic?.end_sec ?? 4,
+        },
+      });
+    }
+  }, [finalProjectUuid, upsertTimelineMusic, volume, currentMusic]);
+
+  const handleAudioMetadata = useCallback(() => {
+    const duration = audioRef.current?.duration;
+    if (!finalProjectUuid || !duration || !Number.isFinite(duration) || audioTrackId === "none") {
+      return;
+    }
+    upsertTimelineMusic({
+      finalProjectUuid,
+      dto: {
+        track_id: audioTrackId,
+        volume,
+        start_sec: 0,
+        end_sec: duration,
+      },
+    });
+  }, [finalProjectUuid, audioTrackId, volume, upsertTimelineMusic]);
 
   return (
     <div className="flex flex-col items-stretch gap-6">
-      <Select label="Audio" size="sm" selectedKeys={new Set([audioTrackId])} onSelectionChange={handleAudioChange} classNames={{ trigger: "min-h-10" }}>
+      <Select
+        label="Audio"
+        size="sm"
+        selectedKeys={new Set([audioTrackId])}
+        onSelectionChange={handleAudioChange}
+        classNames={{ trigger: "min-h-10" }}
+      >
         {ESTATE_AUDIO_TRACK_OPTIONS.map((opt) => (
           <SelectItem key={opt.id}>{opt.label}</SelectItem>
         ))}
       </Select>
-      {!isRendering && !isDone && (
-        <Button color="secondary" size="lg" className="font-semibold" onPress={handleGenerate}>
-          Generate Video
-        </Button>
+
+      {selectedAudioOption.id !== "none" && selectedAudioOption.src && (
+        <audio
+          ref={audioRef}
+          controls
+          preload="metadata"
+          src={selectedAudioOption.src}
+          onLoadedMetadata={handleAudioMetadata}
+        />
       )}
-      {isRendering === true && (
-        <div className="flex min-h-[200px] items-center justify-center gap-3 rounded-2xl border border-default-200 bg-default-100/40 dark:border-default-100/20">
-          <Spinner color="secondary" size="lg" />
-          <span className="text-small text-default-500">Rendering</span>
-        </div>
-      )}
-      {isDone === true && finalVideoAsset && videoUrl.length > 0 && (
-        <div className="flex flex-col gap-4">
-          <div className="overflow-hidden rounded-2xl border border-default-200 bg-black/40 dark:border-default-100/20">
-            <video className="aspect-video w-full max-w-4xl mx-auto" controls src={videoUrl} playsInline />
-          </div>
-          <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-            <Button as="a" href={videoUrl} download={fileName} color="secondary" className="font-semibold" startContent={<Download className="h-4 w-4" />}>
-              Download
-            </Button>
-            <Button as="a" href={videoUrl} target="_blank" rel="noopener noreferrer" variant="bordered" startContent={<ExternalLink className="h-4 w-4" />}>
-              Open in new tab
-            </Button>
-          </div>
-        </div>
-      )}
+
+      <Button color="secondary" size="lg" className="font-semibold" isDisabled>
+        Generate Video (coming soon)
+      </Button>
     </div>
   );
 }

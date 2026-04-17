@@ -20,6 +20,10 @@ import { ProjectAssetsModule } from './modules/project-assets/project-assets.mod
 import { CreditsModule } from './modules/credits/credits.module';
 import { UsersModule } from './modules/users/users.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { TimelineClipsModule } from './modules/timeline-clips/timeline-clips.module';
+import { TimelineCaptionsModule } from './modules/timeline-captions/timeline-captions.module';
+import { TimelineTransitionsModule } from './modules/timeline-transitions/timeline-transitions.module';
+import { TimelineMusicModule } from './modules/timeline-music/timeline-music.module';
 
 @Module({
   imports: [
@@ -43,6 +47,10 @@ import { AdminModule } from './modules/admin/admin.module';
     CreditsModule,
     UsersModule,
     AdminModule,
+    TimelineClipsModule,
+    TimelineCaptionsModule,
+    TimelineTransitionsModule,
+    TimelineMusicModule,
   ],
   controllers: [AppController],
   providers: [AppService],
