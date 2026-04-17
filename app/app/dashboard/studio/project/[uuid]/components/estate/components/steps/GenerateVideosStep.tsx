@@ -26,6 +26,7 @@ import { moveIdInOrder } from "../../utils/estate-workflow.utils";
 type GenerateVideosStepProps = {
   finalProjectUuid: string | null;
   hasPromptImages: boolean;
+  walkthroughAiModel: string;
 };
 
 const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
@@ -36,7 +37,7 @@ const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
   "nostalgic-soft.mp3": "nostalgic_soft",
 };
 
-export function GenerateVideosStep({ finalProjectUuid, hasPromptImages }: GenerateVideosStepProps) {
+export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthroughAiModel }: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
   const [audioTrackId, setAudioTrackId] = useState<string>(ESTATE_DEFAULT_AUDIO_TRACK_ID);
@@ -152,7 +153,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages }: Genera
       return;
     }
     try {
-      await createWalkthroughVideos({ project_uuid: projectUuid });
+      await createWalkthroughVideos({ project_uuid: projectUuid, ai_model: walkthroughAiModel });
     } catch {
       addToast({
         title: "Could not start walkthrough clips",
@@ -160,7 +161,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages }: Genera
         severity: "danger",
       });
     }
-  }, [projectUuid, hasPromptImages, createWalkthroughVideos]);
+  }, [projectUuid, hasPromptImages, createWalkthroughVideos, walkthroughAiModel]);
 
   useEffect(() => {
     if (!projectUuid || !hasPromptImages || videoOrder.length > 0 || isLoading) return;

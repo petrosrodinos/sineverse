@@ -18,9 +18,12 @@ export const VIDEO_MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
   [VideoModels.KLING_VIDEO_V3_STANDARD]:
     KlingSchemas.KlingVideoV3TextToVideoSchema,
   [VideoModels.KLING_VIDEO_V3_PRO]: KlingSchemas.KlingVideoV3TextToVideoSchema,
+  [VideoModels.KLING_VIDEO_V3_STANDARD_IMAGE]:
+    KlingSchemas.KlingVideoV3ImageToVideoSchema,
   [VideoModels.KLING_STANDARD_IMAGE_TO_VIDEO]:
     KlingSchemas.KlingStandardImageToVideoSchema,
   [VideoModels.KLING_2_1]: KlingSchemas.KlingV21TextToVideoSchema,
+  [VideoModels.KLING_2_1_IMAGE]: KlingSchemas.KlingImageToVideoV21Schema,
 
   // Google
   [VideoModels.VEO_3]: GoogleSchemas.GoogleVeo3T2VideoSchema,

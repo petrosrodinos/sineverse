@@ -29,6 +29,41 @@ export const ESTATE_AUDIO_TRACK_OPTIONS = [
   { id: "nostalgic_soft", label: "Nostalgic soft", src: "/estate-audios/nostalgic-soft.mp3" },
 ] as const;
 
+export const ESTATE_VIDEO_MODEL_OPTIONS = [
+  {
+    id: "KLING_2_6_PRO_I2V",
+    label: "Kling 2.6 Pro (Best Overall)",
+    price: 0.091,
+    api_value: "klingai/video-v3-standard-image-to-video",
+  },
+  {
+    id: "LTXV_2_FAST",
+    label: "LTXV 2 Fast (Cheapest)",
+    price: 0.052,
+    api_value: "bytedance/seedance-1-0-lite-i2v",
+  },
+  {
+    id: "WAN_2_6",
+    label: "Wan 2.6 (High Consistency)",
+    price: 0.13,
+    api_value: "klingai/v2.1-master-image-to-video",
+  },
+  {
+    id: "KLING_O1_I2V",
+    label: "Kling O1 Image-to-Video (Stable Alternative)",
+    price: 0.118,
+    api_value: "kling-video/v1/standard/image-to-video",
+  },
+  {
+    id: "VEO_3_1_LITE",
+    label: "Veo 3.1 Lite (Premium Quality)",
+    price: 0.104,
+    api_value: "google/veo-3.0-i2v",
+  },
+] as const;
+export type EstateVideoModelOption = (typeof ESTATE_VIDEO_MODEL_OPTIONS)[number];
+export type EstateVideoModelId = EstateVideoModelOption["id"];
+
 export const ESTATE_CAPTION_POSITION_OPTIONS = [
   { id: "BOTTOM_CENTER", label: "Bottom center" },
   { id: "BOTTOM_LEFT", label: "Bottom left" },
@@ -48,6 +83,7 @@ export const ESTATE_CAPTION_STYLE_OPTIONS = [
 
 export const ESTATE_DEFAULT_TRANSITION_ID = ESTATE_TRANSITION_OPTIONS[0].id;
 export const ESTATE_DEFAULT_AUDIO_TRACK_ID = ESTATE_AUDIO_TRACK_OPTIONS[0].id;
+export const ESTATE_DEFAULT_VIDEO_MODEL_ID: EstateVideoModelId = "LTXV_2_FAST";
 export const ESTATE_DEFAULT_VOLUME = 1;
 export const ESTATE_DEFAULT_SPEED = 1;
 export const ESTATE_DEFAULT_CAPTION_START_SEC = 0;

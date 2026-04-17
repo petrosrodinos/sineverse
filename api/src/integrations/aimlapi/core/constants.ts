@@ -3,8 +3,10 @@ export const VideoModels = {
   KLING_STANDARD_TEXT_TO_VIDEO: 'kling-video/v1/standard/text-to-video',
   KLING_VIDEO_V3_STANDARD: 'klingai/video-v3-standard-text-to-video',
   KLING_VIDEO_V3_PRO: 'klingai/video-v3-pro-text-to-video',
+  KLING_VIDEO_V3_STANDARD_IMAGE: 'klingai/video-v3-standard-image-to-video',
   KLING_STANDARD_IMAGE_TO_VIDEO: 'kling-video/v1/standard/image-to-video',
   KLING_2_1: 'klingai/v2.1-master-text-to-video',
+  KLING_2_1_IMAGE: 'klingai/v2.1-master-image-to-video',
 
   // Google
   VEO_3: 'google/veo3',

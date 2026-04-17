@@ -1,14 +1,19 @@
 "use client";
 
+import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { ImagePlus, Plus, Trash2, Upload } from "lucide-react";
 import { useParams } from "next/navigation";
+import type { Key } from "react";
 import { useCallback, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { addToast } from "@heroui/toast";
 import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
+import { ESTATE_VIDEO_MODEL_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"] as const;
 const ACCEPTED_IMAGE_INPUT = ".jpg,.jpeg,.png";
@@ -18,11 +23,16 @@ type PendingFile = { id: string; file: File; previewUrl: string };
 type UploadPhotosStepProps = {
   pendingFiles: PendingFile[];
   setPendingFiles: React.Dispatch<React.SetStateAction<PendingFile[]>>;
+  selectedVideoModelId: string;
+  onVideoModelChange: (id: string) => void;
 };
 
-export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotosStepProps) {
+export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoModelId, onVideoModelChange }: UploadPhotosStepProps) {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
+  const { data: session, status } = useSession();
+  const isSessionLoading = status === "loading";
+  const isAdmin = !isSessionLoading && (session?.role === RoleTypes.ADMIN || session?.role === RoleTypes.SUPER_ADMIN);
 
   const { data: scenes, isLoading } = useScenes(projectUuid ? { project_uuid: projectUuid } : undefined, { enabled: !!projectUuid });
 
@@ -147,6 +157,13 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
 
   const isConfirmModalOpen = pendingRemoveAsset !== null || pendingRemoveFileId !== null;
   const confirmModalDescription = pendingRemoveFileId !== null ? "Remove this photo from the list?" : "Delete this scene and its image from the project? This cannot be undone.";
+  const handleVideoModelChange = useCallback((keys: "all" | Iterable<Key>) => {
+    if (keys === "all") return;
+    const first = Array.from(keys)[0];
+    if (typeof first === "string") {
+      onVideoModelChange(first);
+    }
+  }, [onVideoModelChange]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -221,6 +238,22 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles }: UploadPhotos
           )}
         </div>
       </div>
+
+      {isAdmin && hasPhotos && (
+        <Select
+          label="Walkthrough model"
+          size="sm"
+          selectedKeys={new Set([selectedVideoModelId])}
+          onSelectionChange={handleVideoModelChange}
+          classNames={{ trigger: "min-h-10" }}
+        >
+          {ESTATE_VIDEO_MODEL_OPTIONS.map((option) => (
+            <SelectItem key={option.id}>
+              {`${option.label} - $${option.price.toFixed(3)}/sec`}
+            </SelectItem>
+          ))}
+        </Select>
+      )}
 
       <ConfirmationModal isOpen={isConfirmModalOpen} onClose={handleCloseRemoveModal} onConfirm={handleConfirmRemove} title="Remove photo" description={confirmModalDescription} confirmText="Remove" isLoading={isDeletingScene} />
     </div>

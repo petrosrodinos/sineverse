@@ -10,7 +10,6 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
-  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
@@ -18,6 +17,7 @@ import {
   CreateProjectAssetDto,
   GenerateProjectAssetImageDto,
   CreateProjectAssetVideoDto,
+  CreateEstateWalkthroughVideosDto,
 } from './dto/create-project-asset.dto';
 import { ProjectAssetQueryDto } from './dto/query-project-asset.dto';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
@@ -73,11 +73,12 @@ export class ProjectAssetsController {
   @ApiResponse({ status: 201, description: 'Walkthrough video jobs created.' })
   createEstateWalkthroughVideos(
     @CurrentUser('uuid') user_uuid: string,
-    @Body('project_uuid', ParseUUIDPipe) project_uuid: string,
+    @Body() dto: CreateEstateWalkthroughVideosDto,
   ) {
     return this.projectAssetsService.createEstateWalkthroughVideos(
       user_uuid,
-      project_uuid,
+      dto.project_uuid,
+      dto.ai_model,
     );
   }
 

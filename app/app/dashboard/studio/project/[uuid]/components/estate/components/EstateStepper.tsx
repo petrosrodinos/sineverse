@@ -10,6 +10,7 @@ import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.
 import { useScenes, useCreateEstateScenesFromImages } from "@/features/scenes/hooks/use-scenes";
 import { useFinalProjectByProject } from "@/features/final-projects/hooks/use-final-projects";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { ESTATE_DEFAULT_VIDEO_MODEL_ID, ESTATE_VIDEO_MODEL_OPTIONS } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { FinalRenderStep } from "./steps/FinalRenderStep";
 import { GenerateVideosStep } from "./steps/GenerateVideosStep";
@@ -23,6 +24,7 @@ export function EstateStepper() {
 
   const [activeStep, setActiveStep] = useState<WorkflowStep>(1);
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
+  const [selectedVideoModelId, setSelectedVideoModelId] = useState<string>(ESTATE_DEFAULT_VIDEO_MODEL_ID);
 
   const { data: scenes } = useScenes(
     projectUuid ? { project_uuid: projectUuid } : undefined,
@@ -56,6 +58,12 @@ export function EstateStepper() {
 
   const pendingFilesRef = useRef(pendingFiles);
   pendingFilesRef.current = pendingFiles;
+  const selectedVideoModel = useMemo(
+    () =>
+      ESTATE_VIDEO_MODEL_OPTIONS.find((option) => option.id === selectedVideoModelId) ??
+      ESTATE_VIDEO_MODEL_OPTIONS[0],
+    [selectedVideoModelId],
+  );
 
   const handleStepClick = useCallback((step: WorkflowStep) => () => {
     setActiveStep(step);
@@ -131,8 +139,15 @@ export function EstateStepper() {
 
       <div className="rounded-2xl border border-default-200 bg-default-100/40 p-3 shadow-sm dark:border-default-100/20 dark:bg-default-100/5 sm:p-4 md:p-8">
         <div className="transition-opacity duration-300">
-          {activeStep === 1 && <UploadPhotosStep pendingFiles={pendingFiles} setPendingFiles={setPendingFiles} />}
-          {activeStep === 2 && <GenerateVideosStep finalProjectUuid={finalProject?.uuid ?? null} hasPromptImages={promptImageAssets.length > 0} />}
+          {activeStep === 1 && (
+            <UploadPhotosStep
+              pendingFiles={pendingFiles}
+              setPendingFiles={setPendingFiles}
+              selectedVideoModelId={selectedVideoModelId}
+              onVideoModelChange={setSelectedVideoModelId}
+            />
+          )}
+          {activeStep === 2 && <GenerateVideosStep finalProjectUuid={finalProject?.uuid ?? null} hasPromptImages={promptImageAssets.length > 0} walkthroughAiModel={selectedVideoModel.api_value} />}
           {activeStep === 3 && <FinalRenderStep finalProjectUuid={finalProject?.uuid ?? null} />}
         </div>
       </div>

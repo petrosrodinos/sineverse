@@ -66,6 +66,7 @@ export interface CreateSceneVideoDto extends Partial<VideoGenerationConfig> {
 
 export interface CreateEstateWalkthroughVideosDto {
     project_uuid: string;
+    ai_model?: string;
 }
 
 export interface GenerateSceneVariationImageDto {

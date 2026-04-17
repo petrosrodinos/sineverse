@@ -183,3 +183,17 @@ export class GenerateProjectAssetImageDto {
   @ApiProperty({ description: 'Whether to enrich the prompt', required: false })
   enrich_prompt?: boolean;
 }
+
+export class CreateEstateWalkthroughVideosDto {
+  @ApiProperty({ description: 'The UUID of the project for walkthrough clips' })
+  @IsUUID()
+  @IsNotEmpty()
+  project_uuid: string;
+
+  @ApiPropertyOptional({
+    description: 'Optional AI video model override for walkthrough generation',
+  })
+  @IsString()
+  @IsOptional()
+  ai_model?: string;
+}

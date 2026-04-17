@@ -298,7 +298,11 @@ export class ProjectAssetsService {
     }
   }
 
-  async createEstateWalkthroughVideos(user_uuid: string, project_uuid: string) {
+  async createEstateWalkthroughVideos(
+    user_uuid: string,
+    project_uuid: string,
+    ai_model?: string,
+  ) {
     try {
       const project = await this.prisma.project.findFirst({
         where: { uuid: project_uuid, user_uuid },
@@ -421,7 +425,7 @@ export class ProjectAssetsService {
               project_uuid,
               scene_uuid: r.task.scene.uuid,
               scene_variation_uuid: r.task.variation.uuid,
-              ai_model: ESTATE_WALKTHROUGH_VIDEO_MODEL,
+              ai_model: ai_model ?? ESTATE_WALKTHROUGH_VIDEO_MODEL,
               duration_sec: ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
               prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
               prompt_image_uuids: [r.task.promptAsset.uuid],
