@@ -1,6 +1,4 @@
-/**
- * Maps a Prisma SceneVariation to a model-specific payload for AIML API.
- */
+import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 const NORMALIZED_ASPECT_RATIO_BY_MODEL: Record<string, readonly string[]> = {
   default: ['16:9', '9:16', '1:1'],
@@ -89,6 +87,21 @@ export const transformVariationToModelPayload = (
   variation: any,
   model: string,
 ): any => {
+  const estateWalkthrough =
+    variation.workflow_source === estateWalkthroughVideoConfig.workflowSource;
+  const resolveGenerateAudio = (): boolean | undefined => {
+    if (estateWalkthrough) {
+      return false;
+    }
+    if (variation.include_sound === true) {
+      return true;
+    }
+    if (variation.include_sound === false) {
+      return false;
+    }
+    return undefined;
+  };
+
   const buildPrompt = () => {
     const parts = [variation.prompt_text || ''];
 
@@ -147,8 +160,7 @@ export const transformVariationToModelPayload = (
 
     if (isV3) {
       klingPayload.shot_type = 'customize';
-      klingPayload.generate_audio =
-        variation.include_sound !== null ? variation.include_sound : undefined;
+      klingPayload.generate_audio = resolveGenerateAudio();
     }
 
     return klingPayload;
@@ -167,6 +179,11 @@ export const transformVariationToModelPayload = (
       ltxPayload.image_url = variation.prompt_image.document.url;
     }
 
+    const ga = resolveGenerateAudio();
+    if (ga !== undefined) {
+      ltxPayload.generate_audio = ga;
+    }
+
     return ltxPayload;
   }
 
@@ -176,8 +193,7 @@ export const transformVariationToModelPayload = (
       ...basePayload,
       negative_prompt: variation.negative_prompt || undefined,
       resolution: variation.resolution || undefined,
-      generate_audio:
-        variation.include_sound !== null ? variation.include_sound : undefined,
+      generate_audio: resolveGenerateAudio(),
     };
 
     if (model.includes('i2v') && variation.prompt_image?.document?.url) {

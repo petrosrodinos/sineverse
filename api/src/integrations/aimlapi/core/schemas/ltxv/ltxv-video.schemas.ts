@@ -19,6 +19,7 @@ export const Ltxv2VideoSchema = z.object({
   resolution: LtxvResolutionSchema,
   fps: z.number().int().optional(),
   seed: z.number().int().optional(),
+  generate_audio: z.boolean().optional(),
 });
 
 export const Ltxv2FastVideoSchema = z.object({
@@ -29,6 +30,7 @@ export const Ltxv2FastVideoSchema = z.object({
   resolution: LtxvResolutionSchema,
   fps: z.number().int().optional(),
   seed: z.number().int().optional(),
+  generate_audio: z.boolean().optional(),
 });
 
 export type Ltxv2VideoRequest = z.infer<typeof Ltxv2VideoSchema>;
