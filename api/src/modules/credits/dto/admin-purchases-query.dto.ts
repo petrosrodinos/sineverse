@@ -1,7 +1,9 @@
 import { IsEnum, IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 import { CreditPurchaseStatus } from '@/generated/prisma';
-import { AdminPaginationQueryDto } from './admin-pagination-query.dto';
-import { AdminSortOrder } from './admin-users-query.dto';
+import {
+  PaginationQueryDto,
+  type SortOrder,
+} from '@/shared/dto/pagination-query.dto';
 
 export type AdminPurchasesSortField =
   | 'created_at'
@@ -11,7 +13,7 @@ export type AdminPurchasesSortField =
   | 'stripe_fee_cents'
   | 'credits_amount';
 
-export class AdminPurchasesQueryDto extends AdminPaginationQueryDto {
+export class AdminPurchasesQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
@@ -38,5 +40,5 @@ export class AdminPurchasesQueryDto extends AdminPaginationQueryDto {
 
   @IsOptional()
   @IsIn(['asc', 'desc'])
-  sort_order?: AdminSortOrder = 'desc';
+  sort_order?: SortOrder = 'desc';
 }

@@ -1,5 +1,8 @@
 import { IsIn, IsOptional, IsString } from 'class-validator';
-import { AdminPaginationQueryDto } from './admin-pagination-query.dto';
+import {
+  PaginationQueryDto,
+  type SortOrder,
+} from '@/shared/dto/pagination-query.dto';
 
 export type AdminUsersSortField =
   | 'created_at'
@@ -7,9 +10,8 @@ export type AdminUsersSortField =
   | 'email'
   | 'role'
   | 'credits_balance';
-export type AdminSortOrder = 'asc' | 'desc';
 
-export class AdminUsersQueryDto extends AdminPaginationQueryDto {
+export class AdminUsersQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
@@ -20,5 +22,5 @@ export class AdminUsersQueryDto extends AdminPaginationQueryDto {
 
   @IsOptional()
   @IsIn(['asc', 'desc'])
-  sort_order?: AdminSortOrder = 'desc';
+  sort_order?: SortOrder = 'desc';
 }

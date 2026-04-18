@@ -24,6 +24,7 @@ import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
 import { calculateHybridMoneyFields } from './utils/hybrid-billing';
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from '@/shared/config/errors/api-error-codes';
+import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
 
 type BalanceTransactionRef =
   | string
@@ -767,5 +768,90 @@ export class CreditsService {
         stripe_price_id: priceId,
       },
     });
+  }
+
+  async getPurchasesForAdminDashboard(query: AdminPurchasesQueryDto) {
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+    const skip = (page - 1) * limit;
+    const sortBy = query.sort_by ?? 'created_at';
+    const sortOrder = query.sort_order ?? 'desc';
+    const search = query.search?.trim();
+    const packKey = query.pack_key?.trim();
+    const statusFilter = query.status;
+
+    const andParts: Prisma.CreditPurchaseWhereInput[] = [];
+
+    if (search) {
+      andParts.push({
+        OR: [
+          { uuid: { contains: search, mode: 'insensitive' } },
+          { user_uuid: { contains: search, mode: 'insensitive' } },
+          { user: { email: { contains: search, mode: 'insensitive' } } },
+        ],
+      });
+    }
+
+    if (packKey) {
+      andParts.push({ credit_pack: { key: packKey } });
+    }
+
+    if (statusFilter) {
+      andParts.push({ status: statusFilter });
+    }
+
+    const where: Prisma.CreditPurchaseWhereInput | undefined =
+      andParts.length > 0 ? { AND: andParts } : undefined;
+
+    const [total, purchases] = await Promise.all([
+      this.prisma.creditPurchase.count({ where }),
+      this.prisma.creditPurchase.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              uuid: true,
+              email: true,
+            },
+          },
+          credit_pack: {
+            select: {
+              key: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    return {
+      total,
+      page,
+      limit,
+      items: purchases.map((purchase) => {
+        const gross = purchase.gross_amount_cents ?? purchase.amount_cents;
+        const stripeFees = purchase.stripe_fee_cents ?? 0;
+        const net = purchase.net_amount_cents ?? gross - stripeFees;
+        const appFees = Math.max(gross - net - stripeFees, 0);
+
+        return {
+          uuid: purchase.uuid,
+          user_uuid: purchase.user_uuid,
+          status: purchase.status,
+          currency: purchase.currency,
+          credits_amount: purchase.credits_amount,
+          gross_amount_cents: gross,
+          net_amount_cents: net,
+          stripe_fee_cents: stripeFees,
+          app_fee_cents: appFees,
+          created_at: purchase.created_at,
+          user: purchase.user,
+          credit_pack: purchase.credit_pack,
+        };
+      }),
+    };
   }
 }

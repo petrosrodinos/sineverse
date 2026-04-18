@@ -1,7 +1,9 @@
 import { Transform } from 'class-transformer';
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
-export class AdminPaginationQueryDto {
+export type SortOrder = 'asc' | 'desc';
+
+export class PaginationQueryDto {
   @IsOptional()
   @Transform(({ value }) => Number(value))
   @IsInt()

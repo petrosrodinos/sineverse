@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthRole } from '@/generated/prisma';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
-import { CreditsService } from './credits.service';
+import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
 import { CreditsPaginationQueryDto } from './dto/credits-query.dto';
 import { CreateCreditCheckoutDto } from './dto/create-checkout.dto';
+import { CreditsService } from './credits.service';
 
 @ApiTags('Credits')
 @Controller('credits')
@@ -41,12 +43,20 @@ export class CreditsController {
   }
 
   @Get('purchases')
-  @ApiOperation({ summary: 'Get credit purchase history' })
+  @ApiOperation({
+    summary: 'Credit purchases: own history, or all purchases when admin',
+  })
   getPurchases(
-    @CurrentUser('uuid') user_uuid: string,
-    @Query() query: CreditsPaginationQueryDto,
+    @CurrentUser() user: { uuid: string; role: AuthRole },
+    @Query() query: AdminPurchasesQueryDto,
   ) {
-    return this.creditsService.getPurchases(user_uuid, query.page, query.limit);
+    if (
+      user.role === AuthRole.ADMIN ||
+      user.role === AuthRole.SUPER_ADMIN
+    ) {
+      return this.creditsService.getPurchasesForAdminDashboard(query);
+    }
+    return this.creditsService.getPurchases(user.uuid, query.page, query.limit);
   }
 
   @Post('checkout')

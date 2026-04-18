@@ -52,6 +52,7 @@ Gateway rules:
 
 DTO rules:
 
+- Reusable query pagination belongs in `src/shared/dto/` with generic names only: `PaginationQueryDto`, `SortOrder` (or other neutral names). Never prefix shared reusable DTOs with `Admin` or another consumer-specific prefix.
 - All body inputs must have DTOs
 - All query inputs must have zod validation and schemas
 - Use class-validator exclusively for body inputs

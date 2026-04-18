@@ -16,6 +16,8 @@ export const ApiRoutes = {
         me: "/users/me",
         update_me: "/users/me",
         update_password: "/users/me/password",
+        list: "/users",
+        record: (user_uuid: string) => `/users/${user_uuid}`,
     },
     projects: {
         prefix: "/projects",
@@ -54,9 +56,6 @@ export const ApiRoutes = {
     },
     admin: {
         overview: "/admin/dashboard/overview",
-        users: "/admin/dashboard/users",
-        user: (user_uuid: string) => `/admin/dashboard/users/${user_uuid}`,
-        purchases: "/admin/dashboard/purchases",
     },
     scene_videos: {
         prefix: "/scene-videos",
