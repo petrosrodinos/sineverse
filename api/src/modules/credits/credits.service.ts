@@ -22,9 +22,13 @@ import {
 } from '@/shared/config/credits/credits.constants';
 import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
-import { calculateHybridMoneyFields } from './utils/hybrid-billing';
+import {
+  calculateEstateUsageMoneyFromCredits,
+  calculateHybridMoneyFields,
+} from './utils/hybrid-billing';
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from '@/shared/config/errors/api-error-codes';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
+import { stripeCommissionPercentFromFeeAndAmount } from './utils/stripe-commission-percent.utils';
 
 type BalanceTransactionRef =
   | string
@@ -334,9 +338,11 @@ export class CreditsService {
       typeof fixed_credits_deduction === 'number'
         ? Math.max(Math.floor(fixed_credits_deduction), 0)
         : this.calculateUsageCredits(provider_credits_used, project_type);
-    const appFeeRate = this.calculateUsageAppFeeRate(project_type);
-    const providerChargeUsd =
-      typeof provider_charge_amount === 'number' && provider_charge_amount > 0
+    const appFeeRate = CreditsConfig.usageAppFeeRate;
+    const providerChargeUsdRaw =
+      typeof provider_charge_amount === 'number' &&
+      Number.isFinite(provider_charge_amount) &&
+      provider_charge_amount > 0
         ? provider_charge_amount
         : null;
     let fxSnapshot: { rate: number; source: string; timestamp: Date };
@@ -355,16 +361,41 @@ export class CreditsService {
       };
     }
     const hybridMoney =
-      providerChargeUsd !== null
+      providerChargeUsdRaw !== null
         ? calculateHybridMoneyFields({
-            providerChargeUsd,
+            providerChargeUsd: providerChargeUsdRaw,
             fxRateUsdToEur: fxSnapshot.rate,
             appFeeRate,
           })
         : null;
-    const providerCharge = hybridMoney?.providerCharge ?? null;
-    const appFeeAmount = hybridMoney?.appFeeAmount ?? null;
-    const grossChargeAmount = hybridMoney?.grossChargeAmount ?? null;
+    const estateMultiplier =
+      CreditsConfig.projectTypeMultipliers[ProjectType.ESTATE] ?? 1;
+    const estateMoney =
+      hybridMoney === null &&
+      project_type === ProjectType.ESTATE &&
+      estateMultiplier > 0
+        ? calculateEstateUsageMoneyFromCredits({
+            creditsDeducted: deduct,
+            estateMultiplier,
+            appFeeRate,
+          })
+        : null;
+    const providerCharge =
+      hybridMoney?.providerCharge ?? estateMoney?.providerCharge ?? null;
+    const appFeeAmount =
+      hybridMoney?.appFeeAmount ?? estateMoney?.appFeeAmount ?? null;
+    const grossChargeAmount =
+      hybridMoney?.grossChargeAmount ?? estateMoney?.grossChargeAmount ?? null;
+    const ledgerMetadata = metadata
+      ? (Object.fromEntries(
+          Object.entries(metadata).filter(
+            ([key]) =>
+              key !== 'provider_credits_used' &&
+              key !== 'provider_charge_amount' &&
+              key !== 'fixed_credits_deduction',
+          ),
+        ) as Prisma.JsonObject)
+      : undefined;
     const idempotencyKey = `usage:${source_ref_uuid}`;
 
     return this.prisma.$transaction(async (tx) => {
@@ -403,8 +434,8 @@ export class CreditsService {
           source_ref_uuid,
           idempotency_key: idempotencyKey,
           provider_charge_amount_usd:
-            providerChargeUsd !== null
-              ? new Prisma.Decimal(providerChargeUsd)
+            hybridMoney !== null
+              ? new Prisma.Decimal(hybridMoney.providerChargeUsdRounded)
               : null,
           provider_charge_amount:
             providerCharge !== null ? new Prisma.Decimal(providerCharge) : null,
@@ -418,7 +449,7 @@ export class CreditsService {
           fx_rate_usd_to_eur: new Prisma.Decimal(fxSnapshot.rate),
           fx_source: fxSnapshot.source,
           fx_timestamp: fxSnapshot.timestamp,
-          metadata,
+          metadata: ledgerMetadata,
         },
       });
     });
@@ -502,6 +533,7 @@ export class CreditsService {
       let stripeChargeId: string | null = null;
       let receiptUrl: string | null = null;
       let stripeFeeCents: number | null = null;
+      let stripeCommissionPercent: Prisma.Decimal | null = null;
       const grossAmountCents = session.amount_total ?? purchase.amount_cents;
 
       if (this.stripe && paymentIntentId) {
@@ -516,7 +548,16 @@ export class CreditsService {
         stripeChargeId = latestCharge?.id ?? null;
         receiptUrl = latestCharge?.receipt_url ?? null;
       }
-      stripeFeeCents = await this.stripeFeeCentsForCheckoutSession(session.id);
+      const feeDetails = await this.stripeFeeDetailsForCheckoutSession(
+        session.id,
+      );
+      if (feeDetails) {
+        stripeFeeCents = feeDetails.feeCents;
+        stripeCommissionPercent = stripeCommissionPercentFromFeeAndAmount(
+          feeDetails.feeCents,
+          feeDetails.grossAmountCents,
+        );
+      }
       const netAmountCents =
         stripeFeeCents !== null ? grossAmountCents - stripeFeeCents : null;
 
@@ -536,6 +577,7 @@ export class CreditsService {
           stripe_receipt_url: receiptUrl,
           gross_amount_cents: grossAmountCents,
           stripe_fee_cents: stripeFeeCents,
+          stripe_commission_percent: stripeCommissionPercent,
           net_amount_cents: netAmountCents,
         },
       });
@@ -596,10 +638,10 @@ export class CreditsService {
       return;
     }
 
-    const stripeFeeCents = await this.balanceTransactionFeeCents(
+    const feeDetails = await this.balanceTransactionFeeDetails(
       charge.balance_transaction as BalanceTransactionRef,
     );
-    if (stripeFeeCents === null) {
+    if (!feeDetails) {
       return;
     }
 
@@ -612,7 +654,7 @@ export class CreditsService {
       if (!sessionId) {
         return;
       }
-      await this.updatePurchaseStripeFeeBySession(sessionId, stripeFeeCents);
+      await this.updatePurchaseStripeFeeBySession(sessionId, feeDetails);
     } catch (error) {
       console.warn(
         '[stripe webhook] charge.updated: could not map payment intent to session',
@@ -621,9 +663,9 @@ export class CreditsService {
     }
   }
 
-  private async balanceTransactionFeeCents(
+  private async balanceTransactionFeeDetails(
     balanceTransaction: BalanceTransactionRef,
-  ): Promise<number | null> {
+  ): Promise<{ feeCents: number; grossAmountCents: number } | null> {
     if (balanceTransaction == null || !this.stripe) {
       return null;
     }
@@ -633,7 +675,14 @@ export class CreditsService {
           ? balanceTransaction
           : await this.stripe.balanceTransactions.retrieve(balanceTransaction);
       const fee = bt.fee ?? 0;
-      return typeof fee === 'number' && fee >= 0 ? fee : null;
+      const grossAmountCents = bt.amount ?? 0;
+      if (typeof fee !== 'number' || fee < 0) {
+        return null;
+      }
+      if (typeof grossAmountCents !== 'number') {
+        return null;
+      }
+      return { feeCents: fee, grossAmountCents };
     } catch (error) {
       console.warn(
         '[stripe webhook] could not resolve balance transaction fee',
@@ -643,9 +692,9 @@ export class CreditsService {
     }
   }
 
-  private async stripeFeeCentsForCheckoutSession(
+  private async stripeFeeDetailsForCheckoutSession(
     sessionId: string,
-  ): Promise<number | null> {
+  ): Promise<{ feeCents: number; grossAmountCents: number } | null> {
     if (!this.stripe) {
       return null;
     }
@@ -661,7 +710,7 @@ export class CreditsService {
       if (!charge || typeof charge === 'string') {
         return null;
       }
-      return this.balanceTransactionFeeCents(
+      return this.balanceTransactionFeeDetails(
         charge.balance_transaction as BalanceTransactionRef,
       );
     } catch (error) {
@@ -675,7 +724,7 @@ export class CreditsService {
 
   private async updatePurchaseStripeFeeBySession(
     sessionId: string,
-    stripeFeeCents: number,
+    feeDetails: { feeCents: number; grossAmountCents: number },
   ): Promise<void> {
     const purchase = await this.prisma.creditPurchase.findFirst({
       where: { stripe_session_id: sessionId },
@@ -686,20 +735,20 @@ export class CreditsService {
     }
     const grossAmountCents =
       purchase.gross_amount_cents ?? purchase.amount_cents;
-    const netAmountCents = grossAmountCents - stripeFeeCents;
+    const netAmountCents = grossAmountCents - feeDetails.feeCents;
+    const stripeCommissionPercent = stripeCommissionPercentFromFeeAndAmount(
+      feeDetails.feeCents,
+      feeDetails.grossAmountCents,
+    );
 
     await this.prisma.creditPurchase.update({
       where: { uuid: purchase.uuid },
       data: {
-        stripe_fee_cents: stripeFeeCents,
+        stripe_fee_cents: feeDetails.feeCents,
+        stripe_commission_percent: stripeCommissionPercent,
         net_amount_cents: netAmountCents,
       },
     });
-  }
-
-  private calculateUsageAppFeeRate(projectType: ProjectType): number {
-    const multiplier = CreditsConfig.projectTypeMultipliers[projectType] ?? 1;
-    return (1 + CreditsConfig.baseMarkupPercent) * multiplier - 1;
   }
 
   private async ensureDefaultCreditPacks() {
@@ -846,6 +895,10 @@ export class CreditsService {
           gross_amount_cents: gross,
           net_amount_cents: net,
           stripe_fee_cents: stripeFees,
+          stripe_commission_percent:
+            purchase.stripe_commission_percent !== null
+              ? Number(purchase.stripe_commission_percent)
+              : null,
           app_fee_cents: appFees,
           created_at: purchase.created_at,
           user: purchase.user,

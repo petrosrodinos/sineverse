@@ -294,6 +294,7 @@ exports.Prisma.CreditPurchaseScalarFieldEnum = {
   amount_cents: 'amount_cents',
   gross_amount_cents: 'gross_amount_cents',
   stripe_fee_cents: 'stripe_fee_cents',
+  stripe_commission_percent: 'stripe_commission_percent',
   net_amount_cents: 'net_amount_cents',
   currency: 'currency',
   stripe_session_id: 'stripe_session_id',

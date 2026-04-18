@@ -49,7 +49,6 @@ export const useCreditsUsage = () => {
   return useQuery({
     queryKey: [QueryKeys.usage],
     queryFn: getCreditsUsage,
-    refetchInterval: 10000,
   });
 };
 

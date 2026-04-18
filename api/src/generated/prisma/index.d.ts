@@ -17757,6 +17757,7 @@ export namespace Prisma {
     amount_cents: number | null
     gross_amount_cents: number | null
     stripe_fee_cents: number | null
+    stripe_commission_percent: Decimal | null
     net_amount_cents: number | null
   }
 
@@ -17766,6 +17767,7 @@ export namespace Prisma {
     amount_cents: number | null
     gross_amount_cents: number | null
     stripe_fee_cents: number | null
+    stripe_commission_percent: Decimal | null
     net_amount_cents: number | null
   }
 
@@ -17779,6 +17781,7 @@ export namespace Prisma {
     amount_cents: number | null
     gross_amount_cents: number | null
     stripe_fee_cents: number | null
+    stripe_commission_percent: Decimal | null
     net_amount_cents: number | null
     currency: string | null
     stripe_session_id: string | null
@@ -17799,6 +17802,7 @@ export namespace Prisma {
     amount_cents: number | null
     gross_amount_cents: number | null
     stripe_fee_cents: number | null
+    stripe_commission_percent: Decimal | null
     net_amount_cents: number | null
     currency: string | null
     stripe_session_id: string | null
@@ -17819,6 +17823,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents: number
     stripe_fee_cents: number
+    stripe_commission_percent: number
     net_amount_cents: number
     currency: number
     stripe_session_id: number
@@ -17838,6 +17843,7 @@ export namespace Prisma {
     amount_cents?: true
     gross_amount_cents?: true
     stripe_fee_cents?: true
+    stripe_commission_percent?: true
     net_amount_cents?: true
   }
 
@@ -17847,6 +17853,7 @@ export namespace Prisma {
     amount_cents?: true
     gross_amount_cents?: true
     stripe_fee_cents?: true
+    stripe_commission_percent?: true
     net_amount_cents?: true
   }
 
@@ -17860,6 +17867,7 @@ export namespace Prisma {
     amount_cents?: true
     gross_amount_cents?: true
     stripe_fee_cents?: true
+    stripe_commission_percent?: true
     net_amount_cents?: true
     currency?: true
     stripe_session_id?: true
@@ -17880,6 +17888,7 @@ export namespace Prisma {
     amount_cents?: true
     gross_amount_cents?: true
     stripe_fee_cents?: true
+    stripe_commission_percent?: true
     net_amount_cents?: true
     currency?: true
     stripe_session_id?: true
@@ -17900,6 +17909,7 @@ export namespace Prisma {
     amount_cents?: true
     gross_amount_cents?: true
     stripe_fee_cents?: true
+    stripe_commission_percent?: true
     net_amount_cents?: true
     currency?: true
     stripe_session_id?: true
@@ -18008,6 +18018,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents: number | null
     stripe_fee_cents: number | null
+    stripe_commission_percent: Decimal | null
     net_amount_cents: number | null
     currency: string
     stripe_session_id: string | null
@@ -18048,6 +18059,7 @@ export namespace Prisma {
     amount_cents?: boolean
     gross_amount_cents?: boolean
     stripe_fee_cents?: boolean
+    stripe_commission_percent?: boolean
     net_amount_cents?: boolean
     currency?: boolean
     stripe_session_id?: boolean
@@ -18071,6 +18083,7 @@ export namespace Prisma {
     amount_cents?: boolean
     gross_amount_cents?: boolean
     stripe_fee_cents?: boolean
+    stripe_commission_percent?: boolean
     net_amount_cents?: boolean
     currency?: boolean
     stripe_session_id?: boolean
@@ -18094,6 +18107,7 @@ export namespace Prisma {
     amount_cents?: boolean
     gross_amount_cents?: boolean
     stripe_fee_cents?: boolean
+    stripe_commission_percent?: boolean
     net_amount_cents?: boolean
     currency?: boolean
     stripe_session_id?: boolean
@@ -18117,6 +18131,7 @@ export namespace Prisma {
     amount_cents?: boolean
     gross_amount_cents?: boolean
     stripe_fee_cents?: boolean
+    stripe_commission_percent?: boolean
     net_amount_cents?: boolean
     currency?: boolean
     stripe_session_id?: boolean
@@ -18128,7 +18143,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type CreditPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "credit_pack_uuid" | "status" | "credits_amount" | "amount_cents" | "gross_amount_cents" | "stripe_fee_cents" | "net_amount_cents" | "currency" | "stripe_session_id" | "stripe_payment_intent_id" | "stripe_charge_id" | "stripe_receipt_url" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditPurchase"]>
+  export type CreditPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "credit_pack_uuid" | "status" | "credits_amount" | "amount_cents" | "gross_amount_cents" | "stripe_fee_cents" | "stripe_commission_percent" | "net_amount_cents" | "currency" | "stripe_session_id" | "stripe_payment_intent_id" | "stripe_charge_id" | "stripe_receipt_url" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditPurchase"]>
   export type CreditPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     credit_pack?: boolean | CreditPackDefaultArgs<ExtArgs>
@@ -18158,6 +18173,7 @@ export namespace Prisma {
       amount_cents: number
       gross_amount_cents: number | null
       stripe_fee_cents: number | null
+      stripe_commission_percent: Prisma.Decimal | null
       net_amount_cents: number | null
       currency: string
       stripe_session_id: string | null
@@ -18601,6 +18617,7 @@ export namespace Prisma {
     readonly amount_cents: FieldRef<"CreditPurchase", 'Int'>
     readonly gross_amount_cents: FieldRef<"CreditPurchase", 'Int'>
     readonly stripe_fee_cents: FieldRef<"CreditPurchase", 'Int'>
+    readonly stripe_commission_percent: FieldRef<"CreditPurchase", 'Decimal'>
     readonly net_amount_cents: FieldRef<"CreditPurchase", 'Int'>
     readonly currency: FieldRef<"CreditPurchase", 'String'>
     readonly stripe_session_id: FieldRef<"CreditPurchase", 'String'>
@@ -21661,6 +21678,7 @@ export namespace Prisma {
     amount_cents: 'amount_cents',
     gross_amount_cents: 'gross_amount_cents',
     stripe_fee_cents: 'stripe_fee_cents',
+    stripe_commission_percent: 'stripe_commission_percent',
     net_amount_cents: 'net_amount_cents',
     currency: 'currency',
     stripe_session_id: 'stripe_session_id',
@@ -21939,20 +21957,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'CreditLedgerType'
-   */
-  export type EnumCreditLedgerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditLedgerType'>
-    
-
-
-  /**
-   * Reference to a field of type 'CreditLedgerType[]'
-   */
-  export type ListEnumCreditLedgerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditLedgerType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -21963,6 +21967,20 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CreditLedgerType'
+   */
+  export type EnumCreditLedgerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditLedgerType'>
+    
+
+
+  /**
+   * Reference to a field of type 'CreditLedgerType[]'
+   */
+  export type ListEnumCreditLedgerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditLedgerType[]'>
     
   /**
    * Deep Input Types
@@ -23118,6 +23136,7 @@ export namespace Prisma {
     amount_cents?: IntFilter<"CreditPurchase"> | number
     gross_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     stripe_fee_cents?: IntNullableFilter<"CreditPurchase"> | number | null
+    stripe_commission_percent?: DecimalNullableFilter<"CreditPurchase"> | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     currency?: StringFilter<"CreditPurchase"> | string
     stripe_session_id?: StringNullableFilter<"CreditPurchase"> | string | null
@@ -23141,6 +23160,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrderInput | SortOrder
     stripe_fee_cents?: SortOrderInput | SortOrder
+    stripe_commission_percent?: SortOrderInput | SortOrder
     net_amount_cents?: SortOrderInput | SortOrder
     currency?: SortOrder
     stripe_session_id?: SortOrderInput | SortOrder
@@ -23170,6 +23190,7 @@ export namespace Prisma {
     amount_cents?: IntFilter<"CreditPurchase"> | number
     gross_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     stripe_fee_cents?: IntNullableFilter<"CreditPurchase"> | number | null
+    stripe_commission_percent?: DecimalNullableFilter<"CreditPurchase"> | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     currency?: StringFilter<"CreditPurchase"> | string
     stripe_receipt_url?: StringNullableFilter<"CreditPurchase"> | string | null
@@ -23190,6 +23211,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrderInput | SortOrder
     stripe_fee_cents?: SortOrderInput | SortOrder
+    stripe_commission_percent?: SortOrderInput | SortOrder
     net_amount_cents?: SortOrderInput | SortOrder
     currency?: SortOrder
     stripe_session_id?: SortOrderInput | SortOrder
@@ -23219,6 +23241,7 @@ export namespace Prisma {
     amount_cents?: IntWithAggregatesFilter<"CreditPurchase"> | number
     gross_amount_cents?: IntNullableWithAggregatesFilter<"CreditPurchase"> | number | null
     stripe_fee_cents?: IntNullableWithAggregatesFilter<"CreditPurchase"> | number | null
+    stripe_commission_percent?: DecimalNullableWithAggregatesFilter<"CreditPurchase"> | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: IntNullableWithAggregatesFilter<"CreditPurchase"> | number | null
     currency?: StringWithAggregatesFilter<"CreditPurchase"> | string
     stripe_session_id?: StringNullableWithAggregatesFilter<"CreditPurchase"> | string | null
@@ -24646,6 +24669,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -24669,6 +24693,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -24687,6 +24712,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24710,6 +24736,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24731,6 +24758,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -24749,6 +24777,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24770,6 +24799,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26181,6 +26211,17 @@ export namespace Prisma {
     not?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel> | $Enums.CreditPurchaseStatus
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type CreditPackScalarRelationFilter = {
     is?: CreditPackWhereInput
     isNot?: CreditPackWhereInput
@@ -26196,6 +26237,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrder
     stripe_fee_cents?: SortOrder
+    stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
     currency?: SortOrder
     stripe_session_id?: SortOrder
@@ -26213,6 +26255,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrder
     stripe_fee_cents?: SortOrder
+    stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
   }
 
@@ -26226,6 +26269,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrder
     stripe_fee_cents?: SortOrder
+    stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
     currency?: SortOrder
     stripe_session_id?: SortOrder
@@ -26246,6 +26290,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrder
     stripe_fee_cents?: SortOrder
+    stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
     currency?: SortOrder
     stripe_session_id?: SortOrder
@@ -26262,6 +26307,7 @@ export namespace Prisma {
     amount_cents?: SortOrder
     gross_amount_cents?: SortOrder
     stripe_fee_cents?: SortOrder
+    stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
   }
 
@@ -26273,6 +26319,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel>
     _max?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel>
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type EnumCreditLedgerTypeFilter<$PrismaModel = never> = {
@@ -26287,17 +26349,6 @@ export namespace Prisma {
     in?: $Enums.ProjectType[] | ListEnumProjectTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.ProjectType[] | ListEnumProjectTypeFieldRefInput<$PrismaModel> | null
     not?: NestedEnumProjectTypeNullableFilter<$PrismaModel> | $Enums.ProjectType | null
-  }
-
-  export type DecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -26423,22 +26474,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumProjectTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumProjectTypeNullableFilter<$PrismaModel>
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -28064,6 +28099,14 @@ export namespace Prisma {
     set?: $Enums.CreditPurchaseStatus
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type UserUpdateOneRequiredWithoutCredit_purchasesNestedInput = {
     create?: XOR<UserCreateWithoutCredit_purchasesInput, UserUncheckedCreateWithoutCredit_purchasesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCredit_purchasesInput
@@ -28092,14 +28135,6 @@ export namespace Prisma {
 
   export type NullableEnumProjectTypeFieldUpdateOperationsInput = {
     set?: $Enums.ProjectType | null
-  }
-
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -28462,6 +28497,17 @@ export namespace Prisma {
     not?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel> | $Enums.CreditPurchaseStatus
   }
 
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type NestedEnumCreditPurchaseStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.CreditPurchaseStatus | EnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CreditPurchaseStatus[] | ListEnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
@@ -28470,6 +28516,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel>
     _max?: NestedEnumCreditPurchaseStatusFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumCreditLedgerTypeFilter<$PrismaModel = never> = {
@@ -28484,17 +28546,6 @@ export namespace Prisma {
     in?: $Enums.ProjectType[] | ListEnumProjectTypeFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.ProjectType[] | ListEnumProjectTypeFieldRefInput<$PrismaModel> | null
     not?: NestedEnumProjectTypeNullableFilter<$PrismaModel> | $Enums.ProjectType | null
-  }
-
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -28526,22 +28577,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumProjectTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumProjectTypeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -28793,6 +28828,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -28814,6 +28850,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -29085,6 +29122,7 @@ export namespace Prisma {
     amount_cents?: IntFilter<"CreditPurchase"> | number
     gross_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     stripe_fee_cents?: IntNullableFilter<"CreditPurchase"> | number | null
+    stripe_commission_percent?: DecimalNullableFilter<"CreditPurchase"> | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: IntNullableFilter<"CreditPurchase"> | number | null
     currency?: StringFilter<"CreditPurchase"> | string
     stripe_session_id?: StringNullableFilter<"CreditPurchase"> | string | null
@@ -32027,6 +32065,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -32048,6 +32087,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -32414,6 +32454,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -32672,6 +32713,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32693,6 +32735,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32713,6 +32756,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33964,6 +34008,7 @@ export namespace Prisma {
     amount_cents: number
     gross_amount_cents?: number | null
     stripe_fee_cents?: number | null
+    stripe_commission_percent?: Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: number | null
     currency?: string
     stripe_session_id?: string | null
@@ -33982,6 +34027,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34003,6 +34049,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34023,6 +34070,7 @@ export namespace Prisma {
     amount_cents?: IntFieldUpdateOperationsInput | number
     gross_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     stripe_fee_cents?: NullableIntFieldUpdateOperationsInput | number | null
+    stripe_commission_percent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     net_amount_cents?: NullableIntFieldUpdateOperationsInput | number | null
     currency?: StringFieldUpdateOperationsInput | string
     stripe_session_id?: NullableStringFieldUpdateOperationsInput | string | null

@@ -5,9 +5,10 @@ import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
 import { useCreditsPurchases, useCreditsSummary, useCreditsUsage, useCreditsUsageStats } from "@/features/credits/hooks/use-credits";
-import type { CreditsUsageStats } from "@/features/credits/interfaces/credits.interfaces";
+import type { CreditsUsageItem, CreditsUsageStats } from "@/features/credits/interfaces/credits.interfaces";
 import { formatCreditCurrency } from "@/features/credits/utils/credits-format.utils";
 import { CreditPacks } from "@/components/ui/CreditPacks";
+import { CreditUsageLedgerMetadata } from "@/config/credits/credits-usage-metadata.constants";
 
 function formatAmount(amount: number | string | null | undefined, currency: string) {
   if (amount === null || amount === undefined) {
@@ -22,6 +23,21 @@ function formatAmount(amount: number | string | null | undefined, currency: stri
     currency: currency.toUpperCase(),
     maximumFractionDigits: 2,
   }).format(numeric);
+}
+
+function usageGenerationDisplay(item: CreditsUsageItem): string {
+  const meta = item.metadata;
+  if (!meta || typeof meta !== "object") {
+    return "—";
+  }
+  const model = meta[CreditUsageLedgerMetadata.GENERATION_MODEL];
+  const assetType = meta[CreditUsageLedgerMetadata.GENERATION_ASSET_TYPE];
+  const modelStr = typeof model === "string" ? model : "";
+  const typeStr = typeof assetType === "string" ? assetType : "";
+  if (modelStr && typeStr) {
+    return `${typeStr} · ${modelStr}`;
+  }
+  return modelStr || typeStr || "—";
 }
 
 function getUsageTypeChipColor(projectType?: string | null): "primary" | "secondary" | "success" | "warning" | "danger" | "default" {
@@ -135,6 +151,7 @@ export default function CreditsPage() {
               <Table aria-label="Credits usage table" removeWrapper>
                 <TableHeader>
                   <TableColumn>DATE</TableColumn>
+                  <TableColumn>MODEL</TableColumn>
                   <TableColumn>AMOUNT</TableColumn>
                   <TableColumn>CREDITS</TableColumn>
                 </TableHeader>
@@ -142,6 +159,11 @@ export default function CreditsPage() {
                   {(usage?.items ?? []).map((item) => (
                     <TableRow key={item.uuid}>
                       <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <span className="max-w-[220px] truncate text-sm text-default-600" title={usageGenerationDisplay(item)}>
+                          {usageGenerationDisplay(item)}
+                        </span>
+                      </TableCell>
                       <TableCell>{formatAmount(item.gross_charge_amount, "EUR") ?? "-"}</TableCell>
                       <TableCell>
                         <span className="font-semibold text-foreground">{item.delta_credits}</span>

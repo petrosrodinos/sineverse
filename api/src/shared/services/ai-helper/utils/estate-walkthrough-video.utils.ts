@@ -1,9 +1,10 @@
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
+import { ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO } from '@/shared/config/credits/credits.constants';
 
 export const estateWalkthroughVideoConfig = {
   model: VideoModels.LTXV_2_FAST,
   durationSec: 4,
-  creditCost: 10,
+  creditCost: ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO,
   workflowSource: 'ESTATE_WALKTHROUGH',
   promptText: [
     'Premium real-estate and short-term rental walkthrough from the reference interior photo.',

@@ -10,6 +10,7 @@ import { Slider } from "@heroui/slider";
 import { Skeleton } from "@heroui/skeleton";
 import type { Key, MouseEvent as ReactMouseEvent, SyntheticEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import { AlertCircle, GripVertical, Trash2 } from "lucide-react";
 import { addToast } from "@heroui/toast";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
@@ -40,6 +41,7 @@ import {
   ESTATE_VOLUME_STEP,
 } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import type { TimelineTransitionType } from "@/features/timeline-transitions/interfaces/timeline-transitions.interfaces";
+import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { useVideoReorderItem } from "../../hooks/useVideoReorderItem";
 import { TrimRangeField } from "./TrimRangeField";
 
@@ -62,6 +64,10 @@ type VideoCardProps = {
 
 export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, timelineClipFromParent, timelineClipsReady }: VideoCardProps) {
   const videoAssetUuid = asset.uuid;
+  const { data: session, status: sessionStatus } = useSession();
+  const isAdmin =
+    sessionStatus !== "loading" &&
+    (session?.role === RoleTypes.ADMIN || session?.role === RoleTypes.SUPER_ADMIN);
 
   const { mutateAsync: deleteProjectAsset, isPending: isDeletingProjectAsset } = useDeleteProjectAsset();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -78,7 +84,6 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
   const thumbUrl = display.prompt_images?.[0]?.document.url ?? "";
   const videoUrl = display.document?.url ?? "";
   const showEditor = display.status === ProjectAssetStatuses.COMPLETED;
-  const isDevelopment = process.env.NODE_ENV === "development";
 
   const useParentTimelineClip = timelineClipFromParent !== undefined;
   const { data: fetchedClips } = useTimelineClips(
@@ -326,7 +331,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
           ) : (
             <Chip size="sm" variant="flat">{display.status}</Chip>
           )}
-          {(compact || isDevelopment) && (
+          {isAdmin && (
             <Button size="sm" color="danger" variant="flat" isIconOnly onPress={handleOpenDeleteModal} aria-label="Remove walkthrough clip">
               <Trash2 className="h-4 w-4" />
             </Button>

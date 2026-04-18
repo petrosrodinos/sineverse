@@ -371,6 +371,7 @@ model CreditPurchase {
   amount_cents      Int
   gross_amount_cents Int?
   stripe_fee_cents  Int?
+  stripe_commission_percent Decimal? @db.Decimal(10, 4)
   net_amount_cents  Int?
   currency          String               @default("eur")
   stripe_session_id String?              @unique
@@ -402,7 +403,7 @@ model CreditLedgerEntry {
   idempotency_key   String?          @unique
   provider_charge_amount_usd Decimal? @db.Decimal(12, 6)
   provider_charge_amount Decimal?    @db.Decimal(12, 6)
-  app_fee_rate      Decimal?         @db.Decimal(8, 6)
+  app_fee_rate      Decimal?         @db.Decimal(10, 2)
   app_fee_amount    Decimal?         @db.Decimal(12, 6)
   gross_charge_amount Decimal?       @db.Decimal(12, 6)
   fx_rate_usd_to_eur Decimal?        @db.Decimal(12, 6)

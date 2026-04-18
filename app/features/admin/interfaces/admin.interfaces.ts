@@ -69,6 +69,7 @@ export interface AdminPurchaseRow {
   gross_amount_cents: number;
   net_amount_cents: number;
   stripe_fee_cents: number;
+  stripe_commission_percent?: number | null;
   app_fee_cents: number;
   created_at: string;
   user: {

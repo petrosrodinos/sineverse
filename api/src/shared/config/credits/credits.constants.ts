@@ -1,9 +1,17 @@
 import { ProjectType } from '@/generated/prisma';
 
+export const ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO = 10;
+
+export const CreditUsageLedgerMetadata = {
+  GENERATION_MODEL: 'generation_model',
+  GENERATION_ASSET_TYPE: 'generation_asset_type',
+} as const;
+
 export const CreditsConfig = {
   baseMarkupPercent: 0.1,
+  usageAppFeeRate: 4,
   projectTypeMultipliers: {
-    [ProjectType.ESTATE]: 2,
+    [ProjectType.ESTATE]: 5,
     [ProjectType.FILM]: 1.25,
   },
 } as const;

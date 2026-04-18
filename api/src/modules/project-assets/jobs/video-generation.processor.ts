@@ -12,6 +12,7 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
+import { CreditUsageLedgerMetadata } from '@/shared/config/credits/credits.constants';
 import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 export interface VideoGenerationJobData {
@@ -198,6 +199,7 @@ export class VideoGenerationProcessor extends WorkerHost {
         select: {
           status: true,
           user_uuid: true,
+          type: true,
           metadata: true,
           project: {
             select: {
@@ -267,11 +269,19 @@ export class VideoGenerationProcessor extends WorkerHost {
             ? estateWalkthroughVideoConfig.creditCost
             : undefined;
           const providerChargeForLedger =
-            !isEstateWalkthrough &&
-            Number.isFinite(providerUsdSpent) &&
-            providerUsdSpent > 0
+            Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
               ? providerUsdSpent
               : null;
+          const aiModelRaw = metadata.ai_model;
+          const aiModelFromMeta =
+            typeof aiModelRaw === 'string' && aiModelRaw.length > 0
+              ? aiModelRaw
+              : null;
+          const generationModel =
+            aiModelFromMeta ??
+            (isEstateWalkthrough
+              ? estateWalkthroughVideoConfig.model
+              : VideoModels.KLING_VIDEO_V3_STANDARD);
           try {
             await this.creditsService.recordUsageDeduction({
               user_uuid: currentAsset.user_uuid,
@@ -287,11 +297,9 @@ export class VideoGenerationProcessor extends WorkerHost {
               metadata: {
                 provider: 'aimlapi',
                 provider_task_id: taskId,
-                provider_credits_used: providerCreditsUsed,
-                provider_charge_amount: providerChargeForLedger,
-                ...(typeof fixedCreditsDeduction === 'number'
-                  ? { fixed_credits_deduction: fixedCreditsDeduction }
-                  : {}),
+                [CreditUsageLedgerMetadata.GENERATION_MODEL]: generationModel,
+                [CreditUsageLedgerMetadata.GENERATION_ASSET_TYPE]:
+                  currentAsset.type,
                 ...(workflowSource
                   ? { workflow_source: workflowSource }
                   : {}),
