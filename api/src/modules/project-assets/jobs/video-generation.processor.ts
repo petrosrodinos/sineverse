@@ -263,6 +263,15 @@ export class VideoGenerationProcessor extends WorkerHost {
           const providerUsdSpent = Number(
             statusResponse.meta?.usage?.usd_spent ?? 0,
           );
+          const fixedCreditsDeduction = isEstateWalkthrough
+            ? estateWalkthroughVideoConfig.creditCost
+            : undefined;
+          const providerChargeForLedger =
+            !isEstateWalkthrough &&
+            Number.isFinite(providerUsdSpent) &&
+            providerUsdSpent > 0
+              ? providerUsdSpent
+              : null;
           try {
             await this.creditsService.recordUsageDeduction({
               user_uuid: currentAsset.user_uuid,
@@ -272,22 +281,20 @@ export class VideoGenerationProcessor extends WorkerHost {
               provider_credits_used: Number.isFinite(providerCreditsUsed)
                 ? Math.max(providerCreditsUsed, 0)
                 : 0,
-              fixed_credits_deduction: isEstateWalkthrough
-                ? estateWalkthroughVideoConfig.creditCost
-                : undefined,
-              provider_charge_amount:
-                !isEstateWalkthrough &&
-                Number.isFinite(providerUsdSpent) &&
-                providerUsdSpent > 0
-                  ? providerUsdSpent
-                  : null,
+              fixed_credits_deduction: fixedCreditsDeduction,
+              provider_charge_amount: providerChargeForLedger,
               source_ref_uuid: projectAssetUuid,
               metadata: {
                 provider: 'aimlapi',
                 provider_task_id: taskId,
                 provider_credits_used: providerCreditsUsed,
-                provider_charge_amount: providerUsdSpent,
-                workflow_source: workflowSource,
+                provider_charge_amount: providerChargeForLedger,
+                ...(typeof fixedCreditsDeduction === 'number'
+                  ? { fixed_credits_deduction: fixedCreditsDeduction }
+                  : {}),
+                ...(workflowSource
+                  ? { workflow_source: workflowSource }
+                  : {}),
               },
             });
           } catch (error: any) {

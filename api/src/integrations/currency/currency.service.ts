@@ -1,5 +1,9 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { Prisma } from '@/generated/prisma';
@@ -14,6 +18,8 @@ export type CurrencyConversionResult = {
 
 @Injectable()
 export class CurrencyService {
+  private readonly logger = new Logger(CurrencyService.name);
+
   constructor(
     private readonly httpService: HttpService,
     private readonly prisma: PrismaService,
@@ -67,6 +73,8 @@ export class CurrencyService {
         timestamp: fetchedAt,
       };
     } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      this.logger.warn(`getUsdToEurRate frankfurter failed: ${detail}`);
       const fallback = await this.prisma.currencyRateSnapshot.findFirst({
         where: {
           base_currency: 'USD',
@@ -78,6 +86,9 @@ export class CurrencyService {
       });
 
       if (!fallback) {
+        this.logger.error(
+          'getUsdToEurRate no USD/EUR snapshot available after frankfurter failure',
+        );
         throw new InternalServerErrorException(
           'Currency rate unavailable and no fallback snapshot exists',
         );

@@ -3,10 +3,15 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRole } from '@/generated/prisma';
@@ -15,6 +20,7 @@ import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { RolesGuard } from '@/shared/guards/roles.guard';
 import { AdminService } from './admin.service';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
+import { AdminTestUsageLedgerDto } from './dto/admin-test-usage-ledger.dto';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 
@@ -57,5 +63,22 @@ export class AdminController {
   @ApiOperation({ summary: 'Delete user by admin (with storage cleanup)' })
   deleteUser(@Param('user_uuid') userUuid: string) {
     return this.adminService.deleteUser(userUuid);
+  }
+
+  @Post('credit-ledger/test-usage')
+  @HttpCode(HttpStatus.CREATED)
+  @UsePipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  )
+  @ApiOperation({
+    summary:
+      'Record a usage credit_ledger_entry via production deduction path (admin)',
+  })
+  testRecordUsageLedgerDeduction(@Body() dto: AdminTestUsageLedgerDto) {
+    return this.adminService.testRecordUsageLedgerDeduction(dto);
   }
 }

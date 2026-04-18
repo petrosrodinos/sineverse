@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
@@ -32,6 +33,7 @@ type BalanceTransactionRef =
 
 @Injectable()
 export class CreditsService {
+  private readonly logger = new Logger(CreditsService.name);
   private stripe: Stripe | null;
   private webhookSecret: string | undefined;
 
@@ -336,15 +338,26 @@ export class CreditsService {
       typeof provider_charge_amount === 'number' && provider_charge_amount > 0
         ? provider_charge_amount
         : null;
-    const fxResult =
-      providerChargeUsd !== null
-        ? await this.currencyService.convertUsdToEur(providerChargeUsd)
-        : null;
+    let fxSnapshot: { rate: number; source: string; timestamp: Date };
+    try {
+      fxSnapshot = await this.currencyService.getUsdToEurRate();
+    } catch (error) {
+      const detail =
+        error instanceof Error ? error.message : String(error);
+      this.logger.warn(
+        `recordUsageDeduction FX unavailable, using parity user=${user_uuid} ref=${source_ref_uuid}: ${detail}`,
+      );
+      fxSnapshot = {
+        rate: 1,
+        source: 'parity',
+        timestamp: new Date(),
+      };
+    }
     const hybridMoney =
-      providerChargeUsd !== null && fxResult
+      providerChargeUsd !== null
         ? calculateHybridMoneyFields({
             providerChargeUsd,
-            fxRateUsdToEur: fxResult.rate,
+            fxRateUsdToEur: fxSnapshot.rate,
             appFeeRate,
           })
         : null;
@@ -401,11 +414,9 @@ export class CreditsService {
             grossChargeAmount !== null
               ? new Prisma.Decimal(grossChargeAmount)
               : null,
-          fx_rate_usd_to_eur: fxResult
-            ? new Prisma.Decimal(fxResult.rate)
-            : null,
-          fx_source: fxResult?.source ?? null,
-          fx_timestamp: fxResult?.timestamp ?? null,
+          fx_rate_usd_to_eur: new Prisma.Decimal(fxSnapshot.rate),
+          fx_source: fxSnapshot.source,
+          fx_timestamp: fxSnapshot.timestamp,
           metadata,
         },
       });

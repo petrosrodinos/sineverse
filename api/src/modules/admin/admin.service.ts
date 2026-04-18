@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { DocumentsService } from '../documents/documents.service';
+import { CreditsService } from '../credits/credits.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import {
   AuthRole,
@@ -14,14 +16,18 @@ import {
   Prisma,
 } from '@/generated/prisma';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
+import { AdminTestUsageLedgerDto } from './dto/admin-test-usage-ledger.dto';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly documentsService: DocumentsService,
+    private readonly creditsService: CreditsService,
   ) {}
 
   async getOverview() {
@@ -336,5 +342,30 @@ export class AdminService {
         cause: error,
       });
     }
+  }
+
+  async testRecordUsageLedgerDeduction(dto: AdminTestUsageLedgerDto) {
+    if (
+      dto.provider_credits_used < 1 &&
+      dto.fixed_credits_deduction === undefined
+    ) {
+      throw new BadRequestException(
+        'Provide fixed_credits_deduction or provider_credits_used >= 1',
+      );
+    }
+    this.logger.log(
+      `testRecordUsageLedgerDeduction user=${dto.user_uuid} ref=${dto.source_ref_uuid} project_type=${dto.project_type} fixed=${dto.fixed_credits_deduction ?? 'n/a'} usd=${dto.provider_charge_amount ?? 'n/a'}`,
+    );
+    return this.creditsService.recordUsageDeduction({
+      user_uuid: dto.user_uuid,
+      project_type: dto.project_type,
+      provider_credits_used: dto.provider_credits_used,
+      source_ref_uuid: dto.source_ref_uuid,
+      fixed_credits_deduction: dto.fixed_credits_deduction,
+      provider_charge_amount: dto.provider_charge_amount,
+      ...(dto.metadata
+        ? { metadata: dto.metadata as Prisma.JsonObject }
+        : {}),
+    });
   }
 }
