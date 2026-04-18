@@ -194,8 +194,14 @@ export function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="mt-12 border-t border-divider/40 pt-8 text-sm text-default-500">
-            © {new Date().getFullYear()} {environments.APP_NAME}. All rights reserved.
+          <div className="mt-12 flex flex-col gap-2 border-t border-divider/40 pt-8 text-sm text-default-500 sm:flex-row sm:items-center sm:justify-between">
+            <span>© {new Date().getFullYear()} {environments.APP_NAME}. All rights reserved.</span>
+            <span className="sm:text-right">
+              Powered by{" "}
+              <NextLink href="https://logiqdev.com/" className="text-default-600 transition-colors hover:text-primary" target="_blank" rel="noopener noreferrer">
+                Logiqdev
+              </NextLink>
+            </span>
           </div>
         </div>
       </footer>

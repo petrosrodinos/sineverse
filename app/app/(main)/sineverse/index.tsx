@@ -136,6 +136,17 @@ export function SineversePage() {
           </div>
         </div>
       </section>
+
+      <footer className="border-t border-divider/50 bg-content1/40 backdrop-blur-sm dark:bg-content1/20">
+        <div className="mx-auto max-w-7xl px-6 py-8 text-sm text-default-500 md:py-10">
+          <p>
+            Powered by{" "}
+            <NextLink href="https://logiqdev.com/" className="text-default-600 transition-colors hover:text-primary" target="_blank" rel="noopener noreferrer">
+              Logiqdev
+            </NextLink>
+          </p>
+        </div>
+      </footer>
     </div>
     </LandingHashScroll>
   );
