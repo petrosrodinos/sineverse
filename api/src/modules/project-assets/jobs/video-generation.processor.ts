@@ -12,11 +12,7 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
-import {
-  ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST,
-  ESTATE_WALKTHROUGH_VIDEO_MODEL,
-  ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
-} from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
+import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 export interface VideoGenerationJobData {
   projectAssetUuid: string;
@@ -91,12 +87,12 @@ export class VideoGenerationProcessor extends WorkerHost {
           ? metadata.workflow_source
           : null;
       const isEstateWalkthrough =
-        workflowSource === ESTATE_WALKTHROUGH_WORKFLOW_SOURCE &&
+        workflowSource === estateWalkthroughVideoConfig.workflowSource &&
         projectAsset.project?.type === ProjectType.ESTATE;
       const model =
         metadata.ai_model ||
         (isEstateWalkthrough
-          ? ESTATE_WALKTHROUGH_VIDEO_MODEL
+          ? estateWalkthroughVideoConfig.model
           : VideoModels.KLING_VIDEO_V3_STANDARD);
       const payload = transformVariationToModelPayload(configForMapping, model);
 
@@ -259,7 +255,7 @@ export class VideoGenerationProcessor extends WorkerHost {
               ? metadata.workflow_source
               : null;
           const isEstateWalkthrough =
-            workflowSource === ESTATE_WALKTHROUGH_WORKFLOW_SOURCE &&
+            workflowSource === estateWalkthroughVideoConfig.workflowSource &&
             currentAsset.project?.type === ProjectType.ESTATE;
           const providerCreditsUsed = Number(
             statusResponse.meta?.usage?.credits_used ?? 0,
@@ -277,7 +273,7 @@ export class VideoGenerationProcessor extends WorkerHost {
                 ? Math.max(providerCreditsUsed, 0)
                 : 0,
               fixed_credits_deduction: isEstateWalkthrough
-                ? ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST
+                ? estateWalkthroughVideoConfig.creditCost
                 : undefined,
               provider_charge_amount:
                 !isEstateWalkthrough &&

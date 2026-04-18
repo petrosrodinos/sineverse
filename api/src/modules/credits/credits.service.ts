@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -20,6 +22,7 @@ import {
 import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
 import { calculateHybridMoneyFields } from './utils/hybrid-billing';
+import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from '@/shared/config/errors/api-error-codes';
 
 type BalanceTransactionRef =
   | string
@@ -42,6 +45,46 @@ export class CreditsService {
     this.webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
     );
+  }
+
+  async assertSufficientCredits(
+    user_uuid: string,
+    required_credits: number,
+    detail?: {
+      items_count?: number;
+      credits_per_item?: number;
+    },
+  ): Promise<void> {
+    if (required_credits <= 0) {
+      return;
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { uuid: user_uuid },
+      select: { credits_balance: true },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    if (user.credits_balance < required_credits) {
+      throw new HttpException(
+        {
+          statusCode: HttpStatus.BAD_REQUEST,
+          code: API_ERROR_CODE_INSUFFICIENT_CREDITS,
+          required_credits,
+          balance: user.credits_balance,
+          ...(detail?.items_count !== undefined
+            ? { items_count: detail.items_count }
+            : {}),
+          ...(detail?.credits_per_item !== undefined
+            ? { credits_per_item: detail.credits_per_item }
+            : {}),
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async getSummary(user_uuid: string) {

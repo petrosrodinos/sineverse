@@ -28,12 +28,8 @@ import { transformVariationToImageModelPayload } from '@/integrations/aimlapi/co
 import { AiHelperService } from '@/shared/services/ai-helper/services/ai-helper.service';
 import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { EnrichProjectAssetVideoDto } from './dto/enrich-project-asset.dto';
-import {
-  ESTATE_WALKTHROUGH_VIDEO_MODEL,
-  ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
-  ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
-  ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
-} from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
+import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
+import { CreditsService } from '@/modules/credits/credits.service';
 
 @Injectable()
 export class ProjectAssetsService {
@@ -44,6 +40,7 @@ export class ProjectAssetsService {
     private readonly documentsService: DocumentsService,
     private readonly aiHelperService: AiHelperService,
     private readonly aimlApiService: AimlApiService,
+    private readonly creditsService: CreditsService,
     @InjectQueue(VIDEO_GENERATION_QUEUE)
     private readonly videoQueue: Queue<VideoGenerationJobData>,
   ) {}
@@ -243,6 +240,17 @@ export class ProjectAssetsService {
         throw new BadRequestException('Scene variation uuid is required');
       }
 
+      if (dto.workflow_source === estateWalkthroughVideoConfig.workflowSource) {
+        await this.creditsService.assertSufficientCredits(
+          user_uuid,
+          estateWalkthroughVideoConfig.creditCost,
+          {
+            items_count: 1,
+            credits_per_item: estateWalkthroughVideoConfig.creditCost,
+          },
+        );
+      }
+
       const variation = await this.prisma.sceneVariation.findFirst({
         where: { uuid: scene_variation_uuid, user_uuid },
         include: {
@@ -285,6 +293,7 @@ export class ProjectAssetsService {
       return projectAsset;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+      if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
         'Failed to trigger video generation',
         { cause: error },
@@ -408,6 +417,18 @@ export class ProjectAssetsService {
         return { kind: 'create', task };
       });
 
+      const createCount = resolved.filter((r) => r.kind === 'create').length;
+      const walkthroughRequiredCredits =
+        createCount * estateWalkthroughVideoConfig.creditCost;
+      await this.creditsService.assertSufficientCredits(
+        user_uuid,
+        walkthroughRequiredCredits,
+        {
+          items_count: createCount,
+          credits_per_item: estateWalkthroughVideoConfig.creditCost,
+        },
+      );
+
       const created = await Promise.all(
         resolved
           .filter(
@@ -422,10 +443,10 @@ export class ProjectAssetsService {
               ai_model:
                 ai_model ??
                 ((r.task.promptAsset.metadata as { walkthrough_ai_model?: string } | null)
-                  ?.walkthrough_ai_model ?? ESTATE_WALKTHROUGH_VIDEO_MODEL),
-              duration_sec: ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC,
-              prompt_text: ESTATE_WALKTHROUGH_VIDEO_PROMPT_TEXT,
-              workflow_source: ESTATE_WALKTHROUGH_WORKFLOW_SOURCE,
+                  ?.walkthrough_ai_model ?? estateWalkthroughVideoConfig.model),
+              duration_sec: estateWalkthroughVideoConfig.durationSec,
+              prompt_text: estateWalkthroughVideoConfig.promptText,
+              workflow_source: estateWalkthroughVideoConfig.workflowSource,
               prompt_image_uuids: [r.task.promptAsset.uuid],
               include_sound: false,
             } as CreateProjectAssetVideoDto),
@@ -460,6 +481,7 @@ export class ProjectAssetsService {
       );
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+      if (error instanceof HttpException) throw error;
       this.logger.error(`createEstateWalkthroughVideos: ${error?.message}`);
       throw new InternalServerErrorException(
         'Failed to create estate walkthrough videos',

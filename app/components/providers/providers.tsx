@@ -6,6 +6,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react"
 import { QueryProvider } from "./query-provider";
 import { HeroUiProviders } from "./hero-ui";
+import { InsufficientCreditsModal } from "@/components/ui/InsufficientCreditsModal";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -21,6 +22,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
         <QueryProvider>
           <SessionProvider>
               {children}
+              <InsufficientCreditsModal />
           </SessionProvider>
         </QueryProvider>
       </NextThemesProvider>

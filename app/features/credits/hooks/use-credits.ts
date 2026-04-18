@@ -21,7 +21,7 @@ export const useCreditsSummary = () => {
   return useQuery({
     queryKey: [QueryKeys.summary],
     queryFn: getCreditsSummary,
-    refetchInterval: 10000,
+    refetchInterval: 60_000,
   });
 };
 

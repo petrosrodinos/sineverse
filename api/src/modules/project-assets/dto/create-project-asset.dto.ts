@@ -163,6 +163,11 @@ export class CreateProjectAssetVideoDto extends CreateProjectAssetDto {
   })
   @IsOptional()
   prompt_image_uuids?: string[];
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  workflow_source?: string;
 }
 
 export class GenerateProjectAssetImageDto {

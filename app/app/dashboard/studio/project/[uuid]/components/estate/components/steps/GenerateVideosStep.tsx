@@ -5,6 +5,7 @@ import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
 import { addToast } from "@heroui/toast";
+import { isAxiosError } from "axios";
 import { Clapperboard } from "lucide-react";
 import { useParams } from "next/navigation";
 import type { Key } from "react";
@@ -22,6 +23,7 @@ import { VideoCard } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
 import { VideoReorderList } from "../video/VideoReorderList";
 import { moveIdInOrder } from "../../utils/estate-workflow.utils";
+import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from "@/config/api/api-error-codes";
 
 type GenerateVideosStepProps = {
   finalProjectUuid: string | null;
@@ -154,7 +156,14 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     }
     try {
       await createWalkthroughVideos({ project_uuid: projectUuid, ai_model: walkthroughAiModel });
-    } catch {
+    } catch (error) {
+      if (
+        isAxiosError(error) &&
+        (error.response?.data as { code?: string } | undefined)?.code ===
+          API_ERROR_CODE_INSUFFICIENT_CREDITS
+      ) {
+        return;
+      }
       addToast({
         title: "Could not start walkthrough clips",
         description: "Check your connection and try again.",
