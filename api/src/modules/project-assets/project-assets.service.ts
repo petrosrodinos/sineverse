@@ -182,7 +182,6 @@ export class ProjectAssetsService {
 
       if (asset.document_uuid) {
         await this.documentsService.deleteDocument(asset.document_uuid);
-        return asset;
       }
 
       return await this.prisma.projectAsset.delete({

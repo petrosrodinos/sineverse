@@ -1,6 +1,6 @@
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
 
-export const ESTATE_WALKTHROUGH_VIDEO_MODEL = VideoModels.SEEDANCE_1_0_LITE_IMAGE;
+export const ESTATE_WALKTHROUGH_VIDEO_MODEL = VideoModels.LTXV_2_FAST;
 export const ESTATE_WALKTHROUGH_VIDEO_DURATION_SEC = 4;
 export const ESTATE_WALKTHROUGH_VIDEO_CREDIT_COST = 10;
 export const ESTATE_WALKTHROUGH_WORKFLOW_SOURCE = 'ESTATE_WALKTHROUGH';

@@ -54,9 +54,9 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     [assetsResponse?.data],
   );
 
-  const { data: timelineClips = [] } = useTimelineClips(
+  const { data: timelineClips = [], isFetched: timelineClipsFetched } = useTimelineClips(
     { final_project_uuid: finalProjectUuid ?? "" },
-    { enabled: !!finalProjectUuid },
+    { enabled: !!finalProjectUuid, staleTime: 30_000 },
   );
 
   const { mutateAsync: updateTimelineClip } = useUpdateTimelineClip();
@@ -273,9 +273,18 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
         setDragIndex: reorderCtx.setDragIndex,
       };
 
-      return <VideoCard asset={assetItem} compact finalProjectUuid={finalProjectUuid} reorder={reorder} />;
+      return (
+        <VideoCard
+          asset={assetItem}
+          compact
+          finalProjectUuid={finalProjectUuid}
+          reorder={reorder}
+          timelineClipFromParent={clipByAssetUuid[clipId] ?? null}
+          timelineClipsReady={timelineClipsFetched}
+        />
+      );
     },
-    [videoAssetsByUuid, finalProjectUuid],
+    [videoAssetsByUuid, finalProjectUuid, clipByAssetUuid, timelineClipsFetched],
   );
 
   const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && hasPromptImages;

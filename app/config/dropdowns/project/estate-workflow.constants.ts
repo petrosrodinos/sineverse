@@ -36,7 +36,7 @@ export const ESTATE_VIDEO_MODEL_OPTIONS = [
     price: 0.091,
   },
   {
-    id: "bytedance/seedance-1-0-lite-i2v",
+    id: "ltxv/ltxv-2-fast",
     label: "LTXV 2 Fast (Cheapest)",
     price: 0.052,
   },
@@ -78,7 +78,7 @@ export const ESTATE_CAPTION_STYLE_OPTIONS = [
 
 export const ESTATE_DEFAULT_TRANSITION_ID = ESTATE_TRANSITION_OPTIONS[0].id;
 export const ESTATE_DEFAULT_AUDIO_TRACK_ID = ESTATE_AUDIO_TRACK_OPTIONS[0].id;
-export const ESTATE_DEFAULT_VIDEO_MODEL_ID: EstateVideoModelId = "bytedance/seedance-1-0-lite-i2v";
+export const ESTATE_DEFAULT_VIDEO_MODEL_ID: EstateVideoModelId = "ltxv/ltxv-2-fast";
 export const ESTATE_DEFAULT_VOLUME = 1;
 export const ESTATE_DEFAULT_SPEED = 1;
 export const ESTATE_DEFAULT_CAPTION_START_SEC = 0;

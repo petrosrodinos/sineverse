@@ -9,15 +9,16 @@ import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { Skeleton } from "@heroui/skeleton";
 import type { Key, MouseEvent as ReactMouseEvent, SyntheticEvent } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertCircle, GripVertical, Trash2 } from "lucide-react";
+import { addToast } from "@heroui/toast";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
-import { useDeleteScene } from "@/features/scenes/hooks/use-scenes";
+import { useDeleteProjectAsset, useProjectAsset } from "@/features/project-assets/hooks/use-project-assets";
 import { useTimelineClips, useCreateTimelineClip, useUpdateTimelineClip } from "@/features/timeline-clips/hooks/use-timeline-clips";
 import { useTimelineCaptions, useCreateTimelineCaption, useUpdateTimelineCaption } from "@/features/timeline-captions/hooks/use-timeline-captions";
+import type { TimelineClip } from "@/features/timeline-clips/interfaces/timeline-clips.interfaces";
 import type { UpdateTimelineClipDto } from "@/features/timeline-clips/interfaces/timeline-clips.interfaces";
 import type { UpdateTimelineCaptionDto } from "@/features/timeline-captions/interfaces/timeline-captions.interfaces";
 import {
@@ -55,12 +56,14 @@ type VideoCardProps = {
   compact?: boolean;
   finalProjectUuid: string;
   reorder?: VideoCardReorderProps;
+  timelineClipFromParent?: TimelineClip | null;
+  timelineClipsReady?: boolean;
 };
 
-export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }: VideoCardProps) {
+export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, timelineClipFromParent, timelineClipsReady }: VideoCardProps) {
   const videoAssetUuid = asset.uuid;
 
-  const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
+  const { mutateAsync: deleteProjectAsset, isPending: isDeletingProjectAsset } = useDeleteProjectAsset();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { data: polled } = useProjectAsset(videoAssetUuid, {
@@ -76,14 +79,13 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
   const videoUrl = display.document?.url ?? "";
   const showEditor = display.status === ProjectAssetStatuses.COMPLETED;
   const isDevelopment = process.env.NODE_ENV === "development";
-  const sceneUuid = display.scene_uuid ?? display.scene?.uuid ?? asset.scene_uuid ?? asset.scene?.uuid ?? null;
-  const promptImageUuid = useMemo(() => display.prompt_images?.[0]?.uuid ?? asset.prompt_images?.[0]?.uuid ?? null, [display.prompt_images, asset.prompt_images]);
 
-  const { data: clips } = useTimelineClips(
+  const useParentTimelineClip = timelineClipFromParent !== undefined;
+  const { data: fetchedClips } = useTimelineClips(
     { final_project_uuid: finalProjectUuid, project_asset_uuid: videoAssetUuid },
-    { enabled: showEditor && !!finalProjectUuid },
+    { enabled: !useParentTimelineClip && showEditor && !!finalProjectUuid },
   );
-  const clip = clips?.[0] ?? null;
+  const clip = useParentTimelineClip ? timelineClipFromParent : (fetchedClips?.[0] ?? null);
 
   const { mutate: createClip } = useCreateTimelineClip();
   const { mutate: updateClip } = useUpdateTimelineClip();
@@ -92,7 +94,9 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
   const clipInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (!showEditor || !finalProjectUuid || clip !== null || clips === undefined || clipInitializedRef.current) return;
+    if (!showEditor || !finalProjectUuid || clip !== null || clipInitializedRef.current) return;
+    if (useParentTimelineClip && timelineClipsReady === false) return;
+    if (!useParentTimelineClip && fetchedClips === undefined) return;
     clipInitializedRef.current = true;
     createClip({
       project_uuid: asset.project_uuid,
@@ -105,7 +109,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
       volume: ESTATE_DEFAULT_VOLUME,
       speed: ESTATE_DEFAULT_SPEED,
     });
-  }, [showEditor, finalProjectUuid, clip, clips, asset.project_uuid, videoAssetUuid, videoDurationSec, createClip]);
+  }, [showEditor, finalProjectUuid, clip, fetchedClips, useParentTimelineClip, timelineClipsReady, asset.project_uuid, videoAssetUuid, videoDurationSec, createClip]);
 
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(5);
@@ -257,14 +261,13 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
   }, []);
 
   const handleOpenDeleteModal = useCallback(() => {
-    if (!sceneUuid) return;
     setIsDeleteModalOpen(true);
-  }, [sceneUuid]);
+  }, []);
 
   const handleCloseDeleteModal = useCallback(() => {
-    if (isDeletingScene) return;
+    if (isDeletingProjectAsset) return;
     setIsDeleteModalOpen(false);
-  }, [isDeletingScene]);
+  }, [isDeletingProjectAsset]);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -289,11 +292,15 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
     }
   }, [reorder?.canReorder]);
 
-  const handleConfirmDeleteScene = useCallback(async () => {
-    if (!sceneUuid) return;
-    await deleteScene(sceneUuid);
-    setIsDeleteModalOpen(false);
-  }, [sceneUuid, deleteScene]);
+  const handleConfirmDeleteClip = useCallback(async () => {
+    try {
+      await deleteProjectAsset(videoAssetUuid);
+      setIsDeleteModalOpen(false);
+      addToast({ title: "Clip removed", severity: "success" });
+    } catch {
+      addToast({ title: "Could not remove clip", severity: "danger" });
+    }
+  }, [videoAssetUuid, deleteProjectAsset]);
 
   const previewShell = compact ? "relative h-24 w-full overflow-hidden rounded-lg bg-default-200/40 sm:h-28" : "relative aspect-video w-full overflow-hidden rounded-xl bg-default-200/40";
 
@@ -319,8 +326,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
           ) : (
             <Chip size="sm" variant="flat">{display.status}</Chip>
           )}
-          {isDevelopment && !!sceneUuid && (
-            <Button size="sm" color="danger" variant="flat" isIconOnly onPress={handleOpenDeleteModal} aria-label="Delete scene">
+          {(compact || isDevelopment) && (
+            <Button size="sm" color="danger" variant="flat" isIconOnly onPress={handleOpenDeleteModal} aria-label="Remove walkthrough clip">
               <Trash2 className="h-4 w-4" />
             </Button>
           )}
@@ -395,7 +402,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
     return (
       <>
         {card}
-        <ConfirmationModal isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDeleteScene} title="Delete scene" description="Delete this scene and all related assets? This action cannot be undone." confirmText="Delete" confirmColor="danger" isLoading={isDeletingScene} />
+        <ConfirmationModal isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDeleteClip} title="Remove walkthrough clip" description="Remove this generated clip only. Your uploaded listing photo stays on the project." confirmText="Remove" confirmColor="danger" isLoading={isDeletingProjectAsset} />
       </>
     );
   }
@@ -412,7 +419,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder }:
           <div className="min-w-0 flex-1">{card}</div>
         </div>
       </div>
-      <ConfirmationModal isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDeleteScene} title="Delete scene" description="Delete this scene and all related assets? This action cannot be undone." confirmText="Delete" confirmColor="danger" isLoading={isDeletingScene} />
+      <ConfirmationModal isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDeleteClip} title="Remove walkthrough clip" description="Remove this generated clip only. Your uploaded listing photo stays on the project." confirmText="Remove" confirmColor="danger" isLoading={isDeletingProjectAsset} />
     </>
   );
 }

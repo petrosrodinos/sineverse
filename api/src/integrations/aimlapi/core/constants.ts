@@ -15,6 +15,9 @@ export const VideoModels = {
   VEO_3_1_FAST: 'google/veo-3.1-t2v-fast',
   VEO_2_IMAGE: 'google/veo-3.0-i2v',
 
+  LTXV_2: 'ltxv/ltxv-2',
+  LTXV_2_FAST: 'ltxv/ltxv-2-fast',
+
   // ByteDance
   SEEDANCE_1_0_PRO: 'bytedance/seedance-1-0-pro-t2v',
   SEEDANCE_1_0_PRO_FAST: 'bytedance/seedance-1-0-pro-fast',

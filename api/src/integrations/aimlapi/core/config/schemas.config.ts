@@ -3,6 +3,7 @@ import { VideoModels, ImageModels } from '../constants';
 import * as KlingSchemas from '../schemas/kling/kling-video.schemas';
 import * as GoogleSchemas from '../schemas/google/google-video.schemas';
 import * as SeedanceSchemas from '../schemas/seedance/seedance-video.schemas';
+import * as LtxvSchemas from '../schemas/ltxv/ltxv-video.schemas';
 
 import * as KlingImageSchemas from '../schemas/kling/kling-image.schemas';
 import * as GoogleImageSchemas from '../schemas/google/google-image.schemas';
@@ -31,6 +32,9 @@ export const VIDEO_MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
   [VideoModels.VEO_3_1]: GoogleSchemas.GoogleVeo3T2VideoSchema,
   [VideoModels.VEO_3_1_FAST]: GoogleSchemas.GoogleVeo3T2VideoSchema,
   [VideoModels.VEO_2_IMAGE]: GoogleSchemas.GoogleVeo3I2VideoSchema,
+
+  [VideoModels.LTXV_2]: LtxvSchemas.Ltxv2VideoSchema,
+  [VideoModels.LTXV_2_FAST]: LtxvSchemas.Ltxv2FastVideoSchema,
 
   // ByteDance / Seedance
   [VideoModels.SEEDANCE_1_0_PRO]: SeedanceSchemas.SeedanceProT2VSchema,

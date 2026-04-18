@@ -41,8 +41,10 @@ export const useDeleteProjectAsset = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (uuid: string) => deleteProjectAsset(uuid),
-        onSuccess: () => {
+        onSuccess: (_data, uuid) => {
             queryClient.invalidateQueries({ queryKey: [QueryKeys.projectAssets] });
+            queryClient.removeQueries({ queryKey: [QueryKeys.projectAsset(uuid)] });
+            queryClient.invalidateQueries({ queryKey: ['timeline-clips'] });
         }
     });
 }

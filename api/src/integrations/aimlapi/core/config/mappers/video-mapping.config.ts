@@ -48,6 +48,19 @@ const normalizeDuration = (
 
   const normalized = Math.floor(duration);
 
+  if (model.includes('ltxv')) {
+    if ([6, 8, 10].includes(normalized)) {
+      return normalized;
+    }
+    if (normalized <= 6) {
+      return 6;
+    }
+    if (normalized <= 8) {
+      return 8;
+    }
+    return 10;
+  }
+
   if (model.includes('seedance')) {
     return [5, 10].includes(normalized) ? normalized : 5;
   }
@@ -139,6 +152,22 @@ export const transformVariationToModelPayload = (
     }
 
     return klingPayload;
+  }
+
+  if (model.includes('ltxv')) {
+    const ltxPayload: any = {
+      model,
+      prompt: basePayload.prompt,
+      seed: basePayload.seed,
+      duration: normalizeDuration(model, variation.duration_sec),
+      resolution: variation.resolution || '1080p',
+    };
+
+    if (variation.prompt_image?.document?.url) {
+      ltxPayload.image_url = variation.prompt_image.document.url;
+    }
+
+    return ltxPayload;
   }
 
   // Google Veo Mappings

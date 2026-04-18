@@ -260,25 +260,22 @@ export function AdminDashboardClient() {
 
       <Tabs aria-label="Admin tabs" variant="underlined">
         <Tab key="overview" title="Overview">
-          <div className="mt-4 space-y-6">
-            <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-default-500">Usage & Content</h2>
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Tabs aria-label="Overview metrics" variant="underlined" className="mt-4">
+            <Tab key="usage" title="Usage & Content">
+              <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {usageCards.map((metric) => (
                   <MetricCard key={metric.label} label={metric.label} value={metric.value} />
                 ))}
               </div>
-            </section>
-
-            <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-default-500">Financials</h2>
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            </Tab>
+            <Tab key="financials" title="Financials">
+              <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {financialCards.map((metric) => (
                   <MetricCard key={metric.label} label={metric.label} value={metric.value} />
                 ))}
               </div>
-            </section>
-          </div>
+            </Tab>
+          </Tabs>
         </Tab>
 
         <Tab key="users" title="Users">
