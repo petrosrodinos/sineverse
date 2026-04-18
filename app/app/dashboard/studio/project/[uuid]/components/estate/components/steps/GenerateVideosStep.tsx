@@ -5,8 +5,10 @@ import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
 import { addToast } from "@heroui/toast";
+import { Button } from "@heroui/button";
 import { isAxiosError } from "axios";
-import { Clapperboard } from "lucide-react";
+import { Clapperboard, Coins } from "lucide-react";
+import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import type { Key } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -14,16 +16,14 @@ import { useProjectAssets, useCreateEstateWalkthroughVideos } from "@/features/p
 import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useTimelineClips, useUpdateTimelineClip } from "@/features/timeline-clips/hooks/use-timeline-clips";
 import { useTimelineMusic, useUpsertTimelineMusic } from "@/features/timeline-music/hooks/use-timeline-music";
-import {
-  ESTATE_AUDIO_TRACK_OPTIONS,
-  ESTATE_DEFAULT_AUDIO_TRACK_ID,
-} from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import type { VideoCardReorderProps } from "../video/VideoCard";
 import { VideoCard } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
 import { VideoReorderList } from "../video/VideoReorderList";
 import { moveIdInOrder } from "../../utils/estate-workflow.utils";
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from "@/config/api/api-error-codes";
+import { Routes } from "@/config/routes";
 
 type GenerateVideosStepProps = {
   finalProjectUuid: string | null;
@@ -45,21 +45,13 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
   const [audioTrackId, setAudioTrackId] = useState<string>(ESTATE_DEFAULT_AUDIO_TRACK_ID);
   const [activeTab, setActiveTab] = useState<string>("videos");
   const [volume, setVolume] = useState(1);
+  const [walkthroughInsufficientCredits, setWalkthroughInsufficientCredits] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const { data: assetsResponse, isLoading } = useProjectAssets({ project_uuid: projectUuid, role: AssetRoles.GENERATED_VIDEO, limit: 100 }, { enabled: !!projectUuid });
-  const videoAssets = useMemo(
-    () =>
-      [...(assetsResponse?.data ?? [])].sort(
-        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-      ),
-    [assetsResponse?.data],
-  );
+  const videoAssets = useMemo(() => [...(assetsResponse?.data ?? [])].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()), [assetsResponse?.data]);
 
-  const { data: timelineClips = [], isFetched: timelineClipsFetched } = useTimelineClips(
-    { final_project_uuid: finalProjectUuid ?? "" },
-    { enabled: !!finalProjectUuid, staleTime: 30_000 },
-  );
+  const { data: timelineClips = [], isFetched: timelineClipsFetched } = useTimelineClips({ final_project_uuid: finalProjectUuid ?? "" }, { enabled: !!finalProjectUuid, staleTime: 30_000 });
 
   const { mutateAsync: updateTimelineClip } = useUpdateTimelineClip();
   const { data: timelineMusic } = useTimelineMusic(finalProjectUuid ?? "");
@@ -72,9 +64,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     }
 
     const assetIdSet = new Set(assetIds);
-    const clipOrderedIds = timelineClips
-      .map((clip) => clip.project_asset_uuid)
-      .filter((id) => assetIdSet.has(id));
+    const clipOrderedIds = timelineClips.map((clip) => clip.project_asset_uuid).filter((id) => assetIdSet.has(id));
     const clipOrderedSet = new Set(clipOrderedIds);
     const remainingIds = assetIds.filter((id) => !clipOrderedSet.has(id));
 
@@ -126,10 +116,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
 
   const { mutateAsync: createWalkthroughVideos, isPending: isCreatingWalkthrough } = useCreateEstateWalkthroughVideos();
   const currentMusic = timelineMusic?.[0] ?? null;
-  const selectedAudioOption = useMemo(
-    () => ESTATE_AUDIO_TRACK_OPTIONS.find((opt) => opt.id === audioTrackId) ?? ESTATE_AUDIO_TRACK_OPTIONS[0],
-    [audioTrackId],
-  );
+  const selectedAudioOption = useMemo(() => ESTATE_AUDIO_TRACK_OPTIONS.find((opt) => opt.id === audioTrackId) ?? ESTATE_AUDIO_TRACK_OPTIONS[0], [audioTrackId]);
 
   const autoWalkthroughAttemptedRef = useRef(false);
 
@@ -154,14 +141,12 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
       });
       return;
     }
+    setWalkthroughInsufficientCredits(false);
     try {
       await createWalkthroughVideos({ project_uuid: projectUuid, ai_model: walkthroughAiModel });
     } catch (error) {
-      if (
-        isAxiosError(error) &&
-        (error.response?.data as { code?: string } | undefined)?.code ===
-          API_ERROR_CODE_INSUFFICIENT_CREDITS
-      ) {
+      if (isAxiosError(error) && (error.response?.data as { code?: string } | undefined)?.code === API_ERROR_CODE_INSUFFICIENT_CREDITS) {
+        setWalkthroughInsufficientCredits(true);
         return;
       }
       addToast({
@@ -171,6 +156,22 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
       });
     }
   }, [projectUuid, hasPromptImages, createWalkthroughVideos, walkthroughAiModel]);
+
+  useEffect(() => {
+    if (videoOrder.length > 0) {
+      setWalkthroughInsufficientCredits(false);
+    }
+  }, [videoOrder.length]);
+
+  useEffect(() => {
+    if (!hasPromptImages) {
+      setWalkthroughInsufficientCredits(false);
+    }
+  }, [hasPromptImages]);
+
+  useEffect(() => {
+    setWalkthroughInsufficientCredits(false);
+  }, [projectUuid]);
 
   useEffect(() => {
     if (!projectUuid || !hasPromptImages || videoOrder.length > 0 || isLoading) return;
@@ -222,38 +223,44 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     [finalProjectUuid, clipByAssetUuid, updateTimelineClip],
   );
 
-  const handleReorder = useCallback((fromIndex: number, toIndex: number) => {
-    if (fromIndex === toIndex) {
-      return;
-    }
-
-    setVideoOrder((prev) => {
-      const nextOrder = moveIdInOrder(prev, fromIndex, toIndex);
-      if (nextOrder.every((id, index) => id === prev[index])) {
-        return prev;
+  const handleReorder = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (fromIndex === toIndex) {
+        return;
       }
-      void persistReorderedClips(nextOrder);
-      return nextOrder;
-    });
-  }, [persistReorderedClips]);
 
-  const handleAudioChange = useCallback((keys: "all" | Iterable<Key>) => {
-    if (keys === "all") return;
-    const first = Array.from(keys)[0];
-    if (typeof first === "string") {
-      setAudioTrackId(first);
-      if (!finalProjectUuid) return;
-      upsertTimelineMusic({
-        finalProjectUuid,
-        dto: {
-          track_id: first,
-          volume,
-          start_sec: 0,
-          end_sec: currentMusic?.end_sec ?? 4,
-        },
+      setVideoOrder((prev) => {
+        const nextOrder = moveIdInOrder(prev, fromIndex, toIndex);
+        if (nextOrder.every((id, index) => id === prev[index])) {
+          return prev;
+        }
+        void persistReorderedClips(nextOrder);
+        return nextOrder;
       });
-    }
-  }, [finalProjectUuid, upsertTimelineMusic, volume, currentMusic]);
+    },
+    [persistReorderedClips],
+  );
+
+  const handleAudioChange = useCallback(
+    (keys: "all" | Iterable<Key>) => {
+      if (keys === "all") return;
+      const first = Array.from(keys)[0];
+      if (typeof first === "string") {
+        setAudioTrackId(first);
+        if (!finalProjectUuid) return;
+        upsertTimelineMusic({
+          finalProjectUuid,
+          dto: {
+            track_id: first,
+            volume,
+            start_sec: 0,
+            end_sec: currentMusic?.end_sec ?? 4,
+          },
+        });
+      }
+    },
+    [finalProjectUuid, upsertTimelineMusic, volume, currentMusic],
+  );
 
   const handleAudioMetadata = useCallback(() => {
     const duration = audioRef.current?.duration;
@@ -282,21 +289,18 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
         setDragIndex: reorderCtx.setDragIndex,
       };
 
-      return (
-        <VideoCard
-          asset={assetItem}
-          compact
-          finalProjectUuid={finalProjectUuid}
-          reorder={reorder}
-          timelineClipFromParent={clipByAssetUuid[clipId] ?? null}
-          timelineClipsReady={timelineClipsFetched}
-        />
-      );
+      return <VideoCard asset={assetItem} compact finalProjectUuid={finalProjectUuid} reorder={reorder} timelineClipFromParent={clipByAssetUuid[clipId] ?? null} timelineClipsReady={timelineClipsFetched} />;
     },
     [videoAssetsByUuid, finalProjectUuid, clipByAssetUuid, timelineClipsFetched],
   );
 
-  const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && hasPromptImages;
+  const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && hasPromptImages && !walkthroughInsufficientCredits;
+
+  const showWalkthroughCreditsEmpty = walkthroughInsufficientCredits && videoOrder.length === 0 && hasPromptImages;
+
+  const handleRetryWalkthrough = useCallback(() => {
+    void runWalkthroughGeneration();
+  }, [runWalkthroughGeneration]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -317,13 +321,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
         </CardBody>
       </Card>
 
-      <Tabs
-        aria-label="Walkthrough step tabs"
-        selectedKey={activeTab}
-        onSelectionChange={(key) => setActiveTab(String(key))}
-        variant="underlined"
-        classNames={{ tabList: "gap-3", panel: "px-0 pt-4" }}
-      >
+      <Tabs aria-label="Walkthrough step tabs" selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))} variant="underlined" classNames={{ tabList: "gap-3", panel: "px-0 pt-4" }}>
         <Tab key="videos" title="Videos">
           <div className="flex flex-col gap-4">
             {showGeneratingShell && (
@@ -341,6 +339,29 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
                 ))}
               </div>
             )}
+            {showWalkthroughCreditsEmpty && (
+              <Card className="border border-warning-200/80 bg-gradient-to-br from-warning-50/80 to-default-100/60 dark:border-warning-500/30 dark:from-warning-500/10 dark:to-default-100/10">
+                <CardBody className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+                  <div className="flex min-w-0 gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-warning-500/15 text-warning-600 dark:text-warning-400">
+                      <Coins className="size-5" aria-hidden />
+                    </span>
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-sm font-semibold text-foreground">Not enough credits for walkthrough clips</p>
+                      <p className="text-sm leading-relaxed text-default-600">Add credits to generate your clips, then try again.</p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 flex-wrap gap-2">
+                    <Button variant="flat" onPress={handleRetryWalkthrough}>
+                      Try again
+                    </Button>
+                    <Button as={NextLink} href={Routes.billing} color="primary" className="font-semibold">
+                      Buy credits
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            )}
             {videoOrder.length > 0 && <VideoReorderList orderedIds={videoOrder} renderItem={renderItem} onReorder={handleReorder} canReorder={canReorder} />}
           </div>
         </Tab>
@@ -348,28 +369,14 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
           <Card className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5">
             <CardBody className="gap-3 p-4">
               <p className="text-sm font-semibold text-foreground">Background audio</p>
-              <Select
-                label="Audio track"
-                size="sm"
-                selectedKeys={new Set([audioTrackId])}
-                onSelectionChange={handleAudioChange}
-                classNames={{ trigger: "min-h-10" }}
-                isDisabled={!finalProjectUuid}
-              >
+              <Select label="Audio track" size="sm" selectedKeys={new Set([audioTrackId])} onSelectionChange={handleAudioChange} classNames={{ trigger: "min-h-10" }} isDisabled={!finalProjectUuid}>
                 {ESTATE_AUDIO_TRACK_OPTIONS.map((opt) => (
                   <SelectItem key={opt.id}>{opt.label}</SelectItem>
                 ))}
               </Select>
               {selectedAudioOption.id !== "none" && selectedAudioOption.src && (
                 <div className="min-w-0">
-                  <audio
-                    ref={audioRef}
-                    controls
-                    preload="metadata"
-                    src={selectedAudioOption.src}
-                    onLoadedMetadata={handleAudioMetadata}
-                    className="w-full max-w-full"
-                  />
+                  <audio ref={audioRef} controls preload="metadata" src={selectedAudioOption.src} onLoadedMetadata={handleAudioMetadata} className="w-full max-w-full" />
                 </div>
               )}
             </CardBody>

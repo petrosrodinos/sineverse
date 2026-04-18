@@ -176,14 +176,17 @@ export class ProjectAssetsService {
   async remove(user_uuid: string, uuid: string) {
     try {
       const asset = await this.findOne(user_uuid, uuid);
+      const documentUuid = asset.document_uuid;
 
-      if (asset.document_uuid) {
-        await this.documentsService.deleteDocument(asset.document_uuid);
-      }
-
-      return await this.prisma.projectAsset.delete({
+      const deleted = await this.prisma.projectAsset.delete({
         where: { uuid },
       });
+
+      if (documentUuid) {
+        await this.documentsService.deleteDocument(documentUuid);
+      }
+
+      return deleted;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       this.logger.error(`Failed to delete project asset: ${error.message}`);
