@@ -46,6 +46,7 @@ export const ApiRoutes = {
     },
     credits: {
         summary: "/credits/summary",
+        usageStats: "/credits/usage-stats",
         packs: "/credits/packs",
         usage: "/credits/usage",
         purchases: "/credits/purchases",

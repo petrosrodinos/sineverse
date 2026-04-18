@@ -6,7 +6,8 @@ import { Chip } from "@heroui/chip";
 import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
-import { useCreateCreditCheckout, useCreditPacks, useCreditsPurchases, useCreditsSummary, useCreditsUsage } from "@/features/credits/hooks/use-credits";
+import { useCreateCreditCheckout, useCreditPacks, useCreditsPurchases, useCreditsSummary, useCreditsUsage, useCreditsUsageStats } from "@/features/credits/hooks/use-credits";
+import type { CreditsUsageStats } from "@/features/credits/interfaces/credits.interfaces";
 
 function formatCurrency(amountCents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
@@ -45,12 +46,28 @@ function getStatusChipColor(status?: string | null): "primary" | "secondary" | "
   return "default";
 }
 
+function usageBreakdownSegments(stats: CreditsUsageStats) {
+  const total = stats.total_credits_used;
+  if (total <= 0) {
+    return [];
+  }
+  return [
+    { key: "FILM", label: "Film", value: stats.film_credits_used, barClass: "bg-secondary-500" },
+    { key: "ESTATE", label: "Estate", value: stats.estate_credits_used, barClass: "bg-primary-500" },
+    { key: "OTHER", label: "Other", value: stats.other_credits_used, barClass: "bg-default-500" },
+  ]
+    .filter((s) => s.value > 0)
+    .map((s) => ({ ...s, widthPct: (s.value / total) * 100 }));
+}
+
 export default function CreditsPage() {
   const { data: summary, isLoading: summaryLoading } = useCreditsSummary();
+  const { data: usageStats, isLoading: usageStatsLoading } = useCreditsUsageStats();
   const { data: packs, isLoading: packsLoading } = useCreditPacks();
   const { data: usage } = useCreditsUsage();
   const { data: purchases } = useCreditsPurchases();
   const { mutate: createCheckout, isPending: checkoutPending } = useCreateCreditCheckout();
+  const usageSegments = usageStats ? usageBreakdownSegments(usageStats) : [];
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
@@ -59,16 +76,47 @@ export default function CreditsPage() {
         <p className="mt-1 text-sm text-default-500">Manage your balance, top up packs, and review detailed usage and purchase records.</p>
       </div>
 
-      <section className="rounded-2xl border border-default-200 bg-gradient-to-r from-primary-500/10 via-default-100 to-secondary-500/10 px-6 py-7 sm:px-8">
-        <p className="text-xs uppercase tracking-[0.18em] text-default-500">Current balance</p>
-        {summaryLoading ? (
-          <Skeleton className="mt-2 h-12 w-36 rounded-xl" />
-        ) : (
-          <div className="mt-2 flex items-end gap-3">
-            <span className="text-5xl font-bold leading-none text-foreground">{summary?.balance ?? 0}</span>
-            <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
-          </div>
-        )}
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-2xl border border-default-200 bg-gradient-to-r from-primary-500/10 via-default-100 to-secondary-500/10 px-6 py-7 sm:px-8">
+          <p className="text-xs uppercase tracking-[0.18em] text-default-500">Current balance</p>
+          {summaryLoading ? (
+            <Skeleton className="mt-2 h-12 w-36 rounded-xl" />
+          ) : (
+            <div className="mt-2 flex items-end gap-3">
+              <span className="text-5xl font-bold leading-none text-foreground">{summary?.balance ?? 0}</span>
+              <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
+            </div>
+          )}
+        </div>
+
+        <div className="rounded-2xl border border-default-200 bg-gradient-to-br from-default-100 via-default-50 to-secondary-500/15 px-6 py-7 sm:px-8">
+          <p className="text-xs uppercase tracking-[0.18em] text-default-500">Total credits used</p>
+          {usageStatsLoading ? (
+            <div className="mt-3 space-y-3">
+              <Skeleton className="h-12 w-40 rounded-xl" />
+              <Skeleton className="h-2.5 w-full rounded-full" />
+              <Skeleton className="h-5 w-3/4 rounded-md" />
+            </div>
+          ) : (
+            <>
+              <div className="mt-2 flex flex-wrap items-end gap-2">
+                <span className="text-5xl font-bold leading-none text-foreground">{(usageStats?.total_credits_used ?? 0).toLocaleString()}</span>
+                <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
+              </div>
+              <p className="mt-1 text-sm text-default-500">Lifetime usage across your projects</p>
+              {(usageStats?.total_credits_used ?? 0) > 0 && usageSegments.length > 0 && (
+                <div className="mt-4 space-y-3">
+                  <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-default-200/80">
+                    {usageSegments.map((s) => (
+                      <div key={s.key} className={`h-full min-w-0 ${s.barClass}`} style={{ width: `${s.widthPct}%` }} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {(usageStats?.total_credits_used ?? 0) === 0 && <p className="mt-3 text-sm text-default-500">No usage yet — your generations will appear here.</p>}
+            </>
+          )}
+        </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -84,19 +132,14 @@ export default function CreditsPage() {
           ))}
         {!packsLoading &&
           packs?.map((pack, index) => (
-            <Card
-              key={pack.uuid}
-              className={
-                index === 1
-                  ? "border border-primary/40 bg-gradient-to-br from-primary/10 to-transparent shadow-lg shadow-primary/10"
-                  : "border border-default-200 bg-default-50/40 shadow-sm"
-              }
-            >
+            <Card key={pack.uuid} className={index === 1 ? "border border-primary/40 bg-gradient-to-br from-primary/10 to-transparent shadow-lg shadow-primary/10" : "border border-default-200 bg-default-50/40 shadow-sm"}>
               <CardBody className="gap-4 p-5">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-sm text-default-500">{pack.name}</p>
-                    <p className="text-3xl font-bold leading-tight">{pack.credits_amount} <span className="text-base font-medium text-default-500">credits</span></p>
+                    <p className="text-3xl font-bold leading-tight">
+                      {pack.credits_amount} <span className="text-base font-medium text-default-500">credits</span>
+                    </p>
                   </div>
                   {index === 1 && (
                     <Chip color="primary" variant="flat" size="sm">
@@ -105,13 +148,7 @@ export default function CreditsPage() {
                   )}
                 </div>
                 <p className="text-2xl font-bold">{formatCurrency(pack.amount_cents, pack.currency)}</p>
-                <Button
-                  color={index === 1 ? "primary" : "default"}
-                  variant={index === 1 ? "solid" : "flat"}
-                  onPress={() => createCheckout({ pack_key: pack.key })}
-                  isLoading={checkoutPending}
-                  className="font-semibold"
-                >
+                <Button color={index === 1 ? "primary" : "default"} variant={index === 1 ? "solid" : "flat"} onPress={() => createCheckout({ pack_key: pack.key })} isLoading={checkoutPending} className="font-semibold">
                   Buy Pack
                 </Button>
               </CardBody>

@@ -5,6 +5,7 @@ import {
   CreditPurchaseItem,
   CreditsSummary,
   CreditsUsageItem,
+  CreditsUsageStats,
   CreateCreditCheckoutPayload,
   CreateCreditCheckoutResponse,
   PaginatedResponse,
@@ -12,6 +13,11 @@ import {
 
 export const getCreditsSummary = async (): Promise<CreditsSummary> => {
   const response = await axiosInstance.get<CreditsSummary>(ApiRoutes.credits.summary);
+  return response.data;
+};
+
+export const getCreditsUsageStats = async (): Promise<CreditsUsageStats> => {
+  const response = await axiosInstance.get<CreditsUsageStats>(ApiRoutes.credits.usageStats);
   return response.data;
 };
 

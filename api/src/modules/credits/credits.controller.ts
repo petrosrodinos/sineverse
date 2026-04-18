@@ -19,6 +19,12 @@ export class CreditsController {
     return this.creditsService.getSummary(user_uuid);
   }
 
+  @Get('usage-stats')
+  @ApiOperation({ summary: 'Get total credits used with project-type breakdown' })
+  getUsageStats(@CurrentUser('uuid') user_uuid: string) {
+    return this.creditsService.getUsageStats(user_uuid);
+  }
+
   @Get('packs')
   @ApiOperation({ summary: 'Get purchasable credit packs' })
   getPacks() {

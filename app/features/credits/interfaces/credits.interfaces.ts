@@ -4,6 +4,13 @@ export interface CreditsSummary {
   used_credits: number;
 }
 
+export interface CreditsUsageStats {
+  total_credits_used: number;
+  film_credits_used: number;
+  estate_credits_used: number;
+  other_credits_used: number;
+}
+
 export interface CreditPack {
   uuid: string;
   key: string;

@@ -72,6 +72,56 @@ export class CreditsService {
     };
   }
 
+  async getUsageStats(user_uuid: string): Promise<{
+    total_credits_used: number;
+    film_credits_used: number;
+    estate_credits_used: number;
+    other_credits_used: number;
+  }> {
+    const user = await this.prisma.user.findUnique({
+      where: { uuid: user_uuid },
+      select: { uuid: true },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const [aggregate, groups] = await Promise.all([
+      this.prisma.creditLedgerEntry.aggregate({
+        where: { user_uuid, type: CreditLedgerType.USAGE },
+        _sum: { delta_credits: true },
+      }),
+      this.prisma.creditLedgerEntry.groupBy({
+        by: ['project_type'],
+        where: { user_uuid, type: CreditLedgerType.USAGE },
+        _sum: { delta_credits: true },
+      }),
+    ]);
+
+    let film_credits_used = 0;
+    let estate_credits_used = 0;
+    let other_credits_used = 0;
+
+    for (const row of groups) {
+      const segment = Math.abs(row._sum.delta_credits ?? 0);
+      if (row.project_type === ProjectType.FILM) {
+        film_credits_used = segment;
+      } else if (row.project_type === ProjectType.ESTATE) {
+        estate_credits_used = segment;
+      } else {
+        other_credits_used += segment;
+      }
+    }
+
+    return {
+      total_credits_used: Math.abs(aggregate._sum.delta_credits ?? 0),
+      film_credits_used,
+      estate_credits_used,
+      other_credits_used,
+    };
+  }
+
   async getPacks() {
     await this.ensureDefaultCreditPacks();
 

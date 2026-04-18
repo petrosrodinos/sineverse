@@ -3,12 +3,15 @@
 import { Navbar as HeroUINavbar, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, DropdownSection } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar";
+import { Chip } from "@heroui/chip";
 import { Skeleton } from "@heroui/skeleton";
 import { ThemeSwitch } from "@/components/ui/theme-switch";
-import { User, CreditCard, LogOut, Menu } from "lucide-react";
+import { Coins, CreditCard, LogOut, Menu, User } from "lucide-react";
 import { Button } from "@heroui/button";
 import { signOut, useSession } from "next-auth/react";
+import NextLink from "next/link";
 import { Routes } from "@/config/routes";
+import { useCreditsSummary } from "@/features/credits/hooks/use-credits";
 import { useLayoutStore } from "@/stores/layout.store";
 
 export function DashboardNavbar() {
@@ -16,6 +19,7 @@ export function DashboardNavbar() {
   const isSessionLoading = status === "loading";
   const { full_name, email } = session || {};
   const { toggleMobileDrawer } = useLayoutStore();
+  const { data: creditsSummary, isLoading: creditsLoading } = useCreditsSummary();
 
   return (
     <HeroUINavbar maxWidth="xl" position="sticky" isBordered>
@@ -27,7 +31,32 @@ export function DashboardNavbar() {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent className="w-full" justify="end">
-        <NavbarItem className="flex items-center gap-3 ml-auto">
+        <NavbarItem className="ml-auto flex items-center gap-2 sm:gap-3">
+          {creditsLoading ? (
+            <Skeleton className="h-9 w-[min(100%,14rem)] max-w-[14rem] shrink-0 rounded-full" />
+          ) : (
+            <Chip
+              variant="bordered"
+              size="md"
+              classNames={{
+                base: "h-9 max-w-[min(100%,20rem)] gap-1 border-default-200 bg-default-100/90 pl-2 pr-1",
+                content: "min-w-0 gap-2 font-semibold tabular-nums",
+              }}
+              startContent={<Coins className="size-4 shrink-0 text-primary" aria-hidden />}
+              endContent={
+                <NextLink
+                  href={Routes.billing}
+                  className="shrink-0 rounded-md px-2 py-1 text-xs font-semibold text-primary sm:text-sm"
+                >
+                  <span className="hidden sm:inline">Buy credits</span>
+                  <span className="sm:hidden">Buy</span>
+                </NextLink>
+              }
+              aria-label={`Credits: ${(creditsSummary?.balance ?? 0).toLocaleString()}. Buy credits.`}
+            >
+              <span className="truncate">{(creditsSummary?.balance ?? 0).toLocaleString()}</span>
+            </Chip>
+          )}
           <ThemeSwitch />
           <Dropdown placement="bottom-end" isDisabled={isSessionLoading} classNames={{ content: "rounded-xl shadow-lg border border-default-200/80 p-0 min-w-[220px]" }}>
             <DropdownTrigger>
