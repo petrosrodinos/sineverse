@@ -1,13 +1,21 @@
 "use client";
 
 import { Button } from "@heroui/button";
-import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Skeleton } from "@heroui/skeleton";
 import { Tab, Tabs } from "@heroui/tabs";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
-import { useCreateCreditCheckout, useCreditPacks, useCreditsPurchases, useCreditsSummary, useCreditsUsage, useCreditsUsageStats } from "@/features/credits/hooks/use-credits";
-import type { CreditsUsageStats } from "@/features/credits/interfaces/credits.interfaces";
+import { useCallback } from "react";
+import {
+  useCreateCreditCheckout,
+  useCreditPacks,
+  useCreditsPurchases,
+  useCreditsSummary,
+  useCreditsUsage,
+  useCreditsUsageStats,
+} from "@/features/credits/hooks/use-credits";
+import type { CreditPack, CreditsUsageStats } from "@/features/credits/interfaces/credits.interfaces";
 
 function formatCurrency(amountCents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
@@ -60,6 +68,55 @@ function usageBreakdownSegments(stats: CreditsUsageStats) {
     .map((s) => ({ ...s, widthPct: (s.value / total) * 100 }));
 }
 
+type PackPurchaseCardProps = {
+  pack: CreditPack;
+  isFeatured: boolean;
+  checkoutPending: boolean;
+  onPurchase: (packKey: string) => void;
+};
+
+function PackPurchaseCard({ pack, isFeatured, checkoutPending, onPurchase }: PackPurchaseCardProps) {
+  function handlePress() {
+    onPurchase(pack.key);
+  }
+
+  return (
+    <Card
+      className={
+        isFeatured
+          ? "border border-primary/35 bg-gradient-to-br from-primary/12 to-transparent shadow-lg shadow-primary/10"
+          : "border border-default-200/80 bg-default-50/30 shadow-sm shadow-black/5"
+      }
+    >
+      <CardBody className="gap-5 p-6">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium text-default-600">{pack.name}</p>
+            <p className="mt-1 text-3xl font-bold tracking-tight text-foreground">
+              {pack.credits_amount} <span className="text-base font-medium text-default-500">credits</span>
+            </p>
+          </div>
+          {isFeatured && (
+            <Chip color="primary" variant="flat" size="sm">
+              Best value
+            </Chip>
+          )}
+        </div>
+        <p className="text-2xl font-semibold text-foreground">{formatCurrency(pack.amount_cents, pack.currency)}</p>
+        <Button
+          color={isFeatured ? "primary" : "default"}
+          variant={isFeatured ? "solid" : "flat"}
+          onPress={handlePress}
+          isLoading={checkoutPending}
+          className="h-11 font-semibold"
+        >
+          {isFeatured ? "Buy credits" : "Buy pack"}
+        </Button>
+      </CardBody>
+    </Card>
+  );
+}
+
 export default function CreditsPage() {
   const { data: summary, isLoading: summaryLoading } = useCreditsSummary();
   const { data: usageStats, isLoading: usageStatsLoading } = useCreditsUsageStats();
@@ -67,165 +124,187 @@ export default function CreditsPage() {
   const { data: usage } = useCreditsUsage();
   const { data: purchases } = useCreditsPurchases();
   const { mutate: createCheckout, isPending: checkoutPending } = useCreateCreditCheckout();
+
+  const purchasePack = useCallback(
+    (packKey: string) => {
+      createCheckout({ pack_key: packKey });
+    },
+    [createCheckout],
+  );
+
   const usageSegments = usageStats ? usageBreakdownSegments(usageStats) : [];
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
-      <div className="rounded-2xl border border-default-200 bg-gradient-to-br from-default-100 to-default-50 p-5 sm:p-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Credits Center</h1>
-        <p className="mt-1 text-sm text-default-500">Manage your balance, top up packs, and review detailed usage and purchase records.</p>
-      </div>
+    <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:pb-20 sm:pt-12">
+      <header className="max-w-2xl">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">Credits</h1>
+        <p className="mt-2 text-sm leading-relaxed text-default-500 sm:text-base">
+          Your balance, credit packs, and full usage and purchase history in one place.
+        </p>
+      </header>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-default-200 bg-gradient-to-r from-primary-500/10 via-default-100 to-secondary-500/10 px-6 py-7 sm:px-8">
-          <p className="text-xs uppercase tracking-[0.18em] text-default-500">Current balance</p>
-          {summaryLoading ? (
-            <Skeleton className="mt-2 h-12 w-36 rounded-xl" />
-          ) : (
-            <div className="mt-2 flex items-end gap-3">
-              <span className="text-5xl font-bold leading-none text-foreground">{summary?.balance ?? 0}</span>
-              <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
-            </div>
-          )}
-        </div>
+      <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-default-300/80 to-transparent" aria-hidden />
 
-        <div className="rounded-2xl border border-default-200 bg-gradient-to-br from-default-100 via-default-50 to-secondary-500/15 px-6 py-7 sm:px-8">
-          <p className="text-xs uppercase tracking-[0.18em] text-default-500">Total credits used</p>
-          {usageStatsLoading ? (
-            <div className="mt-3 space-y-3">
-              <Skeleton className="h-12 w-40 rounded-xl" />
-              <Skeleton className="h-2.5 w-full rounded-full" />
-              <Skeleton className="h-5 w-3/4 rounded-md" />
-            </div>
-          ) : (
-            <>
-              <div className="mt-2 flex flex-wrap items-end gap-2">
-                <span className="text-5xl font-bold leading-none text-foreground">{(usageStats?.total_credits_used ?? 0).toLocaleString()}</span>
-                <span className="pb-1 text-sm font-medium uppercase tracking-wider text-default-500">credits</span>
-              </div>
-              <p className="mt-1 text-sm text-default-500">Lifetime usage across your projects</p>
-              {(usageStats?.total_credits_used ?? 0) > 0 && usageSegments.length > 0 && (
-                <div className="mt-4 space-y-3">
-                  <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-default-200/80">
-                    {usageSegments.map((s) => (
-                      <div key={s.key} className={`h-full min-w-0 ${s.barClass}`} style={{ width: `${s.widthPct}%` }} />
-                    ))}
-                  </div>
+      <section className="mt-6" aria-labelledby="credits-balance-heading">
+        <h2 id="credits-balance-heading" className="text-xs font-semibold uppercase tracking-[0.2em] text-default-500">
+          Balances
+        </h2>
+        <div className="mt-6 rounded-2xl bg-default-100/50 p-8 shadow-sm shadow-black/[0.04] ring-1 ring-default-200/60 backdrop-blur-sm sm:p-10">
+          <div className="grid gap-10 md:grid-cols-2 md:gap-12 md:divide-x md:divide-default-200/70">
+            <div className="md:pr-10">
+              <p className="text-sm font-medium text-default-600">Available now</p>
+              {summaryLoading ? (
+                <Skeleton className="mt-4 h-16 w-44 rounded-xl" />
+              ) : (
+                <div className="mt-4 flex flex-wrap items-end gap-3">
+                  <span className="text-6xl font-bold tabular-nums tracking-tight text-foreground sm:text-7xl">{summary?.balance ?? 0}</span>
+                  <span className="pb-2 text-sm font-medium uppercase tracking-widest text-default-500">credits</span>
                 </div>
               )}
-              {(usageStats?.total_credits_used ?? 0) === 0 && <p className="mt-3 text-sm text-default-500">No usage yet — your generations will appear here.</p>}
-            </>
-          )}
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-default-500">
+                Credits power AI generation across your projects. This is what you can spend right now.
+              </p>
+            </div>
+
+            <div className="md:pl-10">
+              <p className="text-sm font-medium text-default-600">Lifetime usage</p>
+              {usageStatsLoading ? (
+                <div className="mt-4 space-y-4">
+                  <Skeleton className="h-16 w-48 rounded-xl" />
+                  <Skeleton className="h-2.5 w-full rounded-full" />
+                </div>
+              ) : (
+                <>
+                  <div className="mt-4 flex flex-wrap items-end gap-2">
+                    <span className="text-4xl font-bold tabular-nums tracking-tight text-foreground sm:text-5xl">
+                      {(usageStats?.total_credits_used ?? 0).toLocaleString()}
+                    </span>
+                    <span className="pb-1.5 text-sm font-medium uppercase tracking-widest text-default-500">credits</span>
+                  </div>
+                  <p className="mt-2 text-sm text-default-500">Total credits consumed across all work in this account.</p>
+                  {(usageStats?.total_credits_used ?? 0) > 0 && usageSegments.length > 0 && (
+                    <div className="mt-6">
+                      <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-default-200/80">
+                        {usageSegments.map((s) => (
+                          <div key={s.key} className={`h-full min-w-0 ${s.barClass}`} style={{ width: `${s.widthPct}%` }} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {(usageStats?.total_credits_used ?? 0) === 0 && (
+                    <p className="mt-4 text-sm text-default-500">No usage yet. Generations will show up here.</p>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {packsLoading &&
-          Array.from({ length: 3 }).map((_, idx) => (
-            <Card key={`pack-skeleton-${idx}`}>
-              <CardBody className="gap-2">
-                <Skeleton className="h-5 w-28 rounded-md" />
-                <Skeleton className="h-7 w-20 rounded-md" />
-                <Skeleton className="h-9 w-full rounded-md" />
-              </CardBody>
-            </Card>
-          ))}
-        {!packsLoading &&
-          packs?.map((pack, index) => (
-            <Card key={pack.uuid} className={index === 1 ? "border border-primary/40 bg-gradient-to-br from-primary/10 to-transparent shadow-lg shadow-primary/10" : "border border-default-200 bg-default-50/40 shadow-sm"}>
-              <CardBody className="gap-4 p-5">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm text-default-500">{pack.name}</p>
-                    <p className="text-3xl font-bold leading-tight">
-                      {pack.credits_amount} <span className="text-base font-medium text-default-500">credits</span>
-                    </p>
-                  </div>
-                  {index === 1 && (
-                    <Chip color="primary" variant="flat" size="sm">
-                      Best value
-                    </Chip>
-                  )}
+      <section className="mt-16 sm:mt-20" aria-labelledby="credits-purchase-heading">
+        <h2 id="credits-purchase-heading" className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          Buy credits
+        </h2>
+        <p className="mt-2 max-w-xl text-sm text-default-500 sm:text-base">
+          Pick a pack and checkout securely. Your balance updates when payment completes.
+        </p>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {packsLoading &&
+            ["credit-pack-skel-a", "credit-pack-skel-b", "credit-pack-skel-c"].map((key) => (
+              <div
+                key={key}
+                className="rounded-2xl border border-default-200/80 bg-default-50/20 p-6 shadow-sm shadow-black/5"
+              >
+                <div className="space-y-3">
+                  <Skeleton className="h-5 w-28 rounded-md" />
+                  <Skeleton className="h-9 w-36 rounded-md" />
+                  <Skeleton className="h-7 w-24 rounded-md" />
+                  <Skeleton className="h-11 w-full rounded-xl" />
                 </div>
-                <p className="text-2xl font-bold">{formatCurrency(pack.amount_cents, pack.currency)}</p>
-                <Button color={index === 1 ? "primary" : "default"} variant={index === 1 ? "solid" : "flat"} onPress={() => createCheckout({ pack_key: pack.key })} isLoading={checkoutPending} className="font-semibold">
-                  Buy Pack
-                </Button>
-              </CardBody>
-            </Card>
-          ))}
+              </div>
+            ))}
+          {!packsLoading &&
+            packs?.map((pack, index) => (
+              <PackPurchaseCard
+                key={pack.uuid}
+                pack={pack}
+                isFeatured={index === 1}
+                checkoutPending={checkoutPending}
+                onPurchase={purchasePack}
+              />
+            ))}
+        </div>
       </section>
 
-      <Card>
-        <CardHeader>
-          <h2 className="text-lg font-semibold">History</h2>
-        </CardHeader>
-        <CardBody>
-          <Tabs aria-label="Credits history tabs" variant="underlined">
-            <Tab key="usage" title="Credit Usage">
-              <div className="mt-3">
-                <Table aria-label="Credits usage table" removeWrapper>
-                  <TableHeader>
-                    <TableColumn>TYPE</TableColumn>
-                    <TableColumn>DATE</TableColumn>
-                    <TableColumn>GROSS CHARGE</TableColumn>
-                    <TableColumn>CREDITS</TableColumn>
-                  </TableHeader>
-                  <TableBody emptyContent="No usage yet.">
-                    {(usage?.items ?? []).map((item) => (
-                      <TableRow key={item.uuid}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Chip size="sm" color={getUsageTypeChipColor(item.project_type)} variant="flat">
-                              {item.project_type ?? "UNKNOWN"}
+      <section className="mt-16 sm:mt-20" aria-labelledby="credits-history-heading">
+        <h2 id="credits-history-heading" className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          History
+        </h2>
+        <p className="mt-2 text-sm text-default-500 sm:text-base">Credit usage and completed purchases.</p>
+
+        <div className="mt-8 overflow-hidden rounded-2xl bg-content1/40 shadow-sm shadow-black/[0.04] ring-1 ring-default-200/60">
+          <Tabs aria-label="Credits history tabs" variant="underlined" classNames={{ panel: "px-4 pb-4 pt-2 sm:px-6 sm:pb-6" }}>
+            <Tab key="usage" title="Credit usage">
+              <Table aria-label="Credits usage table" removeWrapper>
+                <TableHeader>
+                  <TableColumn>TYPE</TableColumn>
+                  <TableColumn>DATE</TableColumn>
+                  <TableColumn>GROSS CHARGE</TableColumn>
+                  <TableColumn>CREDITS</TableColumn>
+                </TableHeader>
+                <TableBody emptyContent="No usage yet.">
+                  {(usage?.items ?? []).map((item) => (
+                    <TableRow key={item.uuid}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Chip size="sm" color={getUsageTypeChipColor(item.project_type)} variant="flat">
+                            {item.project_type ?? "UNKNOWN"}
+                          </Chip>
+                          {item.fx_source === "fallback" && (
+                            <Chip size="sm" color="warning" variant="dot">
+                              FX fallback
                             </Chip>
-                            {item.fx_source === "fallback" && (
-                              <Chip size="sm" color="warning" variant="dot">
-                                FX fallback
-                              </Chip>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
-                        <TableCell>{formatAmount(item.gross_charge_amount, "EUR") ?? "-"}</TableCell>
-                        <TableCell>
-                          <span className="font-semibold text-foreground">{item.delta_credits}</span>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
+                      <TableCell>{formatAmount(item.gross_charge_amount, "EUR") ?? "-"}</TableCell>
+                      <TableCell>
+                        <span className="font-semibold text-foreground">{item.delta_credits}</span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Tab>
             <Tab key="purchases" title="Purchases">
-              <div className="mt-3">
-                <Table aria-label="Credits purchases table" removeWrapper>
-                  <TableHeader>
-                    <TableColumn>PACK</TableColumn>
-                    <TableColumn>DATE</TableColumn>
-                    <TableColumn>STATUS</TableColumn>
-                    <TableColumn>GROSS</TableColumn>
-                  </TableHeader>
-                  <TableBody emptyContent="No purchases yet.">
-                    {(purchases?.items ?? []).map((item) => (
-                      <TableRow key={item.uuid}>
-                        <TableCell>{item.credit_pack?.name ?? "Credit Pack"}</TableCell>
-                        <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
-                        <TableCell>
-                          <Chip size="sm" color={getStatusChipColor(item.status)} variant="flat">
-                            {item.status}
-                          </Chip>
-                        </TableCell>
-                        <TableCell>{item.gross_amount_cents != null ? formatCurrency(item.gross_amount_cents, item.currency) : "-"}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              <Table aria-label="Credits purchases table" removeWrapper>
+                <TableHeader>
+                  <TableColumn>PACK</TableColumn>
+                  <TableColumn>DATE</TableColumn>
+                  <TableColumn>STATUS</TableColumn>
+                  <TableColumn>GROSS</TableColumn>
+                </TableHeader>
+                <TableBody emptyContent="No purchases yet.">
+                  {(purchases?.items ?? []).map((item) => (
+                    <TableRow key={item.uuid}>
+                      <TableCell>{item.credit_pack?.name ?? "Credit Pack"}</TableCell>
+                      <TableCell>{new Date(item.created_at).toLocaleString()}</TableCell>
+                      <TableCell>
+                        <Chip size="sm" color={getStatusChipColor(item.status)} variant="flat">
+                          {item.status}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>{item.gross_amount_cents != null ? formatCurrency(item.gross_amount_cents, item.currency) : "-"}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </Tab>
           </Tabs>
-        </CardBody>
-      </Card>
+        </div>
+      </section>
     </div>
   );
 }

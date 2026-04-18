@@ -1,3 +1,5 @@
 /api/.env.staging
 /app/.env
 /api/gcp-credentials.json
+
+.agents/
