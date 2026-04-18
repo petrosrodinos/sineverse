@@ -10,6 +10,10 @@ export interface AdminOverview {
   total_net_revenue_cents: number;
   total_stripe_fees_cents: number;
   total_app_fees_collected: number;
+  total_aimlapi_provider_cost: {
+    usd: number;
+    eur: number;
+  };
 }
 
 export interface AdminPaginationResponse<T> {
@@ -50,6 +54,8 @@ export interface AdminPurchasesQuery {
   page?: number;
   limit?: number;
   search?: string;
+  pack_key?: string;
+  status?: "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED";
   sort_by?: "created_at" | "status" | "gross_amount_cents" | "net_amount_cents" | "stripe_fee_cents" | "credits_amount";
   sort_order?: "asc" | "desc";
 }
@@ -68,5 +74,9 @@ export interface AdminPurchaseRow {
   user: {
     uuid: string;
     email: string;
+  };
+  credit_pack: {
+    key: string;
+    name: string;
   };
 }

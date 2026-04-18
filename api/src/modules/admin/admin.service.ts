@@ -9,6 +9,7 @@ import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import {
   AuthRole,
   CreditLedgerType,
+  CreditPurchaseStatus,
   DocumentType,
   Prisma,
 } from '@/generated/prisma';
@@ -32,6 +33,7 @@ export class AdminService {
       usageAggregate,
       purchasesAggregate,
       appFeesAggregate,
+      aimlApiCostAggregate,
     ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.project.count(),
@@ -42,6 +44,7 @@ export class AdminService {
         _sum: { delta_credits: true },
       }),
       this.prisma.creditPurchase.aggregate({
+        where: { status: CreditPurchaseStatus.SUCCEEDED },
         _sum: {
           gross_amount_cents: true,
           net_amount_cents: true,
@@ -51,6 +54,13 @@ export class AdminService {
       this.prisma.creditLedgerEntry.aggregate({
         where: { type: CreditLedgerType.USAGE },
         _sum: { app_fee_amount: true },
+      }),
+      this.prisma.creditLedgerEntry.aggregate({
+        where: { type: CreditLedgerType.USAGE, source: 'aiml_usage' },
+        _sum: {
+          provider_charge_amount_usd: true,
+          provider_charge_amount: true,
+        },
       }),
     ]);
 
@@ -67,6 +77,10 @@ export class AdminService {
       total_app_fees_collected: Number(
         appFeesAggregate._sum.app_fee_amount ?? 0,
       ),
+      total_aimlapi_provider_cost: {
+        usd: Number(aimlApiCostAggregate._sum.provider_charge_amount_usd ?? 0),
+        eur: Number(aimlApiCostAggregate._sum.provider_charge_amount ?? 0),
+      },
     };
   }
 
@@ -143,16 +157,31 @@ export class AdminService {
     const sortBy = query.sort_by ?? 'created_at';
     const sortOrder = query.sort_order ?? 'desc';
     const search = query.search?.trim();
+    const packKey = query.pack_key?.trim();
+    const statusFilter = query.status;
 
-    const where: Prisma.CreditPurchaseWhereInput | undefined = search
-      ? {
-          OR: [
-            { uuid: { contains: search, mode: 'insensitive' } },
-            { user_uuid: { contains: search, mode: 'insensitive' } },
-            { user: { email: { contains: search, mode: 'insensitive' } } },
-          ],
-        }
-      : undefined;
+    const andParts: Prisma.CreditPurchaseWhereInput[] = [];
+
+    if (search) {
+      andParts.push({
+        OR: [
+          { uuid: { contains: search, mode: 'insensitive' } },
+          { user_uuid: { contains: search, mode: 'insensitive' } },
+          { user: { email: { contains: search, mode: 'insensitive' } } },
+        ],
+      });
+    }
+
+    if (packKey) {
+      andParts.push({ credit_pack: { key: packKey } });
+    }
+
+    if (statusFilter) {
+      andParts.push({ status: statusFilter });
+    }
+
+    const where: Prisma.CreditPurchaseWhereInput | undefined =
+      andParts.length > 0 ? { AND: andParts } : undefined;
 
     const [total, purchases] = await Promise.all([
       this.prisma.creditPurchase.count({ where }),
@@ -163,6 +192,12 @@ export class AdminService {
             select: {
               uuid: true,
               email: true,
+            },
+          },
+          credit_pack: {
+            select: {
+              key: true,
+              name: true,
             },
           },
         },
@@ -194,6 +229,7 @@ export class AdminService {
           app_fee_cents: appFees,
           created_at: purchase.created_at,
           user: purchase.user,
+          credit_pack: purchase.credit_pack,
         };
       }),
     };

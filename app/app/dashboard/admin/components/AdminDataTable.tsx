@@ -42,9 +42,9 @@ export function AdminDataTable<T extends { uuid: string }>({
 
   return (
     <Card className="border border-default-200">
-      <CardHeader className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {controls}
+      <CardHeader className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <h3 className="shrink-0 text-lg font-semibold">{title}</h3>
+        {controls ? <div className="min-w-0 w-full lg:flex lg:max-w-[min(100%,48rem)] lg:justify-end xl:max-w-none">{controls}</div> : null}
       </CardHeader>
       <CardBody className="gap-4">
         <Table aria-label={title} removeWrapper>

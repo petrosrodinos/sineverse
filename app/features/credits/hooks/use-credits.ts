@@ -33,10 +33,15 @@ export const useCreditsUsageStats = () => {
   });
 };
 
-export const useCreditPacks = () => {
+type CreditPacksQueryOptions = {
+  enabled?: boolean;
+};
+
+export const useCreditPacks = (options?: CreditPacksQueryOptions) => {
   return useQuery({
     queryKey: [QueryKeys.packs],
     queryFn: getCreditPacks,
+    enabled: options?.enabled ?? true,
   });
 };
 

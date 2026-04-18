@@ -16,24 +16,31 @@ const QueryKeys = {
   purchases: "admin-purchases",
 };
 
-export const useAdminOverview = () => {
+type AdminQueryOptions = {
+  enabled?: boolean;
+};
+
+export const useAdminOverview = (options?: AdminQueryOptions) => {
   return useQuery({
     queryKey: [QueryKeys.overview],
     queryFn: getAdminOverview,
+    enabled: options?.enabled ?? true,
   });
 };
 
-export const useAdminUsers = (query: AdminUsersQuery) => {
+export const useAdminUsers = (query: AdminUsersQuery, options?: AdminQueryOptions) => {
   return useQuery({
     queryKey: [QueryKeys.users, query],
     queryFn: () => getAdminUsers(query),
+    enabled: options?.enabled ?? true,
   });
 };
 
-export const useAdminPurchases = (query: AdminPurchasesQuery) => {
+export const useAdminPurchases = (query: AdminPurchasesQuery, options?: AdminQueryOptions) => {
   return useQuery({
     queryKey: [QueryKeys.purchases, query],
     queryFn: () => getAdminPurchases(query),
+    enabled: options?.enabled ?? true,
   });
 };
 
