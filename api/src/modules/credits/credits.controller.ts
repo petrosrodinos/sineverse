@@ -2,8 +2,11 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRole } from '@/generated/prisma';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
+import { Roles } from '@/shared/decorators/roles.decorator';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
+import { RolesGuard } from '@/shared/guards/roles.guard';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
+import { AdminUsageQueryDto } from './dto/admin-usage-query.dto';
 import { CreditsPaginationQueryDto } from './dto/credits-query.dto';
 import { CreateCreditCheckoutDto } from './dto/create-checkout.dto';
 import { CreditsService } from './credits.service';
@@ -40,6 +43,14 @@ export class CreditsController {
     @Query() query: CreditsPaginationQueryDto,
   ) {
     return this.creditsService.getUsage(user_uuid, query.page, query.limit);
+  }
+
+  @Get('usage/admin')
+  @UseGuards(RolesGuard)
+  @Roles(AuthRole.ADMIN, AuthRole.SUPER_ADMIN)
+  @ApiOperation({ summary: 'Get credit usage for admin dashboard' })
+  getUsageForAdmin(@Query() query: AdminUsageQueryDto) {
+    return this.creditsService.getUsageForAdminDashboard(query);
   }
 
   @Get('purchases')

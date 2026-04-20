@@ -20,6 +20,7 @@ interface AdminDataTableProps<T extends { uuid: string }> {
   total: number;
   limit: number;
   controls?: ReactNode;
+  controlsPlacement?: "inline" | "below";
   emptyContent?: string;
   onPageChange: (page: number) => void;
   renderCell: (row: T, columnKey: string) => ReactNode;
@@ -34,6 +35,7 @@ export function AdminDataTable<T extends { uuid: string }>({
   total,
   limit,
   controls,
+  controlsPlacement = "inline",
   emptyContent = "No data available.",
   onPageChange,
   renderCell,
@@ -44,7 +46,12 @@ export function AdminDataTable<T extends { uuid: string }>({
     <Card className="border border-default-200">
       <CardHeader className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-start lg:justify-between">
         <h3 className="shrink-0 text-lg font-semibold">{title}</h3>
-        {controls ? <div className="min-w-0 w-full lg:flex lg:max-w-[min(100%,48rem)] lg:justify-end xl:max-w-none">{controls}</div> : null}
+        {controls && controlsPlacement === "inline" ? (
+          <div className="min-w-0 w-full lg:flex lg:max-w-[min(100%,48rem)] lg:justify-end xl:max-w-none">{controls}</div>
+        ) : null}
+        {controls && controlsPlacement === "below" ? (
+          <div className="w-full">{controls}</div>
+        ) : null}
       </CardHeader>
       <CardBody className="gap-4">
         <Table aria-label={title} removeWrapper>

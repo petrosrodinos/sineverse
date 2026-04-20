@@ -1,6 +1,8 @@
 import axiosInstance from "@/config/api/axios";
 import { ApiRoutes } from "@/config/api/routes";
 import {
+  AdminCreditUsageQuery,
+  AdminCreditUsageRow,
   CreditPack,
   CreditPurchaseItem,
   CreditsSummary,
@@ -33,6 +35,18 @@ export const getCreditsUsage = async (): Promise<PaginatedResponse<CreditsUsageI
 
 export const getCreditsPurchases = async (): Promise<PaginatedResponse<CreditPurchaseItem>> => {
   const response = await axiosInstance.get<PaginatedResponse<CreditPurchaseItem>>(ApiRoutes.credits.purchases);
+  return response.data;
+};
+
+export const getAdminCreditUsage = async (
+  query: AdminCreditUsageQuery,
+): Promise<PaginatedResponse<AdminCreditUsageRow>> => {
+  const response = await axiosInstance.get<PaginatedResponse<AdminCreditUsageRow>>(
+    ApiRoutes.credits.usage_admin,
+    {
+      params: query,
+    },
+  );
   return response.data;
 };
 

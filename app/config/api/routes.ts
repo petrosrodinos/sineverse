@@ -51,6 +51,7 @@ export const ApiRoutes = {
         usageStats: "/credits/usage-stats",
         packs: "/credits/packs",
         usage: "/credits/usage",
+        usage_admin: "/credits/usage/admin",
         purchases: "/credits/purchases",
         checkout: "/credits/checkout",
     },

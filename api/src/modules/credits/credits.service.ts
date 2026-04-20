@@ -28,6 +28,7 @@ import {
 } from './utils/hybrid-billing';
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from '@/shared/config/errors/api-error-codes';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
+import { AdminUsageQueryDto } from './dto/admin-usage-query.dto';
 import { stripeCommissionPercentFromFeeAndAmount } from './utils/stripe-commission-percent.utils';
 
 type BalanceTransactionRef =
@@ -208,6 +209,63 @@ export class CreditsService {
     return { total, page, limit, items };
   }
 
+  async getUsageForAdminDashboard(query: AdminUsageQueryDto) {
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+    const skip = (page - 1) * limit;
+    const sortBy = query.sort_by ?? 'created_at';
+    const sortOrder = query.sort_order ?? 'desc';
+    const userUuid = query.user_uuid?.trim();
+    const search = query.search?.trim();
+
+    const andParts: Prisma.CreditLedgerEntryWhereInput[] = [
+      { type: CreditLedgerType.USAGE },
+    ];
+
+    if (search) {
+      andParts.push({
+        OR: [
+          { uuid: { contains: search, mode: 'insensitive' } },
+          { user_uuid: { contains: search, mode: 'insensitive' } },
+          { source: { contains: search, mode: 'insensitive' } },
+          { source_ref_uuid: { contains: search, mode: 'insensitive' } },
+          { user: { email: { contains: search, mode: 'insensitive' } } },
+        ],
+      });
+    }
+
+    if (userUuid) {
+      andParts.push({ user_uuid: userUuid });
+    }
+
+    const where: Prisma.CreditLedgerEntryWhereInput = { AND: andParts };
+
+    const [total, items] = await Promise.all([
+      this.prisma.creditLedgerEntry.count({ where }),
+      this.prisma.creditLedgerEntry.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              uuid: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    return {
+      total,
+      page,
+      limit,
+      items
+    };
+  }
+
   async getPurchases(user_uuid: string, page = 1, limit = 20) {
     const skip = (page - 1) * limit;
     const where: Prisma.CreditPurchaseWhereInput = { user_uuid };
@@ -341,8 +399,8 @@ export class CreditsService {
     const appFeeRate = CreditsConfig.usageAppFeeRate;
     const providerChargeUsdRaw =
       typeof provider_charge_amount === 'number' &&
-      Number.isFinite(provider_charge_amount) &&
-      provider_charge_amount > 0
+        Number.isFinite(provider_charge_amount) &&
+        provider_charge_amount > 0
         ? provider_charge_amount
         : null;
     let fxSnapshot: { rate: number; source: string; timestamp: Date };
@@ -363,22 +421,22 @@ export class CreditsService {
     const hybridMoney =
       providerChargeUsdRaw !== null
         ? calculateHybridMoneyFields({
-            providerChargeUsd: providerChargeUsdRaw,
-            fxRateUsdToEur: fxSnapshot.rate,
-            appFeeRatePercent: appFeeRate,
-          })
+          providerChargeUsd: providerChargeUsdRaw,
+          fxRateUsdToEur: fxSnapshot.rate,
+          appFeeRatePercent: appFeeRate,
+        })
         : null;
     const estateMultiplier =
       CreditsConfig.projectTypeMultipliers[ProjectType.ESTATE] ?? 1;
     const estateMoney =
       hybridMoney === null &&
-      project_type === ProjectType.ESTATE &&
-      estateMultiplier > 0
+        project_type === ProjectType.ESTATE &&
+        estateMultiplier > 0
         ? calculateEstateUsageMoneyFromCredits({
-            creditsDeducted: deduct,
-            estateMultiplier,
-            appFeeRatePercent: appFeeRate,
-          })
+          creditsDeducted: deduct,
+          estateMultiplier,
+          appFeeRatePercent: appFeeRate,
+        })
         : null;
     const providerCharge =
       hybridMoney?.providerCharge ?? estateMoney?.providerCharge ?? null;
@@ -388,13 +446,13 @@ export class CreditsService {
       hybridMoney?.grossChargeAmount ?? estateMoney?.grossChargeAmount ?? null;
     const ledgerMetadata = metadata
       ? (Object.fromEntries(
-          Object.entries(metadata).filter(
-            ([key]) =>
-              key !== 'provider_credits_used' &&
-              key !== 'provider_charge_amount' &&
-              key !== 'fixed_credits_deduction',
-          ),
-        ) as Prisma.JsonObject)
+        Object.entries(metadata).filter(
+          ([key]) =>
+            key !== 'provider_credits_used' &&
+            key !== 'provider_charge_amount' &&
+            key !== 'fixed_credits_deduction',
+        ),
+      ) as Prisma.JsonObject)
       : undefined;
     const idempotencyKey = `usage:${source_ref_uuid}`;
 

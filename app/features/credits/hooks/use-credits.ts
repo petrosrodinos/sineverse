@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
 import {
+  getAdminCreditUsage,
   createCreditCheckout,
   getCreditPacks,
   getCreditsPurchases,
@@ -8,6 +9,7 @@ import {
   getCreditsUsage,
   getCreditsUsageStats,
 } from "../services/credits.services";
+import { AdminCreditUsageQuery } from "../interfaces/credits.interfaces";
 
 const QueryKeys = {
   summary: "credits-summary",
@@ -15,6 +17,7 @@ const QueryKeys = {
   packs: "credits-packs",
   usage: "credits-usage",
   purchases: "credits-purchases",
+  adminUsage: "credits-admin-usage",
 };
 
 export const useCreditsSummary = () => {
@@ -37,6 +40,10 @@ type CreditPacksQueryOptions = {
   enabled?: boolean;
 };
 
+type CreditsQueryOptions = {
+  enabled?: boolean;
+};
+
 export const useCreditPacks = (options?: CreditPacksQueryOptions) => {
   return useQuery({
     queryKey: [QueryKeys.packs],
@@ -56,6 +63,14 @@ export const useCreditsPurchases = () => {
   return useQuery({
     queryKey: [QueryKeys.purchases],
     queryFn: getCreditsPurchases,
+  });
+};
+
+export const useAdminCreditUsage = (query: AdminCreditUsageQuery, options?: CreditsQueryOptions) => {
+  return useQuery({
+    queryKey: [QueryKeys.adminUsage, query],
+    queryFn: () => getAdminCreditUsage(query),
+    enabled: options?.enabled ?? true,
   });
 };
 

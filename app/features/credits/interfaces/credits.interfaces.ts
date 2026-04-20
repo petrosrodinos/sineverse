@@ -41,6 +41,41 @@ export interface CreditsUsageItem {
   created_at: string;
 }
 
+export interface AdminCreditUsageQuery {
+  page?: number;
+  limit?: number;
+  user_uuid?: string;
+  search?: string;
+  sort_by?:
+    | "created_at"
+    | "delta_credits"
+    | "provider_charge_amount_usd"
+    | "provider_charge_amount"
+    | "app_fee_amount"
+    | "gross_charge_amount";
+  sort_order?: "asc" | "desc";
+}
+
+export interface AdminCreditUsageRow {
+  id: number;
+  uuid: string;
+  type: "USAGE";
+  delta_credits: number;
+  project_type: "FILM" | "ESTATE" | null;
+  source: string | null;
+  provider_charge_amount_usd: number | null;
+  provider_charge_amount: string | null;
+  app_fee_rate: string | null;
+  app_fee_amount: string | null;
+  gross_charge_amount: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+  user: {
+    uuid: string;
+    email: string;
+  };
+}
+
 export interface CreditPurchaseItem {
   uuid: string;
   status: "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED";

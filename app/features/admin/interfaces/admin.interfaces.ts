@@ -3,6 +3,7 @@ import { RoleType } from "@/features/user/interfaces/user.interfaces";
 export interface AdminOverview {
   total_users: number;
   total_projects: number;
+  total_final_projects: number;
   total_videos_created: number;
   total_images_created: number;
   total_token_usage: number;

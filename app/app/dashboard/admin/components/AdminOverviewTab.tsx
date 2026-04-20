@@ -17,6 +17,7 @@ export function AdminOverviewTab({ isActive }: AdminOverviewTabProps) {
     () => [
       { label: "Total Users", value: (overview?.total_users ?? 0).toLocaleString() },
       { label: "Total Projects", value: (overview?.total_projects ?? 0).toLocaleString() },
+      { label: "Total Final Projects", value: (overview?.total_final_projects ?? 0).toLocaleString() },
       { label: "Total Videos Created", value: (overview?.total_videos_created ?? 0).toLocaleString() },
       { label: "Total Images Created", value: (overview?.total_images_created ?? 0).toLocaleString() },
       { label: "Total Token Usage", value: (overview?.total_token_usage ?? 0).toLocaleString() },

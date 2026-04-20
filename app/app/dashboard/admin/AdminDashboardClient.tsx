@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Tab, Tabs } from "@heroui/tabs";
+import { AdminCreditUsageTab } from "./components/AdminCreditUsageTab";
 import { AdminOverviewTab } from "./components/AdminOverviewTab";
 import { AdminPurchasesTab } from "./components/AdminPurchasesTab";
 import { AdminUsersTab } from "./components/AdminUsersTab";
@@ -34,6 +35,10 @@ export function AdminDashboardClient() {
 
         <Tab key="purchases" title="Credit Purchases">
           <AdminPurchasesTab isActive={mainTab === "purchases"} />
+        </Tab>
+
+        <Tab key="credit-usage" title="Credit Usage">
+          <AdminCreditUsageTab isActive={mainTab === "credit-usage"} />
         </Tab>
       </Tabs>
     </div>

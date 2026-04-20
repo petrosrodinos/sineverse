@@ -22,6 +22,7 @@ export class AdminService {
     const [
       totalUsers,
       totalProjects,
+      totalFinalProjects,
       totalVideosCreated,
       totalImagesCreated,
       usageAggregate,
@@ -31,6 +32,7 @@ export class AdminService {
     ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.project.count(),
+      this.prisma.finalProject.count(),
       this.prisma.projectAsset.count({ where: { type: DocumentType.VIDEO } }),
       this.prisma.projectAsset.count({ where: { type: DocumentType.IMAGE } }),
       this.prisma.creditLedgerEntry.aggregate({
@@ -61,6 +63,7 @@ export class AdminService {
     return {
       total_users: totalUsers,
       total_projects: totalProjects,
+      total_final_projects: totalFinalProjects,
       total_videos_created: totalVideosCreated,
       total_images_created: totalImagesCreated,
       total_token_usage: Math.abs(usageAggregate._sum.delta_credits ?? 0),
