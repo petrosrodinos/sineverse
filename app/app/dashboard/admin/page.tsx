@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/features/auth/config/auth-options";
 import { AdminDashboardClient } from "./AdminDashboardClient";
 import { RoleType, RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { Routes } from "@/config/routes";
@@ -12,7 +12,9 @@ export default async function AdminPage() {
     redirect(Routes.auth.sign_in);
   }
 
-  if (![RoleTypes.ADMIN, RoleTypes.SUPER_ADMIN].includes(session.role as RoleType)) {
+  const role = session.role as RoleType;
+
+  if (role !== RoleTypes.ADMIN && role !== RoleTypes.SUPER_ADMIN) {
     redirect(Routes.dashboard);
   }
 

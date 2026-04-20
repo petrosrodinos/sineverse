@@ -106,8 +106,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
 
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(5);
-  const [volume, setVolume] = useState(estateWalkthroughVideoConfig.volume);
-  const [speed, setSpeed] = useState(estateWalkthroughVideoConfig.speed);
+  const [volume, setVolume] = useState<number>(estateWalkthroughVideoConfig.volume);
+  const [speed, setSpeed] = useState<number>(estateWalkthroughVideoConfig.speed);
   const [transitionType, setTransitionType] = useState<TimelineTransitionType>(estateWalkthroughVideoConfig.transitionId as TimelineTransitionType);
 
   const clipLoadedRef = useRef(false);
@@ -141,8 +141,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
   const { mutate: updateCaption } = useUpdateTimelineCaption();
 
   const [captionText, setCaptionText] = useState("");
-  const [captionStartSec, setCaptionStartSec] = useState(estateWalkthroughVideoConfig.captionStartSec);
-  const [captionEndSec, setCaptionEndSec] = useState(videoDurationSec);
+  const [captionStartSec, setCaptionStartSec] = useState<number>(estateWalkthroughVideoConfig.captionStartSec);
+  const [captionEndSec, setCaptionEndSec] = useState<number>(videoDurationSec);
   const [captionPosition, setCaptionPosition] = useState<string>(estateWalkthroughVideoConfig.captionPosition);
   const [captionStyle, setCaptionStyle] = useState<string>(estateWalkthroughVideoConfig.captionStyle);
 
