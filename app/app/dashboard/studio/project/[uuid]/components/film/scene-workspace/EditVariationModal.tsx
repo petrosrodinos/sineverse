@@ -53,7 +53,6 @@ export function EditVariationModal({ variation, onClose }: EditVariationModalPro
         onValueChange={setTitle}
         variant="bordered"
         classNames={{ inputWrapper: "rounded-xl" }}
-        autoFocus
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             handleSave();

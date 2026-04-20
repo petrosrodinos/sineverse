@@ -188,14 +188,17 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
               controls 
               className="w-full h-full object-contain"
               poster={displayVideo?.document?.url ? undefined : (displayVideo as any).prompt_images?.[0]?.document?.url || promptImageAssets?.[0]?.document?.url}
-            />
+            >
+              <track kind="captions" srcLang="en" label="English captions" src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A" />
+            </video>
           </div>
           {(displayVideo as any).prompt_images?.length > 0 && (
             <div className="flex flex-col gap-2">
               <p className="text-xs font-medium text-default-500">Prompt Images Used:</p>
               <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
                 {(displayVideo as any).prompt_images.map((imgAsset: any) => (
-                  <div 
+                  <button
+                    type="button"
                     key={imgAsset.uuid} 
                     className="group relative size-24 rounded-xl overflow-hidden flex-shrink-0 border-2 border-default-200 hover:border-primary transition-all cursor-pointer shadow-sm active:scale-95"
                     onClick={() => setPreviewAsset(imgAsset)}
@@ -204,7 +207,7 @@ export default function ProjectAssetVideo({ asset, variation, promptImageAssets,
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                        <Maximize2 className="size-5 text-white" />
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

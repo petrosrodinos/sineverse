@@ -43,7 +43,6 @@ export function CreateVariationPopover({ sceneUuid }: CreateVariationPopoverProp
             onValueChange={setNewTitle}
             variant="bordered"
             size="sm"
-            autoFocus
           />
           <div className="flex justify-end gap-2 mt-2">
             <Button size="sm" variant="flat" onPress={() => setIsOpen(false)}>

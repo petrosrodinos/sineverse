@@ -44,7 +44,6 @@ export function ExpandableTextarea(props: any) {
             minRows={12}
             maxRows={25}
             variant="flat"
-            autoFocus
             classNames={{
               input: "text-lg leading-relaxed px-2 py-1",
               inputWrapper: "bg-transparent border-none shadow-none",

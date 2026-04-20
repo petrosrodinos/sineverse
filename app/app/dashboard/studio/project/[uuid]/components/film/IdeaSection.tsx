@@ -60,7 +60,7 @@ export function IdeaSection({}: IdeaSectionProps) {
       >
         <div className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Your original idea</label>
+            <p className="text-sm font-medium text-foreground">Your original idea</p>
             {((project?.genres && project.genres.length > 0) || (project?.tones && project.tones.length > 0)) && (
               <div className="flex flex-wrap gap-2 py-1">
                 {project.genres?.map((genre) => (

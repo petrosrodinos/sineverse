@@ -154,13 +154,7 @@ export function SceneVariationImageUpload({
               {latestPromptImage?.document?.url && (
                 <div className="flex flex-col gap-2 items-center">
                   <p className="text-[10px] font-bold text-default-400 uppercase tracking-widest self-start">Used Reference</p>
-                  <div 
-                    className="relative group w-full aspect-video rounded-xl overflow-hidden border-2 border-default-200 cursor-pointer hover:border-primary transition-all"
-                    onClick={() => {
-                        // We need a way to open the modal from here too if possible, 
-                        // or just show the image
-                    }}
-                  >
+                  <div className="relative group w-full aspect-video rounded-xl overflow-hidden border-2 border-default-200 hover:border-primary transition-all">
                     <img 
                       src={latestPromptImage.document.url} 
                       className="w-full h-full object-cover"
@@ -261,7 +255,7 @@ export function SceneVariationImageUpload({
 
                       {supportsImageToImage && (
                         <div className="flex flex-col gap-2">
-                          <label className="text-xs font-medium text-default-600">Guidance Image (Optional)</label>
+                          <p className="text-xs font-medium text-default-600">Guidance Image (Optional)</p>
                           <ImageUpload
                               height="min-h-[100px]"
                               description="Optional image to guide the generation."

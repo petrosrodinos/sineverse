@@ -8,7 +8,7 @@ import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Select, SelectItem } from "@heroui/select";
 import { Slider } from "@heroui/slider";
 import { Skeleton } from "@heroui/skeleton";
-import type { Key, MouseEvent as ReactMouseEvent, SyntheticEvent } from "react";
+import type { Key, SyntheticEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { AlertCircle, GripVertical, Trash2 } from "lucide-react";
@@ -279,12 +279,6 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
     el.playbackRate = speed;
   }, [volume, speed, videoUrl]);
 
-  const handlePreviewMouseDown = useCallback((event: ReactMouseEvent) => {
-    if (reorder?.canReorder) {
-      event.stopPropagation();
-    }
-  }, [reorder?.canReorder]);
-
   const handleConfirmDeleteClip = useCallback(async () => {
     try {
       await deleteProjectAsset(videoAssetUuid);
@@ -341,7 +335,7 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
             </div>
           )}
           {display.status === ProjectAssetStatuses.COMPLETED && (
-            <div className="relative h-full w-full" onMouseDown={videoUrl ? handlePreviewMouseDown : undefined}>
+            <div className="relative h-full w-full">
               {videoUrl ? (
                 <video ref={videoRef} src={videoUrl} className="h-full w-full object-cover" onLoadedMetadata={handleVideoLoadedMetadata} controls muted playsInline loop preload="metadata" />
               ) : (

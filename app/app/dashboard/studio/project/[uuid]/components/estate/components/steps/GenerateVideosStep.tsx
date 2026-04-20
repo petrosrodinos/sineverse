@@ -378,7 +378,9 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
               </Select>
               {selectedAudioOption.id !== "none" && selectedAudioOption.src && (
                 <div className="min-w-0">
-                  <audio ref={audioRef} controls preload="metadata" src={selectedAudioOption.src} onLoadedMetadata={handleAudioMetadata} className="w-full max-w-full" />
+                  <audio ref={audioRef} controls preload="metadata" src={selectedAudioOption.src} onLoadedMetadata={handleAudioMetadata} className="w-full max-w-full">
+                    <track kind="captions" srcLang="en" label="English captions" src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A" />
+                  </audio>
                 </div>
               )}
             </CardBody>
