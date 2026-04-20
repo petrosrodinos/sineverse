@@ -8,7 +8,9 @@ import { ExpressAdapter } from '@bull-board/express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const configService = app.get(ConfigService);
+
   const bullBoardAdapter = app.get<ExpressAdapter>(BULL_BOARD_ADAPTER);
 
   app.use(
@@ -25,6 +27,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup('api', app, document);
 
   const enabledCors =
@@ -41,4 +44,5 @@ async function bootstrap() {
 
   await app.listen(3001);
 }
+
 bootstrap();

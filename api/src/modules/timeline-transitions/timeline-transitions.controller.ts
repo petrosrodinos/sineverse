@@ -1,5 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { TimelineTransitionsService } from './timeline-transitions.service';
 import { CreateTimelineTransitionDto } from './dto/create-timeline-transition.dto';
@@ -10,7 +24,9 @@ import { UpdateTimelineTransitionDto } from './dto/update-timeline-transition.dt
 @UseGuards(JwtGuard)
 @ApiBearerAuth()
 export class TimelineTransitionsController {
-  constructor(private readonly timelineTransitionsService: TimelineTransitionsService) {}
+  constructor(
+    private readonly timelineTransitionsService: TimelineTransitionsService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a timeline transition' })
@@ -28,7 +44,10 @@ export class TimelineTransitionsController {
   @Patch(':uuid')
   @ApiOperation({ summary: 'Update a timeline transition' })
   @ApiParam({ name: 'uuid' })
-  update(@Param('uuid') uuid: string, @Body() dto: UpdateTimelineTransitionDto) {
+  update(
+    @Param('uuid') uuid: string,
+    @Body() dto: UpdateTimelineTransitionDto,
+  ) {
     return this.timelineTransitionsService.update(uuid, dto);
   }
 

@@ -1,120 +1,139 @@
-import { useEffect, useCallback, useRef } from 'react';
-import {
-    websocketConnect,
-    websocketDisconnect,
-    websocketSubscribe,
-    websocketUnsubscribe,
-    websocketEmit,
-    websocketEmitWithAck,
-    websocketJoinRoom,
-    websocketLeaveRoom,
-    onWebsocketConnectionStateChange,
-} from '../services/websocket.service';
 import type {
-    WebsocketConnectOptions,
-    WebsocketEventCallback,
-    WebsocketSubscription,
-} from '../interfaces/websocket-client.interface';
-import { useWebsocketStore } from '@/stores/websocket.store';
-import { useAuthStore } from '@/stores/auth';
+  WebsocketConnectOptions,
+  WebsocketEventCallback,
+  WebsocketSubscription,
+} from "../interfaces/websocket-client.interface";
+
+import { useEffect, useCallback, useRef } from "react";
+
+import {
+  websocketConnect,
+  websocketDisconnect,
+  websocketSubscribe,
+  websocketUnsubscribe,
+  websocketEmit,
+  websocketEmitWithAck,
+  websocketJoinRoom,
+  websocketLeaveRoom,
+  onWebsocketConnectionStateChange,
+} from "../services/websocket.service";
+
+import { useWebsocketStore } from "@/stores/websocket.store";
+import { useAuthStore } from "@/stores/auth";
 
 export const useWebsocket = (options?: WebsocketConnectOptions) => {
-    const { access_token, isLoggedIn } = useAuthStore();
-    const { updateConnectionState, ...connectionState } = useWebsocketStore();
-    const hasConnectedRef = useRef(false);
+  const { access_token, isLoggedIn } = useAuthStore();
 
-    useEffect(() => {
-        if (!isLoggedIn || !access_token) {
-            if (hasConnectedRef.current) {
-                websocketDisconnect();
-                hasConnectedRef.current = false;
-            }
-            return;
-        }
+  const { updateConnectionState, ...connectionState } = useWebsocketStore();
 
-        if (!hasConnectedRef.current) {
-            websocketConnect(options);
-            hasConnectedRef.current = true;
-        }
+  const hasConnectedRef = useRef(false);
 
-        const unsubscribe = onWebsocketConnectionStateChange((state) => {
-            updateConnectionState(state);
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, [isLoggedIn, access_token, options, updateConnectionState]);
-
-    const connect = useCallback((connectOptions?: WebsocketConnectOptions) => {
-        websocketConnect(connectOptions);
-    }, []);
-
-    const disconnect = useCallback(() => {
+  useEffect(() => {
+    if (!isLoggedIn || !access_token) {
+      if (hasConnectedRef.current) {
         websocketDisconnect();
+
         hasConnectedRef.current = false;
-    }, []);
+      }
 
-    const subscribe = useCallback(<T = unknown>(
-        event: string,
-        callback: WebsocketEventCallback<T>
-    ): WebsocketSubscription => {
-        return websocketSubscribe(event, callback);
-    }, []);
+      return;
+    }
 
-    const unsubscribe = useCallback((event: string, callback?: WebsocketEventCallback) => {
-        websocketUnsubscribe(event, callback);
-    }, []);
+    if (!hasConnectedRef.current) {
+      websocketConnect(options);
 
-    const emit = useCallback(<T = unknown>(event: string, data?: T) => {
-        websocketEmit(event, data);
-    }, []);
+      hasConnectedRef.current = true;
+    }
 
-    const emitWithAck = useCallback(<T = unknown, R = unknown>(
-        event: string,
-        data?: T,
-        timeout?: number
-    ): Promise<R> => {
-        return websocketEmitWithAck<T, R>(event, data, timeout);
-    }, []);
+    const unsubscribe = onWebsocketConnectionStateChange((state) => {
+      updateConnectionState(state);
+    });
 
-    const joinRoom = useCallback((room: string) => {
-        websocketJoinRoom(room);
-    }, []);
-
-    const leaveRoom = useCallback((room: string) => {
-        websocketLeaveRoom(room);
-    }, []);
-
-    return {
-        ...connectionState,
-        connect,
-        disconnect,
-        subscribe,
-        unsubscribe,
-        emit,
-        emitWithAck,
-        joinRoom,
-        leaveRoom,
-        isConnected: connectionState.is_connected,
+    return () => {
+      unsubscribe();
     };
+  }, [isLoggedIn, access_token, options, updateConnectionState]);
+
+  const connect = useCallback((connectOptions?: WebsocketConnectOptions) => {
+    websocketConnect(connectOptions);
+  }, []);
+
+  const disconnect = useCallback(() => {
+    websocketDisconnect();
+
+    hasConnectedRef.current = false;
+  }, []);
+
+  const subscribe = useCallback(
+    <T = unknown>(
+      event: string,
+      callback: WebsocketEventCallback<T>,
+    ): WebsocketSubscription => {
+      return websocketSubscribe(event, callback);
+    },
+    [],
+  );
+
+  const unsubscribe = useCallback(
+    (event: string, callback?: WebsocketEventCallback) => {
+      websocketUnsubscribe(event, callback);
+    },
+    [],
+  );
+
+  const emit = useCallback(<T = unknown>(event: string, data?: T) => {
+    websocketEmit(event, data);
+  }, []);
+
+  const emitWithAck = useCallback(
+    <T = unknown, R = unknown>(
+      event: string,
+      data?: T,
+      timeout?: number,
+    ): Promise<R> => {
+      return websocketEmitWithAck<T, R>(event, data, timeout);
+    },
+    [],
+  );
+
+  const joinRoom = useCallback((room: string) => {
+    websocketJoinRoom(room);
+  }, []);
+
+  const leaveRoom = useCallback((room: string) => {
+    websocketLeaveRoom(room);
+  }, []);
+
+  return {
+    ...connectionState,
+    connect,
+    disconnect,
+    subscribe,
+    unsubscribe,
+    emit,
+    emitWithAck,
+    joinRoom,
+    leaveRoom,
+    isConnected: connectionState.is_connected,
+  };
 };
 
 export const useWebsocketEvent = <T = unknown>(
-    event: string,
-    callback: WebsocketEventCallback<T>,
-    deps: React.DependencyList = []
+  event: string,
+  callback: WebsocketEventCallback<T>,
+  deps: React.DependencyList = [],
 ) => {
-    const callbackRef = useRef(callback);
-    callbackRef.current = callback;
+  const callbackRef = useRef(callback);
 
-    useEffect(() => {
-        const subscription = websocketSubscribe<T>(event, (data) => {
-            callbackRef.current(data);
-        });
+  callbackRef.current = callback;
 
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, [event, ...deps]);
+  useEffect(() => {
+    const subscription = websocketSubscribe<T>(event, (data) => {
+      callbackRef.current(data);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [event, ...deps]);
 };

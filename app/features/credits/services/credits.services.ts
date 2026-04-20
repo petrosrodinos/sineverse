@@ -1,5 +1,3 @@
-import axiosInstance from "@/config/api/axios";
-import { ApiRoutes } from "@/config/api/routes";
 import {
   AdminCreditUsageQuery,
   AdminCreditUsageRow,
@@ -13,46 +11,72 @@ import {
   PaginatedResponse,
 } from "../interfaces/credits.interfaces";
 
+import axiosInstance from "@/config/api/axios";
+import { ApiRoutes } from "@/config/api/routes";
+
 export const getCreditsSummary = async (): Promise<CreditsSummary> => {
-  const response = await axiosInstance.get<CreditsSummary>(ApiRoutes.credits.summary);
+  const response = await axiosInstance.get<CreditsSummary>(
+    ApiRoutes.credits.summary,
+  );
+
   return response.data;
 };
 
 export const getCreditsUsageStats = async (): Promise<CreditsUsageStats> => {
-  const response = await axiosInstance.get<CreditsUsageStats>(ApiRoutes.credits.usageStats);
+  const response = await axiosInstance.get<CreditsUsageStats>(
+    ApiRoutes.credits.usageStats,
+  );
+
   return response.data;
 };
 
 export const getCreditPacks = async (): Promise<CreditPack[]> => {
-  const response = await axiosInstance.get<CreditPack[]>(ApiRoutes.credits.packs);
+  const response = await axiosInstance.get<CreditPack[]>(
+    ApiRoutes.credits.packs,
+  );
+
   return response.data;
 };
 
-export const getCreditsUsage = async (): Promise<PaginatedResponse<CreditsUsageItem>> => {
-  const response = await axiosInstance.get<PaginatedResponse<CreditsUsageItem>>(ApiRoutes.credits.usage);
+export const getCreditsUsage = async (): Promise<
+  PaginatedResponse<CreditsUsageItem>
+> => {
+  const response = await axiosInstance.get<PaginatedResponse<CreditsUsageItem>>(
+    ApiRoutes.credits.usage,
+  );
+
   return response.data;
 };
 
-export const getCreditsPurchases = async (): Promise<PaginatedResponse<CreditPurchaseItem>> => {
-  const response = await axiosInstance.get<PaginatedResponse<CreditPurchaseItem>>(ApiRoutes.credits.purchases);
+export const getCreditsPurchases = async (): Promise<
+  PaginatedResponse<CreditPurchaseItem>
+> => {
+  const response = await axiosInstance.get<
+    PaginatedResponse<CreditPurchaseItem>
+  >(ApiRoutes.credits.purchases);
+
   return response.data;
 };
 
 export const getAdminCreditUsage = async (
   query: AdminCreditUsageQuery,
 ): Promise<PaginatedResponse<AdminCreditUsageRow>> => {
-  const response = await axiosInstance.get<PaginatedResponse<AdminCreditUsageRow>>(
-    ApiRoutes.credits.usage_admin,
-    {
-      params: query,
-    },
-  );
+  const response = await axiosInstance.get<
+    PaginatedResponse<AdminCreditUsageRow>
+  >(ApiRoutes.credits.usage_admin, {
+    params: query,
+  });
+
   return response.data;
 };
 
 export const createCreditCheckout = async (
   payload: CreateCreditCheckoutPayload,
 ): Promise<CreateCreditCheckoutResponse> => {
-  const response = await axiosInstance.post<CreateCreditCheckoutResponse>(ApiRoutes.credits.checkout, payload);
+  const response = await axiosInstance.post<CreateCreditCheckoutResponse>(
+    ApiRoutes.credits.checkout,
+    payload,
+  );
+
   return response.data;
 };

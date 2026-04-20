@@ -57,7 +57,13 @@ export interface AdminPurchasesQuery {
   search?: string;
   pack_key?: string;
   status?: "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED";
-  sort_by?: "created_at" | "status" | "gross_amount_cents" | "net_amount_cents" | "stripe_fee_cents" | "credits_amount";
+  sort_by?:
+    | "created_at"
+    | "status"
+    | "gross_amount_cents"
+    | "net_amount_cents"
+    | "stripe_fee_cents"
+    | "credits_amount";
   sort_order?: "asc" | "desc";
 }
 

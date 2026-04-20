@@ -35,9 +35,11 @@ export class AiConfig {
 
   constructor(private readonly configService: ConfigService<EnvConfig>) {
     const openaiApiKey = this.configService.get('OPENAI_API_KEY');
+
     this.openaiClient = createOpenAI({ apiKey: openaiApiKey });
 
     const googleApiKey = this.configService.get('GOOGLE_API_KEY');
+
     this.googleClient = createGoogleGenerativeAI({ apiKey: googleApiKey });
 
     this.logger.debug('AI SDK clients initialized');
@@ -50,8 +52,10 @@ export class AiConfig {
     switch (provider) {
       case AiProviders.openai:
         return this.openaiClient(model);
+
       case AiProviders.gemini:
         return this.googleClient(model);
+
       default:
         return this.openaiClient(model);
     }
@@ -60,17 +64,22 @@ export class AiConfig {
   getVideoModelAdapter(provider: string, model: string) {
     switch (provider) {
       case AiProviders.gemini:
+
       case 'veo':
         return this.googleClient.videoModel(model);
+
       case AiProviders.openai:
         throw new Error(
           'OpenAI Video (Sora) is not yet supported by the @ai-sdk/openai provider. Please use Gemini/Veo.',
         );
+
       case AiProviders.runway:
+
       case AiProviders.pika:
         throw new Error(
           `Provider ${provider} is not yet integrated with the Vercel AI SDK.`,
         );
+
       default:
         throw new Error(
           `Video provider ${provider} not supported by AI SDK yet.`,

@@ -27,6 +27,7 @@ export class CurrencyService {
 
   async convertUsdToEur(amountUsd: number): Promise<CurrencyConversionResult> {
     const snapshot = await this.getUsdToEurRate();
+
     const amount = amountUsd * snapshot.rate;
 
     return {
@@ -74,7 +75,9 @@ export class CurrencyService {
       };
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
+
       this.logger.warn(`getUsdToEurRate frankfurter failed: ${detail}`);
+
       const fallback = await this.prisma.currencyRateSnapshot.findFirst({
         where: {
           base_currency: 'USD',
@@ -89,6 +92,7 @@ export class CurrencyService {
         this.logger.error(
           'getUsdToEurRate no USD/EUR snapshot available after frankfurter failure',
         );
+
         throw new InternalServerErrorException(
           'Currency rate unavailable and no fallback snapshot exists',
         );

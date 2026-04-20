@@ -8,11 +8,17 @@ export function useLandingHashScroll(matchPathname: string) {
 
   useEffect(() => {
     if (pathname !== matchPathname) return;
+
     const id = window.location.hash.slice(1);
+
     if (!id) return;
+
     const frame = requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document
+        .getElementById(id)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+
     return () => cancelAnimationFrame(frame);
   }, [pathname, matchPathname]);
 }

@@ -1,11 +1,7 @@
 import { z } from 'zod';
 import { ImageURLSchema } from '../google/google-video.schemas';
 
-const LtxvDurationSchema = z.union([
-  z.literal(6),
-  z.literal(8),
-  z.literal(10),
-]);
+const LtxvDurationSchema = z.union([z.literal(6), z.literal(8), z.literal(10)]);
 
 const LtxvResolutionSchema = z
   .enum(['1080p', '1440p', '2160p'])
@@ -34,4 +30,5 @@ export const Ltxv2FastVideoSchema = z.object({
 });
 
 export type Ltxv2VideoRequest = z.infer<typeof Ltxv2VideoSchema>;
+
 export type Ltxv2FastVideoRequest = z.infer<typeof Ltxv2FastVideoSchema>;

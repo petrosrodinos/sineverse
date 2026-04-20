@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button, Input, Link } from "@heroui/react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+
 import { useSignin } from "@/features/auth/hooks/use-auth";
 
 const signInSchema = z.object({
@@ -17,6 +18,7 @@ type SignInValues = z.infer<typeof signInSchema>;
 
 export const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
+
   const { mutate: signIn, isPending, error } = useSignin();
 
   const {
@@ -45,38 +47,34 @@ export const SignInForm = () => {
   return (
     <div className="flex w-full flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small border border-default-200/50">
       <div className="flex flex-col gap-1 items-center mb-4">
-        <h1 className="text-2xl font-bold">
-          Welcome Back
-        </h1>
+        <h1 className="text-2xl font-bold">Welcome Back</h1>
         <p className="text-small text-default-500">Sign in to your account</p>
       </div>
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <Input
           {...register("email")}
-          isInvalid={!!errors.email}
-          errorMessage={errors.email?.message as string}
           isRequired
+          classNames={{
+            inputWrapper:
+              "border-default-200 hover:border-primary transition-colors",
+          }}
+          errorMessage={errors.email?.message as string}
+          isInvalid={!!errors.email}
           label="Email"
           placeholder="Enter your email"
+          startContent={<Mail className="text-default-400" size={20} />}
           type="email"
           variant="bordered"
-          startContent={<Mail className="text-default-400" size={20} />}
-          classNames={{
-            inputWrapper: "border-default-200 hover:border-primary transition-colors",
-          }}
         />
 
         <Input
           {...register("password")}
-          isInvalid={!!errors.password}
-          errorMessage={errors.password?.message as string}
           isRequired
-          label="Password"
-          placeholder="Enter your password"
-          type={isVisible ? "text" : "password"}
-          variant="bordered"
-          startContent={<Lock className="text-default-400" size={20} />}
+          classNames={{
+            inputWrapper:
+              "border-default-200 hover:border-primary transition-colors",
+          }}
           endContent={
             <button
               className="focus:outline-none"
@@ -84,15 +82,25 @@ export const SignInForm = () => {
               onClick={toggleVisibility}
             >
               {isVisible ? (
-                <EyeOff className="text-2xl text-default-400 pointer-events-none" size={20} />
+                <EyeOff
+                  className="text-2xl text-default-400 pointer-events-none"
+                  size={20}
+                />
               ) : (
-                <Eye className="text-2xl text-default-400 pointer-events-none" size={20} />
+                <Eye
+                  className="text-2xl text-default-400 pointer-events-none"
+                  size={20}
+                />
               )}
             </button>
           }
-          classNames={{
-            inputWrapper: "border-default-200 hover:border-primary transition-colors",
-          }}
+          errorMessage={errors.password?.message as string}
+          isInvalid={!!errors.password}
+          label="Password"
+          placeholder="Enter your password"
+          startContent={<Lock className="text-default-400" size={20} />}
+          type={isVisible ? "text" : "password"}
+          variant="bordered"
         />
 
         <div className="flex w-full items-center justify-between px-1 py-2">

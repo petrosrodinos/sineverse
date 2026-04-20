@@ -18,6 +18,7 @@ import type { RedisOptions } from 'ioredis';
           logger.warn(
             'REDIS_URL not set, BullMQ will use default localhost:6379',
           );
+
           return {
             host: 'localhost',
             port: 6379,
@@ -28,6 +29,7 @@ import type { RedisOptions } from 'ioredis';
           const url = new URL(
             redisUrl.includes('://') ? redisUrl : `redis://${redisUrl}`,
           );
+
           return {
             host: url.hostname,
             port: parseInt(url.port, 10) || 6379,
@@ -37,6 +39,7 @@ import type { RedisOptions } from 'ioredis';
             enableReadyCheck: false,
             retryStrategy: (times) => {
               const delay = Math.min(times * 100, 3000);
+
               return delay;
             },
           };
@@ -44,6 +47,7 @@ import type { RedisOptions } from 'ioredis';
           logger.error(
             `Invalid REDIS_URL: ${redisUrl}, falling back to localhost:6379`,
           );
+
           return {
             host: 'localhost',
             port: 6379,

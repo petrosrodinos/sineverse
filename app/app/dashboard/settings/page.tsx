@@ -6,8 +6,13 @@ import { Input } from "@heroui/input";
 import { Skeleton } from "@heroui/skeleton";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useCurrentUserProfile, useUpdateCurrentUserPassword, useUpdateCurrentUserProfile } from "@/features/users/hooks/use-users";
 import { useSession } from "next-auth/react";
+
+import {
+  useCurrentUserProfile,
+  useUpdateCurrentUserPassword,
+  useUpdateCurrentUserProfile,
+} from "@/features/users/hooks/use-users";
 import { useAuthStore } from "@/stores/auth";
 
 type ProfileFormValues = {
@@ -22,9 +27,15 @@ type PasswordFormValues = {
 
 export default function SettingsPage() {
   const { data: user, isLoading } = useCurrentUserProfile();
-  const { mutate: updateProfile, isPending: isUpdatingProfile } = useUpdateCurrentUserProfile();
-  const { mutate: updatePassword, isPending: isUpdatingPassword } = useUpdateCurrentUserPassword();
+
+  const { mutate: updateProfile, isPending: isUpdatingProfile } =
+    useUpdateCurrentUserProfile();
+
+  const { mutate: updatePassword, isPending: isUpdatingPassword } =
+    useUpdateCurrentUserPassword();
+
   const { update: updateSession } = useSession();
+
   const { updateUser } = useAuthStore((state) => state);
 
   const {
@@ -61,7 +72,10 @@ export default function SettingsPage() {
       { full_name: values.full_name },
       {
         onSuccess: async (updated) => {
-          await updateSession({ full_name: updated?.full_name ?? values.full_name });
+          await updateSession({
+            full_name: updated?.full_name ?? values.full_name,
+          });
+
           updateUser({ full_name: updated?.full_name ?? values.full_name });
         },
       },
@@ -72,6 +86,7 @@ export default function SettingsPage() {
     if (values.new_password !== values.confirm_password) {
       return;
     }
+
     updatePassword(
       {
         current_password: values.current_password,
@@ -89,7 +104,9 @@ export default function SettingsPage() {
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4 sm:p-6">
       <div>
         <h1 className="text-2xl font-semibold text-foreground">Settings</h1>
-        <p className="text-sm text-default-500">Update your username and password.</p>
+        <p className="text-sm text-default-500">
+          Update your username and password.
+        </p>
       </div>
 
       <Card className="border border-default-200 shadow-sm">
@@ -105,20 +122,33 @@ export default function SettingsPage() {
           ) : user ? (
             <>
               <div className="rounded-lg border border-default-200 bg-default-50 px-4 py-3">
-                <p className="text-xs uppercase tracking-wide text-default-500">Email</p>
-                <p className="mt-1 text-sm font-medium text-foreground">{user.email}</p>
+                <p className="text-xs uppercase tracking-wide text-default-500">
+                  Email
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {user.email}
+                </p>
               </div>
-              <form className="flex flex-col gap-3" onSubmit={handleSubmitProfile(onSubmitProfile)}>
+              <form
+                className="flex flex-col gap-3"
+                onSubmit={handleSubmitProfile(onSubmitProfile)}
+              >
                 <Input
-                  {...registerProfile("full_name", { required: "Username is required" })}
+                  {...registerProfile("full_name", {
+                    required: "Username is required",
+                  })}
+                  errorMessage={profileErrors.full_name?.message}
+                  isInvalid={!!profileErrors.full_name}
                   label="Username"
                   placeholder="Your username"
                   variant="bordered"
-                  isInvalid={!!profileErrors.full_name}
-                  errorMessage={profileErrors.full_name?.message}
                 />
                 <div className="flex justify-end">
-                  <Button type="submit" color="primary" isLoading={isUpdatingProfile}>
+                  <Button
+                    color="primary"
+                    isLoading={isUpdatingProfile}
+                    type="submit"
+                  >
                     Save Username
                   </Button>
                 </div>
@@ -135,42 +165,55 @@ export default function SettingsPage() {
           <h2 className="text-lg font-semibold">Change Password</h2>
         </CardHeader>
         <CardBody>
-          <form className="flex flex-col gap-3" onSubmit={handleSubmitPassword(onSubmitPassword)}>
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={handleSubmitPassword(onSubmitPassword)}
+          >
             <Input
-              {...registerPassword("current_password", { required: "Current password is required" })}
+              {...registerPassword("current_password", {
+                required: "Current password is required",
+              })}
+              errorMessage={passwordErrors.current_password?.message}
+              isInvalid={!!passwordErrors.current_password}
               label="Current password"
               placeholder="Enter current password"
               type="password"
               variant="bordered"
-              isInvalid={!!passwordErrors.current_password}
-              errorMessage={passwordErrors.current_password?.message}
             />
             <Input
               {...registerPassword("new_password", {
                 required: "New password is required",
-                minLength: { value: 8, message: "Password must be at least 8 characters" },
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
               })}
+              errorMessage={passwordErrors.new_password?.message}
+              isInvalid={!!passwordErrors.new_password}
               label="New password"
               placeholder="Enter new password"
               type="password"
               variant="bordered"
-              isInvalid={!!passwordErrors.new_password}
-              errorMessage={passwordErrors.new_password?.message}
             />
             <Input
               {...registerPassword("confirm_password", {
                 required: "Please confirm your new password",
-                validate: (value) => value === watch("new_password") || "Passwords do not match",
+                validate: (value) =>
+                  value === watch("new_password") || "Passwords do not match",
               })}
+              errorMessage={passwordErrors.confirm_password?.message}
+              isInvalid={!!passwordErrors.confirm_password}
               label="Confirm new password"
               placeholder="Confirm new password"
               type="password"
               variant="bordered"
-              isInvalid={!!passwordErrors.confirm_password}
-              errorMessage={passwordErrors.confirm_password?.message}
             />
             <div className="flex justify-end">
-              <Button type="submit" color="primary" isLoading={isUpdatingPassword}>
+              <Button
+                color="primary"
+                isLoading={isUpdatingPassword}
+                type="submit"
+              >
                 Update Password
               </Button>
             </div>

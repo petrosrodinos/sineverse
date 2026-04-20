@@ -10,6 +10,7 @@ export class JwtGuard extends AuthGuard('jwt') {
 
   getRequest(context: any) {
     const ctx = GqlExecutionContext.create(context);
+
     return ctx.getContext().req;
   }
 
@@ -29,7 +30,9 @@ export class JwtGuard extends AuthGuard('jwt') {
     }
 
     const ctx = GqlExecutionContext.create(context);
+
     const gqlContext = ctx.getContext();
+
     gqlContext.user = user;
 
     return super.handleRequest(err, user, info, context, status);

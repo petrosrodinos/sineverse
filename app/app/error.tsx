@@ -27,18 +27,21 @@ export default function Error({
           <AlertCircle className="w-16 h-16 text-danger" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">Something went wrong!</h1>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Something went wrong!
+          </h1>
           <p className="text-default-500 text-lg">
-            We apologize for the inconvenience. An unexpected error has occurred while processing your request.
+            We apologize for the inconvenience. An unexpected error has occurred
+            while processing your request.
           </p>
         </div>
         <div className="flex w-full flex-col sm:flex-row gap-4 pt-4 justify-center">
           <Button
-            size="lg"
-            color="primary"
-            variant="shadow"
-            startContent={<RefreshCcw className="w-5 h-5" />}
             className="w-full sm:w-auto font-medium"
+            color="primary"
+            size="lg"
+            startContent={<RefreshCcw className="w-5 h-5" />}
+            variant="shadow"
             onPress={
               // Attempt to recover by trying to re-render the segment
               () => reset()
@@ -47,10 +50,10 @@ export default function Error({
             Try again
           </Button>
           <Button
-            size="lg"
-            variant="flat"
-            startContent={<Home className="w-5 h-5" />}
             className="w-full sm:w-auto font-medium"
+            size="lg"
+            startContent={<Home className="w-5 h-5" />}
+            variant="flat"
             onPress={() => router.push("/")}
           >
             Go to Home

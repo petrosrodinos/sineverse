@@ -39,7 +39,10 @@ export class UpdateTimelineClipDto {
   @IsOptional()
   speed?: number;
 
-  @ApiPropertyOptional({ enum: TimelineTransitionType, description: 'Sets or updates the transition_out type for this clip' })
+  @ApiPropertyOptional({
+    enum: TimelineTransitionType,
+    description: 'Sets or updates the transition_out type for this clip',
+  })
   @IsEnum(TimelineTransitionType)
   @IsOptional()
   transition_out_type?: TimelineTransitionType;

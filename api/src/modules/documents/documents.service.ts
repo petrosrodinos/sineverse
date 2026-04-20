@@ -17,11 +17,13 @@ export class DocumentsService {
     try {
       // 1. Download video from provider URL
       const response = await axios.get(url, { responseType: 'arraybuffer' });
+
       const buffer = Buffer.from(response.data, 'binary');
 
       return await this.saveVideoFromBuffer(buffer, filename);
     } catch (error) {
       this.logger.error(`Error saving video from URL to GCP: ${error.message}`);
+
       throw error;
     }
   }
@@ -49,6 +51,7 @@ export class DocumentsService {
       return document.uuid;
     } catch (error) {
       this.logger.error(`Error saving video buffer to GCP: ${error.message}`);
+
       throw error;
     }
   }
@@ -56,7 +59,9 @@ export class DocumentsService {
   async saveImageFromUrl(url: string, filename: string): Promise<string> {
     try {
       const response = await axios.get(url, { responseType: 'arraybuffer' });
+
       const buffer = Buffer.from(response.data, 'binary');
+
       const mimetype = response.headers['content-type'] || 'image/png';
 
       return await this.saveImageFromBuffer(buffer, filename, mimetype);
@@ -92,6 +97,7 @@ export class DocumentsService {
       return document.uuid;
     } catch (error) {
       this.logger.error(`Error saving image buffer to GCP: ${error.message}`);
+
       throw error;
     }
   }
@@ -130,6 +136,7 @@ export class DocumentsService {
       });
 
       const videoAsset = variation?.project_assets?.[0];
+
       if (videoAsset?.document_uuid) {
         await this.deleteDocument(videoAsset.document_uuid);
       }

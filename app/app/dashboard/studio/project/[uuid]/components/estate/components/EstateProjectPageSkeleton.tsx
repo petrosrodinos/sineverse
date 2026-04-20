@@ -8,7 +8,10 @@ export function EstateProjectPageSkeleton() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex flex-1 flex-col gap-3 rounded-2xl border border-default-200 bg-default-100/30 p-4 dark:border-default-100/20 dark:bg-default-100/5">
+                <div
+                  key={i}
+                  className="flex flex-1 flex-col gap-3 rounded-2xl border border-default-200 bg-default-100/30 p-4 dark:border-default-100/20 dark:bg-default-100/5"
+                >
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-9 w-9 shrink-0 rounded-full" />
                     <div className="min-w-0 flex-1 space-y-2">

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
+
 import {
   deleteAdminUser,
   getAdminOverview,
@@ -8,7 +9,11 @@ import {
   getAdminUsers,
   updateAdminUser,
 } from "../services/admin.services";
-import { AdminPurchasesQuery, AdminUsersQuery, UpdateAdminUserPayload } from "../interfaces/admin.interfaces";
+import {
+  AdminPurchasesQuery,
+  AdminUsersQuery,
+  UpdateAdminUserPayload,
+} from "../interfaces/admin.interfaces";
 
 const QueryKeys = {
   overview: "admin-overview",
@@ -28,7 +33,10 @@ export const useAdminOverview = (options?: AdminQueryOptions) => {
   });
 };
 
-export const useAdminUsers = (query: AdminUsersQuery, options?: AdminQueryOptions) => {
+export const useAdminUsers = (
+  query: AdminUsersQuery,
+  options?: AdminQueryOptions,
+) => {
   return useQuery({
     queryKey: [QueryKeys.users, query],
     queryFn: () => getAdminUsers(query),
@@ -36,7 +44,10 @@ export const useAdminUsers = (query: AdminUsersQuery, options?: AdminQueryOption
   });
 };
 
-export const useAdminPurchases = (query: AdminPurchasesQuery, options?: AdminQueryOptions) => {
+export const useAdminPurchases = (
+  query: AdminPurchasesQuery,
+  options?: AdminQueryOptions,
+) => {
   return useQuery({
     queryKey: [QueryKeys.purchases, query],
     queryFn: () => getAdminPurchases(query),
@@ -46,11 +57,18 @@ export const useAdminPurchases = (query: AdminPurchasesQuery, options?: AdminQue
 
 export const useUpdateAdminUser = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ userUuid, payload }: { userUuid: string; payload: UpdateAdminUserPayload }) =>
-      updateAdminUser(userUuid, payload),
+    mutationFn: ({
+      userUuid,
+      payload,
+    }: {
+      userUuid: string;
+      payload: UpdateAdminUserPayload;
+    }) => updateAdminUser(userUuid, payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.users] });
+
       addToast({ title: "User updated", severity: "success" });
     },
     onError: (error: any) => {
@@ -65,11 +83,14 @@ export const useUpdateAdminUser = () => {
 
 export const useDeleteAdminUser = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (userUuid: string) => deleteAdminUser(userUuid),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.users] });
+
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.overview] });
+
       addToast({ title: "User deleted", severity: "success" });
     },
     onError: (error: any) => {

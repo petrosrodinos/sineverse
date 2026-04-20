@@ -100,4 +100,5 @@ export const AiModels = {
 };
 
 export type AiProvider = (typeof AiProviders)[keyof typeof AiProviders];
+
 export type AiModel = string;

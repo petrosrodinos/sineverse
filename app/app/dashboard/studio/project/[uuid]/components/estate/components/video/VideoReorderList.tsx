@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+
 import { useState } from "react";
 
 export type VideoReorderListRenderContext = {
@@ -12,7 +13,11 @@ export type VideoReorderListRenderContext = {
 
 type VideoReorderListProps = {
   orderedIds: readonly string[];
-  renderItem: (clipId: string, index: number, ctx: VideoReorderListRenderContext) => ReactNode;
+  renderItem: (
+    clipId: string,
+    index: number,
+    ctx: VideoReorderListRenderContext,
+  ) => ReactNode;
   onReorder: (fromIndex: number, toIndex: number) => void;
   canReorder: boolean;
 };
@@ -38,7 +43,7 @@ export function VideoReorderList({
       role="list"
     >
       {orderedIds.map((id, index) => (
-        <div key={id} role="listitem" className="min-w-0">
+        <div key={id} className="min-w-0" role="listitem">
           {renderItem(id, index, ctx)}
         </div>
       ))}

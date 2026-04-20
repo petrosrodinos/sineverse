@@ -3,12 +3,15 @@ import { z } from 'zod';
 export const GoogleVeo3DurationEnum = z
   .union([z.literal(4), z.literal(6), z.literal(8)])
   .default(8);
+
 export const GoogleVeo3AspectRatioEnum = z
   .enum(['16:9', '9:16', '1:1', '2.35:1', '4:3'])
   .default('16:9');
+
 export const GoogleVeo3ResolutionEnum = z.enum(['720P', '1080P']);
 
 export const EnhancePromptSchema = z.boolean().default(true);
+
 export const GenerateAudioSchema = z.boolean().default(true);
 
 export const ImageURLSchema = z
@@ -52,4 +55,5 @@ export const GoogleVeo3I2VideoSchema = z.object({
 });
 
 export type GoogleVeo3T2VideoRequest = z.infer<typeof GoogleVeo3T2VideoSchema>;
+
 export type GoogleVeo3I2VideoRequest = z.infer<typeof GoogleVeo3I2VideoSchema>;

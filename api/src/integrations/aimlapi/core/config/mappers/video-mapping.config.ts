@@ -50,12 +50,15 @@ const normalizeDuration = (
     if ([6, 8, 10].includes(normalized)) {
       return normalized;
     }
+
     if (normalized <= 6) {
       return 6;
     }
+
     if (normalized <= 8) {
       return 8;
     }
+
     return 10;
   }
 
@@ -72,7 +75,9 @@ const normalizeDuration = (
 
   if (model.includes('klingai/video-v3')) {
     if (normalized < 3) return 3;
+
     if (normalized > 15) return 15;
+
     return normalized;
   }
 
@@ -89,16 +94,20 @@ export const transformVariationToModelPayload = (
 ): any => {
   const estateWalkthrough =
     variation.workflow_source === estateWalkthroughVideoConfig.workflowSource;
+
   const resolveGenerateAudio = (): boolean | undefined => {
     if (estateWalkthrough) {
       return false;
     }
+
     if (variation.include_sound === true) {
       return true;
     }
+
     if (variation.include_sound === false) {
       return false;
     }
+
     return undefined;
   };
 
@@ -106,29 +115,46 @@ export const transformVariationToModelPayload = (
     const parts = [variation.prompt_text || ''];
 
     if (variation.style) parts.push(`style: ${variation.style}`);
+
     if (variation.tone) parts.push(`tone: ${variation.tone}`);
+
     if (variation.genre) parts.push(`genre: ${variation.genre}`);
+
     if (variation.camera_style) parts.push(`camera: ${variation.camera_style}`);
+
     if (variation.shot_type && variation.shot_type !== 'customize')
       parts.push(`shot: ${variation.shot_type}`);
+
     if (variation.camera_movement)
       parts.push(`movement: ${variation.camera_movement}`);
+
     if (variation.lens_type) parts.push(`lens: ${variation.lens_type}`);
+
     if (variation.depth_of_field)
       parts.push(`depth of field: ${variation.depth_of_field}`);
+
     if (variation.lighting) parts.push(`lighting: ${variation.lighting}`);
+
     if (variation.color_grade)
       parts.push(`color grade: ${variation.color_grade}`);
+
     if (variation.time_of_day) parts.push(`time: ${variation.time_of_day}`);
+
     if (variation.aspect_ratio)
       parts.push(`aspect ratio: ${variation.aspect_ratio}`);
+
     if (variation.resolution) parts.push(`resolution: ${variation.resolution}`);
+
     if (variation.fps) parts.push(`fps: ${variation.fps}`);
+
     if (variation.guidance_scale)
       parts.push(`guidance scale: ${variation.guidance_scale}`);
+
     if (variation.creativity) parts.push(`creativity: ${variation.creativity}`);
+
     if (variation.motion_strength)
       parts.push(`motion strength: ${variation.motion_strength}`);
+
     if (variation.negative_prompt)
       parts.push(`negative prompt: ${variation.negative_prompt}`);
 
@@ -146,6 +172,7 @@ export const transformVariationToModelPayload = (
   // Kling Mappings
   if (model.includes('kling')) {
     const isV3 = model.includes('v3');
+
     const isImage = model.includes('image');
 
     const klingPayload: any = {
@@ -160,6 +187,7 @@ export const transformVariationToModelPayload = (
 
     if (isV3) {
       klingPayload.shot_type = 'customize';
+
       klingPayload.generate_audio = resolveGenerateAudio();
     }
 
@@ -180,6 +208,7 @@ export const transformVariationToModelPayload = (
     }
 
     const ga = resolveGenerateAudio();
+
     if (ga !== undefined) {
       ltxPayload.generate_audio = ga;
     }

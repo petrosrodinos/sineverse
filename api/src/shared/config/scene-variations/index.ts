@@ -149,22 +149,41 @@ export const MOTION_STRENGTH_VALUES = [0.1, 0.25, 0.5, 0.75, 1] as const;
 export const CREATIVITY_VALUES = [0.1, 0.25, 0.5, 0.75, 1] as const;
 
 export type ProjectTone = (typeof PROJECT_TONE_VALUES)[number];
+
 export type ProjectGenre = (typeof PROJECT_GENRE_VALUES)[number];
+
 export const FPS_VALUES = [24, 25, 30, 48, 60] as const;
+
 export type Creativity = (typeof CREATIVITY_VALUES)[number];
+
 export type MotionStrength = (typeof MOTION_STRENGTH_VALUES)[number];
+
 export type AiModel = (typeof AI_MODELS)[number];
+
 export type Duration = (typeof DURATION_VALUES)[number];
+
 export type Fps = (typeof FPS_VALUES)[number];
+
 export type AudioStyle = (typeof AUDIO_STYLE_VALUES)[number];
+
 export type ColorGrade = (typeof COLOR_GRADE_VALUES)[number];
+
 export type Lighting = (typeof LIGHTING_VALUES)[number];
+
 export type Resolution = (typeof RESOLUTION_VALUES)[number];
+
 export type AspectRatio = (typeof ASPECT_RATIO_VALUES)[number];
+
 export type ShotType = (typeof SHOT_TYPE_VALUES)[number];
+
 export type CameraStyle = (typeof CAMERA_STYLE_VALUES)[number];
+
 export type TimeOfDay = (typeof TIME_OF_DAY_VALUES)[number];
+
 export type DepthOfField = (typeof DEPTH_OF_FIELD_VALUES)[number];
+
 export type LensType = (typeof LENS_TYPE_VALUES)[number];
+
 export type CameraMovement = (typeof CAMERA_MOVEMENT_VALUES)[number];
+
 export type Style = (typeof STYLE_VALUES)[number];

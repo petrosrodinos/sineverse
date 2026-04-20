@@ -46,6 +46,7 @@ export class AimlApiService {
 
   async getBalance(): Promise<AimlBillingBalance> {
     const apiKey = this.configService.get<string>('AIMLAPI_KEY');
+
     if (!apiKey) {
       throw new InternalServerErrorException('AIMLAPI_KEY is missing');
     }

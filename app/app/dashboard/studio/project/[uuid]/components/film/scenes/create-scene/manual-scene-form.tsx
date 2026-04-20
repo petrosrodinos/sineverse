@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, Textarea } from "@heroui/input";
-import { Controller, Control, FieldErrors } from "react-hook-form";
+import { Controller, Control } from "react-hook-form";
 import * as z from "zod";
 
 export const manualFormSchema = z.object({
@@ -17,30 +17,34 @@ interface ManualSceneFormProps {
 
 export function ManualSceneForm({ control, onSubmit }: ManualSceneFormProps) {
   return (
-    <form id="manual-form" onSubmit={onSubmit} className="flex flex-col gap-4 py-4">
+    <form
+      className="flex flex-col gap-4 py-4"
+      id="manual-form"
+      onSubmit={onSubmit}
+    >
       <Controller
-        name="title"
         control={control}
+        name="title"
         render={({ field, fieldState }) => (
           <Input
             {...field}
-            label="Scene Title"
-            placeholder="Enter scene title"
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
+            label="Scene Title"
+            placeholder="Enter scene title"
           />
         )}
       />
       <Controller
-        name="description"
         control={control}
+        name="description"
         render={({ field, fieldState }) => (
           <Textarea
             {...field}
-            label="Description (Optional)"
-            placeholder="Enter scene description..."
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
+            label="Description (Optional)"
+            placeholder="Enter scene description..."
           />
         )}
       />

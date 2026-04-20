@@ -1,14 +1,29 @@
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { Tabs, Tab } from "@heroui/tabs";
 import { RadioGroup, Radio } from "@heroui/radio";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateScene, useGenerateAiScenes } from "@/features/scenes/hooks/use-scenes";
-import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
+
 import { AISceneGenerationForm, AIFormValues } from "./ai-scene-form";
-import { ManualSceneForm, manualFormSchema, ManualFormValues } from "./manual-scene-form";
+import {
+  ManualSceneForm,
+  manualFormSchema,
+  ManualFormValues,
+} from "./manual-scene-form";
+
+import {
+  useCreateScene,
+  useGenerateAiScenes,
+} from "@/features/scenes/hooks/use-scenes";
+import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
 
 interface CreateSceneModalProps {
   isOpen: boolean;
@@ -18,11 +33,22 @@ interface CreateSceneModalProps {
   scenes: Scene[];
 }
 
-export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, scenes }: CreateSceneModalProps) {
+export function CreateSceneModal({
+  isOpen,
+  onOpenChange,
+  onClose,
+  projectUuid,
+  scenes,
+}: CreateSceneModalProps) {
   const [selectedTab, setSelectedTab] = useState<string>("ai");
+
   const [aiMode, setAiMode] = useState<string>("continue");
 
-  const { control: manualControl, handleSubmit: handleManualSubmit, reset: resetManual } = useForm<ManualFormValues>({
+  const {
+    control: manualControl,
+    handleSubmit: handleManualSubmit,
+    reset: resetManual,
+  } = useForm<ManualFormValues>({
     resolver: zodResolver(manualFormSchema),
     defaultValues: {
       title: "",
@@ -31,7 +57,9 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, s
   });
 
   const { mutate: createScene, isPending: isManualPending } = useCreateScene();
-  const { mutate: generateAiScenes, isPending: isAiPending } = useGenerateAiScenes();
+
+  const { mutate: generateAiScenes, isPending: isAiPending } =
+    useGenerateAiScenes();
 
   const onManualSubmitForm = (data: ManualFormValues) => {
     createScene(
@@ -43,63 +71,82 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, s
       {
         onSuccess: () => {
           resetManual();
+
           onClose();
         },
-      }
+      },
     );
   };
 
   const onAISubmitForm = (data: AIFormValues) => {
-    generateAiScenes({
-      project_uuid: projectUuid,
-      number_of_scenes: data.number_of_scenes,
-      scene_variations: data.scene_variations,
-      continue_scenes: aiMode === "continue",
-      enrich_concept: data.enrich_concept,
-      directions: data.directions,
-    }, {
-      onSuccess: () => {
-        onClose();
-      }
-    });
+    generateAiScenes(
+      {
+        project_uuid: projectUuid,
+        number_of_scenes: data.number_of_scenes,
+        scene_variations: data.scene_variations,
+        continue_scenes: aiMode === "continue",
+        enrich_concept: data.enrich_concept,
+        directions: data.directions,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      },
+    );
   };
 
   let startingIndex = 1;
+
   const existingScenesLength = scenes?.length || 0;
-  
+
   if (existingScenesLength > 0 && aiMode === "continue") {
     startingIndex = existingScenesLength + 1;
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} size="lg">
+    <Modal
+      isOpen={isOpen}
+      size="lg"
+      onClose={onClose}
+      onOpenChange={onOpenChange}
+    >
       <ModalContent>
         {() => (
           <>
             <ModalHeader>Create New Scene</ModalHeader>
             <ModalBody>
-              <Tabs selectedKey={selectedTab} onSelectionChange={(k) => setSelectedTab(k as string)} fullWidth>
+              <Tabs
+                fullWidth
+                selectedKey={selectedTab}
+                onSelectionChange={(k) => setSelectedTab(k as string)}
+              >
                 <Tab key="ai" title="Generate with AI">
                   {existingScenesLength > 0 && (
                     <div className="mb-4">
-                      <RadioGroup 
-                        value={aiMode} 
-                        onValueChange={setAiMode} 
-                        orientation="horizontal"
+                      <RadioGroup
                         className="mb-4"
+                        orientation="horizontal"
+                        value={aiMode}
+                        onValueChange={setAiMode}
                       >
                         <Radio value="continue">Continue existing scenes</Radio>
-                        <Radio value="scratch">Create scenes from scratch</Radio>
+                        <Radio value="scratch">
+                          Create scenes from scratch
+                        </Radio>
                       </RadioGroup>
                     </div>
                   )}
-                  <AISceneGenerationForm startingIndex={startingIndex} onSubmit={onAISubmitForm} />
+                  <AISceneGenerationForm
+                    startingIndex={startingIndex}
+                    onSubmit={onAISubmitForm}
+                  />
                 </Tab>
 
                 <Tab key="manual" title="Manual Entry">
-                  <ManualSceneForm 
-                    control={manualControl} 
-                    onSubmit={handleManualSubmit(onManualSubmitForm)} 
+                  <ManualSceneForm
+                    control={manualControl}
+                    onSubmit={handleManualSubmit(onManualSubmitForm)}
                   />
                 </Tab>
               </Tabs>
@@ -109,11 +156,21 @@ export function CreateSceneModal({ isOpen, onOpenChange, onClose, projectUuid, s
                 Cancel
               </Button>
               {selectedTab === "ai" ? (
-                <Button color="primary" type="submit" form="ai-scene-form" isLoading={isAiPending}>
+                <Button
+                  color="primary"
+                  form="ai-scene-form"
+                  isLoading={isAiPending}
+                  type="submit"
+                >
                   Generate Scenes
                 </Button>
               ) : (
-                <Button color="primary" type="submit" form="manual-form" isLoading={isManualPending}>
+                <Button
+                  color="primary"
+                  form="manual-form"
+                  isLoading={isManualPending}
+                  type="submit"
+                >
                   Create Scene
                 </Button>
               )}

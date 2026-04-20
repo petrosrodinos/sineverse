@@ -1,7 +1,8 @@
 "use client";
 
-import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
 import { LayoutDashboard, Coins, Settings, Shield } from "lucide-react";
+
+import { DashboardSidebarItem } from "@/interfaces/navigation-bars.interfaces";
 import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 
 export const dashboardSidebarItems: DashboardSidebarItem[] = [

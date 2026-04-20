@@ -34,6 +34,7 @@ export class ProjectsService {
       });
     } catch (error) {
       console.log(error);
+
       throw new InternalServerErrorException('Failed to create project', {
         cause: error,
       });
@@ -43,9 +44,11 @@ export class ProjectsService {
   async findAll(user_uuid: string, query?: ProjectsQueryDto) {
     try {
       const where: Prisma.ProjectWhereInput = { user_uuid };
+
       if (query?.type) {
         where.type = query.type;
       }
+
       return await this.prisma.project.findMany({
         where,
         orderBy: { created_at: 'desc' },
@@ -62,10 +65,13 @@ export class ProjectsService {
       const project = await this.prisma.project.findFirst({
         where: { uuid, user_uuid },
       });
+
       if (!project) throw new NotFoundException('Project not found');
+
       return project;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException('Failed to retrieve project', {
         cause: error,
       });
@@ -79,6 +85,7 @@ export class ProjectsService {
   ) {
     try {
       await this.findOne(user_uuid, uuid);
+
       return await this.prisma.project.update({
         where: { uuid },
         data: {
@@ -95,7 +102,9 @@ export class ProjectsService {
   async remove(user_uuid: string, uuid: string) {
     try {
       await this.findOne(user_uuid, uuid);
+
       await this.documentsService.deleteProjectDocuments(uuid);
+
       return await this.prisma.project.delete({ where: { uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete project', {

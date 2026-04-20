@@ -34,6 +34,7 @@ export function validateEnv(config: Record<string, unknown>) {
 
   if (!parsed.success) {
     console.error(parsed.error.format());
+
     throw new Error('Invalid environment variables');
   }
 

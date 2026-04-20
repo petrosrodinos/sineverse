@@ -24,7 +24,9 @@ export class TemplateService {
   private registerHelpers() {
     Handlebars.registerHelper('formatDate', (dateString: string) => {
       if (!dateString) return '';
+
       const date = new Date(dateString);
+
       return date.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -35,6 +37,7 @@ export class TemplateService {
 
     Handlebars.registerHelper('formatPrice', (price: number) => {
       if (typeof price !== 'number') return '0.00';
+
       return price.toFixed(2);
     });
 
@@ -56,13 +59,17 @@ export class TemplateService {
 
     try {
       const templatePath = path.join(this.templatesPath, `${templateName}.hbs`);
+
       const templateContent = fs.readFileSync(templatePath, 'utf8');
+
       const compiledTemplate = Handlebars.compile(templateContent);
 
       this.compiledTemplates.set(templateName, compiledTemplate);
+
       return compiledTemplate;
     } catch (error) {
       this.logger.error(`Failed to load template ${templateName}:`, error);
+
       throw new Error(`Template ${templateName} not found`);
     }
   }
@@ -73,9 +80,11 @@ export class TemplateService {
   ): Promise<string> {
     try {
       const template = await this.loadTemplate(templateName);
+
       return template(data);
     } catch (error) {
       this.logger.error(`Failed to render template ${templateName}:`, error);
+
       throw new Error(`Failed to render template ${templateName}`);
     }
   }

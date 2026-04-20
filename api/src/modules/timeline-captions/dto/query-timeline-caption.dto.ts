@@ -4,4 +4,6 @@ export const TimelineCaptionQuerySchema = z.object({
   clip_uuid: z.string(),
 });
 
-export type TimelineCaptionQueryDto = z.infer<typeof TimelineCaptionQuerySchema>;
+export type TimelineCaptionQueryDto = z.infer<
+  typeof TimelineCaptionQuerySchema
+>;

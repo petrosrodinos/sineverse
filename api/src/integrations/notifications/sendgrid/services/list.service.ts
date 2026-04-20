@@ -13,6 +13,7 @@ export class SendGridListService {
       return await this.sendgridAdapter.createList(name);
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }
@@ -22,6 +23,7 @@ export class SendGridListService {
       return await this.sendgridAdapter.getLists();
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }
@@ -31,6 +33,7 @@ export class SendGridListService {
       return await this.sendgridAdapter.createContact(data);
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }

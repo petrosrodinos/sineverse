@@ -1,12 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { TimelineClipsService } from './timeline-clips.service';
 import { CreateTimelineClipDto } from './dto/create-timeline-clip.dto';
 import { UpdateTimelineClipDto } from './dto/update-timeline-clip.dto';
-import { TimelineClipQuerySchema, TimelineClipQueryDto } from './dto/query-timeline-clip.dto';
+import {
+  TimelineClipQuerySchema,
+  TimelineClipQueryDto,
+} from './dto/query-timeline-clip.dto';
 
 @ApiTags('Timeline Clips')
 @Controller('timeline-clips')
@@ -17,7 +35,10 @@ export class TimelineClipsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a timeline clip' })
-  create(@CurrentUser('uuid') user_uuid: string, @Body() dto: CreateTimelineClipDto) {
+  create(
+    @CurrentUser('uuid') user_uuid: string,
+    @Body() dto: CreateTimelineClipDto,
+  ) {
     return this.timelineClipsService.create(user_uuid, dto);
   }
 
@@ -25,7 +46,8 @@ export class TimelineClipsController {
   @ApiOperation({ summary: 'List timeline clips for a final project' })
   findAll(
     @CurrentUser('uuid') user_uuid: string,
-    @Query(new ZodValidationPipe(TimelineClipQuerySchema)) query: TimelineClipQueryDto,
+    @Query(new ZodValidationPipe(TimelineClipQuerySchema))
+    query: TimelineClipQueryDto,
   ) {
     return this.timelineClipsService.findAll(user_uuid, query);
   }

@@ -27,6 +27,7 @@ export const CreateVideoSchema = z
 
     if (!result.success) {
       result.error.issues.forEach((issue) => ctx.addIssue(issue));
+
       return z.NEVER;
     }
 
@@ -51,6 +52,7 @@ export const CreateImageSchema = z
 
     if (!result.success) {
       result.error.issues.forEach((issue) => ctx.addIssue(issue));
+
       return z.NEVER;
     }
 
@@ -58,4 +60,5 @@ export const CreateImageSchema = z
   });
 
 export type CreateVideoRequest = any;
+
 export type CreateImageRequest = any;

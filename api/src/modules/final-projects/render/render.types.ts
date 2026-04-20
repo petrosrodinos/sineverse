@@ -1,6 +1,9 @@
 export const COMPOSITION_ID = 'FinalProject';
+
 export const COMPOSITION_FPS = 30;
+
 export const COMPOSITION_WIDTH = 1280;
+
 export const COMPOSITION_HEIGHT = 720;
 
 export interface CaptionData {

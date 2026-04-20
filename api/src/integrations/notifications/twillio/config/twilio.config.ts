@@ -13,11 +13,14 @@ export class TwillioConfig {
 
   private initTwilio() {
     const accountSid = this.configService.get<string>('TWILIO_ACCOUNT_SID');
+
     const authToken = this.configService.get<string>('TWILIO_AUTH_TOKEN');
+
     if (!accountSid || !authToken) {
       this.logger.error(
         'TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN is not configured',
       );
+
       return;
     }
 

@@ -7,6 +7,7 @@ describe('CreditsService', () => {
       baseMarkupPercent: 0.1,
       projectTypeMultiplier: 1.1,
     });
+
     expect(result).toBe(1210);
   });
 
@@ -16,6 +17,7 @@ describe('CreditsService', () => {
       baseMarkupPercent: 0.1,
       projectTypeMultiplier: 1.25,
     });
+
     expect(result).toBe(1375);
   });
 
@@ -25,6 +27,7 @@ describe('CreditsService', () => {
       baseMarkupPercent: 0.1,
       projectTypeMultiplier: 1.1,
     });
+
     expect(result).toBe(4);
   });
 });

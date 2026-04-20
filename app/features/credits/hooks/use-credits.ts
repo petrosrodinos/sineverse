@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
+
 import {
   getAdminCreditUsage,
   createCreditCheckout,
@@ -66,7 +67,10 @@ export const useCreditsPurchases = () => {
   });
 };
 
-export const useAdminCreditUsage = (query: AdminCreditUsageQuery, options?: CreditsQueryOptions) => {
+export const useAdminCreditUsage = (
+  query: AdminCreditUsageQuery,
+  options?: CreditsQueryOptions,
+) => {
   return useQuery({
     queryKey: [QueryKeys.adminUsage, query],
     queryFn: () => getAdminCreditUsage(query),
@@ -81,11 +85,15 @@ export const useCreateCreditCheckout = () => {
     mutationFn: createCreditCheckout,
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.purchases] });
+
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.summary] });
+
       if (data.checkout_url) {
         window.location.href = data.checkout_url;
+
         return;
       }
+
       addToast({
         title: "Checkout link unavailable",
         severity: "warning",

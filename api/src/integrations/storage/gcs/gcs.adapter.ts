@@ -25,10 +25,13 @@ export class GcsAdapter {
   ): Promise<UploadImageResponse> {
     try {
       const storage = this.gcsConfig.getStorageClient();
+
       const bucketName = request.bucket || this.gcsConfig.getBucketName();
+
       const bucket = storage.bucket(bucketName);
 
       const folder = request.folder || this.folder;
+
       const filename = `${folder}/${Date.now()}-${request.filename}`;
 
       const file = bucket.file(filename);
@@ -43,6 +46,7 @@ export class GcsAdapter {
       return new Promise((resolve, reject) => {
         stream.on('error', (error) => {
           this.logger.error('Upload error:', error);
+
           reject(error);
         });
 
@@ -53,6 +57,7 @@ export class GcsAdapter {
             // }
 
             const [metadata] = await file.getMetadata();
+
             const url = `https://storage.googleapis.com/${bucketName}/${filename}`;
 
             resolve({
@@ -65,6 +70,7 @@ export class GcsAdapter {
             });
           } catch (error) {
             this.logger.error('Error getting metadata:', error);
+
             reject(error);
           }
         });
@@ -73,6 +79,7 @@ export class GcsAdapter {
       });
     } catch (error) {
       this.logger.error('Upload error:', error);
+
       throw new Error(`Failed to upload image: ${error.message}`);
     }
   }
@@ -82,10 +89,13 @@ export class GcsAdapter {
   ): Promise<DeleteImageResponse> {
     try {
       const storage = this.gcsConfig.getStorageClient();
+
       const bucketName = this.gcsConfig.getBucketName();
+
       const bucket = storage.bucket(bucketName);
 
       const file = bucket.file(request.filename);
+
       await file.delete();
 
       return {
@@ -94,6 +104,7 @@ export class GcsAdapter {
       };
     } catch (error) {
       this.logger.error('Delete error:', error);
+
       throw new Error(`Failed to delete image: ${error.message}`);
     }
   }
@@ -103,13 +114,17 @@ export class GcsAdapter {
   ): Promise<ListImagesResponse> {
     try {
       const storage = this.gcsConfig.getStorageClient();
+
       const bucketName = this.gcsConfig.getBucketName();
+
       const bucket = storage.bucket(bucketName);
 
       const folder = request.folder || this.folder;
+
       const prefix = request.prefix
         ? `${folder}/${request.prefix}`
         : `${folder}/`;
+
       const maxResults = request.maxResults || 100;
 
       const [files] = await bucket.getFiles({
@@ -120,6 +135,7 @@ export class GcsAdapter {
       const documents = await Promise.all(
         files.map(async (file) => {
           const [metadata] = await file.getMetadata();
+
           const url = `https://storage.googleapis.com/${bucketName}/${file.name}`;
 
           return {
@@ -138,6 +154,7 @@ export class GcsAdapter {
       };
     } catch (error) {
       this.logger.error('List documents error:', error);
+
       throw new Error(`Failed to list documents: ${error.message}`);
     }
   }
@@ -149,13 +166,17 @@ export class GcsAdapter {
   ): Promise<string> {
     try {
       const storage = this.gcsConfig.getStorageClient();
+
       const bucketName = this.gcsConfig.getBucketName();
+
       const bucket = storage.bucket(bucketName);
 
       const folderPath = folder || this.folder;
+
       const fullPath = `${folderPath}/${filename}`;
 
       const file = bucket.file(fullPath);
+
       const [signedUrl] = await file.getSignedUrl({
         action: 'read',
         expires: Date.now() + expiresInMinutes * 60 * 1000,
@@ -164,6 +185,7 @@ export class GcsAdapter {
       return signedUrl;
     } catch (error) {
       this.logger.error('Get signed URL error:', error);
+
       throw new Error(`Failed to get signed URL: ${error.message}`);
     }
   }
@@ -173,20 +195,25 @@ export class GcsAdapter {
   ): Promise<DownloadImageResponse> {
     try {
       const storage = this.gcsConfig.getStorageClient();
+
       const bucketName = this.gcsConfig.getBucketName();
+
       const bucket = storage.bucket(bucketName);
 
       const filePath = request.folder
         ? `${request.folder}/${request.filename}`
         : request.filename;
+
       const file = bucket.file(filePath);
 
       const [exists] = await file.exists();
+
       if (!exists) {
         throw new Error(`File not found: ${filePath}`);
       }
 
       const [buffer] = await file.download();
+
       const [metadata] = await file.getMetadata();
 
       return {
@@ -195,6 +222,7 @@ export class GcsAdapter {
       };
     } catch (error) {
       this.logger.error('Download image error:', error);
+
       throw new Error(`Failed to download image: ${error.message}`);
     }
   }

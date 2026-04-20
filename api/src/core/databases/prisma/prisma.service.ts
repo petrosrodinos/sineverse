@@ -9,6 +9,7 @@ export class PrismaService extends PrismaClient {
     const adapter = new PrismaPg({
       connectionString: configService.get('DATABASE_URL') as string,
     });
+
     super({ adapter });
   }
 }

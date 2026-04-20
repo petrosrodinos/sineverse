@@ -137,15 +137,19 @@ export default defineConfig([globalIgnores([
         "padding-line-between-statements": ["warn", {
             blankLine: "always",
             prev: "*",
-            next: "return",
-        }, {
-            blankLine: "always",
-            prev: ["const", "let", "var"],
             next: "*",
         }, {
             blankLine: "any",
-            prev: ["const", "let", "var"],
-            next: ["const", "let", "var"],
+            prev: "import",
+            next: "import",
+        }, {
+            blankLine: "any",
+            prev: "import",
+            next: "*",
+        }, {
+            blankLine: "any",
+            prev: "*",
+            next: "import",
         }],
     },
 }]);

@@ -12,24 +12,38 @@ interface EnrichPromptPopoverProps {
   isDisabled?: boolean;
 }
 
-export function EnrichPromptPopover({ onEnrich, isLoading, isDisabled }: EnrichPromptPopoverProps) {
+export function EnrichPromptPopover({
+  onEnrich,
+  isLoading,
+  isDisabled,
+}: EnrichPromptPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   const [instructions, setInstructions] = useState("");
 
   const handleEnrich = () => {
     onEnrich(instructions);
+
     setIsOpen(false);
   };
 
   return (
-    <Popover isOpen={isOpen} onOpenChange={setIsOpen} placement="bottom-start" showArrow offset={10}>
+    <Popover
+      showArrow
+      isOpen={isOpen}
+      offset={10}
+      placement="bottom-start"
+      onOpenChange={setIsOpen}
+    >
       <PopoverTrigger>
         <Button
+          className="rounded-xl font-medium"
           color="primary"
           isDisabled={isDisabled || isLoading}
           isLoading={isLoading}
-          startContent={!isLoading ? <Sparkles className="size-4" /> : undefined}
-          className="rounded-xl font-medium"
+          startContent={
+            !isLoading ? <Sparkles className="size-4" /> : undefined
+          }
         >
           Enrich
         </Button>
@@ -39,22 +53,33 @@ export function EnrichPromptPopover({ onEnrich, isLoading, isDisabled }: EnrichP
           <div className="space-y-1">
             <h4 className="font-medium leading-none">AI Enrichment</h4>
             <p className="text-sm text-default-500">
-              Add any specific instructions or focus points for the AI (e.g., &quot;Make it darker&quot;, &quot;Focus on the twist&quot;).
+              Add any specific instructions or focus points for the AI (e.g.,
+              &quot;Make it darker&quot;, &quot;Focus on the twist&quot;).
             </p>
           </div>
           <Textarea
-            value={instructions}
-            onValueChange={setInstructions}
-            placeholder="Instructions (optional)"
-            variant="bordered"
-            minRows={3}
             classNames={{ inputWrapper: "rounded-xl" }}
+            minRows={3}
+            placeholder="Instructions (optional)"
+            value={instructions}
+            variant="bordered"
+            onValueChange={setInstructions}
           />
           <div className="flex justify-end gap-2">
-            <Button size="sm" variant="flat" onPress={() => setIsOpen(false)} className="rounded-lg">
+            <Button
+              className="rounded-lg"
+              size="sm"
+              variant="flat"
+              onPress={() => setIsOpen(false)}
+            >
               Cancel
             </Button>
-            <Button size="sm" color="primary" onPress={handleEnrich} className="rounded-lg">
+            <Button
+              className="rounded-lg"
+              color="primary"
+              size="sm"
+              onPress={handleEnrich}
+            >
               Generate
             </Button>
           </div>

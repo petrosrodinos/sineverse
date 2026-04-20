@@ -11,7 +11,8 @@ export function EstateProjectPage() {
             Estate video workflow
           </h2>
           <p className="text-small text-default-500 md:text-base">
-            Upload photos, refine clips, and render a polished property tour — all in one flow.
+            Upload photos, refine clips, and render a polished property tour —
+            all in one flow.
           </p>
         </div>
         <EstateStepper />

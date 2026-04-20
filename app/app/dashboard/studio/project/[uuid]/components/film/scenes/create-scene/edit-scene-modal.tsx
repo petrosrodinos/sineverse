@@ -1,11 +1,23 @@
 import React, { useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  ManualSceneForm,
+  manualFormSchema,
+  ManualFormValues,
+} from "./manual-scene-form";
+
 import { useUpdateScene } from "@/features/scenes/hooks/use-scenes";
 import { Scene } from "@/features/scenes/interfaces/scenes.interfaces";
-import { ManualSceneForm, manualFormSchema, ManualFormValues } from "./manual-scene-form";
 
 interface EditSceneModalProps {
   isOpen: boolean;
@@ -14,7 +26,12 @@ interface EditSceneModalProps {
   scene: Scene | null;
 }
 
-export function EditSceneModal({ isOpen, onOpenChange, onClose, scene }: EditSceneModalProps) {
+export function EditSceneModal({
+  isOpen,
+  onOpenChange,
+  onClose,
+  scene,
+}: EditSceneModalProps) {
   const { control, handleSubmit, reset } = useForm<ManualFormValues>({
     resolver: zodResolver(manualFormSchema),
     defaultValues: {
@@ -36,7 +53,7 @@ export function EditSceneModal({ isOpen, onOpenChange, onClose, scene }: EditSce
 
   const onSubmitForm = (data: ManualFormValues) => {
     if (!scene) return;
-    
+
     updateScene(
       {
         uuid: scene.uuid,
@@ -50,27 +67,37 @@ export function EditSceneModal({ isOpen, onOpenChange, onClose, scene }: EditSce
         onSuccess: () => {
           onClose();
         },
-      }
+      },
     );
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} size="lg">
+    <Modal
+      isOpen={isOpen}
+      size="lg"
+      onClose={onClose}
+      onOpenChange={onOpenChange}
+    >
       <ModalContent>
         {() => (
           <>
             <ModalHeader>Edit Scene</ModalHeader>
             <ModalBody>
-              <ManualSceneForm 
-                control={control} 
-                onSubmit={handleSubmit(onSubmitForm)} 
+              <ManualSceneForm
+                control={control}
+                onSubmit={handleSubmit(onSubmitForm)}
               />
             </ModalBody>
             <ModalFooter>
               <Button variant="light" onPress={onClose}>
                 Cancel
               </Button>
-              <Button color="primary" type="submit" form="manual-form" isLoading={isPending}>
+              <Button
+                color="primary"
+                form="manual-form"
+                isLoading={isPending}
+                type="submit"
+              >
                 Update Scene
               </Button>
             </ModalFooter>

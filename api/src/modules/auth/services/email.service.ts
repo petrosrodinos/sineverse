@@ -55,6 +55,7 @@ export class EmailAuthService {
       return { access_token: token, expires_in: expires_in, user: user };
     } catch (error) {
       console.log(error);
+
       throw new BadRequestException(error.message);
     }
   }

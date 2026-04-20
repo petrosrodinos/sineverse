@@ -1,12 +1,17 @@
 "use client";
 
+import type { CreditPack } from "@/features/credits/interfaces/credits.interfaces";
+
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Skeleton } from "@heroui/skeleton";
 import { useCallback, useState } from "react";
-import { useCreateCreditCheckout, useCreditPacks } from "@/features/credits/hooks/use-credits";
-import type { CreditPack } from "@/features/credits/interfaces/credits.interfaces";
+
+import {
+  useCreateCreditCheckout,
+  useCreditPacks,
+} from "@/features/credits/hooks/use-credits";
 import { formatCreditCurrency } from "@/features/credits/utils/credits-format.utils";
 
 type PackPurchaseCardProps = {
@@ -18,7 +23,14 @@ type PackPurchaseCardProps = {
   onPurchase: (packKey: string) => void;
 };
 
-function PackPurchaseCard({ pack, isFeatured, isCheckoutLoading, isCheckoutButtonDisabled, compact, onPurchase }: PackPurchaseCardProps) {
+function PackPurchaseCard({
+  pack,
+  isFeatured,
+  isCheckoutLoading,
+  isCheckoutButtonDisabled,
+  compact,
+  onPurchase,
+}: PackPurchaseCardProps) {
   function handlePress() {
     onPurchase(pack.key);
   }
@@ -35,24 +47,35 @@ function PackPurchaseCard({ pack, isFeatured, isCheckoutLoading, isCheckoutButto
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-medium text-default-600">{pack.name}</p>
-            <p className={`mt-1 font-bold tracking-tight text-foreground ${compact ? "text-2xl" : "text-3xl"}`}>
-              {pack.credits_amount} <span className={`font-medium text-default-500 ${compact ? "text-sm" : "text-base"}`}>credits</span>
+            <p
+              className={`mt-1 font-bold tracking-tight text-foreground ${compact ? "text-2xl" : "text-3xl"}`}
+            >
+              {pack.credits_amount}{" "}
+              <span
+                className={`font-medium text-default-500 ${compact ? "text-sm" : "text-base"}`}
+              >
+                credits
+              </span>
             </p>
           </div>
           {isFeatured && (
-            <Chip color="primary" variant="flat" size="sm">
+            <Chip color="primary" size="sm" variant="flat">
               Best value
             </Chip>
           )}
         </div>
-        <p className={`font-semibold text-foreground ${compact ? "text-xl" : "text-2xl"}`}>{formatCreditCurrency(pack.amount_cents, pack.currency)}</p>
+        <p
+          className={`font-semibold text-foreground ${compact ? "text-xl" : "text-2xl"}`}
+        >
+          {formatCreditCurrency(pack.amount_cents, pack.currency)}
+        </p>
         <Button
+          className={compact ? "h-10 font-semibold" : "h-11 font-semibold"}
           color={isFeatured ? "primary" : "default"}
+          isDisabled={isCheckoutButtonDisabled}
+          isLoading={isCheckoutLoading}
           variant={isFeatured ? "solid" : "flat"}
           onPress={handlePress}
-          isLoading={isCheckoutLoading}
-          isDisabled={isCheckoutButtonDisabled}
-          className={compact ? "h-10 font-semibold" : "h-11 font-semibold"}
         >
           {isFeatured ? "Buy credits" : "Buy pack"}
         </Button>
@@ -61,7 +84,11 @@ function PackPurchaseCard({ pack, isFeatured, isCheckoutLoading, isCheckoutButto
   );
 }
 
-const PACK_SKELETON_KEYS = ["credit-pack-skel-a", "credit-pack-skel-b", "credit-pack-skel-c"] as const;
+const PACK_SKELETON_KEYS = [
+  "credit-pack-skel-a",
+  "credit-pack-skel-b",
+  "credit-pack-skel-c",
+] as const;
 
 export type CreditPacksProps = {
   variant?: "default" | "compact";
@@ -69,14 +96,22 @@ export type CreditPacksProps = {
   className?: string;
 };
 
-export function CreditPacks({ variant = "default", showSectionHeader = false, className }: CreditPacksProps) {
+export function CreditPacks({
+  variant = "default",
+  showSectionHeader = false,
+  className,
+}: CreditPacksProps) {
   const { data: packs, isLoading: packsLoading } = useCreditPacks();
-  const { mutate: createCheckout, isPending: checkoutPending } = useCreateCreditCheckout();
+
+  const { mutate: createCheckout, isPending: checkoutPending } =
+    useCreateCreditCheckout();
+
   const [pendingPackKey, setPendingPackKey] = useState<string | null>(null);
 
   const purchasePack = useCallback(
     (packKey: string) => {
       setPendingPackKey(packKey);
+
       createCheckout(
         { pack_key: packKey },
         {
@@ -90,22 +125,35 @@ export function CreditPacks({ variant = "default", showSectionHeader = false, cl
   );
 
   const compact = variant === "compact";
-  const gridClassName = compact ? "grid grid-cols-1 gap-3 sm:grid-cols-2" : "mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3";
+
+  const gridClassName = compact
+    ? "grid grid-cols-1 gap-3 sm:grid-cols-2"
+    : "mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3";
 
   return (
     <div className={className}>
       {showSectionHeader && (
         <>
-          <h2 id="credits-purchase-heading" className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <h2
+            className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+            id="credits-purchase-heading"
+          >
             Buy credits
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-default-500 sm:text-base">Pick a pack and checkout securely. Your balance updates when payment completes.</p>
+          <p className="mt-2 max-w-xl text-sm text-default-500 sm:text-base">
+            Pick a pack and checkout securely. Your balance updates when payment
+            completes.
+          </p>
         </>
       )}
       <div className={gridClassName} role="list">
         {packsLoading &&
           PACK_SKELETON_KEYS.map((key) => (
-            <div key={key} className="rounded-2xl border border-default-200/80 bg-default-50/20 p-6 shadow-sm shadow-black/5" role="listitem">
+            <div
+              key={key}
+              className="rounded-2xl border border-default-200/80 bg-default-50/20 p-6 shadow-sm shadow-black/5"
+              role="listitem"
+            >
               <div className="space-y-3">
                 <Skeleton className="h-5 w-28 rounded-md" />
                 <Skeleton className="h-9 w-36 rounded-md" />
@@ -118,11 +166,15 @@ export function CreditPacks({ variant = "default", showSectionHeader = false, cl
           packs?.map((pack, index) => (
             <div key={pack.uuid} role="listitem">
               <PackPurchaseCard
-                pack={pack}
-                isFeatured={index === 1}
-                isCheckoutLoading={checkoutPending && pendingPackKey === pack.key}
-                isCheckoutButtonDisabled={checkoutPending && pendingPackKey !== pack.key}
                 compact={compact}
+                isCheckoutButtonDisabled={
+                  checkoutPending && pendingPackKey !== pack.key
+                }
+                isCheckoutLoading={
+                  checkoutPending && pendingPackKey === pack.key
+                }
+                isFeatured={index === 1}
+                pack={pack}
                 onPurchase={purchasePack}
               />
             </div>

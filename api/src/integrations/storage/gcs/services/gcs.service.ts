@@ -24,6 +24,7 @@ export class GcsService {
       return await this.gcsAdapter.uploadImage(request);
     } catch (error) {
       this.logger.error('Upload image error:', error);
+
       throw new Error(`Failed to upload image: ${error.message}`);
     }
   }
@@ -35,6 +36,7 @@ export class GcsService {
       return await this.gcsAdapter.deleteImage(request);
     } catch (error) {
       this.logger.error('Delete image error:', error);
+
       throw new Error(`Failed to delete image: ${error.message}`);
     }
   }
@@ -46,6 +48,7 @@ export class GcsService {
       return await this.gcsAdapter.listImages(request);
     } catch (error) {
       this.logger.error('List images error:', error);
+
       throw new Error(`Failed to list images: ${error.message}`);
     }
   }
@@ -63,6 +66,7 @@ export class GcsService {
       );
     } catch (error) {
       this.logger.error('Get signed URL error:', error);
+
       throw new Error(`Failed to get signed URL: ${error.message}`);
     }
   }
@@ -92,6 +96,7 @@ export class GcsService {
     isPublic: boolean = false,
   ): Promise<UploadImageResponse> {
     const buffer = Buffer.from(base64Data, 'base64');
+
     return this.uploadImageFromBuffer(
       buffer,
       filename,
@@ -111,6 +116,7 @@ export class GcsService {
             `Failed to upload image ${index + 1} (${request.filename}):`,
             error,
           );
+
           return null;
         }),
       );
@@ -120,6 +126,7 @@ export class GcsService {
       return results;
     } catch (error) {
       this.logger.error('Upload multiple images error:', error.message);
+
       throw new Error(`Failed to upload multiple images: ${error.message}`);
     }
   }
@@ -131,6 +138,7 @@ export class GcsService {
       return await this.gcsAdapter.downloadImage(request);
     } catch (error) {
       this.logger.error('Download image error:', error);
+
       throw new Error(`Failed to download image: ${error.message}`);
     }
   }

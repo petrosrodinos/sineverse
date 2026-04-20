@@ -12,6 +12,7 @@ export class CreateJwtService {
     private config: ConfigService,
   ) {
     this.secret = this.config.get('JWT_SECRET');
+
     this.expiration = this.config.get('JWT_EXPIRATION_TIME');
   }
 
@@ -34,6 +35,7 @@ export class CreateJwtService {
 
   getExpirationTime(token: string): number {
     const decoded = this.jwt.decode(token);
+
     return decoded.exp;
   }
 }

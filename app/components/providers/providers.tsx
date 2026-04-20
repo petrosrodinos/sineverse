@@ -1,11 +1,14 @@
 "use client";
 
 import type { ThemeProviderProps } from "next-themes";
+
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react";
+
 import { QueryProvider } from "./query-provider";
 import { HeroUiProviders } from "./hero-ui";
+
 import { InsufficientCreditsModal } from "@/components/ui/InsufficientCreditsModal";
 
 export interface ProvidersProps {
@@ -13,19 +16,17 @@ export interface ProvidersProps {
   themeProps?: ThemeProviderProps;
 }
 
-
 export function Providers({ children, themeProps }: ProvidersProps) {
-
   return (
-     <HeroUiProviders>
-       <NextThemesProvider {...themeProps}>
+    <HeroUiProviders>
+      <NextThemesProvider {...themeProps}>
         <QueryProvider>
           <SessionProvider>
-              {children}
-              <InsufficientCreditsModal />
+            {children}
+            <InsufficientCreditsModal />
           </SessionProvider>
         </QueryProvider>
       </NextThemesProvider>
-     </HeroUiProviders>
+    </HeroUiProviders>
   );
 }

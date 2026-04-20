@@ -30,6 +30,7 @@ export class StripeProductsService {
         stripe_account_id,
         metadata,
       });
+
       const price = await this.createPrice({
         product_id: product.id,
         service,
@@ -129,6 +130,7 @@ export class StripeProductsService {
       if (!product_id) {
         return;
       }
+
       await this.stripe.products.update(
         product_id,
         {
@@ -172,11 +174,13 @@ export class StripeProductsService {
       if (!product_id || !price_id) {
         return;
       }
+
       await this.stripe.prices.update(
         price_id,
         { active: active },
         { stripeAccount: stripe_account_id ?? undefined },
       );
+
       await this.stripe.products.update(
         product_id,
         { active: active },

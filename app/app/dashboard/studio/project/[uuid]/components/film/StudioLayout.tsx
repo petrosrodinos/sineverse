@@ -4,7 +4,6 @@ import { ScenesSidebar } from "./scenes";
 import { SceneWorkspace } from "./scene-workspace";
 
 export function StudioLayout() {
-
   return (
     <div className="flex flex-col lg:flex-row lg:h-full lg:min-h-0 gap-4 p-4">
       <ScenesSidebar />

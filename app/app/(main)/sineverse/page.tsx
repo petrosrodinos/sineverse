@@ -1,5 +1,6 @@
-import { SineversePage } from "./index";
 import type { Metadata } from "next";
+
+import { SineversePage } from "./index";
 
 export const metadata: Metadata = {
   title: "Sineverse — AI film studio",

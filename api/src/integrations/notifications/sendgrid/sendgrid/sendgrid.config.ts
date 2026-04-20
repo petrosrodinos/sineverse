@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 const sgMail = require('@sendgrid/mail');
+
 const sgClient = require('@sendgrid/client');
 
 @Injectable()
@@ -15,15 +16,19 @@ export class SendgridConfig {
 
   private initSendgrid() {
     const apiKey = this.configService.get('SENDGRID_API_KEY');
+
     if (!apiKey) {
       this.logger.error('SENDGRID_API_KEY is not configured');
+
       return;
     }
 
     sgMail.setApiKey(apiKey);
+
     sgClient.setApiKey(apiKey);
 
     this.sendgridMailClient = sgMail;
+
     this.sendgridClient = sgClient;
 
     this.logger.debug('SendGrid initialized');

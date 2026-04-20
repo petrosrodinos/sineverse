@@ -5,14 +5,16 @@ function roundMoney2(value: number): number {
 export function calculateHybridMoneyFields(params: {
   providerChargeUsd: number;
   fxRateUsdToEur: number;
-  appFeeRatePercent: number;
+  appFeeMultiplier: number;
 }) {
-  const { providerChargeUsd, fxRateUsdToEur, appFeeRatePercent } = params;
+  const { providerChargeUsd, fxRateUsdToEur, appFeeMultiplier } = params;
+
   const usdRounded = roundMoney2(providerChargeUsd);
+
   const providerCharge = roundMoney2(usdRounded * fxRateUsdToEur);
-  const appFeeAmount = roundMoney2(
-    providerCharge * (appFeeRatePercent / 100),
-  );
+
+  const appFeeAmount = roundMoney2(providerCharge * appFeeMultiplier);
+
   const grossChargeAmount = roundMoney2(providerCharge + appFeeAmount);
 
   return {
@@ -26,27 +28,30 @@ export function calculateHybridMoneyFields(params: {
 export function calculateEstateUsageMoneyFromCredits(params: {
   creditsDeducted: number;
   estateMultiplier: number;
-  appFeeRatePercent: number;
+  appFeeMultiplier: number;
 }): {
   providerCharge: number;
   appFeeAmount: number;
   grossChargeAmount: number;
 } | null {
-  const { creditsDeducted, estateMultiplier, appFeeRatePercent } = params;
+  const { creditsDeducted, estateMultiplier, appFeeMultiplier } = params;
+
   if (
     !Number.isFinite(creditsDeducted) ||
     creditsDeducted <= 0 ||
     !Number.isFinite(estateMultiplier) ||
     estateMultiplier <= 0 ||
-    !Number.isFinite(appFeeRatePercent)
+    !Number.isFinite(appFeeMultiplier)
   ) {
     return null;
   }
+
   const providerCharge = roundMoney2(creditsDeducted / estateMultiplier);
-  const appFeeAmount = roundMoney2(
-    providerCharge * (appFeeRatePercent / 100),
-  );
+
+  const appFeeAmount = roundMoney2(providerCharge * appFeeMultiplier);
+
   const grossChargeAmount = roundMoney2(providerCharge + appFeeAmount);
+
   return {
     providerCharge,
     appFeeAmount,

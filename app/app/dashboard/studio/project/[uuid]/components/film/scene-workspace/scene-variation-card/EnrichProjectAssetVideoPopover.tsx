@@ -9,6 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@heroui/popover";
 import { Textarea } from "@heroui/input";
 import { Checkbox } from "@heroui/checkbox";
 import { Sparkles } from "lucide-react";
+
 import { useEnrichProjectAssetVideo } from "@/features/project-assets/hooks/use-project-assets";
 import { ProjectAssetVideoEnrichDto } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { VideoGenerationConfig } from "@/features/project-assets/interfaces/project-assets-metadata.interfaces";
@@ -28,9 +29,14 @@ interface EnrichVariationPopoverProps {
   className?: string;
 }
 
-export function EnrichProjectAssetVideoPopover({ project_asset_uuid, onEnriched, className }: EnrichVariationPopoverProps) {
+export function EnrichProjectAssetVideoPopover({
+  project_asset_uuid,
+  onEnriched,
+  className,
+}: EnrichVariationPopoverProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const {mutate, isPending} = useEnrichProjectAssetVideo(project_asset_uuid);
+
+  const { mutate, isPending } = useEnrichProjectAssetVideo(project_asset_uuid);
 
   const {
     register,
@@ -50,88 +56,116 @@ export function EnrichProjectAssetVideoPopover({ project_asset_uuid, onEnriched,
   });
 
   const onSubmit = async (data: EnrichFormValues) => {
-    mutate({
-      uuid: project_asset_uuid,
-      enrichDto: data as ProjectAssetVideoEnrichDto,
-    }, {
-      onSuccess: (data) => {
-        onEnriched(data);
-        setIsOpen(false);
-        reset();
+    mutate(
+      {
+        uuid: project_asset_uuid,
+        enrichDto: data as ProjectAssetVideoEnrichDto,
       },
-    })
-    
+      {
+        onSuccess: (data) => {
+          onEnriched(data);
+
+          setIsOpen(false);
+
+          reset();
+        },
+      },
+    );
   };
 
   return (
     <>
-    <Popover isOpen={isOpen} onOpenChange={setIsOpen} placement="bottom-end" showArrow offset={10}>
-      <PopoverTrigger>
-        <Button
-          color="primary"
-          isDisabled={isPending}
-          isLoading={isPending}
-          startContent={!isPending ? <Sparkles className="size-4" /> : undefined}
-          className={`rounded-xl font-medium ${className || ""}`}
-        >
-          Enrich
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[340px] p-4 text-left">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
-          <div className="space-y-1">
-            <h4 className="font-medium leading-none">AI Enrichment</h4>
-            <p className="text-sm text-default-500">
-              Provide optional instructions to guide the AI, and choose which parts to enrich.
-            </p>
-          </div>
-          
-          <Textarea
-            {...register("directions")}
-            placeholder="Directions (e.g., Make it darker, more cinematic...)"
-            variant="bordered"
-            minRows={3}
-            classNames={{ inputWrapper: "rounded-xl" }}
-          />
+      <Popover
+        showArrow
+        isOpen={isOpen}
+        offset={10}
+        placement="bottom-end"
+        onOpenChange={setIsOpen}
+      >
+        <PopoverTrigger>
+          <Button
+            className={`rounded-xl font-medium ${className || ""}`}
+            color="primary"
+            isDisabled={isPending}
+            isLoading={isPending}
+            startContent={
+              !isPending ? <Sparkles className="size-4" /> : undefined
+            }
+          >
+            Enrich
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[340px] p-4 text-left">
+          <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-1">
+              <h4 className="font-medium leading-none">AI Enrichment</h4>
+              <p className="text-sm text-default-500">
+                Provide optional instructions to guide the AI, and choose which
+                parts to enrich.
+              </p>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <Checkbox 
-              isSelected={watch("include_prompt")} 
-              onValueChange={(val) => setValue("include_prompt", val)}
-              size="sm"
-              classNames={{ label: "text-sm text-foreground" }}
-            >
-              Include Prompt
-            </Checkbox>
-            <Checkbox 
-              isSelected={watch("include_negative_prompt")} 
-              onValueChange={(val) => setValue("include_negative_prompt", val)}
-              size="sm"
-              classNames={{ label: "text-sm text-foreground" }}
-            >
-              Include Negative Prompt
-            </Checkbox>
-            <Checkbox 
-              isSelected={watch("include_video_generation_options")} 
-              onValueChange={(val) => setValue("include_video_generation_options", val)}
-              size="sm"
-              classNames={{ label: "text-sm text-foreground" }}
-            >
-              Include Video Options
-            </Checkbox>
-          </div>
+            <Textarea
+              {...register("directions")}
+              classNames={{ inputWrapper: "rounded-xl" }}
+              minRows={3}
+              placeholder="Directions (e.g., Make it darker, more cinematic...)"
+              variant="bordered"
+            />
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button size="sm" variant="flat" onPress={() => setIsOpen(false)} className="rounded-lg">
-              Cancel
-            </Button>
-            <Button size="sm" color="primary" type="submit" isLoading={isSubmitting || isPending} className="rounded-lg">
-              Enrich
-            </Button>
-          </div>
-        </form>
-      </PopoverContent>
-    </Popover>
+            <div className="flex flex-col gap-2">
+              <Checkbox
+                classNames={{ label: "text-sm text-foreground" }}
+                isSelected={watch("include_prompt")}
+                size="sm"
+                onValueChange={(val) => setValue("include_prompt", val)}
+              >
+                Include Prompt
+              </Checkbox>
+              <Checkbox
+                classNames={{ label: "text-sm text-foreground" }}
+                isSelected={watch("include_negative_prompt")}
+                size="sm"
+                onValueChange={(val) =>
+                  setValue("include_negative_prompt", val)
+                }
+              >
+                Include Negative Prompt
+              </Checkbox>
+              <Checkbox
+                classNames={{ label: "text-sm text-foreground" }}
+                isSelected={watch("include_video_generation_options")}
+                size="sm"
+                onValueChange={(val) =>
+                  setValue("include_video_generation_options", val)
+                }
+              >
+                Include Video Options
+              </Checkbox>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                className="rounded-lg"
+                size="sm"
+                variant="flat"
+                onPress={() => setIsOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="rounded-lg"
+                color="primary"
+                isLoading={isSubmitting || isPending}
+                size="sm"
+                type="submit"
+              >
+                Enrich
+              </Button>
+            </div>
+          </form>
+        </PopoverContent>
+      </Popover>
     </>
   );
 }

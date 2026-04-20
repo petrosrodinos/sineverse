@@ -20,9 +20,11 @@ export class StripePaymentsWebhooksService {
     private stripePaymentsService: StripePaymentsService,
   ) {
     this.stripe = this.stripeConfig.getStripeClient();
+
     this.webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
     );
+
     this.relativeEvents = this.stripeConfig.getRelativeEvents();
   }
 
@@ -49,6 +51,7 @@ export class StripePaymentsWebhooksService {
           const session = event.data.object as Stripe.Checkout.Session;
 
           const bookingUuid = session.metadata?.booking_uuid;
+
           if (!bookingUuid) {
             return;
           }
@@ -86,6 +89,7 @@ export class StripePaymentsWebhooksService {
           const setupIntent = event.data.object as Stripe.SetupIntent;
 
           const customerId = setupIntent.customer as string;
+
           const paymentMethodId = setupIntent.payment_method as string;
 
           if (!customerId || !paymentMethodId) break;
@@ -131,6 +135,7 @@ export class StripePaymentsWebhooksService {
 
         case 'payment_method.detached': {
           const paymentMethod = event.data.object as Stripe.PaymentMethod;
+
           try {
             // await this.prisma.account.updateMany({
             //     where: { stripe_payment_method_id: paymentMethod.id },
@@ -139,6 +144,7 @@ export class StripePaymentsWebhooksService {
           } catch (error) {
             console.error('Failed to detach payment method:', error.message);
           }
+
           break;
         }
 
@@ -157,6 +163,7 @@ export class StripePaymentsWebhooksService {
 
             if (charge.customer && charge.payment_method) {
               const amount = charge.amount_captured;
+
               try {
                 // const netAmount = (amount) - (amount * CreditsCosts.CreditsPurchaseFee);
                 // await this.prisma.account.update({
@@ -256,7 +263,9 @@ export class StripePaymentsWebhooksService {
 
           if (context === StripePaymentContext.PROVIDER_PAYMENT) {
             const account_uuid = charge.metadata?.account_uuid;
+
             if (!account_uuid) break;
+
             // await this.prisma.payment.create({
             //     data: {
             //         amount: netAmount,
@@ -284,7 +293,9 @@ export class StripePaymentsWebhooksService {
             );
 
           const platformFee = updatedCharge.application_fee_amount ?? 0;
+
           const totalFee = fee + platformFee;
+
           const net = (updatedCharge.amount_captured ?? 0) - totalFee;
 
           const booking_uuid = updatedCharge.metadata?.booking_uuid;
@@ -312,6 +323,7 @@ export class StripePaymentsWebhooksService {
 
         case 'charge.refunded': {
           const charge = event.data.object as Stripe.Charge;
+
           // await this.prisma.payment.updateMany({
           //     where: { stripe_charge_id: charge.id },
           //     data: { status: PaymentStatus.REFUNDED },
@@ -321,10 +333,12 @@ export class StripePaymentsWebhooksService {
 
         case 'payment_intent.payment_failed': {
           const pi = event.data.object as Stripe.PaymentIntent;
+
           const context = pi.metadata?.context;
 
           if (context === StripePaymentContext.BOOKING_PAYMENT) {
             const booking_uuid = pi.metadata?.booking_uuid;
+
             if (!booking_uuid) break;
 
             // await this.prisma.payment.updateMany({
@@ -332,6 +346,7 @@ export class StripePaymentsWebhooksService {
             //     data: { status: PaymentStatus.FAILED },
             // });
           }
+
           break;
         }
 
@@ -340,6 +355,7 @@ export class StripePaymentsWebhooksService {
       }
     } catch (err) {
       console.error('Stripe webhook error:', err);
+
       throw err;
     }
   }

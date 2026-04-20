@@ -1,5 +1,9 @@
 "use client";
 
+import type { Key } from "react";
+import type { VideoCardReorderProps } from "../video/VideoCard";
+import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
+
 import { Card, CardBody } from "@heroui/card";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
@@ -10,18 +14,32 @@ import { isAxiosError } from "axios";
 import { Clapperboard, Coins } from "lucide-react";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
-import type { Key } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useProjectAssets, useCreateEstateWalkthroughVideos } from "@/features/project-assets/hooks/use-project-assets";
-import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { useTimelineClips, useUpdateTimelineClip } from "@/features/timeline-clips/hooks/use-timeline-clips";
-import { useTimelineMusic, useUpsertTimelineMusic } from "@/features/timeline-music/hooks/use-timeline-music";
-import { ESTATE_AUDIO_TRACK_OPTIONS, estateWalkthroughVideoConfig } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
-import type { VideoCardReorderProps } from "../video/VideoCard";
+
+import {
+  ESTATE_AUDIO_TRACK_OPTIONS,
+  estateWalkthroughVideoConfig,
+} from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { VideoCard } from "../video/VideoCard";
-import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
 import { VideoReorderList } from "../video/VideoReorderList";
 import { moveIdInOrder } from "../../utils/estate-workflow.utils";
+
+import {
+  useProjectAssets,
+  useCreateEstateWalkthroughVideos,
+} from "@/features/project-assets/hooks/use-project-assets";
+import {
+  AssetRoles,
+  ProjectAssetStatuses,
+} from "@/features/project-assets/interfaces/project-assets.interfaces";
+import {
+  useTimelineClips,
+  useUpdateTimelineClip,
+} from "@/features/timeline-clips/hooks/use-timeline-clips";
+import {
+  useTimelineMusic,
+  useUpsertTimelineMusic,
+} from "@/features/timeline-music/hooks/use-timeline-music";
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from "@/config/api/api-error-codes";
 import { Routes } from "@/config/routes";
 
@@ -38,35 +56,74 @@ const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
   "cinematic-pad.mp3": "cinematic_pad",
   "nostalgic-soft.mp3": "nostalgic_soft",
 };
+
 const WALKTHROUGH_GENERATING_LABEL = "Video is generating";
 
-export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthroughAiModel }: GenerateVideosStepProps) {
+export function GenerateVideosStep({
+  finalProjectUuid,
+  hasPromptImages,
+  walkthroughAiModel,
+}: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
+
   const projectUuid = params?.uuid ?? "";
-  const [audioTrackId, setAudioTrackId] = useState<string>(estateWalkthroughVideoConfig.audioTrackId);
+
+  const [audioTrackId, setAudioTrackId] = useState<string>(
+    estateWalkthroughVideoConfig.audioTrackId,
+  );
+
   const [activeTab, setActiveTab] = useState<string>("videos");
-  const [volume, setVolume] = useState<number>(estateWalkthroughVideoConfig.volume);
-  const [walkthroughInsufficientCredits, setWalkthroughInsufficientCredits] = useState(false);
+
+  const [volume, setVolume] = useState<number>(
+    estateWalkthroughVideoConfig.volume,
+  );
+
+  const [walkthroughInsufficientCredits, setWalkthroughInsufficientCredits] =
+    useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { data: assetsResponse, isLoading } = useProjectAssets({ project_uuid: projectUuid, role: AssetRoles.GENERATED_VIDEO, limit: 100 }, { enabled: !!projectUuid });
-  const videoAssets = useMemo(() => [...(assetsResponse?.data ?? [])].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()), [assetsResponse?.data]);
+  const { data: assetsResponse, isLoading } = useProjectAssets(
+    { project_uuid: projectUuid, role: AssetRoles.GENERATED_VIDEO, limit: 100 },
+    { enabled: !!projectUuid },
+  );
 
-  const { data: timelineClips = [], isFetched: timelineClipsFetched } = useTimelineClips({ final_project_uuid: finalProjectUuid ?? "" }, { enabled: !!finalProjectUuid, staleTime: 30_000 });
+  const videoAssets = useMemo(
+    () =>
+      [...(assetsResponse?.data ?? [])].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      ),
+    [assetsResponse?.data],
+  );
+
+  const { data: timelineClips = [], isFetched: timelineClipsFetched } =
+    useTimelineClips(
+      { final_project_uuid: finalProjectUuid ?? "" },
+      { enabled: !!finalProjectUuid, staleTime: 30_000 },
+    );
 
   const { mutateAsync: updateTimelineClip } = useUpdateTimelineClip();
+
   const { data: timelineMusic } = useTimelineMusic(finalProjectUuid ?? "");
+
   const { mutate: upsertTimelineMusic } = useUpsertTimelineMusic();
 
   const orderedVideoIds = useMemo(() => {
     const assetIds = videoAssets.map((asset) => asset.uuid);
+
     if (timelineClips.length === 0) {
       return assetIds;
     }
 
     const assetIdSet = new Set(assetIds);
-    const clipOrderedIds = timelineClips.map((clip) => clip.project_asset_uuid).filter((id) => assetIdSet.has(id));
+
+    const clipOrderedIds = timelineClips
+      .map((clip) => clip.project_asset_uuid)
+      .filter((id) => assetIdSet.has(id));
+
     const clipOrderedSet = new Set(clipOrderedIds);
+
     const remainingIds = assetIds.filter((id) => !clipOrderedSet.has(id));
 
     return [...clipOrderedIds, ...remainingIds];
@@ -74,9 +131,11 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
 
   const clipByAssetUuid = useMemo(() => {
     const map: Record<string, (typeof timelineClips)[number] | undefined> = {};
+
     for (const clip of timelineClips) {
       map[clip.project_asset_uuid] = clip;
     }
+
     return map;
   }, [timelineClips]);
 
@@ -85,6 +144,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
   useEffect(() => {
     setVideoOrder((prev) => {
       const incomingIds = orderedVideoIds;
+
       if (incomingIds.length === 0) {
         return prev.length === 0 ? prev : [];
       }
@@ -94,12 +154,19 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
       }
 
       const incomingSet = new Set(incomingIds);
+
       const preserved = prev.filter((id) => incomingSet.has(id));
+
       const preservedSet = new Set(preserved);
+
       const appended = incomingIds.filter((id) => !preservedSet.has(id));
+
       const next = [...preserved, ...appended];
 
-      if (next.length === prev.length && next.every((id, i) => id === prev[i])) {
+      if (
+        next.length === prev.length &&
+        next.every((id, i) => id === prev[i])
+      ) {
         return prev;
       }
 
@@ -109,27 +176,44 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
 
   const videoAssetsByUuid = useMemo(() => {
     const map: Record<string, (typeof videoAssets)[number] | undefined> = {};
+
     for (const a of videoAssets) {
       map[a.uuid] = a;
     }
+
     return map;
   }, [videoAssets]);
 
-  const { mutateAsync: createWalkthroughVideos, isPending: isCreatingWalkthrough } = useCreateEstateWalkthroughVideos();
+  const {
+    mutateAsync: createWalkthroughVideos,
+    isPending: isCreatingWalkthrough,
+  } = useCreateEstateWalkthroughVideos();
+
   const currentMusic = timelineMusic?.[0] ?? null;
-  const selectedAudioOption = useMemo(() => ESTATE_AUDIO_TRACK_OPTIONS.find((opt) => opt.id === audioTrackId) ?? ESTATE_AUDIO_TRACK_OPTIONS[0], [audioTrackId]);
+
+  const selectedAudioOption = useMemo(
+    () =>
+      ESTATE_AUDIO_TRACK_OPTIONS.find((opt) => opt.id === audioTrackId) ??
+      ESTATE_AUDIO_TRACK_OPTIONS[0],
+    [audioTrackId],
+  );
 
   const autoWalkthroughAttemptedRef = useRef(false);
 
   useEffect(() => {
     if (!currentMusic?.audio?.filename) return;
-    const mappedTrackId = ESTATE_AUDIO_TRACK_ID_BY_FILENAME[currentMusic.audio.filename];
+
+    const mappedTrackId =
+      ESTATE_AUDIO_TRACK_ID_BY_FILENAME[currentMusic.audio.filename];
+
     if (mappedTrackId) setAudioTrackId(mappedTrackId);
+
     setVolume(currentMusic.volume ?? estateWalkthroughVideoConfig.volume);
   }, [currentMusic]);
 
   useEffect(() => {
     if (!audioRef.current) return;
+
     audioRef.current.volume = volume;
   }, [volume]);
 
@@ -137,26 +221,44 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     if (!projectUuid || !hasPromptImages) {
       addToast({
         title: "Add photos first",
-        description: "Upload listing photos in step 1 before generating walkthrough clips.",
+        description:
+          "Upload listing photos in step 1 before generating walkthrough clips.",
         severity: "warning",
       });
+
       return;
     }
+
     setWalkthroughInsufficientCredits(false);
+
     try {
-      await createWalkthroughVideos({ project_uuid: projectUuid, ai_model: walkthroughAiModel });
+      await createWalkthroughVideos({
+        project_uuid: projectUuid,
+        ai_model: walkthroughAiModel,
+      });
     } catch (error) {
-      if (isAxiosError(error) && (error.response?.data as { code?: string } | undefined)?.code === API_ERROR_CODE_INSUFFICIENT_CREDITS) {
+      if (
+        isAxiosError(error) &&
+        (error.response?.data as { code?: string } | undefined)?.code ===
+          API_ERROR_CODE_INSUFFICIENT_CREDITS
+      ) {
         setWalkthroughInsufficientCredits(true);
+
         return;
       }
+
       addToast({
         title: "Could not start walkthrough clips",
         description: "Check your connection and try again.",
         severity: "danger",
       });
     }
-  }, [projectUuid, hasPromptImages, createWalkthroughVideos, walkthroughAiModel]);
+  }, [
+    projectUuid,
+    hasPromptImages,
+    createWalkthroughVideos,
+    walkthroughAiModel,
+  ]);
 
   useEffect(() => {
     if (videoOrder.length > 0) {
@@ -175,13 +277,30 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
   }, [projectUuid]);
 
   useEffect(() => {
-    if (!projectUuid || !hasPromptImages || videoOrder.length > 0 || isLoading) return;
-    if (autoWalkthroughAttemptedRef.current) return;
-    autoWalkthroughAttemptedRef.current = true;
-    void runWalkthroughGeneration();
-  }, [projectUuid, hasPromptImages, videoOrder.length, isLoading, runWalkthroughGeneration]);
+    if (!projectUuid || !hasPromptImages || videoOrder.length > 0 || isLoading)
+      return;
 
-  const canReorder = useMemo(() => videoOrder.every((id) => videoAssetsByUuid[id]?.status === ProjectAssetStatuses.COMPLETED), [videoOrder, videoAssetsByUuid]);
+    if (autoWalkthroughAttemptedRef.current) return;
+
+    autoWalkthroughAttemptedRef.current = true;
+
+    void runWalkthroughGeneration();
+  }, [
+    projectUuid,
+    hasPromptImages,
+    videoOrder.length,
+    isLoading,
+    runWalkthroughGeneration,
+  ]);
+
+  const canReorder = useMemo(
+    () =>
+      videoOrder.every(
+        (id) =>
+          videoAssetsByUuid[id]?.status === ProjectAssetStatuses.COMPLETED,
+      ),
+    [videoOrder, videoAssetsByUuid],
+  );
 
   const persistReorderedClips = useCallback(
     async (nextOrder: readonly string[]) => {
@@ -192,17 +311,31 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
       const updates = nextOrder
         .map((assetUuid, index) => {
           const clip = clipByAssetUuid[assetUuid];
+
           if (!clip) {
             return null;
           }
+
           const nextStartSec = index;
+
           const nextEndSec = index + 1;
+
           if (clip.start_sec === nextStartSec && clip.end_sec === nextEndSec) {
             return null;
           }
-          return { uuid: clip.uuid, start_sec: nextStartSec, end_sec: nextEndSec };
+
+          return {
+            uuid: clip.uuid,
+            start_sec: nextStartSec,
+            end_sec: nextEndSec,
+          };
         })
-        .filter((item): item is { uuid: string; start_sec: number; end_sec: number } => item !== null);
+        .filter(
+          (
+            item,
+          ): item is { uuid: string; start_sec: number; end_sec: number } =>
+            item !== null,
+        );
 
       if (updates.length === 0) {
         return;
@@ -232,10 +365,13 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
 
       setVideoOrder((prev) => {
         const nextOrder = moveIdInOrder(prev, fromIndex, toIndex);
+
         if (nextOrder.every((id, index) => id === prev[index])) {
           return prev;
         }
+
         void persistReorderedClips(nextOrder);
+
         return nextOrder;
       });
     },
@@ -245,10 +381,14 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
   const handleAudioChange = useCallback(
     (keys: "all" | Iterable<Key>) => {
       if (keys === "all") return;
+
       const first = Array.from(keys)[0];
+
       if (typeof first === "string") {
         setAudioTrackId(first);
+
         if (!finalProjectUuid) return;
+
         upsertTimelineMusic({
           finalProjectUuid,
           dto: {
@@ -265,7 +405,15 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
 
   const handleAudioMetadata = useCallback(() => {
     const duration = audioRef.current?.duration;
-    if (!finalProjectUuid || !duration || !Number.isFinite(duration) || audioTrackId === "none") return;
+
+    if (
+      !finalProjectUuid ||
+      !duration ||
+      !Number.isFinite(duration) ||
+      audioTrackId === "none"
+    )
+      return;
+
     upsertTimelineMusic({
       finalProjectUuid,
       dto: {
@@ -278,8 +426,13 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
   }, [finalProjectUuid, audioTrackId, volume, upsertTimelineMusic]);
 
   const renderItem = useCallback(
-    (clipId: string, index: number, reorderCtx: VideoReorderListRenderContext) => {
+    (
+      clipId: string,
+      index: number,
+      reorderCtx: VideoReorderListRenderContext,
+    ) => {
       const assetItem = videoAssetsByUuid[clipId];
+
       if (!assetItem || !finalProjectUuid) return null;
 
       const reorder: VideoCardReorderProps = {
@@ -290,14 +443,35 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
         setDragIndex: reorderCtx.setDragIndex,
       };
 
-      return <VideoCard asset={assetItem} compact finalProjectUuid={finalProjectUuid} reorder={reorder} timelineClipFromParent={clipByAssetUuid[clipId] ?? null} timelineClipsReady={timelineClipsFetched} />;
+      return (
+        <VideoCard
+          compact
+          asset={assetItem}
+          finalProjectUuid={finalProjectUuid}
+          reorder={reorder}
+          timelineClipFromParent={clipByAssetUuid[clipId] ?? null}
+          timelineClipsReady={timelineClipsFetched}
+        />
+      );
     },
-    [videoAssetsByUuid, finalProjectUuid, clipByAssetUuid, timelineClipsFetched],
+    [
+      videoAssetsByUuid,
+      finalProjectUuid,
+      clipByAssetUuid,
+      timelineClipsFetched,
+    ],
   );
 
-  const showGeneratingShell = isCreatingWalkthrough && videoOrder.length === 0 && hasPromptImages && !walkthroughInsufficientCredits;
+  const showGeneratingShell =
+    isCreatingWalkthrough &&
+    videoOrder.length === 0 &&
+    hasPromptImages &&
+    !walkthroughInsufficientCredits;
 
-  const showWalkthroughCreditsEmpty = walkthroughInsufficientCredits && videoOrder.length === 0 && hasPromptImages;
+  const showWalkthroughCreditsEmpty =
+    walkthroughInsufficientCredits &&
+    videoOrder.length === 0 &&
+    hasPromptImages;
 
   const handleRetryWalkthrough = useCallback(() => {
     void runWalkthroughGeneration();
@@ -313,29 +487,56 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
                 <Clapperboard className="h-4 w-4 sm:h-5 sm:w-5" />
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-foreground sm:text-base">Walkthrough clips</p>
-                <p className="text-xs leading-relaxed text-default-500 sm:text-small">Each photo becomes a short clip with smooth camera motion for your listing tour.</p>
+                <p className="text-sm font-semibold text-foreground sm:text-base">
+                  Walkthrough clips
+                </p>
+                <p className="text-xs leading-relaxed text-default-500 sm:text-small">
+                  Each photo becomes a short clip with smooth camera motion for
+                  your listing tour.
+                </p>
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">{!hasPromptImages && <p className="text-tiny text-default-500">Add photos in step 1 to enable generation.</p>}</div>
+          <div className="flex flex-wrap items-center gap-2">
+            {!hasPromptImages && (
+              <p className="text-tiny text-default-500">
+                Add photos in step 1 to enable generation.
+              </p>
+            )}
+          </div>
         </CardBody>
       </Card>
 
-      <Tabs aria-label="Walkthrough step tabs" selectedKey={activeTab} onSelectionChange={(key) => setActiveTab(String(key))} variant="underlined" classNames={{ tabList: "gap-3", panel: "px-0 pt-4" }}>
+      <Tabs
+        aria-label="Walkthrough step tabs"
+        classNames={{ tabList: "gap-3", panel: "px-0 pt-4" }}
+        selectedKey={activeTab}
+        variant="underlined"
+        onSelectionChange={(key) => setActiveTab(String(key))}
+      >
         <Tab key="videos" title="Videos">
           <div className="flex flex-col gap-4">
             {showGeneratingShell && (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" role="status" aria-busy="true" aria-label="Preparing walkthrough clips">
+              <div
+                aria-busy="true"
+                aria-label="Preparing walkthrough clips"
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                role="status"
+              >
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <Card key={`walkthrough-skeleton-${i}`} className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5">
+                  <Card
+                    key={`walkthrough-skeleton-${i}`}
+                    className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5"
+                  >
                     <CardBody className="gap-2 p-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <Skeleton className="h-3.5 w-20 rounded-md" />
                         <Skeleton className="h-3 w-16 rounded-md" />
                       </div>
                       <Skeleton className="h-24 w-full rounded-lg sm:h-28" />
-                      <p className="text-xs font-medium text-default-500">{WALKTHROUGH_GENERATING_LABEL}</p>
+                      <p className="text-xs font-medium text-default-500">
+                        {WALKTHROUGH_GENERATING_LABEL}
+                      </p>
                     </CardBody>
                   </Card>
                 ))}
@@ -346,40 +547,77 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
                 <CardBody className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                   <div className="flex min-w-0 gap-3">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-warning-500/15 text-warning-600 dark:text-warning-400">
-                      <Coins className="size-5" aria-hidden />
+                      <Coins aria-hidden className="size-5" />
                     </span>
                     <div className="min-w-0 space-y-1">
-                      <p className="text-sm font-semibold text-foreground">Not enough credits for walkthrough clips</p>
-                      <p className="text-sm leading-relaxed text-default-600">Add credits to generate your clips, then try again.</p>
+                      <p className="text-sm font-semibold text-foreground">
+                        Not enough credits for walkthrough clips
+                      </p>
+                      <p className="text-sm leading-relaxed text-default-600">
+                        Add credits to generate your clips, then try again.
+                      </p>
                     </div>
                   </div>
                   <div className="flex shrink-0 flex-wrap gap-2">
                     <Button variant="flat" onPress={handleRetryWalkthrough}>
                       Try again
                     </Button>
-                    <Button as={NextLink} href={Routes.billing} color="primary" className="font-semibold">
+                    <Button
+                      as={NextLink}
+                      className="font-semibold"
+                      color="primary"
+                      href={Routes.billing}
+                    >
                       Buy credits
                     </Button>
                   </div>
                 </CardBody>
               </Card>
             )}
-            {videoOrder.length > 0 && <VideoReorderList orderedIds={videoOrder} renderItem={renderItem} onReorder={handleReorder} canReorder={canReorder} />}
+            {videoOrder.length > 0 && (
+              <VideoReorderList
+                canReorder={canReorder}
+                orderedIds={videoOrder}
+                renderItem={renderItem}
+                onReorder={handleReorder}
+              />
+            )}
           </div>
         </Tab>
         <Tab key="audio" title="Background audio">
           <Card className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5">
             <CardBody className="gap-3 p-4">
-              <p className="text-sm font-semibold text-foreground">Background audio</p>
-              <Select label="Audio track" size="sm" selectedKeys={new Set([audioTrackId])} onSelectionChange={handleAudioChange} classNames={{ trigger: "min-h-10" }} isDisabled={!finalProjectUuid}>
+              <p className="text-sm font-semibold text-foreground">
+                Background audio
+              </p>
+              <Select
+                classNames={{ trigger: "min-h-10" }}
+                isDisabled={!finalProjectUuid}
+                label="Audio track"
+                selectedKeys={new Set([audioTrackId])}
+                size="sm"
+                onSelectionChange={handleAudioChange}
+              >
                 {ESTATE_AUDIO_TRACK_OPTIONS.map((opt) => (
                   <SelectItem key={opt.id}>{opt.label}</SelectItem>
                 ))}
               </Select>
               {selectedAudioOption.id !== "none" && selectedAudioOption.src && (
                 <div className="min-w-0">
-                  <audio ref={audioRef} controls preload="metadata" src={selectedAudioOption.src} onLoadedMetadata={handleAudioMetadata} className="w-full max-w-full">
-                    <track kind="captions" srcLang="en" label="English captions" src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A" />
+                  <audio
+                    ref={audioRef}
+                    controls
+                    className="w-full max-w-full"
+                    preload="metadata"
+                    src={selectedAudioOption.src}
+                    onLoadedMetadata={handleAudioMetadata}
+                  >
+                    <track
+                      kind="captions"
+                      label="English captions"
+                      src="data:text/vtt;charset=utf-8,WEBVTT%0A%0A"
+                      srcLang="en"
+                    />
                   </audio>
                 </div>
               )}

@@ -21,6 +21,7 @@ export async function ensureMinDimensions(
     const metadata = await sharp(buffer).metadata();
 
     const width = metadata.width || 0;
+
     const height = metadata.height || 0;
 
     if (width >= minWidth && height >= minHeight) {
@@ -43,6 +44,7 @@ export async function ensureMinDimensions(
       .toBuffer();
   } catch (error) {
     logger.error(`Error processing image dimensions: ${error.message}`);
+
     // Fallback to original buffer if processing fails
     return buffer;
   }

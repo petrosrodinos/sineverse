@@ -11,9 +11,16 @@ export function NoScenes({ onOpen }: NoScenesProps) {
       <Film className="size-12 text-default-300" />
       <div className="space-y-1">
         <h3 className="font-semibold text-foreground">No Scenes Yet</h3>
-        <p className="text-sm text-default-500">Create your first scene to get started.</p>
+        <p className="text-sm text-default-500">
+          Create your first scene to get started.
+        </p>
       </div>
-      <Button color="primary" onPress={onOpen} startContent={<Plus className="size-4" />} className="w-full mt-2 rounded-xl font-medium">
+      <Button
+        className="w-full mt-2 rounded-xl font-medium"
+        color="primary"
+        startContent={<Plus className="size-4" />}
+        onPress={onOpen}
+      >
         Add Scene
       </Button>
     </aside>

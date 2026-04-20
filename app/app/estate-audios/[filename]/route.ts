@@ -1,6 +1,7 @@
-import { NextRequest } from "next/server";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
+
+import { NextRequest } from "next/server";
 
 const ALLOWED_AUDIO_FILES = new Set([
   "soft-ambient.mp3",
@@ -20,11 +21,18 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const audioFilePath = path.join(process.cwd(), "assets", "estate-audios", filename);
+  const audioFilePath = path.join(
+    process.cwd(),
+    "assets",
+    "estate-audios",
+    filename,
+  );
 
   try {
     await access(audioFilePath);
+
     const fileBuffer = await readFile(audioFilePath);
+
     return new Response(fileBuffer, {
       status: 200,
       headers: {

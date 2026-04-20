@@ -188,6 +188,7 @@ export class StripeCustomersService {
         customer: customer_id,
         limit: 10,
       });
+
       return charges.data.map((c) => ({
         id: c.id,
         amount: c.amount,
@@ -209,6 +210,7 @@ export class StripeCustomersService {
         customer: customer_id,
         limit: 10,
       });
+
       return invoices.data.map((i) => ({
         id: i.id,
         amount_due: i.amount_due,

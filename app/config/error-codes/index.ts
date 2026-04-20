@@ -1,5 +1,5 @@
 export const ErrorCodes = {
-    CreditsUsage: {
-        INSUFFICIENT_CREDITS: 'INSUFFICIENT_CREDITS',
-    },
-}
+  CreditsUsage: {
+    INSUFFICIENT_CREDITS: "INSUFFICIENT_CREDITS",
+  },
+};

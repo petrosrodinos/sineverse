@@ -13,6 +13,7 @@ export class CallsService {
     private logger: Logger,
   ) {
     this.twillioClient = this.twillioConfig.getTwillioClient();
+
     this.twillioNumbers = this.twillioConfig.getTwilioNumbers();
   }
 
@@ -30,9 +31,11 @@ export class CallsService {
 
       if (create_call.message) {
         twiml = `<?xml version="1.0" encoding="UTF-8"?><Response><Say>${CallsUtils.escapeXml(create_call.message)}</Say></Response>`;
+
         callParams.twiml = twiml;
       } else if (create_call.url) {
         twiml = `<?xml version="1.0" encoding="UTF-8"?><Response><Play>${create_call.url}</Play></Response>`;
+
         callParams.twiml = twiml;
       }
 
@@ -41,6 +44,7 @@ export class CallsService {
       return call;
     } catch (error) {
       this.logger.error(`Error making call: ${error.message}`);
+
       throw error;
     }
   }
@@ -48,9 +52,11 @@ export class CallsService {
   async getCall(call_sid: string) {
     try {
       const call = await this.twillioClient.calls(call_sid).fetch();
+
       return call;
     } catch (error) {
       this.logger.error(`Error getting call: ${error.message}`);
+
       throw error;
     }
   }
@@ -58,8 +64,11 @@ export class CallsService {
   async handleWebhook(webhookData: any) {
     try {
       const callSid = webhookData.CallSid;
+
       const callStatus = webhookData.CallStatus;
+
       const callDirection = webhookData.Direction;
+
       const recordingStatus = webhookData.RecordingStatus;
 
       const webhookEvent = {
@@ -74,6 +83,7 @@ export class CallsService {
       return webhookEvent;
     } catch (error) {
       this.logger.error(`Error handling Twilio webhook: ${error.message}`);
+
       throw error;
     }
   }

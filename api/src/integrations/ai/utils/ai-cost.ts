@@ -22,9 +22,11 @@ export function calculateAiCost(cost: AICost): AICostResponse {
   }
 
   const inputRate = modelPricing.input;
+
   const outputRate = modelPricing.output;
 
   const inputCost = (inputTokens ?? 0) * inputRate;
+
   const outputCost = (outputTokens ?? 0) * outputRate;
 
   return {
@@ -43,6 +45,7 @@ export function estimateWordsFromPrice(price: number): number {
   const WORDS_PER_TOKEN = 0.75;
 
   const providerPricing = AiPricing[AiProviders.openai];
+
   const modelPricing = providerPricing[AiModels.openai.gpt4o];
 
   const avgTokenCost = (modelPricing.input + modelPricing.output) / 2;

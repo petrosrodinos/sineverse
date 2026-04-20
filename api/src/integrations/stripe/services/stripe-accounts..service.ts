@@ -19,6 +19,7 @@ export class StripeAccountsService {
     private configService: ConfigService,
   ) {
     this.stripe = this.stripeConfig.getStripeClient();
+
     this.appUrl = this.configService.get<string>('APP_URL');
   }
 
@@ -148,6 +149,7 @@ export class StripeAccountsService {
     if (!stripe_account_id) {
       return;
     }
+
     try {
       await this.stripe.accounts.del(stripe_account_id);
     } catch (error) {

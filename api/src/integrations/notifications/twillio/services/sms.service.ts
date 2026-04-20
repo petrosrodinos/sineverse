@@ -9,6 +9,7 @@ export class TwillioSmsService {
 
   constructor(private twillioConfig: TwillioConfig) {
     this.twillioClient = this.twillioConfig.getTwillioClient();
+
     this.shortCodes = this.twillioConfig.getShortCodes();
   }
 
@@ -17,11 +18,13 @@ export class TwillioSmsService {
       const shortcode = (
         create_sms.from || this.shortCodes.appointly
       ).substring(0, 10);
+
       const msg = {
         to: create_sms.to,
         from: shortcode,
         body: create_sms.body,
       };
+
       return await this.twillioClient.messages.create(msg);
     } catch (error) {
       throw new Error(error);
@@ -33,6 +36,7 @@ export class TwillioSmsService {
       const promises = create_sms.map(async (create_sms) => {
         return await this.sendSms(create_sms);
       });
+
       return await Promise.all(promises);
     } catch (error) {
       throw new Error(error);

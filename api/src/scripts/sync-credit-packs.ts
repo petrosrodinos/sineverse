@@ -9,7 +9,9 @@ async function run() {
 
   try {
     const creditsService = app.get(CreditsService);
+
     const packs = await creditsService.syncDefaultCreditPacks();
+
     console.log(`Synced ${packs.length} credit packs`);
   } finally {
     await app.close();
@@ -18,5 +20,6 @@ async function run() {
 
 run().catch((error) => {
   console.error('Failed to sync credit packs', error);
+
   process.exit(1);
 });

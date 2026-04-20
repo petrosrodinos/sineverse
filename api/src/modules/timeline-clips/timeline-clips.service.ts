@@ -13,17 +13,23 @@ import { TimelineClipQueryDto } from './dto/query-timeline-clip.dto';
 export class TimelineClipsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async assertFinalProjectOwnership(user_uuid: string, final_project_uuid: string) {
+  private async assertFinalProjectOwnership(
+    user_uuid: string,
+    final_project_uuid: string,
+  ) {
     const fp = await this.prisma.finalProject.findFirst({
       where: { uuid: final_project_uuid, user_uuid },
     });
+
     if (!fp) throw new NotFoundException('Final project not found');
+
     return fp;
   }
 
   async create(user_uuid: string, dto: CreateTimelineClipDto) {
     try {
       await this.assertFinalProjectOwnership(user_uuid, dto.final_project_uuid);
+
       return await this.prisma.timelineClip.create({
         data: {
           project_uuid: dto.project_uuid,
@@ -40,17 +46,28 @@ export class TimelineClipsService {
       });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to create timeline clip', { cause: error });
+
+      throw new InternalServerErrorException('Failed to create timeline clip', {
+        cause: error,
+      });
     }
   }
 
   async findAll(user_uuid: string, query: TimelineClipQueryDto) {
     try {
-      await this.assertFinalProjectOwnership(user_uuid, query.final_project_uuid);
-      const where: Record<string, unknown> = { final_project_uuid: query.final_project_uuid };
+      await this.assertFinalProjectOwnership(
+        user_uuid,
+        query.final_project_uuid,
+      );
+
+      const where: Record<string, unknown> = {
+        final_project_uuid: query.final_project_uuid,
+      };
+
       if (query.project_asset_uuid) {
         where.project_asset_uuid = query.project_asset_uuid;
       }
+
       return await this.prisma.timelineClip.findMany({
         where,
         include: { transition_in: true, transition_out: true, captions: true },
@@ -58,7 +75,11 @@ export class TimelineClipsService {
       });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to retrieve timeline clips', { cause: error });
+
+      throw new InternalServerErrorException(
+        'Failed to retrieve timeline clips',
+        { cause: error },
+      );
     }
   }
 
@@ -68,24 +89,41 @@ export class TimelineClipsService {
         where: { uuid },
         include: { transition_in: true, transition_out: true, captions: true },
       });
+
       if (!clip) throw new NotFoundException('Timeline clip not found');
-      await this.assertFinalProjectOwnership(user_uuid, clip.final_project_uuid);
+
+      await this.assertFinalProjectOwnership(
+        user_uuid,
+        clip.final_project_uuid,
+      );
+
       return clip;
     } catch (error) {
-      if (error instanceof NotFoundException || error instanceof ForbiddenException) throw error;
-      throw new InternalServerErrorException('Failed to retrieve timeline clip', { cause: error });
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      )
+        throw error;
+
+      throw new InternalServerErrorException(
+        'Failed to retrieve timeline clip',
+        { cause: error },
+      );
     }
   }
 
   async update(user_uuid: string, uuid: string, dto: UpdateTimelineClipDto) {
     try {
       const clip = await this.findOne(user_uuid, uuid);
-      const { transition_out_type, transition_out_duration, ...clipFields } = dto;
+
+      const { transition_out_type, transition_out_duration, ...clipFields } =
+        dto;
 
       let transition_out_uuid = clip.transition_out_uuid;
 
       if (transition_out_type !== undefined) {
         const duration = transition_out_duration ?? 0.5;
+
         if (clip.transition_out_uuid) {
           await this.prisma.timelineTransition.update({
             where: { uuid: clip.transition_out_uuid },
@@ -95,6 +133,7 @@ export class TimelineClipsService {
           const created = await this.prisma.timelineTransition.create({
             data: { type: transition_out_type, duration },
           });
+
           transition_out_uuid = created.uuid;
         }
       }
@@ -106,17 +145,24 @@ export class TimelineClipsService {
       });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to update timeline clip', { cause: error });
+
+      throw new InternalServerErrorException('Failed to update timeline clip', {
+        cause: error,
+      });
     }
   }
 
   async remove(user_uuid: string, uuid: string) {
     try {
       await this.findOne(user_uuid, uuid);
+
       return await this.prisma.timelineClip.delete({ where: { uuid } });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new InternalServerErrorException('Failed to delete timeline clip', { cause: error });
+
+      throw new InternalServerErrorException('Failed to delete timeline clip', {
+        cause: error,
+      });
     }
   }
 }

@@ -4,9 +4,16 @@ import { Job } from 'bullmq';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
 import { RenderService } from './render.service';
-import { FINAL_RENDER_QUEUE, FinalProjectRenderStatus } from './render.constants';
+import {
+  FINAL_RENDER_QUEUE,
+  FinalProjectRenderStatus,
+} from './render.constants';
 import { COMPOSITION_FPS } from './render.types';
-import type { ClipData, MusicData, FinalProjectCompositionProps } from './render.types';
+import type {
+  ClipData,
+  MusicData,
+  FinalProjectCompositionProps,
+} from './render.types';
 
 export interface FinalRenderJobData {
   finalProjectUuid: string;
@@ -59,12 +66,19 @@ export class RenderProcessor extends WorkerHost {
       const inputProps = this.buildCompositionProps(finalProject);
 
       if (inputProps.clips.length === 0) {
-        throw new Error('No renderable clips found — ensure all videos have been generated');
+        throw new Error(
+          'No renderable clips found — ensure all videos have been generated',
+        );
       }
 
       const videoBuffer = await this.renderService.render(inputProps);
+
       const filename = `final-render-${finalProjectUuid}-${Date.now()}.mp4`;
-      const videoUuid = await this.documentsService.saveVideoFromBuffer(videoBuffer, filename);
+
+      const videoUuid = await this.documentsService.saveVideoFromBuffer(
+        videoBuffer,
+        filename,
+      );
 
       await this.prisma.finalProject.update({
         where: { uuid: finalProjectUuid },
@@ -78,48 +92,64 @@ export class RenderProcessor extends WorkerHost {
         `Render failed for ${finalProjectUuid}: ${error.message}`,
         error.stack,
       );
+
       await this.prisma.finalProject
         .update({
           where: { uuid: finalProjectUuid },
           data: { render_status: FinalProjectRenderStatus.FAILED },
         })
         .catch(() => {});
+
       throw error;
     }
   }
 
-  private buildCompositionProps(finalProject: any): FinalProjectCompositionProps {
+  private buildCompositionProps(
+    finalProject: any,
+  ): FinalProjectCompositionProps {
     let currentFrame = 0;
+
     const clips: ClipData[] = [];
 
     for (const clip of finalProject.timeline_clips) {
       const videoUrl: string | undefined = clip.project_asset?.document?.url;
+
       if (!videoUrl) continue;
 
       const trimStart = clip.trim_start ?? 0;
+
       const trimEnd = clip.trim_end ?? 4;
+
       const speed = Math.max(clip.speed ?? 1.0, 0.1);
+
       const volume = clip.volume ?? 1.0;
+
       const sourceDuration = Math.max(trimEnd - trimStart, 0.1);
+
       const clipDurationFrames = Math.max(
         Math.round((sourceDuration / speed) * COMPOSITION_FPS),
         1,
       );
+
       const transitionType = clip.transition_out?.type ?? 'FADE';
+
       const transitionDurationFrames = Math.max(
         Math.round((clip.transition_out?.duration ?? 0.5) * COMPOSITION_FPS),
         1,
       );
+
       const captions = (clip.captions ?? [])
         .map((caption: any) => {
           const startFrame = Math.max(
             Math.round((caption.start_sec ?? 0) * COMPOSITION_FPS),
             0,
           );
+
           const endFrame = Math.min(
             Math.round((caption.end_sec ?? 0) * COMPOSITION_FPS),
             clipDurationFrames,
           );
+
           return {
             text: caption.text ?? '',
             start_frame: startFrame,
@@ -149,7 +179,9 @@ export class RenderProcessor extends WorkerHost {
     }
 
     let music: MusicData | null = null;
+
     const musicEntry = finalProject.timeline_music?.[0];
+
     if (musicEntry?.audio?.filename) {
       music = {
         audio_filename: musicEntry.audio.filename,

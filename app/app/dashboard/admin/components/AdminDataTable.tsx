@@ -3,7 +3,14 @@
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Pagination } from "@heroui/pagination";
 import { Spinner } from "@heroui/spinner";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@heroui/table";
 import { ReactNode } from "react";
 
 interface AdminColumn {
@@ -47,26 +54,32 @@ export function AdminDataTable<T extends { uuid: string }>({
       <CardHeader className="flex flex-col items-stretch gap-4 lg:flex-row lg:items-start lg:justify-between">
         <h3 className="shrink-0 text-lg font-semibold">{title}</h3>
         {controls && controlsPlacement === "inline" ? (
-          <div className="min-w-0 w-full lg:flex lg:max-w-[min(100%,48rem)] lg:justify-end xl:max-w-none">{controls}</div>
+          <div className="min-w-0 w-full lg:flex lg:max-w-[min(100%,48rem)] lg:justify-end xl:max-w-none">
+            {controls}
+          </div>
         ) : null}
         {controls && controlsPlacement === "below" ? (
           <div className="w-full">{controls}</div>
         ) : null}
       </CardHeader>
       <CardBody className="gap-4">
-        <Table aria-label={title} removeWrapper>
+        <Table removeWrapper aria-label={title}>
           <TableHeader columns={columns}>
-            {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+            {(column) => (
+              <TableColumn key={column.key}>{column.label}</TableColumn>
+            )}
           </TableHeader>
           <TableBody
-            items={rows}
             emptyContent={isLoading ? "Loading..." : emptyContent}
+            items={rows}
             loadingContent={<Spinner label="Loading..." />}
             loadingState={isLoading ? "loading" : "idle"}
           >
             {(item) => (
               <TableRow key={item.uuid}>
-                {(columnKey) => <TableCell>{renderCell(item, String(columnKey))}</TableCell>}
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, String(columnKey))}</TableCell>
+                )}
               </TableRow>
             )}
           </TableBody>
@@ -74,11 +87,11 @@ export function AdminDataTable<T extends { uuid: string }>({
 
         <div className="flex justify-end">
           <Pagination
-            total={totalPages}
-            page={Math.min(page, totalPages)}
-            onChange={onPageChange}
-            showControls
             isCompact
+            showControls
+            page={Math.min(page, totalPages)}
+            total={totalPages}
+            onChange={onPageChange}
           />
         </div>
       </CardBody>

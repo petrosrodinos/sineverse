@@ -16,6 +16,7 @@ export class GoogleMapsService {
       const url = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${timestamp}&key=${this.apiKey}`;
 
       const res = await fetch(url);
+
       const data = await res.json();
 
       return {
@@ -26,6 +27,7 @@ export class GoogleMapsService {
       };
     } catch (error) {
       console.log(error);
+
       throw new InternalServerErrorException(error.message);
     }
   }

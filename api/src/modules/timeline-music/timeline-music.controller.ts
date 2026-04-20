@@ -7,7 +7,12 @@ import {
   Body,
   Param,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiParam,
+} from '@nestjs/swagger';
 import { JwtGuard } from '@/shared/guards/jwt.guard';
 import { CurrentUser } from '@/shared/decorators/current-user.decorator';
 import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
@@ -36,7 +41,9 @@ export class TimelineMusicController {
   }
 
   @Put('final-projects/:final_project_uuid')
-  @ApiOperation({ summary: 'Create or update timeline music for a final project' })
+  @ApiOperation({
+    summary: 'Create or update timeline music for a final project',
+  })
   @ApiParam({ name: 'final_project_uuid' })
   upsertForFinalProject(
     @CurrentUser('uuid') user_uuid: string,

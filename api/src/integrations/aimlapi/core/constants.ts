@@ -41,4 +41,5 @@ export const ImageModels = {
 } as const;
 
 export type ImageModel = (typeof ImageModels)[keyof typeof ImageModels];
+
 export type VideoModel = (typeof VideoModels)[keyof typeof VideoModels];

@@ -6,21 +6,33 @@ import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Select, SelectItem } from "@heroui/select";
 import { Search } from "lucide-react";
+
+import { formatCurrencyFromCents } from "../utils/admin-format";
+
+import { AdminDataTable } from "./AdminDataTable";
+
 import { useAdminPurchases } from "@/features/admin/hooks/use-admin";
 import { useCreditPacks } from "@/features/credits/hooks/use-credits";
-import { AdminPurchaseRow, AdminPurchasesQuery } from "@/features/admin/interfaces/admin.interfaces";
-import { formatCurrencyFromCents } from "../utils/admin-format";
-import { AdminDataTable } from "./AdminDataTable";
+import {
+  AdminPurchaseRow,
+  AdminPurchasesQuery,
+} from "@/features/admin/interfaces/admin.interfaces";
 
 type AdminPurchasesTabProps = {
   isActive: boolean;
 };
 
-function purchaseStatusChipColor(status: AdminPurchaseRow["status"]): "success" | "warning" | "danger" | "default" {
+function purchaseStatusChipColor(
+  status: AdminPurchaseRow["status"],
+): "success" | "warning" | "danger" | "default" {
   if (status === "SUCCEEDED") return "success";
+
   if (status === "PENDING") return "warning";
+
   if (status === "FAILED") return "danger";
+
   if (status === "EXPIRED") return "default";
+
   return "default";
 }
 
@@ -42,39 +54,49 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
     sort_by: "created_at",
     sort_order: "desc",
   });
+
   const [purchasesSearchInput, setPurchasesSearchInput] = useState("");
 
-  const { data: purchasesData, isLoading: purchasesLoading } = useAdminPurchases(purchasesQuery, { enabled: isActive });
+  const { data: purchasesData, isLoading: purchasesLoading } =
+    useAdminPurchases(purchasesQuery, { enabled: isActive });
+
   const { data: creditPacks } = useCreditPacks({ enabled: isActive });
 
   const packTypeFilterItems = useMemo(
-    () => [{ key: "all", label: "All types" }, ...(creditPacks ?? []).map((pack) => ({ key: pack.key, label: pack.name }))],
-    [creditPacks]
+    () => [
+      { key: "all", label: "All types" },
+      ...(creditPacks ?? []).map((pack) => ({
+        key: pack.key,
+        label: pack.name,
+      })),
+    ],
+    [creditPacks],
   );
 
   const purchasesControls = (
     <div className="grid w-full min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 sm:items-end lg:flex lg:w-auto lg:min-w-0 lg:flex-1 lg:flex-wrap lg:justify-end lg:gap-2">
       <Input
-        value={purchasesSearchInput}
-        onValueChange={setPurchasesSearchInput}
+        className="min-w-0 sm:col-span-2 lg:max-w-sm lg:flex-1"
         placeholder="Search purchase id, user id, or user email"
         startContent={<Search className="size-4 text-default-400" />}
-        className="min-w-0 sm:col-span-2 lg:max-w-sm lg:flex-1"
+        value={purchasesSearchInput}
+        onValueChange={setPurchasesSearchInput}
       />
       <Select
         aria-label="Filter by pack type"
+        className="min-w-0 w-full lg:w-52"
         label="Type"
-        size="sm"
         selectedKeys={[purchasesQuery.pack_key ?? "all"]}
+        size="sm"
         onSelectionChange={(keys) => {
           const next = Array.from(keys)[0] as string;
+
           setPurchasesQuery((prev) => ({
             ...prev,
             page: 1,
             pack_key: next && next !== "all" ? next : undefined,
           }));
         }}
-        className="min-w-0 w-full lg:w-52"
       >
         {packTypeFilterItems.map((item) => (
           <SelectItem key={item.key}>{item.label}</SelectItem>
@@ -82,18 +104,22 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
       </Select>
       <Select
         aria-label="Filter by payment status"
+        className="min-w-0 w-full lg:w-44"
         label="Status"
-        size="sm"
         selectedKeys={[purchasesQuery.status ?? "all"]}
+        size="sm"
         onSelectionChange={(keys) => {
           const next = Array.from(keys)[0] as string;
+
           setPurchasesQuery((prev) => ({
             ...prev,
             page: 1,
-            status: next && next !== "all" ? (next as AdminPurchasesQuery["status"]) : undefined,
+            status:
+              next && next !== "all"
+                ? (next as AdminPurchasesQuery["status"])
+                : undefined,
           }));
         }}
-        className="min-w-0 w-full lg:w-44"
       >
         <SelectItem key="all">All statuses</SelectItem>
         <SelectItem key="PENDING">PENDING</SelectItem>
@@ -103,9 +129,10 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
       </Select>
       <Select
         aria-label="Sort purchases by"
+        className="min-w-0 w-full lg:w-44"
         label="Sort"
-        size="sm"
         selectedKeys={[purchasesQuery.sort_by ?? "created_at"]}
+        size="sm"
         onSelectionChange={(keys) =>
           setPurchasesQuery((prev) => ({
             ...prev,
@@ -113,7 +140,6 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
             sort_by: Array.from(keys)[0] as AdminPurchasesQuery["sort_by"],
           }))
         }
-        className="min-w-0 w-full lg:w-44"
       >
         <SelectItem key="created_at">Newest</SelectItem>
         <SelectItem key="gross_amount_cents">Gross</SelectItem>
@@ -123,8 +149,8 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
         <SelectItem key="status">Status</SelectItem>
       </Select>
       <Button
-        variant="flat"
         className="w-full sm:w-auto"
+        variant="flat"
         onPress={() =>
           setPurchasesQuery((prev) => ({
             ...prev,
@@ -153,53 +179,79 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
   return (
     <div className="mt-4">
       <AdminDataTable<AdminPurchaseRow>
-        title="Credit Purchases"
         columns={purchaseColumns}
-        rows={purchasesData?.items ?? []}
-        isLoading={purchasesLoading}
-        page={purchasesData?.page ?? purchasesQuery.page ?? 1}
-        total={purchasesData?.total ?? 0}
-        limit={purchasesData?.limit ?? purchasesQuery.limit ?? 10}
         controls={purchasesControls}
         emptyContent="No purchases found."
-        onPageChange={(page) => setPurchasesQuery((prev) => ({ ...prev, page }))}
+        isLoading={purchasesLoading}
+        limit={purchasesData?.limit ?? purchasesQuery.limit ?? 10}
+        page={purchasesData?.page ?? purchasesQuery.page ?? 1}
         renderCell={(row, columnKey) => {
           if (columnKey === "uuid") return row.uuid;
+
           if (columnKey === "user") {
             return (
               <div className="flex flex-col">
                 <span className="font-medium">{row.user.uuid}</span>
-                <span className="text-xs text-default-500">{row.user.email}</span>
+                <span className="text-xs text-default-500">
+                  {row.user.email}
+                </span>
               </div>
             );
           }
+
           if (columnKey === "pack") {
             return (
               <div className="flex flex-col">
                 <span className="font-medium">{row.credit_pack.name}</span>
-                <span className="text-xs text-default-500">{row.credit_pack.key}</span>
+                <span className="text-xs text-default-500">
+                  {row.credit_pack.key}
+                </span>
               </div>
             );
           }
+
           if (columnKey === "amounts") {
             return (
               <div className="flex flex-col">
-                <span className="font-medium">{formatCurrencyFromCents(row.gross_amount_cents, row.currency)}</span>
-                <span className="text-xs text-default-500">{formatCurrencyFromCents(row.net_amount_cents, row.currency)}</span>
+                <span className="font-medium">
+                  {formatCurrencyFromCents(
+                    row.gross_amount_cents,
+                    row.currency,
+                  )}
+                </span>
+                <span className="text-xs text-default-500">
+                  {formatCurrencyFromCents(row.net_amount_cents, row.currency)}
+                </span>
               </div>
             );
           }
-          if (columnKey === "tokens") return row.credits_amount.toLocaleString();
-          if (columnKey === "stripe_fees") return formatCurrencyFromCents(row.stripe_fee_cents, row.currency);
+
+          if (columnKey === "tokens")
+            return row.credits_amount.toLocaleString();
+
+          if (columnKey === "stripe_fees")
+            return formatCurrencyFromCents(row.stripe_fee_cents, row.currency);
+
           if (columnKey === "status") {
             return (
-              <Chip size="sm" variant="flat" color={purchaseStatusChipColor(row.status)}>
+              <Chip
+                color={purchaseStatusChipColor(row.status)}
+                size="sm"
+                variant="flat"
+              >
                 {row.status}
               </Chip>
             );
           }
+
           return new Date(row.created_at).toLocaleString();
         }}
+        rows={purchasesData?.items ?? []}
+        title="Credit Purchases"
+        total={purchasesData?.total ?? 0}
+        onPageChange={(page) =>
+          setPurchasesQuery((prev) => ({ ...prev, page }))
+        }
       />
     </div>
   );

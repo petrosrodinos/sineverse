@@ -78,6 +78,7 @@ export class AiHelperService {
       return response.response;
     } catch (error) {
       console.log(error);
+
       throw new Error('Failed to generate AI scenes');
     }
   }

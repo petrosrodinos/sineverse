@@ -1,21 +1,25 @@
 "use client";
 
+import type { Key } from "react";
+import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
+
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { ImagePlus, Plus, Trash2, Upload } from "lucide-react";
 import { useParams } from "next/navigation";
-import type { Key } from "react";
 import { useCallback, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
-import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { addToast } from "@heroui/toast";
-import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
+
 import { ESTATE_VIDEO_MODEL_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
+import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
+
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"] as const;
+
 const ACCEPTED_IMAGE_INPUT = ".jpg,.jpeg,.png";
 
 type PendingFile = { id: string; file: File; previewUrl: string };
@@ -27,23 +31,50 @@ type UploadPhotosStepProps = {
   onVideoModelChange: (id: string) => void;
 };
 
-export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoModelId, onVideoModelChange }: UploadPhotosStepProps) {
+export function UploadPhotosStep({
+  pendingFiles,
+  setPendingFiles,
+  selectedVideoModelId,
+  onVideoModelChange,
+}: UploadPhotosStepProps) {
   const params = useParams<{ uuid: string }>();
+
   const projectUuid = params?.uuid ?? "";
+
   const { data: session, status } = useSession();
+
   const isSessionLoading = status === "loading";
-  const isAdmin = !isSessionLoading && (session?.role === RoleTypes.ADMIN || session?.role === RoleTypes.SUPER_ADMIN);
 
-  const { data: scenes, isLoading } = useScenes(projectUuid ? { project_uuid: projectUuid } : undefined, { enabled: !!projectUuid });
+  const isAdmin =
+    !isSessionLoading &&
+    (session?.role === RoleTypes.ADMIN ||
+      session?.role === RoleTypes.SUPER_ADMIN);
 
-  const promptImageAssets: ProjectAsset[] = (scenes ?? []).flatMap((scene) => (scene.scene_variations ?? []).flatMap((sv) => (sv.project_assets ?? []).filter((a) => a.role === "PROMPT_IMAGE")));
+  const { data: scenes, isLoading } = useScenes(
+    projectUuid ? { project_uuid: projectUuid } : undefined,
+    { enabled: !!projectUuid },
+  );
 
-  const { mutateAsync: deleteScene, isPending: isDeletingScene } = useDeleteScene();
+  const promptImageAssets: ProjectAsset[] = (scenes ?? []).flatMap((scene) =>
+    (scene.scene_variations ?? []).flatMap((sv) =>
+      (sv.project_assets ?? []).filter((a) => a.role === "PROMPT_IMAGE"),
+    ),
+  );
 
-  const [pendingRemoveAsset, setPendingRemoveAsset] = useState<ProjectAsset | null>(null);
-  const [pendingRemoveFileId, setPendingRemoveFileId] = useState<string | null>(null);
+  const { mutateAsync: deleteScene, isPending: isDeletingScene } =
+    useDeleteScene();
+
+  const [pendingRemoveAsset, setPendingRemoveAsset] =
+    useState<ProjectAsset | null>(null);
+
+  const [pendingRemoveFileId, setPendingRemoveFileId] = useState<string | null>(
+    null,
+  );
+
   const [isDragOver, setIsDragOver] = useState(false);
+
   const dragDepth = useRef(0);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const openPicker = useCallback(() => {
@@ -52,8 +83,14 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
 
   const addFiles = useCallback(
     (files: FileList | File[]) => {
-      const images = Array.from(files).filter((f) => ACCEPTED_IMAGE_TYPES.includes(f.type as (typeof ACCEPTED_IMAGE_TYPES)[number]));
+      const images = Array.from(files).filter((f) =>
+        ACCEPTED_IMAGE_TYPES.includes(
+          f.type as (typeof ACCEPTED_IMAGE_TYPES)[number],
+        ),
+      );
+
       if (images.length === 0) return;
+
       setPendingFiles((prev) => [
         ...prev,
         ...images.map((file) => ({
@@ -69,7 +106,9 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
   const handleFileChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const list = event.target.files;
+
       if (list && list.length > 0) addFiles(list);
+
       event.target.value = "";
     },
     [addFiles],
@@ -78,8 +117,11 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
+
       dragDepth.current = 0;
+
       setIsDragOver(false);
+
       if (event.dataTransfer.files?.length) addFiles(event.dataTransfer.files);
     },
     [addFiles],
@@ -87,20 +129,26 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
+
     event.dataTransfer.dropEffect = "copy";
   }, []);
 
   const handleDragEnter = useCallback((event: React.DragEvent) => {
     event.preventDefault();
+
     dragDepth.current += 1;
+
     setIsDragOver(true);
   }, []);
 
   const handleDragLeave = useCallback((event: React.DragEvent) => {
     event.preventDefault();
+
     dragDepth.current -= 1;
+
     if (dragDepth.current <= 0) {
       dragDepth.current = 0;
+
       setIsDragOver(false);
     }
   }, []);
@@ -122,6 +170,7 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
   const handleCloseRemoveModal = useCallback(() => {
     if (!isDeletingScene) {
       setPendingRemoveAsset(null);
+
       setPendingRemoveFileId(null);
     }
   }, [isDeletingScene]);
@@ -130,19 +179,34 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
     if (pendingRemoveFileId !== null) {
       setPendingFiles((prev) => {
         const item = prev.find((f) => f.id === pendingRemoveFileId);
+
         if (item) URL.revokeObjectURL(item.previewUrl);
+
         return prev.filter((f) => f.id !== pendingRemoveFileId);
       });
+
       setPendingRemoveFileId(null);
+
       return;
     }
+
     if (!pendingRemoveAsset) return;
-    const sceneId = pendingRemoveAsset.scene_uuid ?? pendingRemoveAsset.scene?.uuid;
+
+    const sceneId =
+      pendingRemoveAsset.scene_uuid ?? pendingRemoveAsset.scene?.uuid;
+
     if (!sceneId) {
-      addToast({ title: "Cannot remove photo", description: "Missing scene reference.", severity: "danger" });
+      addToast({
+        title: "Cannot remove photo",
+        description: "Missing scene reference.",
+        severity: "danger",
+      });
+
       setPendingRemoveAsset(null);
+
       return;
     }
+
     try {
       await deleteScene(sceneId);
     } finally {
@@ -150,26 +214,60 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
     }
   }, [pendingRemoveFileId, pendingRemoveAsset, setPendingFiles, deleteScene]);
 
-  const showLoadingGrid = isLoading && promptImageAssets.length === 0 && pendingFiles.length === 0;
+  const showLoadingGrid =
+    isLoading && promptImageAssets.length === 0 && pendingFiles.length === 0;
+
   const hasPhotos = promptImageAssets.length > 0 || pendingFiles.length > 0;
 
-  const pickerClassName = ["relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300", "bg-gradient-to-br from-default-100/50 via-default-50/30 to-secondary-500/[0.07]", "dark:from-default-100/10 dark:via-default-100/5 dark:to-secondary-500/10", isDragOver ? "border-secondary-500 ring-4 ring-secondary-500/20" : "border-default-300/90 dark:border-default-100/25", "hover:border-secondary-400/70 dark:hover:border-secondary-500/40"].join(" ");
+  const pickerClassName = [
+    "relative w-full overflow-hidden rounded-2xl border-2 border-dashed transition-all duration-300",
+    "bg-gradient-to-br from-default-100/50 via-default-50/30 to-secondary-500/[0.07]",
+    "dark:from-default-100/10 dark:via-default-100/5 dark:to-secondary-500/10",
+    isDragOver
+      ? "border-secondary-500 ring-4 ring-secondary-500/20"
+      : "border-default-300/90 dark:border-default-100/25",
+    "hover:border-secondary-400/70 dark:hover:border-secondary-500/40",
+  ].join(" ");
 
-  const isConfirmModalOpen = pendingRemoveAsset !== null || pendingRemoveFileId !== null;
-  const confirmModalDescription = pendingRemoveFileId !== null ? "Remove this photo from the list?" : "Delete this scene and its image from the project? This cannot be undone.";
-  const handleVideoModelChange = useCallback((keys: "all" | Iterable<Key>) => {
-    if (keys === "all") return;
-    const first = Array.from(keys)[0];
-    if (typeof first === "string") {
-      onVideoModelChange(first);
-    }
-  }, [onVideoModelChange]);
+  const isConfirmModalOpen =
+    pendingRemoveAsset !== null || pendingRemoveFileId !== null;
+
+  const confirmModalDescription =
+    pendingRemoveFileId !== null
+      ? "Remove this photo from the list?"
+      : "Delete this scene and its image from the project? This cannot be undone.";
+
+  const handleVideoModelChange = useCallback(
+    (keys: "all" | Iterable<Key>) => {
+      if (keys === "all") return;
+
+      const first = Array.from(keys)[0];
+
+      if (typeof first === "string") {
+        onVideoModelChange(first);
+      }
+    },
+    [onVideoModelChange],
+  );
 
   return (
     <div className="flex flex-col gap-6">
-      <input ref={inputRef} type="file" accept={ACCEPTED_IMAGE_INPUT} multiple className="hidden" onChange={handleFileChange} />
+      <input
+        ref={inputRef}
+        multiple
+        accept={ACCEPTED_IMAGE_INPUT}
+        className="hidden"
+        type="file"
+        onChange={handleFileChange}
+      />
 
-      <div onDrop={handleDrop} onDragOver={handleDragOver} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} className={pickerClassName}>
+      <div
+        className={pickerClassName}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
         <div className="p-4 sm:p-5">
           {showLoadingGrid ? (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -178,13 +276,21 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
               ))}
             </div>
           ) : !hasPhotos ? (
-            <button type="button" onClick={openPicker} className="flex min-h-[200px] w-full flex-col items-center justify-center gap-4 rounded-xl px-4 py-10 text-center transition-colors duration-200 hover:bg-secondary-500/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <button
+              className="flex min-h-[200px] w-full flex-col items-center justify-center gap-4 rounded-xl px-4 py-10 text-center transition-colors duration-200 hover:bg-secondary-500/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              type="button"
+              onClick={openPicker}
+            >
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary-500/12 text-secondary-600 shadow-inner ring-1 ring-secondary-500/20 dark:text-secondary-400">
                 <ImagePlus className="h-8 w-8" strokeWidth={1.5} />
               </div>
               <div className="max-w-sm space-y-1.5">
-                <p className="text-lg font-semibold tracking-tight text-foreground">Add listing photos</p>
-                <p className="text-small leading-relaxed text-default-500">Drop images here or click to browse. You can add more anytime.</p>
+                <p className="text-lg font-semibold tracking-tight text-foreground">
+                  Add listing photos
+                </p>
+                <p className="text-small leading-relaxed text-default-500">
+                  Drop images here or click to browse. You can add more anytime.
+                </p>
               </div>
               <span className="inline-flex items-center gap-2 rounded-full bg-secondary-500/10 px-4 py-2 text-small font-medium text-secondary-700 dark:text-secondary-300">
                 <Upload className="h-4 w-4" />
@@ -199,39 +305,83 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
                     <ImagePlus className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Your photos</p>
-                    <p className="text-tiny text-default-500">{promptImageAssets.length + pendingFiles.length} selected · drop to add more</p>
+                    <p className="text-sm font-semibold text-foreground">
+                      Your photos
+                    </p>
+                    <p className="text-tiny text-default-500">
+                      {promptImageAssets.length + pendingFiles.length} selected
+                      · drop to add more
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {promptImageAssets.map((asset) => (
-                  <div key={asset.uuid} className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-default-200/40 shadow-sm ring-1 ring-black/[0.06] transition duration-200 hover:ring-secondary-500/35 dark:bg-default-100/10 dark:ring-white/10">
-                    {asset.status === ProjectAssetStatuses.PROCESSING ? <Skeleton className="h-full w-full rounded-xl" /> : <img alt="" src={asset.document.url} className="h-full w-full object-cover" />}
+                  <div
+                    key={asset.uuid}
+                    className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-default-200/40 shadow-sm ring-1 ring-black/[0.06] transition duration-200 hover:ring-secondary-500/35 dark:bg-default-100/10 dark:ring-white/10"
+                  >
+                    {asset.status === ProjectAssetStatuses.PROCESSING ? (
+                      <Skeleton className="h-full w-full rounded-xl" />
+                    ) : (
+                      <img
+                        alt=""
+                        className="h-full w-full object-cover"
+                        src={asset.document.url}
+                      />
+                    )}
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent p-2 pt-8">
-                      <p className="truncate text-tiny font-medium text-white/95">{asset.document.filename}</p>
+                      <p className="truncate text-tiny font-medium text-white/95">
+                        {asset.document.filename}
+                      </p>
                     </div>
-                    <button type="button" onClick={handleRemoveApiAsset(asset)} className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition hover:bg-danger/90 hover:text-white md:opacity-0 md:group-hover:opacity-100" aria-label="Remove image">
+                    <button
+                      aria-label="Remove image"
+                      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition hover:bg-danger/90 hover:text-white md:opacity-0 md:group-hover:opacity-100"
+                      type="button"
+                      onClick={handleRemoveApiAsset(asset)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
 
                 {pendingFiles.map((pf) => (
-                  <div key={pf.id} className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-default-200/40 shadow-sm ring-1 ring-secondary-400/40 transition duration-200 dark:bg-default-100/10">
-                    <img alt="" src={pf.previewUrl} className="h-full w-full object-cover" />
-                    <button type="button" onClick={handleRemovePendingFile(pf.id)} className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition hover:bg-danger/90 hover:text-white md:opacity-0 md:group-hover:opacity-100" aria-label="Remove image">
+                  <div
+                    key={pf.id}
+                    className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-default-200/40 shadow-sm ring-1 ring-secondary-400/40 transition duration-200 dark:bg-default-100/10"
+                  >
+                    <img
+                      alt=""
+                      className="h-full w-full object-cover"
+                      src={pf.previewUrl}
+                    />
+                    <button
+                      aria-label="Remove image"
+                      className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-background/90 text-foreground shadow-md backdrop-blur-sm transition hover:bg-danger/90 hover:text-white md:opacity-0 md:group-hover:opacity-100"
+                      type="button"
+                      onClick={handleRemovePendingFile(pf.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 ))}
 
-                <button type="button" onClick={openPicker} className="group/add flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2">
+                <button
+                  className="group/add flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2"
+                  type="button"
+                  onClick={openPicker}
+                >
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary-500/15 ring-1 ring-secondary-500/25 transition group-hover/add:scale-105 group-hover/add:bg-secondary-500/25 sm:h-12 sm:w-12">
-                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2.25} />
+                    <Plus
+                      className="h-5 w-5 sm:h-6 sm:w-6"
+                      strokeWidth={2.25}
+                    />
                   </span>
-                  <span className="text-[11px] font-semibold tracking-wide sm:text-tiny">Add more</span>
+                  <span className="text-[11px] font-semibold tracking-wide sm:text-tiny">
+                    Add more
+                  </span>
                 </button>
               </div>
             </div>
@@ -241,11 +391,11 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
 
       {isAdmin && hasPhotos && (
         <Select
-          label="Walkthrough model"
-          size="sm"
-          selectedKeys={new Set([selectedVideoModelId])}
-          onSelectionChange={handleVideoModelChange}
           classNames={{ trigger: "min-h-10" }}
+          label="Walkthrough model"
+          selectedKeys={new Set([selectedVideoModelId])}
+          size="sm"
+          onSelectionChange={handleVideoModelChange}
         >
           {ESTATE_VIDEO_MODEL_OPTIONS.map((option) => (
             <SelectItem key={option.id}>
@@ -255,7 +405,15 @@ export function UploadPhotosStep({ pendingFiles, setPendingFiles, selectedVideoM
         </Select>
       )}
 
-      <ConfirmationModal isOpen={isConfirmModalOpen} onClose={handleCloseRemoveModal} onConfirm={handleConfirmRemove} title="Remove photo" description={confirmModalDescription} confirmText="Remove" isLoading={isDeletingScene} />
+      <ConfirmationModal
+        confirmText="Remove"
+        description={confirmModalDescription}
+        isLoading={isDeletingScene}
+        isOpen={isConfirmModalOpen}
+        title="Remove photo"
+        onClose={handleCloseRemoveModal}
+        onConfirm={handleConfirmRemove}
+      />
     </div>
   );
 }

@@ -61,7 +61,10 @@ export class TimelineMusicService {
 
   async findAll(user_uuid: string, query: TimelineMusicQueryDto) {
     try {
-      await this.assertFinalProjectOwnership(user_uuid, query.final_project_uuid);
+      await this.assertFinalProjectOwnership(
+        user_uuid,
+        query.final_project_uuid,
+      );
 
       return this.prisma.timelineMusic.findMany({
         where: { final_project_uuid: query.final_project_uuid },
@@ -70,6 +73,7 @@ export class TimelineMusicService {
       });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException(
         'Failed to retrieve timeline music',
         { cause: error },
@@ -101,7 +105,9 @@ export class TimelineMusicService {
       });
 
       const start_sec = dto.start_sec ?? 0;
+
       const end_sec = dto.end_sec ?? 4;
+
       const volume = dto.volume ?? 1;
 
       if (existing) {

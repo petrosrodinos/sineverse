@@ -11,9 +11,11 @@ const AspectRatioSchema = z
 export const ResolutionEnum = z
   .enum(['480p', '720p', '1080p'])
   .default('1080p');
+
 export const DurationEnum = z.union([z.literal(5), z.literal(10)]).default(5);
 
 export const WatermarkSchema = z.boolean().default(false);
+
 export const CameraFixedSchema = z.boolean().default(false);
 
 export const ImageURLSchema = z
@@ -76,6 +78,9 @@ export const SeedanceProI2VSchema = z.object({
 });
 
 export type SeedanceLiteT2VRequest = z.infer<typeof SeedanceLiteT2VSchema>;
+
 export type SeedanceLiteI2VRequest = z.infer<typeof SeedanceLiteI2VSchema>;
+
 export type SeedanceProT2VRequest = z.infer<typeof SeedanceProT2VSchema>;
+
 export type SeedanceProI2VRequest = z.infer<typeof SeedanceProI2VSchema>;

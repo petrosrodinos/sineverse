@@ -17,9 +17,17 @@ export class RenderService {
     }
 
     const entryPoint = path.resolve(process.cwd(), 'remotion', 'index.js');
-    const publicDir = path.resolve(process.cwd(), '..', 'app', 'assets', 'estate-audios');
+
+    const publicDir = path.resolve(
+      process.cwd(),
+      '..',
+      'app',
+      'assets',
+      'estate-audios',
+    );
 
     this.bundleCache = await bundle({ entryPoint, publicDir });
+
     return this.bundleCache;
   }
 
@@ -45,7 +53,9 @@ export class RenderService {
     });
 
     const buffer = await fs.readFile(outputPath);
+
     await fs.unlink(outputPath).catch(() => {});
+
     return buffer;
   }
 }

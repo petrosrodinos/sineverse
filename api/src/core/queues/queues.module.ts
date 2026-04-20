@@ -13,6 +13,7 @@ import { REDIS_OPTIONS } from '../databases/redis/redis.constants';
 
         if (!redisOptions) {
           logger.warn('Redis options not provided, using defaults for BullMQ');
+
           return {
             connection: {
               host: 'localhost',

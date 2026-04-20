@@ -40,8 +40,10 @@ export class CreateImageAdapter {
     data?: any,
   ): Promise<T> {
     const apiKey = this.configService.get<string>('AIMLAPI_KEY');
+
     if (!apiKey) {
       this.logger.error('AIMLAPI_KEY is missing in environment config.');
+
       throw new HttpException(
         'API Configuration Error',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -49,6 +51,7 @@ export class CreateImageAdapter {
     }
 
     const url = `${this.baseUrl}${path}`;
+
     const headers = {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -61,6 +64,7 @@ export class CreateImageAdapter {
           : this.httpService.get<T>(url, { headers });
 
       const response = await firstValueFrom(request$);
+
       return response.data;
     } catch (error: any) {
       throw error; // Rethrow to handle in caller
@@ -70,6 +74,7 @@ export class CreateImageAdapter {
   private handleError(error: any, context: string): never {
     const statusCode =
       error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+
     const errorMessage =
       error.response?.data?.error?.message || error.message || 'Unknown error';
 

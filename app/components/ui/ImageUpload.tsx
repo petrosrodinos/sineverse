@@ -5,6 +5,7 @@ import { Image, Upload, X } from "lucide-react";
 import { Spinner } from "@heroui/spinner";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"] as const;
+
 const ACCEPTED_IMAGE_INPUT = ".jpg,.jpeg,.png";
 
 interface ImageUploadProps {
@@ -30,17 +31,29 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
-  const isAcceptedImageType = useCallback((file: File) => ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]), []);
+  const isAcceptedImageType = useCallback(
+    (file: File) =>
+      ACCEPTED_IMAGE_TYPES.includes(
+        file.type as (typeof ACCEPTED_IMAGE_TYPES)[number],
+      ),
+    [],
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0] && isAcceptedImageType(e.target.files[0])) {
+    if (
+      e.target.files &&
+      e.target.files[0] &&
+      isAcceptedImageType(e.target.files[0])
+    ) {
       onChange?.(e.target.files[0]);
     }
   };
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+
     e.stopPropagation();
+
     if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true);
     } else if (e.type === "dragleave") {
@@ -51,13 +64,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
+
       e.stopPropagation();
+
       setDragActive(false);
-      if (e.dataTransfer.files && e.dataTransfer.files[0] && isAcceptedImageType(e.dataTransfer.files[0])) {
+
+      if (
+        e.dataTransfer.files &&
+        e.dataTransfer.files[0] &&
+        isAcceptedImageType(e.dataTransfer.files[0])
+      ) {
         onChange?.(e.dataTransfer.files[0]);
       }
     },
-    [isAcceptedImageType, onChange]
+    [isAcceptedImageType, onChange],
   );
 
   return (
@@ -79,36 +99,36 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         {value ? (
           <div className="relative w-full h-full aspect-video">
             <img
-              src={value}
               alt="Uploaded"
               className="w-full h-full object-cover"
+              src={value}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <label className="cursor-pointer">
                 <input
-                  type="file"
-                  className="hidden"
                   accept={ACCEPTED_IMAGE_INPUT}
-                  onChange={handleFileChange}
+                  className="hidden"
                   disabled={isLoading}
+                  type="file"
+                  onChange={handleFileChange}
                 />
                 <Button
-                  size="sm"
-                  variant="flat"
-                  className="bg-white/20 text-white backdrop-blur-md"
-                  startContent={<Upload className="size-4" />}
                   as="div"
+                  className="bg-white/20 text-white backdrop-blur-md"
+                  size="sm"
+                  startContent={<Upload className="size-4" />}
+                  variant="flat"
                 >
                   Change
                 </Button>
               </label>
               <Button
-                size="sm"
-                color="danger"
-                variant="flat"
-                className="backdrop-blur-md"
-                onPress={onRemove}
                 isIconOnly
+                className="backdrop-blur-md"
+                color="danger"
+                size="sm"
+                variant="flat"
+                onPress={onRemove}
               >
                 <X className="size-4" />
               </Button>
@@ -117,17 +137,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         ) : (
           <label className="flex flex-col items-center justify-center gap-2 p-6 cursor-pointer w-full h-full">
             <input
-              type="file"
-              className="hidden"
               accept={ACCEPTED_IMAGE_INPUT}
-              onChange={handleFileChange}
+              className="hidden"
               disabled={isLoading}
+              type="file"
+              onChange={handleFileChange}
             />
             <div className="p-3 rounded-full bg-default-100 text-default-500 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
               <Image className="size-6" />
             </div>
             <div className="text-center">
-              <p className="text-sm font-medium">Click to upload or drag and drop</p>
+              <p className="text-sm font-medium">
+                Click to upload or drag and drop
+              </p>
               <p className="text-xs text-default-400">PNG or JPG (max. 5MB)</p>
             </div>
           </label>
@@ -135,7 +157,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
         {isLoading && (
           <div className="absolute inset-0 bg-default-50/80 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
-            <Spinner size="md" color="primary" />
+            <Spinner color="primary" size="md" />
             <p className="text-xs font-medium text-primary">Uploading...</p>
           </div>
         )}

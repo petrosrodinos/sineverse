@@ -80,6 +80,7 @@ export class UsersService {
     }
 
     const isMatch = await bcrypt.compare(dto.current_password, user.password);
+
     if (!isMatch) {
       throw new UnauthorizedException('Current password is incorrect');
     }
@@ -96,10 +97,15 @@ export class UsersService {
 
   async getUsersForAdminDashboard(query: AdminUsersQueryDto) {
     const page = Math.max(1, Number(query.page) || 1);
+
     const limit = Math.min(100, Math.max(1, Number(query.limit) || 20));
+
     const skip = (page - 1) * limit;
+
     const sortBy = query.sort_by ?? 'created_at';
+
     const sortOrder = query.sort_order ?? 'desc';
+
     const search = query.search?.trim();
 
     const where: Prisma.UserWhereInput | undefined = search
@@ -174,22 +180,27 @@ export class UsersService {
 
     if (dto.email !== undefined) {
       const email = dto.email.trim().toLowerCase();
+
       if (!email) {
         throw new BadRequestException('Email cannot be empty');
       }
+
       data.email = email;
     }
 
     if (dto.full_name !== undefined) {
       const fullName = dto.full_name.trim();
+
       if (!fullName) {
         throw new BadRequestException('Full name cannot be empty');
       }
+
       data.full_name = fullName;
     }
 
     if (dto.phone !== undefined) {
       const normalizedPhone = dto.phone ? dto.phone.trim() : null;
+
       data.phone = normalizedPhone || null;
     }
 
@@ -197,16 +208,19 @@ export class UsersService {
       if (!Object.values(AuthRole).includes(dto.role)) {
         throw new BadRequestException('Invalid role');
       }
+
       data.role = dto.role;
     }
 
     if (dto.credits_balance !== undefined) {
       const balance = Number(dto.credits_balance);
+
       if (!Number.isInteger(balance) || balance < 0) {
         throw new BadRequestException(
           'Credits balance must be a non-negative integer',
         );
       }
+
       data.credits_balance = balance;
     }
 
@@ -255,6 +269,7 @@ export class UsersService {
       await this.prisma.user.delete({
         where: { uuid: userUuid },
       });
+
       return { success: true };
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete user', {

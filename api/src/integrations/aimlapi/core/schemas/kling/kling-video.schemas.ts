@@ -51,7 +51,9 @@ const AdvancedCameraControlSchema = z.object({
 });
 
 const UriSchema = z.string().url().or(z.string());
+
 const CFGScaleSchema = z.number().max(1);
+
 const DynamicMasksSchema = z.array(DynamicMaskSchema).max(6);
 
 const SinglePromptSchema = z.object({
@@ -196,18 +198,23 @@ export const KlingVideoV3ImageToVideoSchema = z
 export type KlingVideoV3ImageToVideoRequest = z.infer<
   typeof KlingVideoV3ImageToVideoSchema
 >;
+
 export type KlingVideoV3TextToVideoRequest = z.infer<
   typeof KlingVideoV3TextToVideoSchema
 >;
+
 export type KlingV21TextToVideoRequest = z.infer<
   typeof KlingV21TextToVideoSchema
 >;
+
 export type KlingImageToVideoV21Request = z.infer<
   typeof KlingImageToVideoV21Schema
 >;
+
 export type KlingStandardImageToVideoInput = z.infer<
   typeof KlingStandardImageToVideoSchema
 >;
+
 export type KlingStandardTextToVideoInput = z.infer<
   typeof KlingStandardTextToVideoSchema
 >;

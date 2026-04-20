@@ -6,9 +6,12 @@ export function NoSceneSelected() {
       <div className="bg-primary/10 p-5 rounded-full mb-4 shadow-sm">
         <MousePointerClick className="w-8 h-8 text-primary" />
       </div>
-      <h3 className="text-xl font-semibold text-foreground mb-2">No Scene Selected</h3>
+      <h3 className="text-xl font-semibold text-foreground mb-2">
+        No Scene Selected
+      </h3>
       <p className="text-default-500 max-w-sm text-base">
-        Select a scene from the sidebar on the left to view its details, generate prompt variations, and create videos.
+        Select a scene from the sidebar on the left to view its details,
+        generate prompt variations, and create videos.
       </p>
     </div>
   );

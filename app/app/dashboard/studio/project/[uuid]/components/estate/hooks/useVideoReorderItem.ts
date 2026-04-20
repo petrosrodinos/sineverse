@@ -19,10 +19,14 @@ export function useVideoReorderItem({
     (event: React.DragEvent) => {
       if (!canReorder) {
         event.preventDefault();
+
         return;
       }
+
       setDragIndex(index);
+
       event.dataTransfer.setData("text/plain", String(index));
+
       event.dataTransfer.effectAllowed = "move";
     },
     [canReorder, index, setDragIndex],
@@ -30,19 +34,26 @@ export function useVideoReorderItem({
 
   const handleDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
+
     event.dataTransfer.dropEffect = "move";
   }, []);
 
   const handleDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
+
       const raw = event.dataTransfer.getData("text/plain");
+
       const from = Number.parseInt(raw, 10);
+
       if (Number.isNaN(from)) {
         setDragIndex(null);
+
         return;
       }
+
       onReorder(from, index);
+
       setDragIndex(null);
     },
     [index, onReorder, setDragIndex],

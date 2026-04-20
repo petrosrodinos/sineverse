@@ -8,5 +8,7 @@ export function stripeCommissionPercentFromFeeAndAmount(
     return null;
   }
 
-  return new Prisma.Decimal(feeCents).mul(100).div(balanceTransactionAmountCents);
+  return new Prisma.Decimal(feeCents)
+    .mul(100)
+    .div(balanceTransactionAmountCents);
 }

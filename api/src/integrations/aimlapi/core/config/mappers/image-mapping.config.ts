@@ -7,7 +7,9 @@ export const transformVariationToImageModelPayload = (
 ): any => {
   const buildPrompt = () => {
     const prompt = variation.prompt || variation.prompt_text || '';
+
     const parts = [prompt];
+
     return parts.filter((p) => p.length > 0).join(', ');
   };
 
@@ -20,10 +22,13 @@ export const transformVariationToImageModelPayload = (
   // Kling Image Mappings
   if (model.includes('kling')) {
     const urls = variation.image_urls || [];
+
     const payload = { ...basePayload };
+
     if (urls.length > 0) {
       payload.image_urls = urls;
     }
+
     return payload;
   }
 

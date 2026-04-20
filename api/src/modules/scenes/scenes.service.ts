@@ -35,6 +35,7 @@ export class ScenesService {
       const scenes = await this.findAll(user_uuid, {
         project_uuid: createSceneDto.project_uuid,
       });
+
       const order = scenes.length + 1;
 
       return await this.prisma.scene.create({
@@ -42,6 +43,7 @@ export class ScenesService {
       });
     } catch (error) {
       console.log(error);
+
       throw new InternalServerErrorException('Failed to create scene', {
         cause: error,
       });
@@ -109,6 +111,7 @@ export class ScenesService {
       return scene;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException('Failed to retrieve scene', {
         cause: error,
       });
@@ -135,6 +138,7 @@ export class ScenesService {
   async remove(user_uuid: string, uuid: string) {
     try {
       await this.documentsService.deleteSceneDocuments(uuid);
+
       return await this.prisma.scene.delete({ where: { uuid, user_uuid } });
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete scene', {
@@ -189,6 +193,7 @@ export class ScenesService {
       if (config.enrich_concept) {
         const enrichedConcept =
           await this.aiHelperService.enrichProjectConcept(config);
+
         config.enriched_concept = enrichedConcept.response;
       }
 
@@ -239,6 +244,7 @@ export class ScenesService {
       return newScenes;
     } catch (error) {
       console.log(error);
+
       throw new InternalServerErrorException('Failed to generate ai scenes', {
         cause: error,
       });
@@ -332,6 +338,7 @@ export class ScenesService {
             });
 
             const variationUuids = scene.scene_variations.map((v) => v.uuid);
+
             if (variationUuids.length) {
               await tx.projectAsset.updateMany({
                 where: { scene_variation_uuid: { in: variationUuids } },
@@ -358,12 +365,14 @@ export class ScenesService {
       return createdScenes;
     } catch (error) {
       console.log('error', error);
+
       if (
         error instanceof NotFoundException ||
         error instanceof BadRequestException
       ) {
         throw error;
       }
+
       throw new InternalServerErrorException(
         'Failed to create estate scenes from images',
         { cause: error },
@@ -378,6 +387,7 @@ export class ScenesService {
       return await this.prisma.$transaction(async (tx) => {
         // Step 1: Displacement to temporary high values to avoid unique constraint conflict
         const offset = 10000;
+
         for (const scene of scenes) {
           await tx.scene.update({
             where: { uuid: scene.uuid },
@@ -395,6 +405,7 @@ export class ScenesService {
       });
     } catch (error) {
       console.log(error);
+
       throw new InternalServerErrorException('Failed to reorder scenes', {
         cause: error,
       });

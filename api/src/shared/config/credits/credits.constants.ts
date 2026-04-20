@@ -9,9 +9,8 @@ export const CreditUsageLedgerMetadata = {
 
 export const CreditsConfig = {
   baseMarkupPercent: 0.1,
-  usageAppFeeRate: 4,
   projectTypeMultipliers: {
-    [ProjectType.ESTATE]: 5,
+    [ProjectType.ESTATE]: 4,
     [ProjectType.FILM]: 1.25,
   },
 } as const;

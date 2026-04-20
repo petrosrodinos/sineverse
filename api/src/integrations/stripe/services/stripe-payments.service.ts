@@ -268,6 +268,7 @@ export class StripePaymentsService {
       };
     } catch (error) {
       console.error('Failed to get account charge fees', error);
+
       return {
         fee: 0,
         net: 0,

@@ -1,9 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
-import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+
+import { useMemo } from "react";
+
+import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 type EstateStepperInput = {
   activeStep: WorkflowStep;
@@ -12,9 +14,17 @@ type EstateStepperInput = {
   pendingFilesCount: number;
 };
 
-const STEP_LABELS: readonly { step: WorkflowStep; title: string; subtitle: string }[] = [
+const STEP_LABELS: readonly {
+  step: WorkflowStep;
+  title: string;
+  subtitle: string;
+}[] = [
   { step: 1, title: "Upload Photos", subtitle: "Add listing images" },
-  { step: 2, title: "Generate & Edit Clips", subtitle: "AI clips from your photos" },
+  {
+    step: 2,
+    title: "Generate & Edit Clips",
+    subtitle: "AI clips from your photos",
+  },
   { step: 3, title: "Generate Final Video", subtitle: "Review and render" },
 ];
 
@@ -27,7 +37,9 @@ export function useEstateStepper({
   const uploadsReady = useMemo(
     () =>
       promptImageAssets.length > 0 &&
-      promptImageAssets.every((a) => a.status === ProjectAssetStatuses.COMPLETED),
+      promptImageAssets.every(
+        (a) => a.status === ProjectAssetStatuses.COMPLETED,
+      ),
     [promptImageAssets],
   );
 
@@ -39,10 +51,15 @@ export function useEstateStepper({
   );
 
   const canGoNextFromStep1 = uploadsReady || pendingFilesCount > 0;
+
   const canGoNextFromStep2 = videosReady;
 
   const canGoNext =
-    activeStep === 1 ? canGoNextFromStep1 : activeStep === 2 ? canGoNextFromStep2 : false;
+    activeStep === 1
+      ? canGoNextFromStep1
+      : activeStep === 2
+        ? canGoNextFromStep2
+        : false;
 
   const canGoBack = activeStep > 1;
 

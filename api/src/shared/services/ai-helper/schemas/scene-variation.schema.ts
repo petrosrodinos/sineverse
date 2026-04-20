@@ -76,4 +76,5 @@ export const GenerateAiScenesSchema = z.object({
 export type ProjectAssetVideoSchemaType = z.infer<
   typeof ProjectAssetVideoSchema
 >;
+
 export type GenerateAiScenesSchemaType = z.infer<typeof GenerateAiScenesSchema>;

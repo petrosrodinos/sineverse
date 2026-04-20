@@ -25,7 +25,9 @@ export class CreditsController {
   }
 
   @Get('usage-stats')
-  @ApiOperation({ summary: 'Get total credits used with project-type breakdown' })
+  @ApiOperation({
+    summary: 'Get total credits used with project-type breakdown',
+  })
   getUsageStats(@CurrentUser('uuid') user_uuid: string) {
     return this.creditsService.getUsageStats(user_uuid);
   }
@@ -61,12 +63,10 @@ export class CreditsController {
     @CurrentUser() user: { uuid: string; role: AuthRole },
     @Query() query: AdminPurchasesQueryDto,
   ) {
-    if (
-      user.role === AuthRole.ADMIN ||
-      user.role === AuthRole.SUPER_ADMIN
-    ) {
+    if (user.role === AuthRole.ADMIN || user.role === AuthRole.SUPER_ADMIN) {
       return this.creditsService.getPurchasesForAdminDashboard(query);
     }
+
     return this.creditsService.getPurchases(user.uuid, query.page, query.limit);
   }
 

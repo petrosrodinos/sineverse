@@ -13,12 +13,32 @@ export const ESTATE_TRANSITION_OPTIONS = [
 ] as const;
 
 export const ESTATE_AUDIO_TRACK_OPTIONS = [
-  { id: "minimal_piano", label: "Minimal piano", src: "/estate-audios/minimal-piano.mp3" },
+  {
+    id: "minimal_piano",
+    label: "Minimal piano",
+    src: "/estate-audios/minimal-piano.mp3",
+  },
   { id: "none", label: "No music", src: "" },
-  { id: "soft_ambient", label: "Soft ambient", src: "/estate-audios/soft-ambient.mp3" },
-  { id: "light_upbeat", label: "Light upbeat", src: "/estate-audios/light-upbeat.mp3" },
-  { id: "cinematic_pad", label: "Cinematic pad", src: "/estate-audios/cinematic-pad.mp3" },
-  { id: "nostalgic_soft", label: "Nostalgic soft", src: "/estate-audios/nostalgic-soft.mp3" },
+  {
+    id: "soft_ambient",
+    label: "Soft ambient",
+    src: "/estate-audios/soft-ambient.mp3",
+  },
+  {
+    id: "light_upbeat",
+    label: "Light upbeat",
+    src: "/estate-audios/light-upbeat.mp3",
+  },
+  {
+    id: "cinematic_pad",
+    label: "Cinematic pad",
+    src: "/estate-audios/cinematic-pad.mp3",
+  },
+  {
+    id: "nostalgic_soft",
+    label: "Nostalgic soft",
+    src: "/estate-audios/nostalgic-soft.mp3",
+  },
 ] as const;
 
 export const ESTATE_VIDEO_MODEL_OPTIONS = [
@@ -53,7 +73,10 @@ export const ESTATE_VIDEO_MODEL_OPTIONS = [
     price: 0.104,
   },
 ] as const;
-export type EstateVideoModelOption = (typeof ESTATE_VIDEO_MODEL_OPTIONS)[number];
+
+export type EstateVideoModelOption =
+  (typeof ESTATE_VIDEO_MODEL_OPTIONS)[number];
+
 export type EstateVideoModelId = EstateVideoModelOption["id"];
 
 export const ESTATE_CAPTION_POSITION_OPTIONS = [

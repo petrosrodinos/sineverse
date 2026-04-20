@@ -31,4 +31,5 @@ export const Imagen4Schema = z.object({
 });
 
 export type Imagen4Input = z.infer<typeof Imagen4Schema>;
+
 export type Imagen4FastInput = z.infer<typeof Imagen4FastSchema>;

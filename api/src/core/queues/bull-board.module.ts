@@ -17,6 +17,7 @@ import { VIDEO_GENERATION_QUEUE } from '@/modules/project-assets/queues/video.co
       inject: [getQueueToken(VIDEO_GENERATION_QUEUE)],
       useFactory: (videoGenerationQueue: Queue) => {
         const serverAdapter = new ExpressAdapter();
+
         serverAdapter.setBasePath('/admin/queues');
 
         createBullBoard({

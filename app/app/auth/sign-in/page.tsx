@@ -1,6 +1,7 @@
 import React from "react";
-import { SignInForm } from "./components/SignInForm";
 import { Metadata } from "next";
+
+import { SignInForm } from "./components/SignInForm";
 
 export const metadata: Metadata = {
   title: "Sign In",

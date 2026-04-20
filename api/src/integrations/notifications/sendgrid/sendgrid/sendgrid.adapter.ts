@@ -16,8 +16,10 @@ export class SendGridAdapter {
 
   constructor(private sendgridConfig: SendgridConfig) {
     this.sendgridMailClient = this.sendgridConfig.getSendgridClient();
+
     this.sendgridMarketingClient =
       this.sendgridConfig.getSendgridMarketingClient();
+
     this.emailFromAddresses = EmailConfig.email_addresses;
   }
 
@@ -36,9 +38,11 @@ export class SendGridAdapter {
         template_id: create_email.template_id,
         dynamic_template_data: create_email.dynamic_template_data,
       };
+
       return await this.sendgridMailClient.send(msg);
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }
@@ -52,9 +56,11 @@ export class SendGridAdapter {
       };
 
       const response = await this.sendgridMarketingClient.request(request);
+
       return response[0].body;
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }
@@ -65,10 +71,13 @@ export class SendGridAdapter {
         url: '/v3/marketing/lists',
         method: 'GET',
       };
+
       const response = await this.sendgridMarketingClient.request(request);
+
       return response[0].body.result;
     } catch (error) {
       this.logger.error('Error fetching lists:', error);
+
       throw new Error('Failed to get lists');
     }
   }
@@ -92,9 +101,11 @@ export class SendGridAdapter {
       };
 
       const response = await this.sendgridMarketingClient.request(request);
+
       return response;
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }

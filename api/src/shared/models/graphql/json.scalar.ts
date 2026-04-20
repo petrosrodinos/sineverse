@@ -17,14 +17,19 @@ export class JSONScalar {
     switch (ast.kind) {
       case Kind.STRING:
         return ast.value;
+
       case Kind.INT:
         return parseInt(ast.value, 10);
+
       case Kind.FLOAT:
         return parseFloat(ast.value);
+
       case Kind.BOOLEAN:
         return ast.value;
+
       case Kind.NULL:
         return null;
+
       default:
         return null;
     }

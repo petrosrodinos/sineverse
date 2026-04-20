@@ -3,16 +3,40 @@
 import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Chip } from "@heroui/chip";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 import { Input } from "@heroui/input";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
 import { MoreHorizontal, Search } from "lucide-react";
-import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
-import { useAdminUsers, useDeleteAdminUser, useUpdateAdminUser } from "@/features/admin/hooks/use-admin";
-import { AdminUserRow, AdminUsersQuery, UpdateAdminUserPayload } from "@/features/admin/interfaces/admin.interfaces";
-import { RoleType, RoleTypes } from "@/features/user/interfaces/user.interfaces";
+
 import { AdminDataTable } from "./AdminDataTable";
+
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import {
+  useAdminUsers,
+  useDeleteAdminUser,
+  useUpdateAdminUser,
+} from "@/features/admin/hooks/use-admin";
+import {
+  AdminUserRow,
+  AdminUsersQuery,
+  UpdateAdminUserPayload,
+} from "@/features/admin/interfaces/admin.interfaces";
+import {
+  RoleType,
+  RoleTypes,
+} from "@/features/user/interfaces/user.interfaces";
 
 type AdminUsersTabProps = {
   isActive: boolean;
@@ -34,10 +58,15 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
     sort_by: "created_at",
     sort_order: "desc",
   });
+
   const [usersSearchInput, setUsersSearchInput] = useState("");
+
   const [editingUser, setEditingUser] = useState<AdminUserRow | null>(null);
+
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
   const [userToDelete, setUserToDelete] = useState<AdminUserRow | null>(null);
+
   const [editForm, setEditForm] = useState<UpdateAdminUserPayload>({
     email: "",
     full_name: "",
@@ -46,26 +75,37 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
     credits_balance: 0,
   });
 
-  const { data: usersData, isLoading: usersLoading } = useAdminUsers(usersQuery, { enabled: isActive });
-  const { mutate: updateUser, isPending: isUpdatingUser } = useUpdateAdminUser();
-  const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteAdminUser();
+  const { data: usersData, isLoading: usersLoading } = useAdminUsers(
+    usersQuery,
+    { enabled: isActive },
+  );
+
+  const { mutate: updateUser, isPending: isUpdatingUser } =
+    useUpdateAdminUser();
+
+  const { mutate: deleteUser, isPending: isDeletingUser } =
+    useDeleteAdminUser();
 
   const userControls = (
     <div className="grid w-full min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 sm:items-end lg:flex lg:w-auto lg:min-w-0 lg:flex-1 lg:flex-wrap lg:justify-end lg:gap-2">
       <Input
-        value={usersSearchInput}
-        onValueChange={setUsersSearchInput}
+        className="min-w-0 sm:col-span-2 lg:max-w-xs lg:flex-1"
         placeholder="Search user id, name, or email"
         startContent={<Search className="size-4 text-default-400" />}
-        className="min-w-0 sm:col-span-2 lg:max-w-xs lg:flex-1"
+        value={usersSearchInput}
+        onValueChange={setUsersSearchInput}
       />
       <Select
         aria-label="Sort users by"
+        className="min-w-0 w-full sm:min-w-0 lg:w-44"
         selectedKeys={[usersQuery.sort_by ?? "created_at"]}
         onSelectionChange={(keys) =>
-          setUsersQuery((prev) => ({ ...prev, page: 1, sort_by: Array.from(keys)[0] as AdminUsersQuery["sort_by"] }))
+          setUsersQuery((prev) => ({
+            ...prev,
+            page: 1,
+            sort_by: Array.from(keys)[0] as AdminUsersQuery["sort_by"],
+          }))
         }
-        className="min-w-0 w-full sm:min-w-0 lg:w-44"
       >
         <SelectItem key="created_at">Newest</SelectItem>
         <SelectItem key="full_name">Name</SelectItem>
@@ -74,8 +114,8 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
         <SelectItem key="credits_balance">Credit Balance</SelectItem>
       </Select>
       <Button
-        variant="flat"
         className="w-full sm:w-auto"
+        variant="flat"
         onPress={() =>
           setUsersQuery((prev) => ({
             ...prev,
@@ -88,7 +128,13 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
       </Button>
       <Button
         className="w-full sm:col-span-2 sm:w-auto lg:col-span-1"
-        onPress={() => setUsersQuery((prev) => ({ ...prev, page: 1, search: usersSearchInput.trim() || undefined }))}
+        onPress={() =>
+          setUsersQuery((prev) => ({
+            ...prev,
+            page: 1,
+            search: usersSearchInput.trim() || undefined,
+          }))
+        }
       >
         Search
       </Button>
@@ -97,6 +143,7 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
 
   const openEditModal = (user: AdminUserRow) => {
     setEditingUser(user);
+
     setEditForm({
       email: user.email,
       full_name: user.full_name,
@@ -114,20 +161,24 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
     if (!editingUser) {
       return;
     }
+
     updateUser(
       {
         userUuid: editingUser.uuid,
         payload: {
           ...editForm,
           credits_balance: Number(editForm.credits_balance) || 0,
-          phone: editForm.phone && editForm.phone.trim().length ? editForm.phone : null,
+          phone:
+            editForm.phone && editForm.phone.trim().length
+              ? editForm.phone
+              : null,
         },
       },
       {
         onSuccess: () => {
           closeEditModal();
         },
-      }
+      },
     );
   };
 
@@ -135,9 +186,11 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
     if (!userToDelete) {
       return;
     }
+
     deleteUser(userToDelete.uuid, {
       onSuccess: () => {
         setIsDeleteConfirmOpen(false);
+
         setUserToDelete(null);
       },
     });
@@ -146,18 +199,15 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
   return (
     <div className="mt-4">
       <AdminDataTable<AdminUserRow>
-        title="Users"
         columns={userColumns}
-        rows={usersData?.items ?? []}
-        isLoading={usersLoading}
-        page={usersData?.page ?? usersQuery.page ?? 1}
-        total={usersData?.total ?? 0}
-        limit={usersData?.limit ?? usersQuery.limit ?? 10}
         controls={userControls}
         emptyContent="No users found."
-        onPageChange={(page) => setUsersQuery((prev) => ({ ...prev, page }))}
+        isLoading={usersLoading}
+        limit={usersData?.limit ?? usersQuery.limit ?? 10}
+        page={usersData?.page ?? usersQuery.page ?? 1}
         renderCell={(row, columnKey) => {
           if (columnKey === "uuid") return row.uuid;
+
           if (columnKey === "identity") {
             return (
               <div className="flex flex-col">
@@ -166,22 +216,29 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
               </div>
             );
           }
+
           if (columnKey === "role") {
             return <Chip variant="flat">{row.role}</Chip>;
           }
+
           if (columnKey === "tokens") {
             return (
               <div className="flex flex-col">
-                <span className="font-medium">{row.credits_balance.toLocaleString()} balance</span>
-                <span className="text-xs text-default-500">{row.token_usage.toLocaleString()} used</span>
+                <span className="font-medium">
+                  {row.credits_balance.toLocaleString()} balance
+                </span>
+                <span className="text-xs text-default-500">
+                  {row.token_usage.toLocaleString()} used
+                </span>
               </div>
             );
           }
+
           if (columnKey === "actions") {
             return (
               <Dropdown>
                 <DropdownTrigger>
-                  <Button isIconOnly variant="light" size="sm">
+                  <Button isIconOnly size="sm" variant="light">
                     <MoreHorizontal className="size-4" />
                   </Button>
                 </DropdownTrigger>
@@ -195,6 +252,7 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
                     color="danger"
                     onPress={() => {
                       setUserToDelete(row);
+
                       setIsDeleteConfirmOpen(true);
                     }}
                   >
@@ -204,36 +262,59 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
               </Dropdown>
             );
           }
+
           return new Date(row.created_at).toLocaleString();
         }}
+        rows={usersData?.items ?? []}
+        title="Users"
+        total={usersData?.total ?? 0}
+        onPageChange={(page) => setUsersQuery((prev) => ({ ...prev, page }))}
       />
 
-      <Modal isOpen={Boolean(editingUser)} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
+      <Modal
+        isOpen={Boolean(editingUser)}
+        onOpenChange={(isOpen) => !isOpen && closeEditModal()}
+      >
         <ModalContent>
           <ModalHeader>Edit User</ModalHeader>
           <ModalBody>
             <div className="grid gap-3">
-              <Input label="User ID" value={editingUser?.uuid ?? ""} isDisabled />
+              <Input
+                isDisabled
+                label="User ID"
+                value={editingUser?.uuid ?? ""}
+              />
               <Input
                 label="Full Name"
                 value={editForm.full_name}
-                onValueChange={(value) => setEditForm((prev) => ({ ...prev, full_name: value }))}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, full_name: value }))
+                }
               />
               <Input
                 label="Email"
                 type="email"
                 value={editForm.email}
-                onValueChange={(value) => setEditForm((prev) => ({ ...prev, email: value }))}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, email: value }))
+                }
               />
               <Input
                 label="Phone"
                 value={editForm.phone ?? ""}
-                onValueChange={(value) => setEditForm((prev) => ({ ...prev, phone: value || null }))}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, phone: value || null }))
+                }
               />
               <Select
                 label="Role"
                 selectedKeys={[editForm.role]}
-                onSelectionChange={(keys) => setEditForm((prev) => ({ ...prev, role: Array.from(keys)[0] as RoleType }))}
+                onSelectionChange={(keys) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    role: Array.from(keys)[0] as RoleType,
+                  }))
+                }
               >
                 <SelectItem key={RoleTypes.USER}>USER</SelectItem>
                 <SelectItem key={RoleTypes.ADMIN}>ADMIN</SelectItem>
@@ -244,7 +325,12 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
                 label="Credits Balance"
                 type="number"
                 value={String(editForm.credits_balance)}
-                onValueChange={(value) => setEditForm((prev) => ({ ...prev, credits_balance: Number(value) || 0 }))}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    credits_balance: Number(value) || 0,
+                  }))
+                }
               />
             </div>
           </ModalBody>
@@ -252,7 +338,11 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
             <Button variant="flat" onPress={closeEditModal}>
               Cancel
             </Button>
-            <Button color="primary" onPress={onSaveUser} isLoading={isUpdatingUser}>
+            <Button
+              color="primary"
+              isLoading={isUpdatingUser}
+              onPress={onSaveUser}
+            >
               Save Changes
             </Button>
           </ModalFooter>
@@ -260,17 +350,18 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
       </Modal>
 
       <ConfirmationModal
+        confirmColor="danger"
+        confirmText="Delete User"
+        description={`Delete ${userToDelete?.email ?? "this user"} and all associated projects/assets from cloud storage? This action cannot be undone.`}
+        isLoading={isDeletingUser}
         isOpen={isDeleteConfirmOpen}
+        title="Delete User"
         onClose={() => {
           setIsDeleteConfirmOpen(false);
+
           setUserToDelete(null);
         }}
         onConfirm={onDeleteUser}
-        title="Delete User"
-        description={`Delete ${userToDelete?.email ?? "this user"} and all associated projects/assets from cloud storage? This action cannot be undone.`}
-        confirmText="Delete User"
-        isLoading={isDeletingUser}
-        confirmColor="danger"
       />
     </div>
   );

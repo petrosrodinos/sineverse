@@ -10,21 +10,27 @@ export default function NotFound() {
           <FileQuestion className="w-16 h-16 text-default-500" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-6xl font-bold tracking-tight text-primary">404</h1>
-          <h2 className="text-2xl font-semibold tracking-tight">Page not found</h2>
+          <h1 className="text-6xl font-bold tracking-tight text-primary">
+            404
+          </h1>
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Page not found
+          </h2>
           <p className="text-default-500 text-lg">
-            Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been removed, renamed, or didn&apos;t exist in the first place.
+            Sorry, we couldn&apos;t find the page you&apos;re looking for. It
+            might have been removed, renamed, or didn&apos;t exist in the first
+            place.
           </p>
         </div>
         <div className="flex w-full flex-col sm:flex-row gap-4 pt-4 justify-center">
           <Button
             as={Link}
+            className="w-full sm:w-auto font-medium"
+            color="primary"
             href="/"
             size="lg"
-            color="primary"
-            variant="shadow"
             startContent={<Home className="w-5 h-5" />}
-            className="w-full sm:w-auto font-medium"
+            variant="shadow"
           >
             Go to Home
           </Button>

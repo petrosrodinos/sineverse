@@ -56,6 +56,7 @@ export class ProjectAssetsService {
       };
     } catch (error) {
       this.logger.error(`Failed to create project asset: ${error.message}`);
+
       throw new InternalServerErrorException('Failed to create project asset', {
         cause: error,
       });
@@ -74,6 +75,7 @@ export class ProjectAssetsService {
       } = query;
 
       const page = Number(rawPage) || 1;
+
       const limit = Number(rawLimit) || 10;
 
       const where: any = {
@@ -125,6 +127,7 @@ export class ProjectAssetsService {
       };
     } catch (error) {
       this.logger.error(`Failed to retrieve project assets: ${error.message}`);
+
       throw new InternalServerErrorException(
         'Failed to retrieve project assets',
         { cause: error },
@@ -165,7 +168,9 @@ export class ProjectAssetsService {
       return asset;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       this.logger.error(`Failed to retrieve project asset: ${error.message}`);
+
       throw new InternalServerErrorException(
         'Failed to retrieve project asset',
         { cause: error },
@@ -176,6 +181,7 @@ export class ProjectAssetsService {
   async remove(user_uuid: string, uuid: string) {
     try {
       const asset = await this.findOne(user_uuid, uuid);
+
       const documentUuid = asset.document_uuid;
 
       const deleted = await this.prisma.projectAsset.delete({
@@ -189,7 +195,9 @@ export class ProjectAssetsService {
       return deleted;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       this.logger.error(`Failed to delete project asset: ${error.message}`);
+
       throw new InternalServerErrorException('Failed to delete project asset', {
         cause: error,
       });
@@ -226,7 +234,9 @@ export class ProjectAssetsService {
       });
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       this.logger.error(`Failed to select project asset: ${error.message}`);
+
       throw new InternalServerErrorException('Failed to select project asset', {
         cause: error,
       });
@@ -264,6 +274,7 @@ export class ProjectAssetsService {
       if (!variation) throw new NotFoundException('Scene variation not found');
 
       const { prompt_image_uuids, ...metadata } = dto;
+
       const projectAsset = await this.prisma.projectAsset.create({
         data: {
           user_uuid,
@@ -296,7 +307,9 @@ export class ProjectAssetsService {
       return projectAsset;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       if (error instanceof HttpException) throw error;
+
       throw new InternalServerErrorException(
         'Failed to trigger video generation',
         { cause: error },
@@ -351,6 +364,7 @@ export class ProjectAssetsService {
 
       for (const scene of scenes) {
         const variation = scene.scene_variations[0];
+
         if (!variation) {
           continue;
         }
@@ -358,6 +372,7 @@ export class ProjectAssetsService {
         const promptAsset = variation.project_assets.find(
           (a) => a.role === AssetRole.PROMPT_IMAGE,
         );
+
         if (!promptAsset) {
           continue;
         }
@@ -389,22 +404,29 @@ export class ProjectAssetsService {
         if (!row.scene_variation_uuid) {
           continue;
         }
+
         const list = videosByVariation.get(row.scene_variation_uuid) ?? [];
+
         list.push({ uuid: row.uuid, status: row.status });
+
         videosByVariation.set(row.scene_variation_uuid, list);
       }
 
       const resolveExistingUuid = (variationUuid: string): string | null => {
         const list = videosByVariation.get(variationUuid) ?? [];
+
         const active = list.find(
           (a) =>
             a.status === AssetStatus.PENDING ||
             a.status === AssetStatus.PROCESSING,
         );
+
         if (active) {
           return active.uuid;
         }
+
         const completed = list.find((a) => a.status === AssetStatus.COMPLETED);
+
         return completed?.uuid ?? null;
       };
 
@@ -414,15 +436,19 @@ export class ProjectAssetsService {
 
       const resolved: Resolved[] = tasks.map((task) => {
         const uuid = resolveExistingUuid(task.variation.uuid);
+
         if (uuid) {
           return { kind: 'existing', uuid };
         }
+
         return { kind: 'create', task };
       });
 
       const createCount = resolved.filter((r) => r.kind === 'create').length;
+
       const walkthroughRequiredCredits =
         createCount * estateWalkthroughVideoConfig.creditCost;
+
       await this.creditsService.assertSufficientCredits(
         user_uuid,
         walkthroughRequiredCredits,
@@ -445,8 +471,12 @@ export class ProjectAssetsService {
               scene_variation_uuid: r.task.variation.uuid,
               ai_model:
                 ai_model ??
-                ((r.task.promptAsset.metadata as { walkthrough_ai_model?: string } | null)
-                  ?.walkthrough_ai_model ?? estateWalkthroughVideoConfig.model),
+                (
+                  r.task.promptAsset.metadata as {
+                    walkthrough_ai_model?: string;
+                  } | null
+                )?.walkthrough_ai_model ??
+                estateWalkthroughVideoConfig.model,
               duration_sec: estateWalkthroughVideoConfig.durationSec,
               prompt_text: estateWalkthroughVideoConfig.promptText,
               workflow_source: estateWalkthroughVideoConfig.workflowSource,
@@ -457,10 +487,12 @@ export class ProjectAssetsService {
       );
 
       let createdIndex = 0;
+
       const createdUuids = resolved.map((r) => {
         if (r.kind === 'existing') {
           return r.uuid;
         }
+
         return created[createdIndex++].uuid;
       });
 
@@ -484,8 +516,11 @@ export class ProjectAssetsService {
       );
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       if (error instanceof HttpException) throw error;
+
       this.logger.error(`createEstateWalkthroughVideos: ${error?.message}`);
+
       throw new InternalServerErrorException(
         'Failed to create estate walkthrough videos',
         { cause: error },
@@ -503,7 +538,9 @@ export class ProjectAssetsService {
       if (!variation) throw new NotFoundException('Scene variation not found');
 
       const filename = `prompt-image-${uuid}-${Date.now()}`;
+
       const processedBuffer = await ensureMinDimensions(file.buffer);
+
       const documentUuid = await this.documentsService.saveImageFromBuffer(
         processedBuffer,
         filename,
@@ -526,6 +563,7 @@ export class ProjectAssetsService {
       return asset;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException('Failed to upload prompt image', {
         cause: error,
       });
@@ -549,6 +587,7 @@ export class ProjectAssetsService {
         if (promptImage.document_uuid) {
           await this.documentsService.deleteDocument(promptImage.document_uuid);
         }
+
         await this.prisma.projectAsset.delete({
           where: { uuid: promptImage.uuid },
         });
@@ -557,6 +596,7 @@ export class ProjectAssetsService {
       return variation;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException('Failed to remove prompt image', {
         cause: error,
       });
@@ -581,6 +621,7 @@ export class ProjectAssetsService {
 
       if (file) {
         const filename = `temp-ref-image-${uuid}-${Date.now()}`;
+
         const processedBuffer = await ensureMinDimensions(file.buffer);
 
         temporaryImageUuid = await this.documentsService.saveImageFromBuffer(
@@ -592,8 +633,10 @@ export class ProjectAssetsService {
         const tempDoc = await this.prisma.document.findUnique({
           where: { uuid: temporaryImageUuid },
         });
+
         if (tempDoc) {
           if (!generateImageDto.image_urls) generateImageDto.image_urls = [];
+
           generateImageDto.image_urls.push(tempDoc.url);
         }
       }
@@ -629,7 +672,9 @@ export class ProjectAssetsService {
       this.logger.error(
         `Failed to initiate image generation for variation ${uuid}: ${error.message}`,
       );
+
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException(
         'Failed to initiate image generation',
         { cause: error },
@@ -662,7 +707,9 @@ export class ProjectAssetsService {
       if (!projectAsset) throw new NotFoundException('Project asset not found');
 
       const scene = projectAsset.scene;
+
       const project = projectAsset.project;
+
       const variation = projectAsset.scene_variation;
 
       const metadata: any = projectAsset.metadata || {};
@@ -693,7 +740,9 @@ export class ProjectAssetsService {
       return newProjectAsset;
     } catch (error) {
       this.logger.error(error);
+
       if (error instanceof NotFoundException) throw error;
+
       throw new InternalServerErrorException(
         'Failed to enrich scene variation',
         { cause: error },
@@ -729,11 +778,13 @@ export class ProjectAssetsService {
       }
 
       const imageUrl = response.data[0].url;
+
       if (!imageUrl) {
         throw new Error('Image URL is missing in the response');
       }
 
       const filename = `generated-image-${uuid}-${Date.now()}.png`;
+
       const documentUuid = await this.documentsService.saveImageFromUrl(
         imageUrl,
         filename,
@@ -757,8 +808,10 @@ export class ProjectAssetsService {
     } catch (err) {
       let errorMessage =
         err.message || 'Unknown error occurred during generation';
+
       if (err instanceof HttpException) {
         const response = err.getResponse();
+
         if (typeof response === 'object' && response !== null) {
           errorMessage =
             (response as any).details ||

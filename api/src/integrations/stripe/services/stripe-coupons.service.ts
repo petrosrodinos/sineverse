@@ -211,6 +211,7 @@ export class StripeCouponsService {
           stripeAccount: stripe_account_id ?? undefined,
         },
       );
+
       return this.mapPromotionCode(promo);
     } catch (error) {
       throw new BadRequestException(
@@ -259,6 +260,7 @@ export class StripeCouponsService {
           stripeAccount: stripe_account_id ?? undefined,
         },
       );
+
       return this.mapPromotionCode(promo);
     } catch (error) {
       throw new BadRequestException(
@@ -277,6 +279,7 @@ export class StripeCouponsService {
         { active: false },
         { stripeAccount: stripe_account_id ?? undefined },
       );
+
       return this.mapPromotionCode(promo);
     } catch (error) {
       throw new BadRequestException(
@@ -287,12 +290,14 @@ export class StripeCouponsService {
 
   private mapPromotionCode(promo: Stripe.PromotionCode): StripePromotionCode {
     let couponId = '';
+
     if (
       promo.promotion &&
       typeof promo.promotion === 'object' &&
       'coupon' in promo.promotion
     ) {
       const coupon = promo.promotion.coupon;
+
       couponId = typeof coupon === 'string' ? coupon : coupon.id;
     }
 

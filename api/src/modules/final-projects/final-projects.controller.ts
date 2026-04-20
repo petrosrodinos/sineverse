@@ -24,7 +24,10 @@ import { ZodValidationPipe } from '@/shared/pipes/zod.validation.pipe';
 import { FinalProjectsService } from './final-projects.service';
 import { CreateFinalProjectDto } from './dto/create-final-project.dto';
 import { UpdateFinalProjectDto } from './dto/update-final-project.dto';
-import { FinalProjectQuerySchema, FinalProjectQueryDto } from './dto/query-final-project.dto';
+import {
+  FinalProjectQuerySchema,
+  FinalProjectQueryDto,
+} from './dto/query-final-project.dto';
 import type { Response } from 'express';
 
 @ApiTags('Final Projects')
@@ -55,7 +58,8 @@ export class FinalProjectsController {
   })
   findAll(
     @CurrentUser('uuid') uuid: string,
-    @Query(new ZodValidationPipe(FinalProjectQuerySchema)) query: FinalProjectQueryDto,
+    @Query(new ZodValidationPipe(FinalProjectQuerySchema))
+    query: FinalProjectQueryDto,
   ) {
     return this.finalProjectsService.findAll(uuid, query);
   }
@@ -110,7 +114,10 @@ export class FinalProjectsController {
   @ApiResponse({ status: 201, description: 'Render job queued successfully.' })
   @ApiResponse({ status: 404, description: 'Final project not found.' })
   @ApiResponse({ status: 409, description: 'Render already in progress.' })
-  startRender(@CurrentUser('uuid') user_uuid: string, @Param('uuid') uuid: string) {
+  startRender(
+    @CurrentUser('uuid') user_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
     return this.finalProjectsService.startRender(user_uuid, uuid);
   }
 
@@ -125,18 +132,24 @@ export class FinalProjectsController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<StreamableFile> {
     const file = await this.finalProjectsService.downloadVideo(user_uuid, uuid);
+
     res.setHeader('Content-Type', file.mimetype);
+
     res.setHeader(
       'Content-Disposition',
       `attachment; filename="${file.filename}"`,
     );
+
     return new StreamableFile(file.buffer);
   }
 
   @Get(':uuid/download/:documentUuid')
   @ApiOperation({ summary: 'Download a specific rendered video from history' })
   @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
-  @ApiParam({ name: 'documentUuid', description: 'The UUID of the rendered video document' })
+  @ApiParam({
+    name: 'documentUuid',
+    description: 'The UUID of the rendered video document',
+  })
   @ApiResponse({ status: 200, description: 'Rendered video downloaded.' })
   @ApiResponse({ status: 404, description: 'Rendered video not found.' })
   async downloadVideoByDocument(
@@ -150,18 +163,24 @@ export class FinalProjectsController {
       uuid,
       documentUuid,
     );
+
     res.setHeader('Content-Type', file.mimetype);
+
     res.setHeader(
       'Content-Disposition',
       `attachment; filename="${file.filename}"`,
     );
+
     return new StreamableFile(file.buffer);
   }
 
   @Delete(':uuid/videos/:documentUuid')
   @ApiOperation({ summary: 'Delete a specific rendered video from history' })
   @ApiParam({ name: 'uuid', description: 'The UUID of the final project' })
-  @ApiParam({ name: 'documentUuid', description: 'The UUID of the rendered video document' })
+  @ApiParam({
+    name: 'documentUuid',
+    description: 'The UUID of the rendered video document',
+  })
   @ApiResponse({ status: 200, description: 'Rendered video deleted.' })
   @ApiResponse({ status: 404, description: 'Rendered video not found.' })
   deleteRenderedVideo(

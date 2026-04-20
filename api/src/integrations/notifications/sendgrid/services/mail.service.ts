@@ -13,6 +13,7 @@ export class SendgridMailService {
       return await this.sendgridAdapter.sendEmail(create_email);
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }
@@ -22,9 +23,11 @@ export class SendgridMailService {
       const promises = create_emails.map(async (create_email) => {
         return await this.sendEmail(create_email);
       });
+
       return await Promise.all(promises);
     } catch (error) {
       this.logger.error(error);
+
       throw new Error(error);
     }
   }

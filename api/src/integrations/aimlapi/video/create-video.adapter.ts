@@ -65,11 +65,14 @@ export class CreateVideoAdapter {
 
   private cleanPayload(obj: any): any {
     const clean: any = {};
+
     Object.keys(obj).forEach((key) => {
       const value = obj[key];
+
       if (value !== undefined && value !== null) {
         if (typeof value === 'object' && !Array.isArray(value)) {
           const nested = this.cleanPayload(value);
+
           if (Object.keys(nested).length > 0) {
             clean[key] = nested;
           }
@@ -82,6 +85,7 @@ export class CreateVideoAdapter {
         }
       }
     });
+
     return clean;
   }
 
@@ -92,8 +96,10 @@ export class CreateVideoAdapter {
     timeoutMs?: number,
   ): Promise<T> {
     const apiKey = this.configService.get<string>('AIMLAPI_KEY');
+
     if (!apiKey) {
       this.logger.error('AIMLAPI_KEY is missing in environment config.');
+
       throw new HttpException(
         'API Configuration Error',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -101,6 +107,7 @@ export class CreateVideoAdapter {
     }
 
     const url = `${this.baseUrl}${path}`;
+
     const headers = {
       Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
@@ -113,6 +120,7 @@ export class CreateVideoAdapter {
           : this.httpService.get<T>(url, { headers, timeout: timeoutMs });
 
       const response = await firstValueFrom(request$);
+
       return response.data;
     } catch (error: any) {
       throw error; // Rethrow to handle in caller
@@ -122,6 +130,7 @@ export class CreateVideoAdapter {
   private handleProviderError(error: any, context: string): never {
     const statusCode =
       error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+
     const errorMessage =
       error.response?.data?.error?.message || error.message || 'Unknown error';
 

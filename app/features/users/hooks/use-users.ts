@@ -1,8 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addToast } from "@heroui/toast";
-import { getCurrentUserProfile, updateCurrentUserPassword, updateCurrentUserProfile } from "../services/users.services";
-import { UpdatePasswordPayload, UpdateProfilePayload } from "../interfaces/users.interfaces";
+
+import {
+  getCurrentUserProfile,
+  updateCurrentUserPassword,
+  updateCurrentUserProfile,
+} from "../services/users.services";
+import {
+  UpdatePasswordPayload,
+  UpdateProfilePayload,
+} from "../interfaces/users.interfaces";
 
 const QueryKeys = {
   me: "users-me",
@@ -19,9 +27,11 @@ export const useUpdateCurrentUserProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: UpdateProfilePayload) => updateCurrentUserProfile(payload),
+    mutationFn: (payload: UpdateProfilePayload) =>
+      updateCurrentUserProfile(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [QueryKeys.me] });
+
       addToast({ title: "Username updated", severity: "success" });
     },
     onError: (error: any) => {
@@ -36,7 +46,8 @@ export const useUpdateCurrentUserProfile = () => {
 
 export const useUpdateCurrentUserPassword = () => {
   return useMutation({
-    mutationFn: (payload: UpdatePasswordPayload) => updateCurrentUserPassword(payload),
+    mutationFn: (payload: UpdatePasswordPayload) =>
+      updateCurrentUserPassword(payload),
     onSuccess: () => {
       addToast({ title: "Password updated", severity: "success" });
     },

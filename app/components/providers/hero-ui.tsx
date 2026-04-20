@@ -1,9 +1,9 @@
-import {HeroUIProvider} from '@heroui/react'
-import {ToastProvider} from "@heroui/toast";
+import { HeroUIProvider } from "@heroui/react";
+import { ToastProvider } from "@heroui/toast";
 import { useRouter } from "next/navigation";
 
-interface HeroUiProvidersProps{
-      children: React.ReactNode;
+interface HeroUiProvidersProps {
+  children: React.ReactNode;
 }
 
 declare module "@react-types/shared" {
@@ -14,7 +14,7 @@ declare module "@react-types/shared" {
   }
 }
 
-export function HeroUiProviders({children}: HeroUiProvidersProps) {
+export function HeroUiProviders({ children }: HeroUiProvidersProps) {
   const router = useRouter();
 
   return (
@@ -22,5 +22,5 @@ export function HeroUiProviders({children}: HeroUiProvidersProps) {
       <ToastProvider />
       {children}
     </HeroUIProvider>
-  )
+  );
 }

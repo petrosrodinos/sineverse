@@ -4,22 +4,30 @@ import { Skeleton } from "@heroui/skeleton";
 import { Button } from "@heroui/button";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useEnrichProject, useProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
-import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
 import { Chip } from "@heroui/chip";
-import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
 import { Accordion, AccordionItem } from "@heroui/accordion";
 import { Lightbulb } from "lucide-react";
 
-interface IdeaSectionProps {
-}
+import {
+  useEnrichProject,
+  useProject,
+  useUpdateProject,
+} from "@/features/projects/hooks/use-projects";
+import { EnrichPromptPopover } from "@/components/ui/enrich-prompt-popover";
+import { ExpandableTextarea } from "@/components/ui/ExpandableTextarea";
+
+interface IdeaSectionProps {}
 
 export function IdeaSection({}: IdeaSectionProps) {
   const params = useParams();
+
   const uuid = params.uuid as string;
+
   const { data: project, isLoading } = useProject(uuid);
-  const {mutate, isPending} = useEnrichProject(uuid);
-  const {mutate: updateProject, isPending: isUpdating} = useUpdateProject();
+
+  const { mutate, isPending } = useEnrichProject(uuid);
+
+  const { mutate: updateProject, isPending: isUpdating } = useUpdateProject();
 
   const [localConcept, setLocalConcept] = useState("");
 
@@ -30,12 +38,12 @@ export function IdeaSection({}: IdeaSectionProps) {
   }, [project?.enriched_concept]);
 
   if (isLoading) {
-      return <Skeleton className="h-[100px] w-full rounded-xl" />;
+    return <Skeleton className="h-[100px] w-full rounded-xl" />;
   }
 
   const handleEnrich = (instructions: string) => {
-    mutate({project_uuid: uuid, directions: instructions})
-  }
+    mutate({ project_uuid: uuid, directions: instructions });
+  };
 
   return (
     <Accordion
@@ -45,7 +53,7 @@ export function IdeaSection({}: IdeaSectionProps) {
         base: "px-0 w-full",
         trigger: "py-0 hover:bg-default-100 transition-colors rounded-lg",
         title: "text-base font-medium",
-        content: "pb-2 pt-4"
+        content: "pb-2 pt-4",
       }}
     >
       <AccordionItem
@@ -60,17 +68,34 @@ export function IdeaSection({}: IdeaSectionProps) {
       >
         <div className="space-y-6">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-foreground">Your original idea</p>
-            {((project?.genres && project.genres.length > 0) || (project?.tones && project.tones.length > 0)) && (
+            <p className="text-sm font-medium text-foreground">
+              Your original idea
+            </p>
+            {((project?.genres && project.genres.length > 0) ||
+              (project?.tones && project.tones.length > 0)) && (
               <div className="flex flex-wrap gap-2 py-1">
                 {project.genres?.map((genre) => (
-                  <Chip key={genre} variant="flat" color="primary" size="sm" className="capitalize">
-                    {typeof genre === 'string' ? genre.replace(/_/g, ' ') : genre}
+                  <Chip
+                    key={genre}
+                    className="capitalize"
+                    color="primary"
+                    size="sm"
+                    variant="flat"
+                  >
+                    {typeof genre === "string"
+                      ? genre.replace(/_/g, " ")
+                      : genre}
                   </Chip>
                 ))}
                 {project.tones?.map((tone) => (
-                  <Chip key={tone} variant="flat" color="secondary" size="sm" className="capitalize">
-                    {typeof tone === 'string' ? tone.replace(/_/g, ' ') : tone}
+                  <Chip
+                    key={tone}
+                    className="capitalize"
+                    color="secondary"
+                    size="sm"
+                    variant="flat"
+                  >
+                    {typeof tone === "string" ? tone.replace(/_/g, " ") : tone}
                   </Chip>
                 ))}
               </div>
@@ -78,10 +103,10 @@ export function IdeaSection({}: IdeaSectionProps) {
             <div className="p-4 rounded-xl border-2 border-default-200 min-h-[100px] text-default-700 bg-transparent">
               {project?.original_concept}
             </div>
-            <EnrichPromptPopover 
-              onEnrich={handleEnrich} 
-              isLoading={isPending} 
-              isDisabled={!project?.original_concept?.trim() || isPending} 
+            <EnrichPromptPopover
+              isDisabled={!project?.original_concept?.trim() || isPending}
+              isLoading={isPending}
+              onEnrich={handleEnrich}
             />
           </div>
           {project?.enriched_concept && (
@@ -90,21 +115,31 @@ export function IdeaSection({}: IdeaSectionProps) {
                 <Skeleton className="rounded-xl h-24 w-full" />
               ) : (
                 <div className="flex flex-col gap-3">
-                    <ExpandableTextarea
-                      value={localConcept}
-                      onChange={(e: any) => setLocalConcept(e.target.value)}
-                      variant="bordered"
-                      classNames={{ input: "min-h-[100px] text-foreground/90 pr-10", inputWrapper: "rounded-xl bg-transparent border-none" }}
-                      minRows={7}
-                      label="Enriched Concept"
-                    />
+                  <ExpandableTextarea
+                    classNames={{
+                      input: "min-h-[100px] text-foreground/90 pr-10",
+                      inputWrapper: "rounded-xl bg-transparent border-none",
+                    }}
+                    label="Enriched Concept"
+                    minRows={7}
+                    value={localConcept}
+                    variant="bordered"
+                    onChange={(e: any) => setLocalConcept(e.target.value)}
+                  />
                   <div className="flex justify-end">
-                    <Button 
-                      color="primary" 
+                    <Button
+                      color="primary"
+                      isDisabled={
+                        localConcept === project?.enriched_concept || isUpdating
+                      }
+                      isLoading={isUpdating}
                       size="sm"
-                      isLoading={isUpdating} 
-                      onPress={() => updateProject({ uuid, project: { enriched_concept: localConcept } })} 
-                      isDisabled={localConcept === project?.enriched_concept || isUpdating}
+                      onPress={() =>
+                        updateProject({
+                          uuid,
+                          project: { enriched_concept: localConcept },
+                        })
+                      }
                     >
                       Save
                     </Button>

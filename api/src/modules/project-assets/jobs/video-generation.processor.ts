@@ -19,7 +19,9 @@ export interface VideoGenerationJobData {
   projectAssetUuid: string;
 }
 
-@Processor(VIDEO_GENERATION_QUEUE, { concurrency: VIDEO_GENERATION_CONCURRENCY })
+@Processor(VIDEO_GENERATION_QUEUE, {
+  concurrency: VIDEO_GENERATION_CONCURRENCY,
+})
 export class VideoGenerationProcessor extends WorkerHost {
   private readonly logger = new Logger(VideoGenerationProcessor.name);
   private readonly POLL_INTERVAL_MS = 15000; // 15 seconds
@@ -63,6 +65,7 @@ export class VideoGenerationProcessor extends WorkerHost {
       this.logger.error(
         `[video-job:${job.id}] projectAsset or variation not found: ${projectAssetUuid}`,
       );
+
       return;
     }
 
@@ -73,7 +76,10 @@ export class VideoGenerationProcessor extends WorkerHost {
       });
 
       const variation = projectAsset.scene_variation;
-      const metadata = ((projectAsset.metadata || {}) as Record<string, unknown>) ?? {};
+
+      const metadata =
+        ((projectAsset.metadata || {}) as Record<string, unknown>) ?? {};
+
       const promptImageAsset =
         projectAsset.prompt_images?.[0] ?? variation.project_assets?.[0];
 
@@ -87,16 +93,20 @@ export class VideoGenerationProcessor extends WorkerHost {
         typeof metadata.workflow_source === 'string'
           ? metadata.workflow_source
           : null;
+
       const isEstateWalkthrough =
         workflowSource === estateWalkthroughVideoConfig.workflowSource &&
         projectAsset.project?.type === ProjectType.ESTATE;
+
       const aiModelRaw = metadata.ai_model;
+
       const configuredModel =
         typeof aiModelRaw === 'string' && aiModelRaw.length > 0
           ? aiModelRaw
           : isEstateWalkthrough
             ? estateWalkthroughVideoConfig.model
             : VideoModels.KLING_VIDEO_V3_STANDARD;
+
       const modelAttempts =
         isEstateWalkthrough &&
         configuredModel !== estateWalkthroughVideoConfig.fallbackModel
@@ -107,6 +117,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
       for (let index = 0; index < modelAttempts.length; index += 1) {
         const attemptModel = modelAttempts[index];
+
         const isLastAttempt = index === modelAttempts.length - 1;
 
         try {
@@ -114,6 +125,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             this.logger.warn(
               `[video-job:${job.id}] retrying estate walkthrough with fallback model=${attemptModel}`,
             );
+
             await this.prisma.projectAsset.update({
               where: { uuid: projectAssetUuid },
               data: {
@@ -126,6 +138,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
           if (metadata.ai_model !== attemptModel) {
             metadata.ai_model = attemptModel;
+
             await this.prisma.projectAsset.update({
               where: { uuid: projectAssetUuid },
               data: {
@@ -138,6 +151,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             configForMapping,
             attemptModel,
           );
+
           const genResponse = await this.aimlApiService.video.create(payload);
 
           if (!genResponse.id) {
@@ -150,7 +164,9 @@ export class VideoGenerationProcessor extends WorkerHost {
           });
 
           await this.pollUntilTerminal(genResponse.id, projectAssetUuid);
+
           completedTaskId = genResponse.id;
+
           break;
         } catch (attemptError) {
           if (isLastAttempt) {
@@ -166,8 +182,10 @@ export class VideoGenerationProcessor extends WorkerHost {
       return { status: 'completed', taskId: completedTaskId };
     } catch (error: any) {
       let details = error.message;
+
       if (error.getResponse && typeof error.getResponse === 'function') {
         const response = error.getResponse();
+
         details =
           response?.details || response?.message || JSON.stringify(response);
       }
@@ -179,6 +197,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
       if (this.isRequestTimeout(error, details)) {
         await this.deleteVideoProjectAssetKeepPromptImages(projectAssetUuid);
+
         return { status: 'timeout', removed: true };
       }
 
@@ -198,21 +217,27 @@ export class VideoGenerationProcessor extends WorkerHost {
     if (/timeout|timed out|ETIMEDOUT|ECONNABORTED|deadline/i.test(details)) {
       return true;
     }
+
     if (error instanceof HttpException) {
       const status = error.getStatus();
+
       if (status === 408 || status === 504) {
         return true;
       }
     }
+
     if (error && typeof error === 'object') {
       const e = error as { code?: string; cause?: { code?: string } };
+
       if (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT') {
         return true;
       }
+
       if (e.cause?.code === 'ETIMEDOUT' || e.cause?.code === 'ECONNABORTED') {
         return true;
       }
     }
+
     return false;
   }
 
@@ -227,6 +252,7 @@ export class VideoGenerationProcessor extends WorkerHost {
       this.logger.error(
         `Could not delete video project asset ${projectAssetUuid}: ${deleteError?.message}`,
       );
+
       await this.prisma.projectAsset.update({
         where: { uuid: projectAssetUuid },
         data: {
@@ -242,10 +268,12 @@ export class VideoGenerationProcessor extends WorkerHost {
     projectAssetUuid: string,
   ): Promise<void> {
     let pollErrors = 0;
+
     let pollCount = 0;
 
     for (;;) {
       pollCount += 1;
+
       const currentAsset = await this.prisma.projectAsset.findUnique({
         where: { uuid: projectAssetUuid },
         select: {
@@ -277,10 +305,13 @@ export class VideoGenerationProcessor extends WorkerHost {
       try {
         const statusResponse =
           await this.aimlApiService.video.getStatus(taskId);
+
         pollErrors = 0;
 
         const normalizedStatus = (statusResponse.status || '').toLowerCase();
+
         const isCompleted = normalizedStatus === 'completed';
+
         const isFailed = [
           'error',
           'failed',
@@ -303,37 +334,50 @@ export class VideoGenerationProcessor extends WorkerHost {
             },
           });
 
-          const metadata = (currentAsset.metadata ?? {}) as Record<string, unknown>;
+          const metadata = (currentAsset.metadata ?? {}) as Record<
+            string,
+            unknown
+          >;
+
           const workflowSource =
             typeof metadata.workflow_source === 'string'
               ? metadata.workflow_source
               : null;
+
           const isEstateWalkthrough =
             workflowSource === estateWalkthroughVideoConfig.workflowSource &&
             currentAsset.project?.type === ProjectType.ESTATE;
+
           const providerCreditsUsed = Number(
             statusResponse.meta?.usage?.credits_used ?? 0,
           );
+
           const providerUsdSpent = Number(
             statusResponse.meta?.usage?.usd_spent ?? 0,
           );
+
           const fixedCreditsDeduction = isEstateWalkthrough
             ? estateWalkthroughVideoConfig.creditCost
             : undefined;
+
           const providerChargeForLedger =
             Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
               ? providerUsdSpent
               : null;
+
           const aiModelRaw = metadata.ai_model;
+
           const aiModelFromMeta =
             typeof aiModelRaw === 'string' && aiModelRaw.length > 0
               ? aiModelRaw
               : null;
+
           const generationModel =
             aiModelFromMeta ??
             (isEstateWalkthrough
               ? estateWalkthroughVideoConfig.model
               : VideoModels.KLING_VIDEO_V3_STANDARD);
+
           try {
             await this.creditsService.recordUsageDeduction({
               user_uuid: currentAsset.user_uuid,
@@ -352,9 +396,7 @@ export class VideoGenerationProcessor extends WorkerHost {
                 [CreditUsageLedgerMetadata.GENERATION_MODEL]: generationModel,
                 [CreditUsageLedgerMetadata.GENERATION_ASSET_TYPE]:
                   currentAsset.type,
-                ...(workflowSource
-                  ? { workflow_source: workflowSource }
-                  : {}),
+                ...(workflowSource ? { workflow_source: workflowSource } : {}),
               },
             });
           } catch (error: any) {
@@ -362,12 +404,14 @@ export class VideoGenerationProcessor extends WorkerHost {
               `[video-poll:${taskId}] failed to deduct credits: ${error?.message}`,
             );
           }
+
           return;
         }
 
         if (isFailed || statusResponse.error) {
           const errorMsg =
             statusResponse.error?.message || 'Unknown provider error';
+
           this.logger.error(
             `[video-poll:${taskId}] provider returned failed status: ${errorMsg}`,
           );
@@ -384,14 +428,18 @@ export class VideoGenerationProcessor extends WorkerHost {
         }
       } catch (error) {
         const details = this.extractErrorMessage(error);
+
         this.logger.error(
           `[video-poll:${taskId}] cycle=${pollCount} polling error: ${details}`,
         );
 
         const isInferenceNotFound = /inference not found/i.test(details);
+
         const isModelMaintenance =
           /model is under maintenance|under maintenance/i.test(details);
+
         pollErrors += 1;
+
         const shouldFail =
           isInferenceNotFound ||
           isModelMaintenance ||
@@ -417,20 +465,25 @@ export class VideoGenerationProcessor extends WorkerHost {
   private extractErrorMessage(error: unknown): string {
     if (error instanceof HttpException) {
       const response = error.getResponse();
+
       if (typeof response === 'string') {
         return response;
       }
+
       if (response && typeof response === 'object') {
         const payload = response as {
           details?: string;
           message?: string | string[];
         };
+
         if (payload.details) {
           return payload.details;
         }
+
         if (Array.isArray(payload.message)) {
           return payload.message.join(', ');
         }
+
         if (payload.message) {
           return payload.message;
         }
@@ -439,6 +492,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
     if (error && typeof error === 'object' && 'message' in error) {
       const withMessage = error as { message?: string };
+
       if (withMessage.message) {
         return withMessage.message;
       }

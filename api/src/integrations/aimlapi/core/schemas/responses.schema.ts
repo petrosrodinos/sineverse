@@ -47,5 +47,7 @@ export const ImageGenerationResponseSchema = z.object({
 export type ImageGenerationResponse = z.infer<
   typeof ImageGenerationResponseSchema
 >;
+
 export type CreateVideoResponse = z.infer<typeof CreateVideoResponseSchema>;
+
 export type VideoStatusResponse = z.infer<typeof VideoStatusResponseSchema>;

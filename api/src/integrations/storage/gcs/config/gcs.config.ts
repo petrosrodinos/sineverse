@@ -16,13 +16,18 @@ export class GcsConfig {
   private initGcs() {
     try {
       const projectId = this.configService.get<string>('GCS_PROJECT_ID');
+
       const bucketName = this.configService.get<string>('GCS_BUCKET_NAME');
-      const credentialsBase64 =
-        this.configService.get<string>('GCS_CREDENTIALS_BASE64');
+
+      const credentialsBase64 = this.configService.get<string>(
+        'GCS_CREDENTIALS_BASE64',
+      );
+
       const folderName = this.configService.get<string>('GCS_FOLDER_NAME');
 
       if (!projectId || !bucketName) {
         this.logger.error('GCS_PROJECT_ID and GCS_BUCKET_NAME are required');
+
         return;
       }
 
@@ -30,7 +35,9 @@ export class GcsConfig {
         project_id: projectId,
         bucket_name: bucketName,
         credentials: credentialsBase64
-          ? JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf8'))
+          ? JSON.parse(
+              Buffer.from(credentialsBase64, 'base64').toString('utf8'),
+            )
           : undefined,
         folder_name: folderName || 'documents',
       };
@@ -44,6 +51,7 @@ export class GcsConfig {
       }
 
       this.storageClient = new Storage(storageOptions);
+
       this.logger.debug('Google Cloud Storage initialized');
     } catch (error) {
       this.logger.error('Error initializing Google Cloud Storage', error);

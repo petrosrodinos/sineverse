@@ -18,6 +18,7 @@ export class ZodValidationPipe implements PipeTransform {
           })),
         });
       }
+
       throw new BadRequestException('Invalid query parameters');
     }
   }

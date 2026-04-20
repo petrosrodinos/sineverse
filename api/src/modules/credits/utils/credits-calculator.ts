@@ -5,6 +5,7 @@ export function calculateUsageCreditsValue(params: {
 }) {
   const { providerCreditsUsed, baseMarkupPercent, projectTypeMultiplier } =
     params;
+
   return Math.ceil(
     providerCreditsUsed * (1 + baseMarkupPercent) * projectTypeMultiplier,
   );

@@ -60,6 +60,7 @@ export class AiService {
       };
     } catch (error) {
       this.logger.error(`Error generating text: ${error.message}`);
+
       throw new Error(`Failed to generate text: ${error.message}`);
     }
   }
@@ -68,6 +69,7 @@ export class AiService {
     options: AIGenerateOptions<T>,
   ): Promise<AIGenerateObjectResponse<T>> {
     const maxRetries = 3;
+
     let lastError: Error;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -107,12 +109,14 @@ export class AiService {
           this.logger.warn(
             `Schema validation error on attempt ${attempt}, retrying... Error: ${error.message}`,
           );
+
           continue;
         }
 
         this.logger.error(
           `Error generating text on attempt ${attempt}: ${error.message}`,
         );
+
         throw new Error(`Failed to generate text: ${error.message}`);
       }
     }
@@ -148,6 +152,7 @@ export class AiService {
         if (options.onToken) {
           options.onToken(chunk);
         }
+
         fullText += chunk;
       }
 
@@ -156,16 +161,19 @@ export class AiService {
       }
     } catch (error) {
       this.logger.error(`Error streaming text: ${error.message}`, error.stack);
+
       throw new Error(`Failed to stream text: ${error.message}`);
     }
   }
 
   async embedText(text: string): Promise<number[]> {
     const embeddingModel = openai.embedding('text-embedding-3-small');
+
     const { embedding } = await embed({
       model: embeddingModel,
       value: text,
     });
+
     return embedding;
   }
 
@@ -179,6 +187,7 @@ export class AiService {
     this.logger.log(
       `Generating real video on ${options.provider} with model ${options.model}`,
     );
+
     this.aiConfig.validateProviderAndModel(
       options.provider as any,
       options.model,
@@ -205,6 +214,7 @@ export class AiService {
       };
     } catch (error) {
       this.logger.error(`AI SDK Video Generation Error: ${error.message}`);
+
       throw new Error(`AI Provider Video Error: ${error.message}`);
     }
   }
