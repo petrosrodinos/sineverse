@@ -3,3 +3,5 @@
 /api/gcp-credentials.json
 
 .agents/
+/graphify-out/cache
+/app/public/graphify-out/cache
