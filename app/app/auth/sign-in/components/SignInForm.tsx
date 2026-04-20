@@ -17,7 +17,7 @@ type SignInValues = z.infer<typeof signInSchema>;
 
 export const SignInForm = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const { mutate: signIn, isPending } = useSignin();
+  const { mutate: signIn, isPending, error } = useSignin();
 
   const {
     register,
@@ -36,6 +36,11 @@ export const SignInForm = () => {
   const onSubmit = (data: SignInValues) => {
     signIn(data);
   };
+
+  const signInErrorMessage =
+    error instanceof Error
+      ? error.message
+      : "We could not sign you in right now. Please try again in a moment.";
 
   return (
     <div className="flex w-full flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small border border-default-200/50">
@@ -96,6 +101,12 @@ export const SignInForm = () => {
             Forgot password?
           </Link>
         </div>
+
+        {error ? (
+          <p className="text-small text-danger" role="alert">
+            {signInErrorMessage}
+          </p>
+        ) : null}
 
         <Button
           className="mt-2 font-medium w-full"

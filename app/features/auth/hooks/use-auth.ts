@@ -21,7 +21,16 @@ export function useSignin() {
             })
 
             if (result?.error) {
-                throw new Error(result.error || "Could not sign in: Invalid credentials");
+                const isUnauthorized =
+                    result.status === 401 ||
+                    result.error === "CredentialsSignin" ||
+                    result.error.toLowerCase().includes("unauthorized");
+
+                if (isUnauthorized) {
+                    throw new Error("Unauthorized: the email or password you entered is incorrect.");
+                }
+
+                throw new Error("We could not sign you in. Please check your email and password, then try again.");
             }
 
             const session = await getSession();
@@ -55,8 +64,8 @@ export function useSignin() {
         },
         onError: (error: any) => {
             addToast({
-                title: "Could not sign in",
-                description: error?.message || "An unexpected error occurred",
+                title: "Sign-in failed",
+                description: error?.message || "We could not sign you in right now. Please try again in a moment.",
                 color: "danger",
             });
         },
