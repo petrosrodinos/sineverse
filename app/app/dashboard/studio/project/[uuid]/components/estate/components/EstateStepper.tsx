@@ -10,7 +10,7 @@ import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.
 import { useScenes, useCreateEstateScenesFromImages } from "@/features/scenes/hooks/use-scenes";
 import { useFinalProjectByProject } from "@/features/final-projects/hooks/use-final-projects";
 import type { WorkflowStep } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
-import { ESTATE_DEFAULT_VIDEO_MODEL_ID, ESTATE_VIDEO_MODEL_OPTIONS } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { ESTATE_VIDEO_MODEL_OPTIONS, estateWalkthroughVideoConfig } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 import { FinalRenderStep } from "./steps/FinalRenderStep";
 import { GenerateVideosStep } from "./steps/GenerateVideosStep";
@@ -24,7 +24,7 @@ export function EstateStepper() {
 
   const [activeStep, setActiveStep] = useState<WorkflowStep>(1);
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
-  const [selectedVideoModelId, setSelectedVideoModelId] = useState<string>(ESTATE_DEFAULT_VIDEO_MODEL_ID);
+  const [selectedVideoModelId, setSelectedVideoModelId] = useState<string>(estateWalkthroughVideoConfig.videoModelId);
 
   const { data: scenes } = useScenes(
     projectUuid ? { project_uuid: projectUuid } : undefined,

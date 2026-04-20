@@ -3,14 +3,6 @@ export const ESTATE_MOCK_FINAL_VIDEO_URL =
 
 export type WorkflowStep = 1 | 2 | 3;
 
-export const ESTATE_TRIM_SEC_MAX = 10;
-export const ESTATE_VOLUME_MIN = 0;
-export const ESTATE_VOLUME_MAX = 1;
-export const ESTATE_VOLUME_STEP = 0.05;
-export const ESTATE_SPEED_MIN = 0.5;
-export const ESTATE_SPEED_MAX = 2;
-export const ESTATE_SPEED_STEP = 0.1;
-
 export const ESTATE_TRANSITION_OPTIONS = [
   { id: "FADE", label: "Fade" },
   { id: "CROSSFADE", label: "Crossfade" },
@@ -81,12 +73,21 @@ export const ESTATE_CAPTION_STYLE_OPTIONS = [
   { id: "OUTLINE_HIGH_VIS", label: "Outline high visibility" },
 ] as const;
 
-export const ESTATE_DEFAULT_TRANSITION_ID = ESTATE_TRANSITION_OPTIONS[0].id;
-export const ESTATE_DEFAULT_AUDIO_TRACK_ID = "minimal_piano";
-export const ESTATE_DEFAULT_VIDEO_MODEL_ID: EstateVideoModelId = "ltxv/ltxv-2-fast";
-export const ESTATE_DEFAULT_VOLUME = 1;
-export const ESTATE_DEFAULT_SPEED = 1;
-export const ESTATE_DEFAULT_CAPTION_START_SEC = 0;
-export const ESTATE_DEFAULT_CAPTION_END_SEC = 5;
-export const ESTATE_DEFAULT_CAPTION_POSITION = ESTATE_CAPTION_POSITION_OPTIONS[0].id;
-export const ESTATE_DEFAULT_CAPTION_STYLE = ESTATE_CAPTION_STYLE_OPTIONS[0].id;
+export const estateWalkthroughVideoConfig = {
+  trimSecMax: 10,
+  volumeMin: 0,
+  volumeMax: 1,
+  volumeStep: 0.05,
+  speedMin: 0.5,
+  speedMax: 2,
+  speedStep: 0.1,
+  transitionId: ESTATE_TRANSITION_OPTIONS[0].id,
+  audioTrackId: "minimal_piano",
+  videoModelId: "runway-act-two" as EstateVideoModelId,
+  volume: 1,
+  speed: 1,
+  captionStartSec: 0,
+  captionEndSec: 5,
+  captionPosition: ESTATE_CAPTION_POSITION_OPTIONS[0].id,
+  captionStyle: ESTATE_CAPTION_STYLE_OPTIONS[0].id,
+} as const;

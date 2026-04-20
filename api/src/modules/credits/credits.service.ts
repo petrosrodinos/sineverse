@@ -365,7 +365,7 @@ export class CreditsService {
         ? calculateHybridMoneyFields({
             providerChargeUsd: providerChargeUsdRaw,
             fxRateUsdToEur: fxSnapshot.rate,
-            appFeeRate,
+            appFeeRatePercent: appFeeRate,
           })
         : null;
     const estateMultiplier =
@@ -377,7 +377,7 @@ export class CreditsService {
         ? calculateEstateUsageMoneyFromCredits({
             creditsDeducted: deduct,
             estateMultiplier,
-            appFeeRate,
+            appFeeRatePercent: appFeeRate,
           })
         : null;
     const providerCharge =

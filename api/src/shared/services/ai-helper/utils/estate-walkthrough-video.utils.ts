@@ -2,7 +2,8 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO } from '@/shared/config/credits/credits.constants';
 
 export const estateWalkthroughVideoConfig = {
-  model: VideoModels.LTXV_2_FAST,
+  model: VideoModels.RUNWAY_ACT_TWO,
+  fallbackModel: VideoModels.KLING_VIDEO_V3_STANDARD_IMAGE,
   durationSec: 4,
   creditCost: ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO,
   workflowSource: 'ESTATE_WALKTHROUGH',

@@ -1,7 +1,7 @@
 "use client";
 
 import { Slider } from "@heroui/slider";
-import { ESTATE_TRIM_SEC_MAX } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { estateWalkthroughVideoConfig } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
 type TrimRangeFieldProps = {
   start: number;
@@ -11,7 +11,7 @@ type TrimRangeFieldProps = {
   isDisabled?: boolean;
 };
 
-export function TrimRangeField({ start, end, maxSec = ESTATE_TRIM_SEC_MAX, onChange, isDisabled }: TrimRangeFieldProps) {
+export function TrimRangeField({ start, end, maxSec = estateWalkthroughVideoConfig.trimSecMax, onChange, isDisabled }: TrimRangeFieldProps) {
   const handleChange = (raw: number | number[]) => {
     if (Array.isArray(raw) && raw.length >= 2) {
       const a = raw[0];

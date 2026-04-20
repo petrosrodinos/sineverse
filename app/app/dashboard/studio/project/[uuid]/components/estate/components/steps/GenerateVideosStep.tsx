@@ -16,7 +16,7 @@ import { useProjectAssets, useCreateEstateWalkthroughVideos } from "@/features/p
 import { AssetRoles, ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useTimelineClips, useUpdateTimelineClip } from "@/features/timeline-clips/hooks/use-timeline-clips";
 import { useTimelineMusic, useUpsertTimelineMusic } from "@/features/timeline-music/hooks/use-timeline-music";
-import { ESTATE_AUDIO_TRACK_OPTIONS, ESTATE_DEFAULT_AUDIO_TRACK_ID } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import { ESTATE_AUDIO_TRACK_OPTIONS, estateWalkthroughVideoConfig } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import type { VideoCardReorderProps } from "../video/VideoCard";
 import { VideoCard } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
@@ -43,9 +43,9 @@ const WALKTHROUGH_GENERATING_LABEL = "Video is generating";
 export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthroughAiModel }: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
   const projectUuid = params?.uuid ?? "";
-  const [audioTrackId, setAudioTrackId] = useState<string>(ESTATE_DEFAULT_AUDIO_TRACK_ID);
+  const [audioTrackId, setAudioTrackId] = useState<string>(estateWalkthroughVideoConfig.audioTrackId);
   const [activeTab, setActiveTab] = useState<string>("videos");
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState<number>(estateWalkthroughVideoConfig.volume);
   const [walkthroughInsufficientCredits, setWalkthroughInsufficientCredits] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -125,7 +125,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
     if (!currentMusic?.audio?.filename) return;
     const mappedTrackId = ESTATE_AUDIO_TRACK_ID_BY_FILENAME[currentMusic.audio.filename];
     if (mappedTrackId) setAudioTrackId(mappedTrackId);
-    setVolume(currentMusic.volume ?? 1);
+    setVolume(currentMusic.volume ?? estateWalkthroughVideoConfig.volume);
   }, [currentMusic]);
 
   useEffect(() => {

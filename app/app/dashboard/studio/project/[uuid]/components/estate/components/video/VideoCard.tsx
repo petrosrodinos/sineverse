@@ -25,20 +25,8 @@ import type { UpdateTimelineCaptionDto } from "@/features/timeline-captions/inte
 import {
   ESTATE_CAPTION_POSITION_OPTIONS,
   ESTATE_CAPTION_STYLE_OPTIONS,
-  ESTATE_DEFAULT_CAPTION_END_SEC,
-  ESTATE_DEFAULT_CAPTION_POSITION,
-  ESTATE_DEFAULT_CAPTION_START_SEC,
-  ESTATE_DEFAULT_CAPTION_STYLE,
-  ESTATE_DEFAULT_SPEED,
-  ESTATE_DEFAULT_TRANSITION_ID,
-  ESTATE_DEFAULT_VOLUME,
-  ESTATE_SPEED_MAX,
-  ESTATE_SPEED_MIN,
-  ESTATE_SPEED_STEP,
   ESTATE_TRANSITION_OPTIONS,
-  ESTATE_VOLUME_MAX,
-  ESTATE_VOLUME_MIN,
-  ESTATE_VOLUME_STEP,
+  estateWalkthroughVideoConfig,
 } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 import type { TimelineTransitionType } from "@/features/timeline-transitions/interfaces/timeline-transitions.interfaces";
 import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
@@ -111,16 +99,16 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
       end_sec: videoDurationSec,
       trim_start: 0,
       trim_end: videoDurationSec,
-      volume: ESTATE_DEFAULT_VOLUME,
-      speed: ESTATE_DEFAULT_SPEED,
+      volume: estateWalkthroughVideoConfig.volume,
+      speed: estateWalkthroughVideoConfig.speed,
     });
   }, [showEditor, finalProjectUuid, clip, fetchedClips, useParentTimelineClip, timelineClipsReady, asset.project_uuid, videoAssetUuid, videoDurationSec, createClip]);
 
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(5);
-  const [volume, setVolume] = useState(ESTATE_DEFAULT_VOLUME);
-  const [speed, setSpeed] = useState(ESTATE_DEFAULT_SPEED);
-  const [transitionType, setTransitionType] = useState<TimelineTransitionType>(ESTATE_DEFAULT_TRANSITION_ID as TimelineTransitionType);
+  const [volume, setVolume] = useState(estateWalkthroughVideoConfig.volume);
+  const [speed, setSpeed] = useState(estateWalkthroughVideoConfig.speed);
+  const [transitionType, setTransitionType] = useState<TimelineTransitionType>(estateWalkthroughVideoConfig.transitionId as TimelineTransitionType);
 
   const clipLoadedRef = useRef(false);
   useEffect(() => {
@@ -128,8 +116,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
     clipLoadedRef.current = true;
     setTrimStart(clip.trim_start ?? 0);
     setTrimEnd(clip.trim_end ?? videoDurationSec);
-    setVolume(clip.volume ?? ESTATE_DEFAULT_VOLUME);
-    setSpeed(clip.speed ?? ESTATE_DEFAULT_SPEED);
+    setVolume(clip.volume ?? estateWalkthroughVideoConfig.volume);
+    setSpeed(clip.speed ?? estateWalkthroughVideoConfig.speed);
     if (clip.transition_out?.type) {
       setTransitionType(clip.transition_out.type as TimelineTransitionType);
     }
@@ -153,10 +141,10 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
   const { mutate: updateCaption } = useUpdateTimelineCaption();
 
   const [captionText, setCaptionText] = useState("");
-  const [captionStartSec, setCaptionStartSec] = useState(ESTATE_DEFAULT_CAPTION_START_SEC);
+  const [captionStartSec, setCaptionStartSec] = useState(estateWalkthroughVideoConfig.captionStartSec);
   const [captionEndSec, setCaptionEndSec] = useState(videoDurationSec);
-  const [captionPosition, setCaptionPosition] = useState<string>(ESTATE_DEFAULT_CAPTION_POSITION);
-  const [captionStyle, setCaptionStyle] = useState<string>(ESTATE_DEFAULT_CAPTION_STYLE);
+  const [captionPosition, setCaptionPosition] = useState<string>(estateWalkthroughVideoConfig.captionPosition);
+  const [captionStyle, setCaptionStyle] = useState<string>(estateWalkthroughVideoConfig.captionStyle);
 
   const captionLoadedRef = useRef(false);
   useEffect(() => {
@@ -165,8 +153,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
     setCaptionText(caption.text);
     setCaptionStartSec(caption.start_sec);
     setCaptionEndSec(caption.end_sec);
-    setCaptionPosition(caption.position ?? ESTATE_DEFAULT_CAPTION_POSITION);
-    setCaptionStyle(caption.style ?? ESTATE_DEFAULT_CAPTION_STYLE);
+    setCaptionPosition(caption.position ?? estateWalkthroughVideoConfig.captionPosition);
+    setCaptionStyle(caption.style ?? estateWalkthroughVideoConfig.captionStyle);
   }, [caption]);
 
   const captionDebounceRef = useRef<ReturnType<typeof setTimeout>>();
@@ -392,8 +380,8 @@ export function VideoCard({ asset, compact = false, finalProjectUuid, reorder, t
                     ))}
                   </Select>
                   <TrimRangeField start={trimStart} end={trimEnd} maxSec={videoDurationSec} onChange={handleTrimChange} />
-                  <Slider aria-label="Volume" label="Volume" size="sm" minValue={ESTATE_VOLUME_MIN} maxValue={ESTATE_VOLUME_MAX} step={ESTATE_VOLUME_STEP} value={volume} onChange={handleVolumeChange} getValue={(value) => `${Math.round(Number(value) * 100)}%`} />
-                  <Slider aria-label="Speed" label="Speed" size="sm" minValue={ESTATE_SPEED_MIN} maxValue={ESTATE_SPEED_MAX} step={ESTATE_SPEED_STEP} value={speed} onChange={handleSpeedChange} getValue={(value) => `${Number(value).toFixed(1)}x`} />
+                  <Slider aria-label="Volume" label="Volume" size="sm" minValue={estateWalkthroughVideoConfig.volumeMin} maxValue={estateWalkthroughVideoConfig.volumeMax} step={estateWalkthroughVideoConfig.volumeStep} value={volume} onChange={handleVolumeChange} getValue={(value) => `${Math.round(Number(value) * 100)}%`} />
+                  <Slider aria-label="Speed" label="Speed" size="sm" minValue={estateWalkthroughVideoConfig.speedMin} maxValue={estateWalkthroughVideoConfig.speedMax} step={estateWalkthroughVideoConfig.speedStep} value={speed} onChange={handleSpeedChange} getValue={(value) => `${Number(value).toFixed(1)}x`} />
                 </div>
               </AccordionItem>
             </Accordion>

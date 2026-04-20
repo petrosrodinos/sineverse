@@ -73,7 +73,7 @@ export class VideoGenerationProcessor extends WorkerHost {
       });
 
       const variation = projectAsset.scene_variation;
-      const metadata = (projectAsset.metadata || {}) as any;
+      const metadata = ((projectAsset.metadata || {}) as Record<string, unknown>) ?? {};
       const promptImageAsset =
         projectAsset.prompt_images?.[0] ?? variation.project_assets?.[0];
 
@@ -90,28 +90,80 @@ export class VideoGenerationProcessor extends WorkerHost {
       const isEstateWalkthrough =
         workflowSource === estateWalkthroughVideoConfig.workflowSource &&
         projectAsset.project?.type === ProjectType.ESTATE;
-      const model =
-        metadata.ai_model ||
-        (isEstateWalkthrough
-          ? estateWalkthroughVideoConfig.model
-          : VideoModels.KLING_VIDEO_V3_STANDARD);
-      const payload = transformVariationToModelPayload(configForMapping, model);
+      const aiModelRaw = metadata.ai_model;
+      const configuredModel =
+        typeof aiModelRaw === 'string' && aiModelRaw.length > 0
+          ? aiModelRaw
+          : isEstateWalkthrough
+            ? estateWalkthroughVideoConfig.model
+            : VideoModels.KLING_VIDEO_V3_STANDARD;
+      const modelAttempts =
+        isEstateWalkthrough &&
+        configuredModel !== estateWalkthroughVideoConfig.fallbackModel
+          ? [configuredModel, estateWalkthroughVideoConfig.fallbackModel]
+          : [configuredModel];
 
-      const genResponse = await this.aimlApiService.video.create(payload);
+      let completedTaskId: string | null = null;
 
-      if (!genResponse.id) {
-        throw new Error('Failed to get a generation ID from AIML API');
+      for (let index = 0; index < modelAttempts.length; index += 1) {
+        const attemptModel = modelAttempts[index];
+        const isLastAttempt = index === modelAttempts.length - 1;
+
+        try {
+          if (index > 0) {
+            this.logger.warn(
+              `[video-job:${job.id}] retrying estate walkthrough with fallback model=${attemptModel}`,
+            );
+            await this.prisma.projectAsset.update({
+              where: { uuid: projectAssetUuid },
+              data: {
+                status: AssetStatus.PROCESSING,
+                provider_job_id: null,
+                error_message: null,
+              },
+            });
+          }
+
+          if (metadata.ai_model !== attemptModel) {
+            metadata.ai_model = attemptModel;
+            await this.prisma.projectAsset.update({
+              where: { uuid: projectAssetUuid },
+              data: {
+                metadata: metadata as any,
+              },
+            });
+          }
+
+          const payload = transformVariationToModelPayload(
+            configForMapping,
+            attemptModel,
+          );
+          const genResponse = await this.aimlApiService.video.create(payload);
+
+          if (!genResponse.id) {
+            throw new Error('Failed to get a generation ID from AIML API');
+          }
+
+          await this.prisma.projectAsset.update({
+            where: { uuid: projectAssetUuid },
+            data: { provider_job_id: genResponse.id },
+          });
+
+          await this.pollUntilTerminal(genResponse.id, projectAssetUuid);
+          completedTaskId = genResponse.id;
+          break;
+        } catch (attemptError) {
+          if (isLastAttempt) {
+            throw attemptError;
+          }
+        }
       }
 
-      // 2. Update provider job ID in DB
-      await this.prisma.projectAsset.update({
-        where: { uuid: projectAssetUuid },
-        data: { provider_job_id: genResponse.id },
-      });
+      if (!completedTaskId) {
+        throw new Error('Video generation failed for all configured models');
+      }
 
-      await this.pollUntilTerminal(genResponse.id, projectAssetUuid);
-
-      return { status: 'completed', taskId: genResponse.id };
+      return { status: 'completed', taskId: completedTaskId };
     } catch (error: any) {
       let details = error.message;
       if (error.getResponse && typeof error.getResponse === 'function') {

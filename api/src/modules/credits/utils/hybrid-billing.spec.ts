@@ -5,7 +5,7 @@ describe('calculateHybridMoneyFields', () => {
     const result = calculateHybridMoneyFields({
       providerChargeUsd: 10,
       fxRateUsdToEur: 0.92,
-      appFeeRate: 0.2,
+      appFeeRatePercent: 20,
     });
 
     expect(result.providerChargeUsdRounded).toBe(10);
@@ -18,11 +18,11 @@ describe('calculateHybridMoneyFields', () => {
     const result = calculateHybridMoneyFields({
       providerChargeUsd: 0.312,
       fxRateUsdToEur: 0.84767,
-      appFeeRate: 4,
+      appFeeRatePercent: 4,
     });
     expect(result.providerChargeUsdRounded).toBe(0.31);
     expect(result.providerCharge).toBe(0.26);
-    expect(result.appFeeAmount).toBe(1.04);
-    expect(result.grossChargeAmount).toBe(1.3);
+    expect(result.appFeeAmount).toBe(0.01);
+    expect(result.grossChargeAmount).toBe(0.27);
   });
 });
