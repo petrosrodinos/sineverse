@@ -55,7 +55,6 @@ export interface DownloadImageResponse {
 export interface GcsConfig {
   project_id: string;
   bucket_name: string;
-  credentials_path?: string;
   credentials?: object;
   folder_name?: string;
 }

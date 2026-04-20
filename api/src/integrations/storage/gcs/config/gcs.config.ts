@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Storage } from '@google-cloud/storage';
+import { Storage, StorageOptions } from '@google-cloud/storage';
 import { GcsConfig as GcsConfigInterface } from '../interfaces/gcs.interfaces';
 
 @Injectable()
@@ -15,11 +15,11 @@ export class GcsConfig {
 
   private initGcs() {
     try {
-      const projectId = this.configService.get('GCS_PROJECT_ID');
-      const bucketName = this.configService.get('GCS_BUCKET_NAME');
-      const credentialsPath = this.configService.get('GCS_CREDENTIALS_PATH');
-      const credentials = this.configService.get('GCS_CREDENTIALS');
-      const folderName = this.configService.get('GCS_FOLDER_NAME');
+      const projectId = this.configService.get<string>('GCS_PROJECT_ID');
+      const bucketName = this.configService.get<string>('GCS_BUCKET_NAME');
+      const credentialsBase64 =
+        this.configService.get<string>('GCS_CREDENTIALS_BASE64');
+      const folderName = this.configService.get<string>('GCS_FOLDER_NAME');
 
       if (!projectId || !bucketName) {
         this.logger.error('GCS_PROJECT_ID and GCS_BUCKET_NAME are required');
@@ -29,18 +29,17 @@ export class GcsConfig {
       this.config = {
         project_id: projectId,
         bucket_name: bucketName,
-        credentials_path: credentialsPath,
-        credentials: credentials ? JSON.parse(credentials) : undefined,
+        credentials: credentialsBase64
+          ? JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf8'))
+          : undefined,
         folder_name: folderName || 'documents',
       };
 
-      const storageOptions: any = {
+      const storageOptions: StorageOptions = {
         projectId: this.config.project_id,
       };
 
-      if (this.config.credentials_path) {
-        storageOptions.keyFilename = this.config.credentials_path;
-      } else if (this.config.credentials) {
+      if (this.config.credentials) {
         storageOptions.credentials = this.config.credentials;
       }
 
