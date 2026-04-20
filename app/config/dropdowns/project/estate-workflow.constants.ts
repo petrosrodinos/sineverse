@@ -21,15 +21,20 @@ export const ESTATE_TRANSITION_OPTIONS = [
 ] as const;
 
 export const ESTATE_AUDIO_TRACK_OPTIONS = [
+  { id: "minimal_piano", label: "Minimal piano", src: "/estate-audios/minimal-piano.mp3" },
   { id: "none", label: "No music", src: "" },
   { id: "soft_ambient", label: "Soft ambient", src: "/estate-audios/soft-ambient.mp3" },
-  { id: "minimal_piano", label: "Minimal piano", src: "/estate-audios/minimal-piano.mp3" },
   { id: "light_upbeat", label: "Light upbeat", src: "/estate-audios/light-upbeat.mp3" },
   { id: "cinematic_pad", label: "Cinematic pad", src: "/estate-audios/cinematic-pad.mp3" },
   { id: "nostalgic_soft", label: "Nostalgic soft", src: "/estate-audios/nostalgic-soft.mp3" },
 ] as const;
 
 export const ESTATE_VIDEO_MODEL_OPTIONS = [
+  {
+    id: "runway-act-two",
+    label: "Runway / Runway Act Two",
+    price: 0.065,
+  },
   {
     id: "klingai/video-v3-standard-image-to-video",
     label: "Kling 2.6 Pro (Best Overall)",
@@ -77,7 +82,7 @@ export const ESTATE_CAPTION_STYLE_OPTIONS = [
 ] as const;
 
 export const ESTATE_DEFAULT_TRANSITION_ID = ESTATE_TRANSITION_OPTIONS[0].id;
-export const ESTATE_DEFAULT_AUDIO_TRACK_ID = ESTATE_AUDIO_TRACK_OPTIONS[0].id;
+export const ESTATE_DEFAULT_AUDIO_TRACK_ID = "minimal_piano";
 export const ESTATE_DEFAULT_VIDEO_MODEL_ID: EstateVideoModelId = "ltxv/ltxv-2-fast";
 export const ESTATE_DEFAULT_VOLUME = 1;
 export const ESTATE_DEFAULT_SPEED = 1;

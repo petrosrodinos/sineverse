@@ -5,7 +5,7 @@ import { Card, CardBody } from "@heroui/card";
 import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { addToast } from "@heroui/toast";
-import { CheckCircle2, Download, Sparkles, Trash2, Wand2 } from "lucide-react";
+import { CheckCircle2, Download, ExternalLink, Sparkles, Trash2, Wand2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useFinalProject, useDeleteFinalProjectVideo, useDeleteFinalProjectVideoByDocument, useRenderFinalProject } from "@/features/final-projects/hooks/use-final-projects";
@@ -17,10 +17,7 @@ type FinalRenderStepProps = {
   finalProjectUuid: string | null;
 };
 
-type PendingDelete =
-  | { type: "single"; documentUuid: string }
-  | { type: "all" }
-  | null;
+type PendingDelete = { type: "single"; documentUuid: string } | { type: "all" } | null;
 
 export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
   const { data: session, status } = useSession();
@@ -90,12 +87,15 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
     deleteAllRenderedVideos({ finalProjectUuid });
   }, [deleteAllRenderedVideos, finalProjectUuid]);
 
-  const handleDeleteVideo = useCallback((documentUuid: string) => {
-    if (!finalProjectUuid) {
-      return;
-    }
-    deleteRenderedVideoByDocument({ finalProjectUuid, documentUuid });
-  }, [deleteRenderedVideoByDocument, finalProjectUuid]);
+  const handleDeleteVideo = useCallback(
+    (documentUuid: string) => {
+      if (!finalProjectUuid) {
+        return;
+      }
+      deleteRenderedVideoByDocument({ finalProjectUuid, documentUuid });
+    },
+    [deleteRenderedVideoByDocument, finalProjectUuid],
+  );
 
   const requestDeleteAllVideos = useCallback(() => {
     setPendingDelete({ type: "all" });
@@ -158,11 +158,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
   }, []);
 
   useEffect(() => {
-    if (
-      renderStatus === "RENDERING" ||
-      renderStatus === "COMPLETED" ||
-      renderStatus === "FAILED"
-    ) {
+    if (renderStatus === "RENDERING" || renderStatus === "COMPLETED" || renderStatus === "FAILED") {
       setIsRenderStarting(false);
     }
   }, [renderStatus]);
@@ -176,7 +172,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-500/15 text-secondary-500">
                 <Sparkles className="h-4 w-4" />
               </span>
-              <p className="text-sm font-medium text-default-700 dark:text-default-300">Rendering your final video</p>
+              <p className="text-sm font-medium text-default-700 dark:text-default-300">Rendering your awesome video</p>
             </div>
             <div className="relative overflow-hidden rounded-xl border border-default-200 dark:border-default-100/20">
               <Skeleton className="aspect-video w-full rounded-none" />
@@ -212,7 +208,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-success-500/15 text-success-500">
                 <CheckCircle2 className="h-4 w-4" />
               </span>
-              <p className="text-sm font-semibold text-foreground">{isCompleted ? "Your latest video is ready" : "Latest generated video"}</p>
+              <p className="text-sm font-semibold text-foreground">{isCompleted ? "Your video is ready" : "Latest generated video"}</p>
             </div>
             <video src={featuredVideoUrl} controls className="w-full rounded-xl border border-default-200 dark:border-default-100/20" style={{ maxHeight: 380 }} />
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -227,27 +223,16 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               >
                 Download Video
               </Button>
-              <Button as="a" href={featuredVideoUrl} target="_blank" rel="noopener noreferrer" variant="bordered">
+              <Button as="a" href={featuredVideoUrl} target="_blank" rel="noopener noreferrer" variant="bordered" startContent={<ExternalLink className="h-5 w-5" />}>
                 Open in New Tab
               </Button>
             </div>
             {isAdmin && featuredDocumentUuid && (
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <Button
-                  color="danger"
-                  variant="flat"
-                  startContent={<Trash2 className="h-4 w-4" />}
-                  isLoading={isDeletingRenderedVideo}
-                  onPress={() => requestDeleteVideo(featuredDocumentUuid)}
-                >
+                <Button color="danger" variant="flat" startContent={<Trash2 className="h-4 w-4" />} isLoading={isDeletingRenderedVideo} onPress={() => requestDeleteVideo(featuredDocumentUuid)}>
                   Delete This Video
                 </Button>
-                <Button
-                  color="danger"
-                  variant="bordered"
-                  isLoading={isDeletingAllRenderedVideos}
-                  onPress={requestDeleteAllVideos}
-                >
+                <Button color="danger" variant="bordered" isLoading={isDeletingAllRenderedVideos} onPress={requestDeleteAllVideos}>
                   Delete All Final Videos
                 </Button>
               </div>
@@ -280,17 +265,11 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                   >
                     Download
                   </Button>
-                  <Button size="sm" variant="light" as="a" href={renderItem.url ?? ""} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" variant="light" as="a" href={renderItem.url ?? ""} target="_blank" rel="noopener noreferrer" startContent={<ExternalLink className="h-5 w-5" />}>
                     Open
                   </Button>
                   {isAdmin && (
-                    <Button
-                      size="sm"
-                      color="danger"
-                      variant="light"
-                      isLoading={isDeletingRenderedVideo}
-                      onPress={() => requestDeleteVideo(renderItem.uuid)}
-                    >
+                    <Button size="sm" color="danger" variant="light" startContent={<Trash2 className="h-5 w-5" />} isLoading={isDeletingRenderedVideo} onPress={() => requestDeleteVideo(renderItem.uuid)}>
                       Delete
                     </Button>
                   )}
@@ -323,24 +302,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
           {isCompleted ? "Re-render Video" : "Generate Video"}
         </Button>
       )}
-      <ConfirmationModal
-        isOpen={pendingDelete !== null}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        title={
-          pendingDelete?.type === "all"
-            ? "Delete all final videos"
-            : "Delete final video"
-        }
-        description={
-          pendingDelete?.type === "all"
-            ? "Delete all rendered videos for this final project? This will remove them from history and cloud storage."
-            : "Delete this rendered video from history and cloud storage?"
-        }
-        confirmText="Delete"
-        confirmColor="danger"
-        isLoading={isDeletePending}
-      />
+      <ConfirmationModal isOpen={pendingDelete !== null} onClose={handleCloseDeleteModal} onConfirm={handleConfirmDelete} title={pendingDelete?.type === "all" ? "Delete all final videos" : "Delete final video"} description={pendingDelete?.type === "all" ? "Delete all rendered videos for this final project? This will remove them from history and cloud storage." : "Delete this rendered video from history and cloud storage?"} confirmText="Delete" confirmColor="danger" isLoading={isDeletePending} />
     </div>
   );
 }

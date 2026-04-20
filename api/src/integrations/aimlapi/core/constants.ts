@@ -18,6 +18,8 @@ export const VideoModels = {
   LTXV_2: 'ltxv/ltxv-2',
   LTXV_2_FAST: 'ltxv/ltxv-2-fast',
 
+  RUNWAY_ACT_TWO: 'runway-act-two',
+
   // ByteDance
   SEEDANCE_1_0_PRO: 'bytedance/seedance-1-0-pro-t2v',
   SEEDANCE_1_0_PRO_FAST: 'bytedance/seedance-1-0-pro-fast',

@@ -38,6 +38,7 @@ const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
   "cinematic-pad.mp3": "cinematic_pad",
   "nostalgic-soft.mp3": "nostalgic_soft",
 };
+const WALKTHROUGH_GENERATING_LABEL = "Video is generating";
 
 export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthroughAiModel }: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
@@ -334,6 +335,7 @@ export function GenerateVideosStep({ finalProjectUuid, hasPromptImages, walkthro
                         <Skeleton className="h-3 w-16 rounded-md" />
                       </div>
                       <Skeleton className="h-24 w-full rounded-lg sm:h-28" />
+                      <p className="text-xs font-medium text-default-500">{WALKTHROUGH_GENERATING_LABEL}</p>
                     </CardBody>
                   </Card>
                 ))}
