@@ -48,7 +48,6 @@ export function CreateProjectEstateForm({
                 render={({ field }) => (
                     <Input
                         {...field}
-                        autoFocus
                         label="Title"
                         placeholder="Enter listing title"
                         variant="bordered"

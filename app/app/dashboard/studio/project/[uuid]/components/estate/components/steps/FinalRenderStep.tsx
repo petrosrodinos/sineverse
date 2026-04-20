@@ -210,7 +210,9 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               </span>
               <p className="text-sm font-semibold text-foreground">{isCompleted ? "Your video is ready" : "Latest generated video"}</p>
             </div>
-            <video src={featuredVideoUrl} controls className="w-full rounded-xl border border-default-200 dark:border-default-100/20" style={{ maxHeight: 380 }} />
+            <video src={featuredVideoUrl} controls className="w-full rounded-xl border border-default-200 dark:border-default-100/20" style={{ maxHeight: 380 }}>
+              <track kind="captions" srcLang="en" label="English captions" />
+            </video>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Button
                 color="secondary"
@@ -253,7 +255,9 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                   onError={() => {
                     void ensurePlaybackUrl(renderItem.uuid);
                   }}
-                />
+                >
+                  <track kind="captions" srcLang="en" label="English captions" />
+                </video>
                 <div className="flex gap-2">
                   <Button
                     size="sm"

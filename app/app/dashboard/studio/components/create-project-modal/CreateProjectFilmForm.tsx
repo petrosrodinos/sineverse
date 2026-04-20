@@ -59,7 +59,6 @@ export function CreateProjectFilmForm({
                 render={({ field }) => (
                     <Input
                         {...field}
-                        autoFocus
                         label="Title"
                         placeholder="Enter project title"
                         variant="bordered"
