@@ -83,25 +83,24 @@ export class AdminService {
 
   async testRecordUsageLedgerDeduction(dto: AdminTestUsageLedgerDto) {
     if (
-      dto.provider_credits_used < 1 &&
+      dto.provider_charge_usd <= 0 &&
       dto.fixed_credits_deduction === undefined
     ) {
       throw new BadRequestException(
-        'Provide fixed_credits_deduction or provider_credits_used >= 1',
+        'Provide fixed_credits_deduction or provider_charge_usd > 0',
       );
     }
 
     this.logger.log(
-      `testRecordUsageLedgerDeduction user=${dto.user_uuid} ref=${dto.source_ref_uuid} project_type=${dto.project_type} fixed=${dto.fixed_credits_deduction ?? 'n/a'} usd=${dto.provider_charge_amount ?? 'n/a'}`,
+      `testRecordUsageLedgerDeduction user=${dto.user_uuid} ref=${dto.source_ref_uuid} project_type=${dto.project_type} provider_charge_usd=${dto.provider_charge_usd} fixed=${dto.fixed_credits_deduction ?? 'n/a'}`,
     );
 
     return this.creditsService.recordUsageDeduction({
       user_uuid: dto.user_uuid,
       project_type: dto.project_type,
-      provider_credits_used: dto.provider_credits_used,
+      provider_charge_usd: dto.provider_charge_usd,
       source_ref_uuid: dto.source_ref_uuid,
       fixed_credits_deduction: dto.fixed_credits_deduction,
-      provider_charge_amount: dto.provider_charge_amount,
       ...(dto.metadata ? { metadata: dto.metadata as Prisma.JsonObject } : {}),
     });
   }

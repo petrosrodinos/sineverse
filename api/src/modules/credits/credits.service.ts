@@ -22,10 +22,10 @@ import {
 } from '@/shared/config/credits/credits.constants';
 import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
+import { calculateTokenBilling } from './utils/hybrid-billing';
 import {
-  calculateEstateUsageMoneyFromCredits,
-  calculateHybridMoneyFields,
-} from './utils/hybrid-billing';
+  DOLLARS_PER_TOKEN,
+} from '@/shared/config/credits/credits.constants';
 import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from '@/shared/config/errors/api-error-codes';
 import { AdminPurchasesQueryDto } from './dto/admin-purchases-query.dto';
 import { AdminUsageQueryDto } from './dto/admin-usage-query.dto';
@@ -395,23 +395,21 @@ export class CreditsService {
   async recordUsageDeduction(params: {
     user_uuid: string;
     project_type: ProjectType;
-    provider_credits_used: number;
+    provider_charge_usd: number;
     source_ref_uuid: string;
     fixed_credits_deduction?: number;
-    provider_charge_amount?: number | null;
     metadata?: Prisma.JsonObject;
   }) {
     const {
       user_uuid,
       project_type,
-      provider_credits_used,
+      provider_charge_usd,
       source_ref_uuid,
       fixed_credits_deduction,
       metadata,
-      provider_charge_amount,
     } = params;
 
-    if (provider_credits_used < 0) {
+    if (provider_charge_usd < 0) {
       return null;
     }
 
@@ -429,21 +427,6 @@ export class CreditsService {
       CreditsConfig.projectTypeMultipliers[effectiveProjectType] ?? 1;
 
     const appFeeMultiplier = Math.max(projectTypeMultiplier, 0);
-
-    const deduct =
-      typeof fixed_credits_deduction === 'number'
-        ? Math.max(Math.floor(fixed_credits_deduction), 0)
-        : this.calculateUsageCredits(
-            provider_credits_used,
-            effectiveProjectType,
-          );
-
-    const providerChargeUsdRaw =
-      typeof provider_charge_amount === 'number' &&
-      Number.isFinite(provider_charge_amount) &&
-      provider_charge_amount > 0
-        ? provider_charge_amount
-        : null;
 
     let fxSnapshot: { rate: number; source: string; timestamp: Date };
 
@@ -463,45 +446,25 @@ export class CreditsService {
       };
     }
 
-    const hybridMoney =
-      providerChargeUsdRaw !== null
-        ? calculateHybridMoneyFields({
-            providerChargeUsd: providerChargeUsdRaw,
-            fxRateUsdToEur: fxSnapshot.rate,
-            appFeeMultiplier,
-          })
-        : null;
+    const billing = calculateTokenBilling({
+      providerChargeUsd: provider_charge_usd,
+      appFeeMultiplier,
+      dollarsPerToken: DOLLARS_PER_TOKEN,
+      fxRateUsdToEur: fxSnapshot.rate,
+    });
 
-    const estateMultiplier =
-      CreditsConfig.projectTypeMultipliers[ProjectType.ESTATE] ?? 1;
-
-    const estateMoney =
-      hybridMoney === null &&
-      effectiveProjectType === ProjectType.ESTATE &&
-      estateMultiplier > 0
-        ? calculateEstateUsageMoneyFromCredits({
-            creditsDeducted: deduct,
-            estateMultiplier,
-            appFeeMultiplier,
-          })
-        : null;
-
-    const providerCharge =
-      hybridMoney?.providerCharge ?? estateMoney?.providerCharge ?? null;
-
-    const appFeeAmount =
-      hybridMoney?.appFeeAmount ?? estateMoney?.appFeeAmount ?? null;
-
-    const grossChargeAmount =
-      hybridMoney?.grossChargeAmount ?? estateMoney?.grossChargeAmount ?? null;
+    const deduct =
+      typeof fixed_credits_deduction === 'number'
+        ? Math.max(Math.floor(fixed_credits_deduction), 0)
+        : this.calculateUsageCredits(
+            billing.providerCredits,
+            effectiveProjectType,
+          );
 
     const ledgerMetadata = metadata
       ? (Object.fromEntries(
           Object.entries(metadata).filter(
-            ([key]) =>
-              key !== 'provider_credits_used' &&
-              key !== 'provider_charge_amount' &&
-              key !== 'fixed_credits_deduction',
+            ([key]) => key !== 'fixed_credits_deduction',
           ),
         ) as Prisma.JsonObject)
       : undefined;
@@ -546,19 +509,14 @@ export class CreditsService {
           source: 'aiml_usage',
           source_ref_uuid,
           idempotency_key: idempotencyKey,
-          provider_charge_amount_usd:
-            hybridMoney !== null
-              ? new Prisma.Decimal(hybridMoney.providerChargeUsdRounded)
-              : null,
-          provider_charge_amount:
-            providerCharge !== null ? new Prisma.Decimal(providerCharge) : null,
+          provider_credits_used: billing.providerCredits,
+          fee_tokens: billing.feeTokens,
+          gross_tokens: billing.grossTokens,
+          provider_charge_amount_usd: new Prisma.Decimal(provider_charge_usd),
+          provider_charge_amount: new Prisma.Decimal(billing.providerChargeEur),
           app_fee_rate: new Prisma.Decimal(appFeeMultiplier),
-          app_fee_amount:
-            appFeeAmount !== null ? new Prisma.Decimal(appFeeAmount) : null,
-          gross_charge_amount:
-            grossChargeAmount !== null
-              ? new Prisma.Decimal(grossChargeAmount)
-              : null,
+          app_fee_amount: new Prisma.Decimal(billing.appFeeAmountEur),
+          gross_charge_amount: new Prisma.Decimal(billing.grossChargeAmountEur),
           fx_rate_usd_to_eur: new Prisma.Decimal(fxSnapshot.rate),
           fx_source: fxSnapshot.source,
           fx_timestamp: fxSnapshot.timestamp,

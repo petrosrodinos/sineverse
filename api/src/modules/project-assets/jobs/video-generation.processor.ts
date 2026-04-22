@@ -12,7 +12,11 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
-import { CreditUsageLedgerMetadata } from '@/shared/config/credits/credits.constants';
+import {
+  CreditUsageLedgerMetadata,
+  DEFAULT_VIDEO_DURATION_SECONDS,
+  MODEL_PROVIDER_COST_DOLLARS,
+} from '@/shared/config/credits/credits.constants';
 import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
 
 export interface VideoGenerationJobData {
@@ -109,7 +113,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
       const modelAttempts =
         isEstateWalkthrough &&
-        configuredModel !== estateWalkthroughVideoConfig.fallbackModel
+          configuredModel !== estateWalkthroughVideoConfig.fallbackModel
           ? [configuredModel, estateWalkthroughVideoConfig.fallbackModel]
           : [configuredModel];
 
@@ -271,7 +275,7 @@ export class VideoGenerationProcessor extends WorkerHost {
 
     let pollCount = 0;
 
-    for (;;) {
+    for (; ;) {
       pollCount += 1;
 
       const currentAsset = await this.prisma.projectAsset.findUnique({
@@ -348,23 +352,6 @@ export class VideoGenerationProcessor extends WorkerHost {
             workflowSource === estateWalkthroughVideoConfig.workflowSource &&
             currentAsset.project?.type === ProjectType.ESTATE;
 
-          const providerCreditsUsed = Number(
-            statusResponse.meta?.usage?.credits_used ?? 0,
-          );
-
-          const providerUsdSpent = Number(
-            statusResponse.meta?.usage?.usd_spent ?? 0,
-          );
-
-          const fixedCreditsDeduction = isEstateWalkthrough
-            ? estateWalkthroughVideoConfig.creditCost
-            : undefined;
-
-          const providerChargeForLedger =
-            Number.isFinite(providerUsdSpent) && providerUsdSpent > 0
-              ? providerUsdSpent
-              : null;
-
           const aiModelRaw = metadata.ai_model;
 
           const aiModelFromMeta =
@@ -378,17 +365,28 @@ export class VideoGenerationProcessor extends WorkerHost {
               ? estateWalkthroughVideoConfig.model
               : VideoModels.KLING_VIDEO_V3_STANDARD);
 
+          const providerCostUsdPerSecond =
+            MODEL_PROVIDER_COST_DOLLARS[generationModel] ?? 0;
+
+          const providerCostUsd =
+            providerCostUsdPerSecond * DEFAULT_VIDEO_DURATION_SECONDS;
+
+          this.logger.log(
+            `[video-poll:${taskId}] completed — meta=${JSON.stringify(statusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd=${providerCostUsd}`,
+          );
+
+          const fixedCreditsDeduction = isEstateWalkthrough
+            ? estateWalkthroughVideoConfig.creditCost
+            : undefined;
+
           try {
             await this.creditsService.recordUsageDeduction({
               user_uuid: currentAsset.user_uuid,
               project_type: currentAsset.user_uuid
                 ? (currentAsset.project?.type ?? ProjectType.FILM)
                 : ProjectType.FILM,
-              provider_credits_used: Number.isFinite(providerCreditsUsed)
-                ? Math.max(providerCreditsUsed, 0)
-                : 0,
+              provider_charge_usd: providerCostUsd,
               fixed_credits_deduction: fixedCreditsDeduction,
-              provider_charge_amount: providerChargeForLedger,
               source_ref_uuid: projectAssetUuid,
               metadata: {
                 provider: 'aimlapi',

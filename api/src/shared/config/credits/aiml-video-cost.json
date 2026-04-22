@@ -1,0 +1,90 @@
+[
+  { "model": "ByteDance / Seedance 2 Fast", "cost": 0.316 },
+  { "model": "Google / Veo 3.1 Lite", "cost": 0.104 },
+  { "model": "Kling AI / Kling 2.6 Pro Motion Control", "cost": 0.146 },
+  { "model": "Kling AI / Kling Video v3 Standard", "cost": 0.218 },
+  { "model": "Kling AI / Kling Video v3 Pro", "cost": 0.291 },
+  { "model": "Google / Veo 3.1 Fast Extend Video", "cost": 0.13 },
+  { "model": "Google / Veo 3.1 Extend Video", "cost": 0.26 },
+  { "model": "Alibaba Cloud / Wan 2.6 Video", "cost": 0.13 },
+  { "model": "Kling AI / Kling 2.6 Pro Text-to-Video", "cost": 0.091 },
+  { "model": "Kling AI / Kling 2.6 Pro Image-to-Video", "cost": 0.091 },
+  {
+    "model": "Kling AI / Kling Video O1 Video-to-Video Reference",
+    "cost": 0.218
+  },
+  { "model": "Kling AI / Kling Video O1 Image to Video", "cost": 0.118 },
+  { "model": "Kling AI / Kling Video O1 Video to Video Edit", "cost": 0.218 },
+  { "model": "Kling AI / Kling Video O1 Reference-to-Video", "cost": 0.146 },
+  { "model": "LTXV / LTXV 2 Fast", "cost": 0.052 },
+  { "model": "LTXV / LTXV 2", "cost": 0.78 },
+  { "model": "ByteDance / OmniHuman v1.5", "cost": 0.208 },
+  { "model": "Kling AI / Kling AI Avatar Pro", "cost": 0.15 },
+  { "model": "Kling AI / Kling AI Avatar Standard", "cost": 0.073 },
+  { "model": "Krea / Krea WAN 14B", "cost": 0.033 },
+  { "model": "Sber AI / Kandinsky 5 Distill", "cost": 0.013 },
+  { "model": "Sber AI / Kandinsky 5 Standard", "cost": 0.026 },
+  { "model": "Google / Veo 3.1 Fast", "cost": 0.13 },
+  { "model": "Google / Veo 3.1", "cost": 0.26 },
+  { "model": "VEED / VEED Fabric-1.0 Fast", "cost": 0.13 },
+  { "model": "VEED / VEED Fabric 1.0", "cost": 0.104 },
+  { "model": "OpenAI / Sora 2 Pro", "cost": 0.39 },
+  { "model": "OpenAI / Sora 2", "cost": 0.13 },
+  { "model": "ByteDance / OmniHuman 1.5 | AI Video Generator", "cost": 0.156 },
+  { "model": "Alibaba Cloud / Wan 2.5 Text-to-Video Preview", "cost": 0.065 },
+  { "model": "Alibaba Cloud / Wan 2.5 Image-to-Video Preview", "cost": 0.065 },
+  {
+    "model": "Kuaishou Technology / Kling Video v2.5 Turbo Pro Text-to-Video",
+    "cost": 0.091
+  },
+  {
+    "model": "Kuaishou Technology / Kling Video v2.5 Turbo Pro Image-to-Video",
+    "cost": 0.091
+  },
+  { "model": "Tencent / HunyuanVideo Foley", "cost": 0.013 },
+  {
+    "model": "Kuaishou Technology / Kling V1.6 Multi-Image-to-Video",
+    "cost": 0.059
+  },
+  {
+    "model": "Kuaishou Technology / Kling V2.1 Standard Image-to-Video",
+    "cost": 0.059
+  },
+  {
+    "model": "Kuaishou Technology / Kling V1.5 Pro Image-to-Video",
+    "cost": 0.103
+  },
+  {
+    "model": "Kuaishou Technology / Kling V1.5 Pro Text-to-Video",
+    "cost": 0.103
+  },
+  {
+    "model": "Kuaishou Technology / Kling V1.5 Standard Image-to-Video",
+    "cost": 0.059
+  },
+  { "model": "Google / Veo 3 Fast", "cost": 0.105 },
+  { "model": "Runway / Aleph", "cost": 0.195 },
+  { "model": "Runway / Runway Act Two", "cost": 0.065 },
+  { "model": "Kuaishou Technology / Kling 2.1", "cost": 0.294 },
+  { "model": "Google / Veo 3", "cost": 0.26 },
+  { "model": "Kuaishou Technology / Kling 2.0 Master", "cost": 0.294 },
+  { "model": "Kuaishou Technology / Kling 1.6 Pro Effects", "cost": 0.103 },
+  {
+    "model": "Kuaishou Technology / Kling Video v1.6 Standard Effects",
+    "cost": 0.048
+  },
+  { "model": "Runway / Runway Gen-4 Turbo", "cost": 0.065 },
+  {
+    "model": "Kuaishou Technology / Kling 1.6 Pro (text-to-video)",
+    "cost": 0.103
+  },
+  { "model": "Google / Veo 2 Image-to-Video", "cost": 0.455 },
+  { "model": "Google / Veo 2 Text-to-Video", "cost": 0.455 },
+  { "model": "Alibaba Cloud / Wan 2.1", "cost": 0.047 },
+  { "model": "Kuaishou Technology / Kling 1.6 Pro", "cost": 0.103 },
+  { "model": "Kuaishou Technology / Kling 1.6 Standard", "cost": 0.059 },
+  { "model": "Kuaishou Technology / Kling 1.6", "cost": 0.032 },
+  { "model": "Kuaishou Technology / Kling AI (text-to-video)", "cost": 0.029 },
+  { "model": "Kuaishou Technology / Kling AI (image-to-video)", "cost": 0.029 },
+  { "model": "Runway / Runway Gen-3 Turbo", "cost": 0.065 }
+]

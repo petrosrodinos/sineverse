@@ -58,20 +58,22 @@ function formatUsdValue(value: number | null): string {
   return formatCurrencyValue(value, "USD");
 }
 
-function formatEurStringValue(value: string | null): string {
-  if (value === null) return "—";
+function formatEurStringValue(value: string | number | null): string {
+  if (value === null || value === undefined) return "—";
 
   const parsed = Number(value);
 
-  if (!Number.isFinite(parsed)) return value;
+  if (!Number.isFinite(parsed)) return String(value);
 
   return formatCurrencyValue(parsed, "EUR");
 }
 
-function formatMultiplierValue(value: string | null): string {
-  if (value === null) return "—";
+function formatMultiplierValue(value: string | number | null): string {
+  if (value === null || value === undefined) return "—";
 
-  return value.endsWith("x") ? value : `${value}x`;
+  const str = String(value);
+
+  return str.endsWith("x") ? str : `${str}x`;
 }
 
 export function AdminCreditUsageTab({ isActive }: AdminCreditUsageTabProps) {

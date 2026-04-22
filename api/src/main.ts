@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { BULL_BOARD_ADAPTER } from './core/queues/queues.constants';
 import { bullBoardAuthMiddleware } from './core/queues/bull-board.middleware';
 import { ExpressAdapter } from '@bull-board/express';
+import { DecimalTransformInterceptor } from './core/interceptors/decimal-transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -41,6 +42,8 @@ async function bootstrap() {
     // methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     // allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Access-Control-Allow-Origin'],
   });
+
+  app.useGlobalInterceptors(new DecimalTransformInterceptor());
 
   await app.listen(3001);
 }

@@ -1,35 +1,48 @@
-import { calculateHybridMoneyFields } from './hybrid-billing';
+import { calculateTokenBilling } from './hybrid-billing';
 
-describe('calculateHybridMoneyFields', () => {
-  it('converts USD to EUR and applies app fee rate', () => {
-    const result = calculateHybridMoneyFields({
-      providerChargeUsd: 10,
-      fxRateUsdToEur: 0.92,
-      appFeeMultiplier: 0.2,
+describe('calculateTokenBilling', () => {
+  it('derives credits from USD cost and computes EUR amounts', () => {
+    const result = calculateTokenBilling({
+      providerChargeUsd: 0.218,
+      appFeeMultiplier: 4,
+      dollarsPerToken: 0.00983,
+      fxRateUsdToEur: 0.84983,
     });
 
-    expect(result.providerChargeUsdRounded).toBe(10);
-
-    expect(result.providerCharge).toBe(9.2);
-
-    expect(result.appFeeAmount).toBe(1.84);
-
-    expect(result.grossChargeAmount).toBe(11.04);
+    expect(result.providerCredits).toBe(22);
+    expect(result.feeTokens).toBe(88);
+    expect(result.grossTokens).toBe(110);
+    expect(result.providerChargeEur).toBeCloseTo(0.1853, 3);
+    expect(result.appFeeAmountEur).toBeCloseTo(0.7351, 3);
+    expect(result.grossChargeAmountEur).toBeCloseTo(0.9189, 3);
   });
 
-  it('rounds USD and matches estate-style fee at rate 4', () => {
-    const result = calculateHybridMoneyFields({
-      providerChargeUsd: 0.312,
-      fxRateUsdToEur: 0.84767,
+  it('handles zero cost', () => {
+    const result = calculateTokenBilling({
+      providerChargeUsd: 0,
       appFeeMultiplier: 4,
+      dollarsPerToken: 0.00983,
+      fxRateUsdToEur: 0.84983,
     });
 
-    expect(result.providerChargeUsdRounded).toBe(0.31);
+    expect(result.providerCredits).toBe(0);
+    expect(result.feeTokens).toBe(0);
+    expect(result.grossTokens).toBe(0);
+    expect(result.providerChargeEur).toBe(0);
+    expect(result.appFeeAmountEur).toBe(0);
+    expect(result.grossChargeAmountEur).toBe(0);
+  });
 
-    expect(result.providerCharge).toBe(0.26);
+  it('handles FILM multiplier (1.25)', () => {
+    const result = calculateTokenBilling({
+      providerChargeUsd: 0.065,
+      appFeeMultiplier: 1.25,
+      dollarsPerToken: 0.00983,
+      fxRateUsdToEur: 0.9,
+    });
 
-    expect(result.appFeeAmount).toBe(1.04);
-
-    expect(result.grossChargeAmount).toBe(1.3);
+    expect(result.providerCredits).toBe(7);
+    expect(result.feeTokens).toBe(9);
+    expect(result.grossTokens).toBe(16);
   });
 });

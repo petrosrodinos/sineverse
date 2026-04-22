@@ -50,6 +50,10 @@ export class CreateVideoAdapter {
         30000,
       );
 
+      this.logger.log(
+        `[getVideoStatus:${taskId}] raw response: ${JSON.stringify(response)}`,
+      );
+
       return {
         id: response.id,
         status: response.status,
@@ -57,6 +61,7 @@ export class CreateVideoAdapter {
         error: response.error
           ? { name: response.error.name, message: response.error.message }
           : null,
+        meta: response.meta ?? null,
       };
     } catch (error) {
       this.handleProviderError(error, 'status retrieval');

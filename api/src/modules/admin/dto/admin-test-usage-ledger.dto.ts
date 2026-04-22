@@ -1,9 +1,9 @@
 import {
   IsEnum,
-  IsInt,
   IsNumber,
   IsObject,
   IsOptional,
+  IsInt,
   IsUUID,
   Min,
 } from 'class-validator';
@@ -16,9 +16,9 @@ export class AdminTestUsageLedgerDto {
   @IsEnum(ProjectType)
   project_type: ProjectType;
 
-  @IsInt()
+  @IsNumber()
   @Min(0)
-  provider_credits_used: number;
+  provider_charge_usd: number;
 
   @IsUUID()
   source_ref_uuid: string;
@@ -27,11 +27,6 @@ export class AdminTestUsageLedgerDto {
   @IsInt()
   @Min(1)
   fixed_credits_deduction?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0.000001)
-  provider_charge_amount?: number;
 
   @IsOptional()
   @IsObject()
