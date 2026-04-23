@@ -1,52 +1,22 @@
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@heroui/modal";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/modal";
 import { Button } from "@heroui/button";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CreateProjectTypeStep } from "./CreateProjectTypeStep";
-import {
-  CreateProjectFilmForm,
-  FilmProjectFormValues,
-} from "./CreateProjectFilmForm";
-import {
-  CreateProjectEstateForm,
-  EstateProjectFormValues,
-} from "./CreateProjectEstateForm";
+import { CreateProjectFilmForm, FilmProjectFormValues } from "./CreateProjectFilmForm";
+import { CreateProjectEstateForm, EstateProjectFormValues } from "./CreateProjectEstateForm";
 
-import {
-  Project,
-  ProjectGenre,
-  ProjectTone,
-  ProjectTypes,
-  ProjectType,
-} from "@/features/projects/interfaces/projects.interfaces";
+import { Project, ProjectGenre, ProjectTone, ProjectTypes, ProjectType } from "@/features/projects/interfaces/projects.interfaces";
 import { Routes } from "@/config/routes";
-import {
-  useCreateProject,
-  useUpdateProject,
-} from "@/features/projects/hooks/use-projects";
+import { useCreateProject, useUpdateProject } from "@/features/projects/hooks/use-projects";
+import { enabledProjectTypes, isProjectTypeEnabled } from "@/features/projects/utils/project-feature.utils";
 
 const FORM_FILM = "create-project-film-form";
 
 const FORM_ESTATE = "create-project-estate-form";
 
-export function CreateProjectModal({
-  isOpen,
-  onOpenChange,
-  onClose,
-  project,
-}: {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onClose: () => void;
-  project?: Project;
-}) {
+export function CreateProjectModal({ isOpen, onOpenChange, onClose, project }: { isOpen: boolean; onOpenChange: (open: boolean) => void; onClose: () => void; project?: Project }) {
   const { mutate: createProject, isPending: isCreating } = useCreateProject();
 
   const { mutate: updateProject, isPending: isUpdating } = useUpdateProject();
@@ -61,8 +31,18 @@ export function CreateProjectModal({
 
   const [selectedType, setSelectedType] = useState<ProjectType | null>(null);
 
+  const availableProjectTypes = useMemo(() => enabledProjectTypes(), []);
+
+  const requiresTypeSelection = availableProjectTypes.length > 1;
+
   useEffect(() => {
     if (!isOpen) {
+      return;
+    }
+
+    if (!isEdit && availableProjectTypes.length === 0) {
+      onClose();
+
       return;
     }
 
@@ -71,13 +51,21 @@ export function CreateProjectModal({
 
       setSelectedType(project.type);
     } else {
-      setStep(1);
+      if (requiresTypeSelection) {
+        setStep(1);
 
-      setSelectedType(null);
+        setSelectedType(null);
+      } else {
+        setStep(2);
+
+        setSelectedType(availableProjectTypes[0] ?? null);
+      }
     }
-  }, [isOpen, isEdit, project]);
+  }, [isOpen, isEdit, project, requiresTypeSelection, availableProjectTypes, onClose]);
 
   const activeType = isEdit ? project?.type : selectedType;
+
+  const canRenderType = !!activeType && isProjectTypeEnabled(activeType);
 
   const handleFilmSubmit = (data: FilmProjectFormValues) => {
     const genres = (data.genres ?? []) as ProjectGenre[];
@@ -117,9 +105,7 @@ export function CreateProjectModal({
           onSuccess: (newProject) => {
             onClose();
 
-            router.push(
-              Routes.project(newProject.uuid, { type: newProject.type }),
-            );
+            router.push(Routes.project(newProject.uuid, { type: newProject.type }));
           },
         },
       );
@@ -152,9 +138,7 @@ export function CreateProjectModal({
           onSuccess: (newProject) => {
             onClose();
 
-            router.push(
-              Routes.project(newProject.uuid, { type: newProject.type }),
-            );
+            router.push(Routes.project(newProject.uuid, { type: newProject.type }));
           },
         },
       );
@@ -171,50 +155,23 @@ export function CreateProjectModal({
     }
 
     if (activeType === ProjectTypes.ESTATE) {
-      return "Estate project";
+      return "Estate lift";
     }
 
     return "Film project";
   };
 
-  const showTypeStep = !isEdit && step === 1;
+  const showTypeStep = !isEdit && requiresTypeSelection && step === 1;
 
   return (
-    <Modal
-      backdrop="blur"
-      isOpen={isOpen}
-      scrollBehavior="inside"
-      size="3xl"
-      onOpenChange={onOpenChange}
-    >
+    <Modal backdrop="blur" isOpen={isOpen} scrollBehavior="inside" size="3xl" onOpenChange={onOpenChange}>
       <ModalContent>
         <>
-          <ModalHeader className="flex flex-col gap-1">
-            {modalTitle()}
-          </ModalHeader>
+          <ModalHeader className="flex flex-col gap-1">{modalTitle()}</ModalHeader>
           <ModalBody className="pb-2">
-            {showTypeStep && (
-              <CreateProjectTypeStep
-                selected={selectedType}
-                onSelect={setSelectedType}
-              />
-            )}
-            {!showTypeStep && activeType === ProjectTypes.FILM && (
-              <CreateProjectFilmForm
-                formId={FORM_FILM}
-                isPending={isPending}
-                project={project}
-                onSubmit={handleFilmSubmit}
-              />
-            )}
-            {!showTypeStep && activeType === ProjectTypes.ESTATE && (
-              <CreateProjectEstateForm
-                formId={FORM_ESTATE}
-                isPending={isPending}
-                project={project}
-                onSubmit={handleEstateSubmit}
-              />
-            )}
+            {showTypeStep && <CreateProjectTypeStep selected={selectedType} onSelect={setSelectedType} />}
+            {!showTypeStep && canRenderType && activeType === ProjectTypes.FILM && <CreateProjectFilmForm formId={FORM_FILM} isPending={isPending} project={project} onSubmit={handleFilmSubmit} />}
+            {!showTypeStep && canRenderType && activeType === ProjectTypes.ESTATE && <CreateProjectEstateForm formId={FORM_ESTATE} isPending={isPending} project={project} onSubmit={handleEstateSubmit} />}
           </ModalBody>
           <ModalFooter>
             {showTypeStep && (
@@ -222,18 +179,14 @@ export function CreateProjectModal({
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button
-                  color="primary"
-                  isDisabled={!selectedType}
-                  onPress={() => setStep(2)}
-                >
+                <Button color="primary" isDisabled={!selectedType} onPress={() => setStep(2)}>
                   Continue
                 </Button>
               </>
             )}
-            {!showTypeStep && activeType === ProjectTypes.FILM && (
+            {!showTypeStep && canRenderType && activeType === ProjectTypes.FILM && (
               <>
-                {!isEdit && (
+                {!isEdit && requiresTypeSelection && (
                   <Button variant="flat" onPress={() => setStep(1)}>
                     Back
                   </Button>
@@ -241,19 +194,14 @@ export function CreateProjectModal({
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button
-                  color="primary"
-                  form={FORM_FILM}
-                  isLoading={isPending}
-                  type="submit"
-                >
+                <Button color="primary" form={FORM_FILM} isLoading={isPending} type="submit">
                   {isEdit ? "Save changes" : "Create project"}
                 </Button>
               </>
             )}
-            {!showTypeStep && activeType === ProjectTypes.ESTATE && (
+            {!showTypeStep && canRenderType && activeType === ProjectTypes.ESTATE && (
               <>
-                {!isEdit && (
+                {!isEdit && requiresTypeSelection && (
                   <Button variant="flat" onPress={() => setStep(1)}>
                     Back
                   </Button>
@@ -261,12 +209,7 @@ export function CreateProjectModal({
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Cancel
                 </Button>
-                <Button
-                  color="primary"
-                  form={FORM_ESTATE}
-                  isLoading={isPending}
-                  type="submit"
-                >
+                <Button color="primary" form={FORM_ESTATE} isLoading={isPending} type="submit">
                   {isEdit ? "Save changes" : "Create project"}
                 </Button>
               </>

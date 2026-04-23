@@ -1,6 +1,6 @@
 "use client";
-import { use } from "react";
-import { useSearchParams } from "next/navigation";
+import { use, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { StudioLayout } from "@/app/dashboard/studio/project/[uuid]/components/film/StudioLayout";
 import { EstateLift } from "@/app/dashboard/studio/project/[uuid]/components/estate";
@@ -12,6 +12,8 @@ import {
   Project,
   ProjectTypes,
 } from "@/features/projects/interfaces/projects.interfaces";
+import { Routes } from "@/config/routes";
+import { isProjectTypeEnabled } from "@/features/projects/utils/project-feature.utils";
 
 function ProjectMainContent({
   isLoading,
@@ -44,6 +46,8 @@ export default function ProjectPage({
 }) {
   const { uuid } = use(params);
 
+  const router = useRouter();
+
   const searchParams = useSearchParams();
 
   const typeParam = searchParams.get("type");
@@ -52,6 +56,20 @@ export default function ProjectPage({
     typeParam === ProjectTypes.ESTATE ? ProjectTypes.ESTATE : ProjectTypes.FILM;
 
   const { data: project, isLoading } = useProject(uuid);
+
+  useEffect(() => {
+    if (!project) {
+      return;
+    }
+
+    if (!isProjectTypeEnabled(project.type)) {
+      router.push(Routes.studio);
+    }
+  }, [project, router]);
+
+  if (project && !isProjectTypeEnabled(project.type)) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col lg:h-full lg:min-h-0">

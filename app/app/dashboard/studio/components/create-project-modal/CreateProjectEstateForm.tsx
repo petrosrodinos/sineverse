@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
 
+import { EstateProjectTypeDescription } from "@/config/dropdowns/project/create-project-type.options";
 import { Project } from "@/features/projects/interfaces/projects.interfaces";
 
 const estateProjectSchema = z.object({
@@ -47,6 +48,9 @@ export function CreateProjectEstateForm({
       id={formId}
       onSubmit={handleSubmit(onSubmit)}
     >
+      <p className="text-sm leading-relaxed text-default-500">
+        {EstateProjectTypeDescription}
+      </p>
       <Controller
         control={control}
         name="title"
@@ -57,7 +61,7 @@ export function CreateProjectEstateForm({
             isDisabled={isPending}
             isInvalid={!!errors.title}
             label="Title"
-            placeholder="Enter listing title"
+            placeholder="Enter property name"
             variant="bordered"
           />
         )}
