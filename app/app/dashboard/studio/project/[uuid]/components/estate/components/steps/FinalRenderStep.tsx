@@ -2,6 +2,14 @@
 
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
+import { Input } from "@heroui/input";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/modal";
 import { Skeleton } from "@heroui/skeleton";
 import { Spinner } from "@heroui/spinner";
 import { addToast } from "@heroui/toast";
@@ -9,12 +17,14 @@ import {
   CheckCircle2,
   Download,
   ExternalLink,
+  Lock,
   Sparkles,
   Trash2,
   Wand2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import {
   useFinalProject,
@@ -23,8 +33,15 @@ import {
   useRenderFinalProject,
 } from "@/features/final-projects/hooks/use-final-projects";
 import { downloadFinalProjectVideoByDocument } from "@/features/final-projects/services/final-projects.services";
+import { completeVisitorSession } from "@/features/auth/services/auth";
+import {
+  clearStoredVisitorAuth,
+  getStoredVisitorAuth,
+} from "@/features/auth/utils/visitor-auth.utils";
+import { ProjectTypes } from "@/features/projects/interfaces/projects.interfaces";
 import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { Routes } from "@/config/routes";
 
 type FinalRenderStepProps = {
   finalProjectUuid: string | null;
@@ -36,6 +53,8 @@ type PendingDelete =
   | null;
 
 export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
+  const router = useRouter();
+
   const { data: session, status } = useSession();
 
   const isSessionLoading = status === "loading";
@@ -66,7 +85,19 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const [playbackUrls, setPlaybackUrls] = useState<Record<string, string>>({});
 
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const [signupEmail, setSignupEmail] = useState("");
+
+  const [signupPassword, setSignupPassword] = useState("");
+
+  const [signupName, setSignupName] = useState("");
+
+  const [isCompletingSignup, setIsCompletingSignup] = useState(false);
+
   const playbackUrlsRef = useRef<Record<string, string>>({});
+
+  const hasAutoRenderAttemptedRef = useRef(false);
 
   const renderStatus = finalProjectData?.render_status ?? "IDLE";
 
@@ -100,8 +131,15 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const showEmptyState = !isRendering && !featuredVideoUrl && !isFailed;
 
+  const previewImageUrl = finalProjectData?.thumbnail?.url ?? null;
+
   const isDeletePending =
     isDeletingAllRenderedVideos || isDeletingRenderedVideo;
+
+  const visitorAuth = useMemo(() => getStoredVisitorAuth(), [status]);
+
+  const isVisitor =
+    status === "unauthenticated" && visitorAuth?.role === RoleTypes.VISITOR;
 
   const handleRender = useCallback(() => {
     if (!finalProjectUuid) return;
@@ -117,6 +155,12 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const handleDownloadVideo = useCallback(
     async (documentUuid: string) => {
+      if (isVisitor) {
+        setIsSignupOpen(true);
+
+        return;
+      }
+
       if (!finalProjectUuid) {
         return;
       }
@@ -150,8 +194,73 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
         });
       }
     },
-    [finalProjectUuid],
+    [finalProjectUuid, isVisitor],
   );
+
+  const handleCompleteSignup = useCallback(async () => {
+    if (!signupEmail || !signupPassword || !signupName) {
+      addToast({
+        title: "Signup details missing",
+        description: "Please fill in your name, email, and password.",
+        severity: "warning",
+      });
+
+      return;
+    }
+
+    setIsCompletingSignup(true);
+
+    try {
+      await completeVisitorSession({
+        full_name: signupName,
+        email: signupEmail,
+        password: signupPassword,
+      });
+
+      clearStoredVisitorAuth();
+
+      const result = await signIn("credentials", {
+        email: signupEmail,
+        password: signupPassword,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      setIsSignupOpen(false);
+
+      const projectUuid = finalProjectData?.project_uuid;
+
+      if (!projectUuid) {
+        router.push(Routes.dashboard);
+
+        return;
+      }
+
+      router.push(
+        `${Routes.project(projectUuid, { type: ProjectTypes.ESTATE })}&step=3`,
+      );
+    } catch (error: unknown) {
+      addToast({
+        title: "Signup failed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Could not complete signup right now.",
+        severity: "danger",
+      });
+    } finally {
+      setIsCompletingSignup(false);
+    }
+  }, [
+    finalProjectData?.project_uuid,
+    router,
+    signupEmail,
+    signupName,
+    signupPassword,
+  ]);
 
   const handleDeleteAllVideos = useCallback(() => {
     if (!finalProjectUuid) {
@@ -254,6 +363,21 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
     }
   }, [renderStatus]);
 
+  useEffect(() => {
+    if (
+      !showEmptyState ||
+      !finalProjectUuid ||
+      isVisitor ||
+      hasAutoRenderAttemptedRef.current
+    ) {
+      return;
+    }
+
+    hasAutoRenderAttemptedRef.current = true;
+
+    handleRender();
+  }, [finalProjectUuid, handleRender, isVisitor, showEmptyState]);
+
   return (
     <div className="flex flex-col items-stretch gap-6">
       {isRendering && (
@@ -268,7 +392,15 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               </p>
             </div>
             <div className="relative overflow-hidden rounded-xl border border-default-200 dark:border-default-100/20">
-              <Skeleton className="aspect-video w-full rounded-none" />
+              {previewImageUrl ? (
+                <img
+                  alt="Final video preview"
+                  className="aspect-video w-full object-cover"
+                  src={previewImageUrl}
+                />
+              ) : (
+                <Skeleton className="aspect-video w-full rounded-none" />
+              )}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-default-50/10 backdrop-blur-[1px] dark:bg-black/10">
                 <Spinner color="secondary" size="sm" />
                 <p className="text-xs text-default-600 dark:text-default-400">
@@ -308,17 +440,31 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                 {isCompleted ? "Your video is ready" : "Latest generated video"}
               </p>
             </div>
-            <video
-              controls
-              className="w-full rounded-xl border border-default-200 dark:border-default-100/20"
-              src={featuredVideoUrl}
-              style={{ maxHeight: 380 }}
-            >
-              <track kind="captions" label="English captions" srcLang="en" />
-            </video>
+            <div className="relative">
+              <video
+                className={`w-full rounded-xl border border-default-200 dark:border-default-100/20 ${isVisitor ? "blur-sm" : ""}`}
+                controls={!isVisitor}
+                src={featuredVideoUrl}
+                style={{ maxHeight: 380 }}
+              >
+                <track kind="captions" label="English captions" srcLang="en" />
+              </video>
+              {isVisitor && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl bg-black/45">
+                  <Lock className="h-8 w-8 text-white" />
+                  <p className="text-center text-sm font-semibold text-white">
+                    Sign up to unlock and download your video
+                  </p>
+                  <Button color="primary" onPress={() => setIsSignupOpen(true)}>
+                    Sign up to download
+                  </Button>
+                </div>
+              )}
+            </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Button
                 color="secondary"
+                isDisabled={isVisitor}
                 startContent={<Download className="h-4 w-4" />}
                 variant="solid"
                 onPress={() => {
@@ -330,12 +476,22 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                 Download Video
               </Button>
               <Button
-                as="a"
-                href={featuredVideoUrl}
-                rel="noopener noreferrer"
+                isDisabled={isVisitor}
                 startContent={<ExternalLink className="h-5 w-5" />}
-                target="_blank"
                 variant="bordered"
+                onPress={() => {
+                  if (isVisitor) {
+                    setIsSignupOpen(true);
+
+                    return;
+                  }
+
+                  window.open(
+                    featuredVideoUrl,
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
+                }}
               >
                 Open in New Tab
               </Button>
@@ -399,13 +555,23 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                     Download
                   </Button>
                   <Button
-                    as="a"
-                    href={renderItem.url ?? ""}
-                    rel="noopener noreferrer"
+                    isDisabled={isVisitor}
                     size="sm"
                     startContent={<ExternalLink className="h-5 w-5" />}
-                    target="_blank"
                     variant="light"
+                    onPress={() => {
+                      if (isVisitor) {
+                        setIsSignupOpen(true);
+
+                        return;
+                      }
+
+                      window.open(
+                        renderItem.url ?? "",
+                        "_blank",
+                        "noopener,noreferrer",
+                      );
+                    }}
                   >
                     Open
                   </Button>
@@ -437,6 +603,15 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
       {showEmptyState && (
         <Card className="border border-default-200 bg-gradient-to-br from-default-100/60 to-secondary-500/[0.08] dark:border-default-100/20 dark:from-default-100/10 dark:to-secondary-500/10">
           <CardBody className="gap-3 p-4 sm:p-5">
+            {previewImageUrl && (
+              <div className="overflow-hidden rounded-xl border border-default-200 dark:border-default-100/20">
+                <img
+                  alt="Final video preview"
+                  className="aspect-video w-full object-cover"
+                  src={previewImageUrl}
+                />
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-500/15 text-secondary-500">
                 <Sparkles className="h-4 w-4" />
@@ -457,7 +632,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
         </Card>
       )}
 
-      {!isRendering && (
+      {!isRendering && !isVisitor && (
         <Button
           className="h-12 bg-gradient-to-r from-secondary-500 to-secondary-400 font-semibold text-white shadow-lg shadow-secondary-500/30 transition-transform duration-200 hover:scale-[1.01]"
           color="secondary"
@@ -469,6 +644,45 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
           {isCompleted ? "Re-render Video" : "Generate Video"}
         </Button>
       )}
+      <Modal isOpen={isSignupOpen} onOpenChange={setIsSignupOpen}>
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalBody>
+            <Input
+              label="Full name"
+              value={signupName}
+              variant="bordered"
+              onValueChange={setSignupName}
+            />
+            <Input
+              label="Email"
+              type="email"
+              value={signupEmail}
+              variant="bordered"
+              onValueChange={setSignupEmail}
+            />
+            <Input
+              label="Password"
+              type="password"
+              value={signupPassword}
+              variant="bordered"
+              onValueChange={setSignupPassword}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="light" onPress={() => setIsSignupOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              isLoading={isCompletingSignup}
+              onPress={handleCompleteSignup}
+            >
+              Sign up and download
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <ConfirmationModal
         confirmColor="danger"
         confirmText="Delete"

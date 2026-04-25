@@ -95,6 +95,7 @@ export type CurrencyRateSnapshot = $Result.DefaultSelection<Prisma.$CurrencyRate
 export namespace $Enums {
   export const AuthRole: {
   USER: 'USER',
+  VISITOR: 'VISITOR',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN',
   SUPPORT: 'SUPPORT'
@@ -2940,10 +2941,10 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: number
     uuid: string
-    email: string
+    email: string | null
     phone: string | null
     full_name: string
-    password: string
+    password: string | null
     role: $Enums.AuthRole
     credits_balance: number
     created_at: Date
@@ -3057,10 +3058,10 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       uuid: string
-      email: string
+      email: string | null
       phone: string | null
       full_name: string
-      password: string
+      password: string | null
       role: $Enums.AuthRole
       credits_balance: number
       created_at: Date
@@ -22047,10 +22048,10 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     id?: IntFilter<"User"> | number
     uuid?: StringFilter<"User"> | string
-    email?: StringFilter<"User"> | string
+    email?: StringNullableFilter<"User"> | string | null
     phone?: StringNullableFilter<"User"> | string | null
     full_name?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     role?: EnumAuthRoleFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
@@ -22067,10 +22068,10 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     uuid?: SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     full_name?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
     created_at?: SortOrder
@@ -22093,7 +22094,7 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     full_name?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     role?: EnumAuthRoleFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
@@ -22110,10 +22111,10 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     uuid?: SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     full_name?: SortOrder
-    password?: SortOrder
+    password?: SortOrderInput | SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
     created_at?: SortOrder
@@ -22131,10 +22132,10 @@ export namespace Prisma {
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"User"> | number
     uuid?: StringWithAggregatesFilter<"User"> | string
-    email?: StringWithAggregatesFilter<"User"> | string
+    email?: StringNullableWithAggregatesFilter<"User"> | string | null
     phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     full_name?: StringWithAggregatesFilter<"User"> | string
-    password?: StringWithAggregatesFilter<"User"> | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumAuthRoleWithAggregatesFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntWithAggregatesFilter<"User"> | number
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -23535,10 +23536,10 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -23555,10 +23556,10 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -23574,10 +23575,10 @@ export namespace Prisma {
 
   export type UserUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23594,10 +23595,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23614,10 +23615,10 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -23626,10 +23627,10 @@ export namespace Prisma {
 
   export type UserUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23639,10 +23640,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29293,10 +29294,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutProjectsInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -29312,10 +29313,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutProjectsInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -29516,10 +29517,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutProjectsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29535,10 +29536,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutProjectsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29638,10 +29639,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutScenesInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -29657,10 +29658,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutScenesInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -29813,10 +29814,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutScenesInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29832,10 +29833,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutScenesInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29926,10 +29927,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutScene_variationsInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -29945,10 +29946,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutScene_variationsInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -30060,10 +30061,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutScene_variationsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30079,10 +30080,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutScene_variationsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30149,10 +30150,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutProject_assetsInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -30168,10 +30169,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutProject_assetsInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -30471,10 +30472,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutProject_assetsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30490,10 +30491,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutProject_assetsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30712,10 +30713,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutFinal_projectsInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -30731,10 +30732,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutFinal_projectsInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -30951,10 +30952,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutFinal_projectsInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30970,10 +30971,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutFinal_projectsInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32241,10 +32242,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutCredit_purchasesInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -32260,10 +32261,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutCredit_purchasesInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -32328,10 +32329,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutCredit_purchasesInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32347,10 +32348,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutCredit_purchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32405,10 +32406,10 @@ export namespace Prisma {
 
   export type UserCreateWithoutCredit_ledger_entriesInput = {
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -32424,10 +32425,10 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutCredit_ledger_entriesInput = {
     id?: number
     uuid?: string
-    email: string
+    email?: string | null
     phone?: string | null
     full_name: string
-    password: string
+    password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
     created_at?: Date | string
@@ -32458,10 +32459,10 @@ export namespace Prisma {
 
   export type UserUpdateWithoutCredit_ledger_entriesInput = {
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32477,10 +32478,10 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutCredit_ledger_entriesInput = {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     full_name?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -8,6 +8,7 @@ import { API_ERROR_CODE_INSUFFICIENT_CREDITS } from "./api-error-codes";
 import { environments } from "@/config/environments";
 import { isTokenExpired } from "@/lib/token";
 import { useApiErrorModalStore } from "@/stores/api-error-modal.store";
+import { getStoredVisitorAuth } from "@/features/auth/utils/visitor-auth.utils";
 
 const axiosInstance = axios.create({
   baseURL: environments.API_URL,
@@ -21,14 +22,22 @@ axiosInstance.interceptors.request.use(async (config) => {
 
   const { access_token, expires_in } = session || {};
 
-  if (expires_in && isTokenExpired(expires_in)) {
-    signOut({ callbackUrl: Routes.auth.sign_in });
+  const visitorAuth = getStoredVisitorAuth();
+
+  const effectiveAccessToken = access_token ?? visitorAuth?.access_token;
+
+  const effectiveExpiresIn = expires_in ?? visitorAuth?.expires_in;
+
+  if (effectiveExpiresIn && isTokenExpired(effectiveExpiresIn)) {
+    if (access_token) {
+      signOut({ callbackUrl: Routes.auth.sign_in });
+    }
 
     return Promise.reject(new Error("Token expired"));
   }
 
-  if (access_token) {
-    config.headers.Authorization = `Bearer ${access_token}`;
+  if (effectiveAccessToken) {
+    config.headers.Authorization = `Bearer ${effectiveAccessToken}`;
   }
 
   return config;

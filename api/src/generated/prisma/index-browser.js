@@ -372,6 +372,7 @@ exports.Prisma.JsonNullValueFilter = {
 };
 exports.AuthRole = exports.$Enums.AuthRole = {
   USER: 'USER',
+  VISITOR: 'VISITOR',
   ADMIN: 'ADMIN',
   SUPER_ADMIN: 'SUPER_ADMIN',
   SUPPORT: 'SUPPORT'

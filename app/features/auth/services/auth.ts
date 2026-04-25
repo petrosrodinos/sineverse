@@ -17,8 +17,6 @@ export const signIn = async ({
   password,
 }: SignInUser): Promise<LoggedInUser> => {
   try {
-    console.log("asd", `${environments.API_URL}${ApiRoutes.auth.email.login}`);
-
     const response = await axios.post(
       `${environments.API_URL}${ApiRoutes.auth.email.login}`,
       {
@@ -30,9 +28,7 @@ export const signIn = async ({
     const auth_response = response.data;
 
     return formatAuthUser(auth_response);
-  } catch (error) {
-    console.error(error);
-
+  } catch {
     throw new Error("Failed to sign in. Please try again.");
   }
 };
@@ -55,8 +51,42 @@ export const signUp = async ({
     const auth_response = response.data;
 
     return formatAuthUser(auth_response);
-  } catch (error) {
+  } catch {
     throw new Error("Failed to sign up. Please try again.");
+  }
+};
+
+export const createVisitorSession = async (): Promise<LoggedInUser> => {
+  try {
+    const response = await axios.post(
+      `${environments.API_URL}${ApiRoutes.auth.email.visitor}`,
+      {},
+    );
+
+    return formatAuthUser(response.data);
+  } catch {
+    throw new Error("Failed to create visitor session. Please try again.");
+  }
+};
+
+export const completeVisitorSession = async ({
+  full_name,
+  email,
+  password,
+}: SignUpUser): Promise<LoggedInUser> => {
+  try {
+    const response = await axiosInstance.post(
+      ApiRoutes.auth.email.complete_visitor,
+      {
+        full_name,
+        email,
+        password,
+      },
+    );
+
+    return formatAuthUser(response.data);
+  } catch {
+    throw new Error("Failed to complete visitor signup. Please try again.");
   }
 };
 

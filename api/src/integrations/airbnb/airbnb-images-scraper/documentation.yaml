@@ -1,0 +1,315 @@
+{
+  'openapi': '3.0.1',
+  'info': { 'version': '0.3', 'x-build-id': '4XHnVOx5nbpBBbudY' },
+  'servers': [{ 'url': 'https://api.apify.com/v2' }],
+  'paths':
+    {
+      '/acts/simpleapi~airbnb-images-scraper/run-sync-get-dataset-items':
+        {
+          'post':
+            {
+              'operationId': 'run-sync-get-dataset-items-simpleapi-airbnb-images-scraper',
+              'x-openai-isConsequential': false,
+              'summary': "Executes an Actor, waits for its completion, and returns Actor's dataset items in response.",
+              'tags': ['Run Actor'],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/inputSchema' },
+                        },
+                    },
+                },
+              'parameters':
+                [
+                  {
+                    'name': 'token',
+                    'in': 'query',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                    'description': 'Enter your Apify token here',
+                  },
+                ],
+              'responses': { '200': { 'description': 'OK' } },
+            },
+        },
+      '/acts/simpleapi~airbnb-images-scraper/runs':
+        {
+          'post':
+            {
+              'operationId': 'runs-sync-simpleapi-airbnb-images-scraper',
+              'x-openai-isConsequential': false,
+              'summary': 'Executes an Actor and returns information about the initiated run in response.',
+              'tags': ['Run Actor'],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/inputSchema' },
+                        },
+                    },
+                },
+              'parameters':
+                [
+                  {
+                    'name': 'token',
+                    'in': 'query',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                    'description': 'Enter your Apify token here',
+                  },
+                ],
+              'responses':
+                {
+                  '200':
+                    {
+                      'description': 'OK',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  '$ref': '#/components/schemas/runsResponseSchema',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+      '/acts/simpleapi~airbnb-images-scraper/run-sync':
+        {
+          'post':
+            {
+              'operationId': 'run-sync-simpleapi-airbnb-images-scraper',
+              'x-openai-isConsequential': false,
+              'summary': 'Executes an Actor, waits for completion, and returns the OUTPUT from Key-value store in response.',
+              'tags': ['Run Actor'],
+              'requestBody':
+                {
+                  'required': true,
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/inputSchema' },
+                        },
+                    },
+                },
+              'parameters':
+                [
+                  {
+                    'name': 'token',
+                    'in': 'query',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                    'description': 'Enter your Apify token here',
+                  },
+                ],
+              'responses': { '200': { 'description': 'OK' } },
+            },
+        },
+    },
+  'components':
+    {
+      'schemas':
+        {
+          'inputSchema':
+            {
+              'type': 'object',
+              'required': ['urls'],
+              'properties':
+                {
+                  'urls':
+                    {
+                      'title': '🔗 Airbnb listing URLs',
+                      'type': 'array',
+                      'description': 'One or more room URLs to scrape. Each must be a valid Airbnb room page, e.g. https://www.airbnb.com/rooms/782682596976136912. Add one URL per line. At least one URL is required.',
+                      'items': { 'type': 'string' },
+                    },
+                  'proxyConfiguration':
+                    {
+                      'title': '🛡️ Proxy configuration (optional)',
+                      'type': 'object',
+                      'description': 'Proxy is not used for the first request. If the actor detects a block (403, 429, captcha, or anti-bot page), it turns on Apify Proxy using the settings here and retries. You can choose proxy groups (e.g. RESIDENTIAL) and optionally a country code. If left default, the actor uses RESIDENTIAL when it switches to proxy mode.',
+                      'properties':
+                        {
+                          'useApifyProxy':
+                            {
+                              'title': '✅ Use Apify Proxy',
+                              'type': 'boolean',
+                              'description': 'Enable Apify Proxy in the UI. The actor code will still start without proxy and only enable it when a block is detected.',
+                            },
+                          'apifyProxyGroups':
+                            {
+                              'title': '📌 Proxy groups',
+                              'type': 'array',
+                              'items': { 'type': 'string' },
+                              'description': 'Apify proxy groups to use when proxy is enabled (e.g. RESIDENTIAL). Default is RESIDENTIAL when the actor switches to proxy.',
+                            },
+                          'apifyProxyCountry':
+                            {
+                              'title': '🌍 Proxy country',
+                              'type': 'string',
+                              'description': 'Optional ISO-2 country code for proxy (e.g. US, GB). Leave empty for no country restriction.',
+                            },
+                        },
+                    },
+                },
+            },
+          'runsResponseSchema':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'data':
+                    {
+                      'type': 'object',
+                      'properties':
+                        {
+                          'id': { 'type': 'string' },
+                          'actId': { 'type': 'string' },
+                          'userId': { 'type': 'string' },
+                          'startedAt':
+                            {
+                              'type': 'string',
+                              'format': 'date-time',
+                              'example': '2025-01-08T00:00:00.000Z',
+                            },
+                          'finishedAt':
+                            {
+                              'type': 'string',
+                              'format': 'date-time',
+                              'example': '2025-01-08T00:00:00.000Z',
+                            },
+                          'status': { 'type': 'string', 'example': 'READY' },
+                          'meta':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'origin':
+                                    { 'type': 'string', 'example': 'API' },
+                                  'userAgent': { 'type': 'string' },
+                                },
+                            },
+                          'stats':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'inputBodyLen':
+                                    { 'type': 'integer', 'example': 2000 },
+                                  'rebootCount':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'restartCount':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'resurrectCount':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'computeUnits':
+                                    { 'type': 'integer', 'example': 0 },
+                                },
+                            },
+                          'options':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'build':
+                                    { 'type': 'string', 'example': 'latest' },
+                                  'timeoutSecs':
+                                    { 'type': 'integer', 'example': 300 },
+                                  'memoryMbytes':
+                                    { 'type': 'integer', 'example': 1024 },
+                                  'diskMbytes':
+                                    { 'type': 'integer', 'example': 2048 },
+                                },
+                            },
+                          'buildId': { 'type': 'string' },
+                          'defaultKeyValueStoreId': { 'type': 'string' },
+                          'defaultDatasetId': { 'type': 'string' },
+                          'defaultRequestQueueId': { 'type': 'string' },
+                          'buildNumber':
+                            { 'type': 'string', 'example': '1.0.0' },
+                          'containerUrl': { 'type': 'string' },
+                          'usage':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'ACTOR_COMPUTE_UNITS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATASET_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATASET_WRITES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'KEY_VALUE_STORE_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'KEY_VALUE_STORE_WRITES':
+                                    { 'type': 'integer', 'example': 1 },
+                                  'KEY_VALUE_STORE_LISTS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'REQUEST_QUEUE_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'REQUEST_QUEUE_WRITES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATA_TRANSFER_INTERNAL_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATA_TRANSFER_EXTERNAL_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'PROXY_RESIDENTIAL_TRANSFER_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'PROXY_SERPS':
+                                    { 'type': 'integer', 'example': 0 },
+                                },
+                            },
+                          'usageTotalUsd':
+                            { 'type': 'number', 'example': 0.00005 },
+                          'usageUsd':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'ACTOR_COMPUTE_UNITS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATASET_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATASET_WRITES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'KEY_VALUE_STORE_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'KEY_VALUE_STORE_WRITES':
+                                    { 'type': 'number', 'example': 0.00005 },
+                                  'KEY_VALUE_STORE_LISTS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'REQUEST_QUEUE_READS':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'REQUEST_QUEUE_WRITES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATA_TRANSFER_INTERNAL_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'DATA_TRANSFER_EXTERNAL_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'PROXY_RESIDENTIAL_TRANSFER_GBYTES':
+                                    { 'type': 'integer', 'example': 0 },
+                                  'PROXY_SERPS':
+                                    { 'type': 'integer', 'example': 0 },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}

@@ -27,12 +27,16 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const router = useRouter();
+
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const { mutate: deleteProject, isPending } = useDeleteProject();
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+
     e.preventDefault();
+
     setIsConfirmOpen(true);
   };
 
@@ -53,45 +57,47 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <Trash2 className="w-4 h-4" />
         </button>
         <Card className="cursor-pointer w-full h-full">
-        <CardHeader className="flex gap-3 justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="text-md font-bold">{project.title}</p>
-            <p className="text-small text-default-500">
-              {new Date(project.created_at).toLocaleDateString()}
-            </p>
-            <Chip color="primary" size="sm" variant="flat">
-              {TypeOptionsLabels[project.type]}
-            </Chip>
-          </div>
-        </CardHeader>
-        <CardBody>
-          {project.genres && project.genres.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
-              {project.genres.map((genre, idx) => (
-                <Chip key={idx} color="secondary" size="sm" variant="flat">
-                  {GenreOptionsLabels[genre] || genre}
-                </Chip>
-              ))}
+          <CardHeader className="flex gap-3 justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="text-md font-bold">{project.title}</p>
+              <p className="text-small text-default-500">
+                {new Date(project.created_at).toLocaleDateString()}
+              </p>
+              <Chip color="primary" size="sm" variant="flat">
+                {TypeOptionsLabels[project.type]}
+              </Chip>
             </div>
-          )}
-          {project.original_concept ? (
-            <p className="text-default-600 line-clamp-3">
-              {project.original_concept}
-            </p>
-          ) : null}
-        </CardBody>
-        <CardFooter>
-          <Button
-            className="w-full"
-            color="primary"
-            variant="flat"
-            onPress={() =>
-              router.push(Routes.project(project.uuid, { type: project.type }))
-            }
-          >
-            Open Project
-          </Button>
-        </CardFooter>
+          </CardHeader>
+          <CardBody>
+            {project.genres && project.genres.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-3">
+                {project.genres.map((genre, idx) => (
+                  <Chip key={idx} color="secondary" size="sm" variant="flat">
+                    {GenreOptionsLabels[genre] || genre}
+                  </Chip>
+                ))}
+              </div>
+            )}
+            {project.original_concept ? (
+              <p className="text-default-600 line-clamp-3">
+                {project.original_concept}
+              </p>
+            ) : null}
+          </CardBody>
+          <CardFooter>
+            <Button
+              className="w-full"
+              color="primary"
+              variant="flat"
+              onPress={() =>
+                router.push(
+                  Routes.project(project.uuid, { type: project.type }),
+                )
+              }
+            >
+              Open Project
+            </Button>
+          </CardFooter>
         </Card>
       </div>
 
@@ -108,10 +114,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </p>
           </ModalBody>
           <ModalFooter>
-            <Button
-              variant="flat"
-              onPress={() => setIsConfirmOpen(false)}
-            >
+            <Button variant="flat" onPress={() => setIsConfirmOpen(false)}>
               Cancel
             </Button>
             <Button

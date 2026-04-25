@@ -6,7 +6,7 @@ import { Button } from "@heroui/button";
 import { Progress } from "@heroui/progress";
 import { Check } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import {
   ESTATE_VIDEO_MODEL_OPTIONS,
@@ -23,7 +23,10 @@ import {
   useScenes,
   useCreateEstateScenesFromImages,
 } from "@/features/scenes/hooks/use-scenes";
-import { AssetRoles } from "@/features/project-assets/interfaces/project-assets.interfaces";
+import {
+  AssetRoles,
+  ProjectAssetStatuses,
+} from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { useProjectAssets } from "@/features/project-assets/hooks/use-project-assets";
 
 type PendingFile = { id: string; file: File; previewUrl: string };
@@ -31,9 +34,16 @@ type PendingFile = { id: string; file: File; previewUrl: string };
 export function EstateStepper() {
   const params = useParams<{ uuid: string }>();
 
+  const searchParams = useSearchParams();
+
   const projectUuid = params?.uuid ?? "";
 
-  const [activeStep, setActiveStep] = useState<WorkflowStep>(1);
+  const stepParam = Number(searchParams.get("step"));
+
+  const initialStep: WorkflowStep =
+    stepParam === 1 || stepParam === 2 || stepParam === 3 ? stepParam : 1;
+
+  const [activeStep, setActiveStep] = useState<WorkflowStep>(initialStep);
 
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
 
@@ -48,7 +58,24 @@ export function EstateStepper() {
 
   const { data: videoAssetsResponse } = useProjectAssets(
     { project_uuid: projectUuid, role: AssetRoles.GENERATED_VIDEO, limit: 100 },
-    { enabled: !!projectUuid },
+    {
+      enabled: !!projectUuid,
+      refetchInterval: (query) => {
+        const assets = query.state.data?.data ?? [];
+
+        if (assets.length === 0) {
+          return false;
+        }
+
+        const hasProcessingAssets = assets.some(
+          (asset) =>
+            asset.status === ProjectAssetStatuses.PENDING ||
+            asset.status === ProjectAssetStatuses.PROCESSING,
+        );
+
+        return hasProcessingAssets ? 3000 : false;
+      },
+    },
   );
 
   const videoAssets = videoAssetsResponse?.data ?? [];

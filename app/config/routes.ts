@@ -22,5 +22,8 @@ export const Routes = {
   landing: {
     sineverse: "/sineverse",
     estatelift: "/estatelift",
+    estatelift_workflow: "/estatelift/workflow",
+    estatelift_workflow_project: (uuid: string) =>
+      `/estatelift/workflow/${uuid}`,
   },
 } as const;

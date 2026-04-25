@@ -3,6 +3,8 @@ export const ApiRoutes = {
     email: {
       login: "auth/email/login",
       register: "auth/email/register",
+      visitor: "auth/email/visitor",
+      complete_visitor: "auth/email/complete-visitor",
       refresh_token: "/auth/email/refresh-token",
       admin_login_to_account: (account_uuid: string) =>
         `/auth/email/${account_uuid}/admin-login`,

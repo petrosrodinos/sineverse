@@ -71,6 +71,8 @@ export class CreditsController {
   }
 
   @Post('checkout')
+  @UseGuards(RolesGuard)
+  @Roles(AuthRole.USER, AuthRole.ADMIN, AuthRole.SUPER_ADMIN, AuthRole.SUPPORT)
   @ApiOperation({ summary: 'Create Stripe checkout session for credit pack' })
   createCheckout(
     @CurrentUser('uuid') user_uuid: string,

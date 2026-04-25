@@ -9,6 +9,7 @@ datasource db {
 
 enum AuthRole {
   USER
+  VISITOR
   ADMIN
   SUPER_ADMIN
   SUPPORT
@@ -82,10 +83,10 @@ enum TimelineTransitionType {
 model User {
   id              Int      @id @default(autoincrement())
   uuid            String   @unique @default(uuid())
-  email           String   @unique
+  email           String?  @unique
   phone           String?  @unique
   full_name       String
-  password        String
+  password        String?
   role            AuthRole
   credits_balance Int      @default(0)
   created_at      DateTime @default(now())
