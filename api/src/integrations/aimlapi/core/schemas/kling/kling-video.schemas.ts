@@ -177,7 +177,10 @@ export const KlingVideoV3TextToVideoSchema = z
 
 export const KlingVideoV3ImageToVideoSchema = z
   .object({
-    model: z.literal('klingai/video-v3-standard-image-to-video'),
+    model: z.enum([
+      'klingai/video-v3-standard-image-to-video',
+      'klingai/video-v3-pro-image-to-video',
+    ]),
     image_url: UriSchema,
     tail_image_url: UriSchema.optional(),
     duration: KlingV3DurationSchema,

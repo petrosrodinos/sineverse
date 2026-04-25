@@ -3,6 +3,7 @@ export const VideoModels = {
   KLING_VIDEO_V3_STANDARD: 'klingai/video-v3-standard-text-to-video',
   KLING_VIDEO_V3_PRO: 'klingai/video-v3-pro-text-to-video',
   KLING_VIDEO_V3_STANDARD_IMAGE: 'klingai/video-v3-standard-image-to-video',
+  KLING_VIDEO_V3_PRO_IMAGE: 'klingai/video-v3-pro-image-to-video',
   KLING_VIDEO_V2_6_PRO_IMAGE: 'klingai/video-v2-6-pro-image-to-video',
   KLING_VIDEO_O1_IMAGE: 'klingai/video-o1-image-to-video',
   KLING_V2_5_TURBO_PRO_IMAGE: 'klingai/v2.5-turbo/pro/image-to-video',

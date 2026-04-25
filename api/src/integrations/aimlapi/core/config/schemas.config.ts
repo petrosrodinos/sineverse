@@ -23,6 +23,8 @@ export const VIDEO_MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
   [VideoModels.KLING_VIDEO_V3_PRO]: KlingSchemas.KlingVideoV3TextToVideoSchema,
   [VideoModels.KLING_VIDEO_V3_STANDARD_IMAGE]:
     KlingSchemas.KlingVideoV3ImageToVideoSchema,
+  [VideoModels.KLING_VIDEO_V3_PRO_IMAGE]:
+    KlingSchemas.KlingVideoV3ImageToVideoSchema,
   [VideoModels.KLING_STANDARD_IMAGE_TO_VIDEO]:
     KlingSchemas.KlingStandardImageToVideoSchema,
   [VideoModels.KLING_V1_PRO_IMAGE_TO_VIDEO]:
