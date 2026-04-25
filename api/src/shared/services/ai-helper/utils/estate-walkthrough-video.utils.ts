@@ -13,7 +13,7 @@ export const estateWalkthroughVideoConfig = {
     'Natural daylight through windows, warm neutral tones, clean lines, tasteful staging.',
     'Stable horizon, no handheld shake; cinematic depth and soft parallax between foreground and background.',
     'Inviting, aspirational mood suitable for Airbnb or brokerage listings.',
-    'No people, no faces, no text overlays, no logos, no watermarks, no UI.',
-    'Photorealistic continuity with the source room; avoid warping walls, doors, or furniture.',
+    'No people, no faces, no text overlays, no logos, no watermarks, no UI, no showing people at the mirrors.',
+    'Photorealistic continuity with the source room; avoid warping walls, doors, or showing or generating furniture and decoration that does not exist in the source photo.',
   ].join(' '),
 } as const;

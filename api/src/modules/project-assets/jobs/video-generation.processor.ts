@@ -325,8 +325,22 @@ export class VideoGenerationProcessor extends WorkerHost {
         ].includes(normalizedStatus);
 
         if (isCompleted && statusResponse.video?.url) {
+          let finalStatusResponse = statusResponse;
+
+          if (!statusResponse.meta) {
+            try {
+              const refreshedStatus =
+                await this.aimlApiService.video.getStatus(taskId);
+
+              if (refreshedStatus.meta) {
+                finalStatusResponse = refreshedStatus;
+              }
+            } catch {
+            }
+          }
+
           const videoUuid = await this.documentsService.saveVideoFromUrl(
-            statusResponse.video.url,
+            finalStatusResponse.video?.url ?? statusResponse.video.url,
             `video_${projectAssetUuid}.mp4`,
           );
 
@@ -335,7 +349,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             data: {
               status: AssetStatus.COMPLETED,
               document_uuid: videoUuid,
-              raw_response: (statusResponse.raw ?? statusResponse) as any,
+              raw_response: (finalStatusResponse.raw ?? finalStatusResponse) as any,
             } as any,
           });
 
@@ -373,7 +387,7 @@ export class VideoGenerationProcessor extends WorkerHost {
             providerCostUsdPerSecond * DEFAULT_VIDEO_DURATION_SECONDS;
 
           this.logger.log(
-            `[video-poll:${taskId}] completed — meta=${JSON.stringify(statusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd=${providerCostUsd}`,
+            `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd=${providerCostUsd}`,
           );
 
           const fixedCreditsDeduction = isEstateWalkthrough

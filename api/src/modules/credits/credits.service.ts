@@ -213,7 +213,37 @@ export class CreditsService {
       }),
     ]);
 
-    return { total, page, limit, items };
+    const sourceRefUuids = Array.from(
+      new Set(
+        items
+          .map((item) => item.source_ref_uuid)
+          .filter((uuid): uuid is string => typeof uuid === 'string' && !!uuid),
+      ),
+    );
+
+    const projectAssets = sourceRefUuids.length
+      ? await this.prisma.projectAsset.findMany({
+          where: { uuid: { in: sourceRefUuids } },
+          select: { uuid: true, raw_response: true },
+        })
+      : [];
+
+    const rawResponseByAssetUuid = new Map<string, Prisma.JsonValue | null>(
+      projectAssets.map((asset) => [asset.uuid, asset.raw_response]),
+    );
+
+    return {
+      total,
+      page,
+      limit,
+      items: items.map((item) => ({
+        ...item,
+        raw_response:
+          (item.source_ref_uuid
+            ? (rawResponseByAssetUuid.get(item.source_ref_uuid) ?? null)
+            : null) ?? null,
+      })),
+    };
   }
 
   async getUsageForAdminDashboard(query: AdminUsageQueryDto) {
@@ -271,11 +301,36 @@ export class CreditsService {
       }),
     ]);
 
+    const sourceRefUuids = Array.from(
+      new Set(
+        items
+          .map((item) => item.source_ref_uuid)
+          .filter((uuid): uuid is string => typeof uuid === 'string' && !!uuid),
+      ),
+    );
+
+    const projectAssets = sourceRefUuids.length
+      ? await this.prisma.projectAsset.findMany({
+          where: { uuid: { in: sourceRefUuids } },
+          select: { uuid: true, raw_response: true },
+        })
+      : [];
+
+    const rawResponseByAssetUuid = new Map<string, Prisma.JsonValue | null>(
+      projectAssets.map((asset) => [asset.uuid, asset.raw_response]),
+    );
+
     return {
       total,
       page,
       limit,
-      items,
+      items: items.map((item) => ({
+        ...item,
+        raw_response:
+          (item.source_ref_uuid
+            ? (rawResponseByAssetUuid.get(item.source_ref_uuid) ?? null)
+            : null) ?? null,
+      })),
     };
   }
 
