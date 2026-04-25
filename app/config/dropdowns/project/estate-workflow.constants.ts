@@ -48,29 +48,59 @@ export const ESTATE_VIDEO_MODEL_OPTIONS = [
     price: 0.065,
   },
   {
-    id: "klingai/video-v3-standard-image-to-video",
-    label: "Kling 2.6 Pro (Best Overall)",
+    id: "klingai/video-v2-6-pro-image-to-video",
+    label: "Kling AI / Kling 2.6 Pro Image-to-Video",
     price: 0.091,
   },
   {
-    id: "ltxv/ltxv-2-fast",
-    label: "LTXV 2 Fast (Cheapest)",
-    price: 0.052,
-  },
-  {
-    id: "klingai/v2.1-master-image-to-video",
-    label: "Wan 2.6 (High Consistency)",
-    price: 0.13,
-  },
-  {
-    id: "kling-video/v1/standard/image-to-video",
-    label: "Kling O1 Image-to-Video (Stable Alternative)",
+    id: "klingai/video-o1-image-to-video",
+    label: "Kling AI / Kling Video O1 Image to Video",
     price: 0.118,
   },
   {
-    id: "google/veo-3.0-i2v",
-    label: "Veo 3.1 Lite (Premium Quality)",
+    id: "alibaba/wan2.5-i2v-preview",
+    label: "Alibaba Cloud / Wan 2.5 Image-to-Video Preview",
+    price: 0.065,
+  },
+  {
+    id: "klingai/v2.5-turbo/pro/image-to-video",
+    label: "Kuaishou Technology / Kling Video v2.5 Turbo Pro Image-to-Video",
+    price: 0.091,
+  },
+  {
+    id: "kling-video/v1.6/standard/multi-image-to-video",
+    label: "Kuaishou Technology / Kling V1.6 Multi-Image-to-Video",
+    price: 0.059,
+  },
+  {
+    id: "kling-video/v2.1/standard/image-to-video",
+    label: "Kuaishou Technology / Kling V2.1 Standard Image-to-Video",
+    price: 0.059,
+  },
+  {
+    id: "kling-video/v1/pro/image-to-video",
+    label: "Kuaishou Technology / Kling V1.5 Pro Image-to-Video",
+    price: 0.103,
+  },
+  {
+    id: "kling-video/v1/standard/image-to-video",
+    label: "Kuaishou Technology / Kling V1.5 Standard Image-to-Video",
+    price: 0.059,
+  },
+  {
+    id: "veo2/image-to-video",
+    label: "Google / Veo 2 Image-to-Video",
+    price: 0.455,
+  },
+  {
+    id: "google/veo-3.1-i2v",
+    label: "Google / Veo 3.1 Image-to-Video",
     price: 0.104,
+  },
+  {
+    id: "klingai/video-v3-standard-image-to-video",
+    label: "Kling AI / Kling Video v3 Standard Image-to-Video",
+    price: 0.218,
   },
 ] as const;
 

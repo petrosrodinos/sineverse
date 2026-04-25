@@ -5,6 +5,7 @@ import * as GoogleSchemas from '../schemas/google/google-video.schemas';
 import * as SeedanceSchemas from '../schemas/seedance/seedance-video.schemas';
 import * as LtxvSchemas from '../schemas/ltxv/ltxv-video.schemas';
 import * as RunwaySchemas from '../schemas/runway/runway-video.schemas';
+import * as AlibabaSchemas from '../schemas/alibaba/alibaba-video.schemas';
 
 import * as KlingImageSchemas from '../schemas/kling/kling-image.schemas';
 import * as GoogleImageSchemas from '../schemas/google/google-image.schemas';
@@ -24,6 +25,18 @@ export const VIDEO_MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
     KlingSchemas.KlingVideoV3ImageToVideoSchema,
   [VideoModels.KLING_STANDARD_IMAGE_TO_VIDEO]:
     KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_V1_PRO_IMAGE_TO_VIDEO]:
+    KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_V2_1_STANDARD_IMAGE_TO_VIDEO]:
+    KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_V2_5_TURBO_PRO_IMAGE]:
+    KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_VIDEO_V2_6_PRO_IMAGE]:
+    KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_VIDEO_O1_IMAGE]:
+    KlingSchemas.KlingStandardImageToVideoSchema,
+  [VideoModels.KLING_V1_6_MULTI_IMAGE_TO_VIDEO]:
+    KlingSchemas.KlingV16MultiImageToVideoSchema,
   [VideoModels.KLING_2_1]: KlingSchemas.KlingV21TextToVideoSchema,
   [VideoModels.KLING_2_1_IMAGE]: KlingSchemas.KlingImageToVideoV21Schema,
 
@@ -32,11 +45,15 @@ export const VIDEO_MODEL_SCHEMAS_CONFIG: Record<string, z.ZodTypeAny> = {
   [VideoModels.VEO_3_FAST]: GoogleSchemas.GoogleVeo3T2VideoSchema,
   [VideoModels.VEO_3_1]: GoogleSchemas.GoogleVeo3T2VideoSchema,
   [VideoModels.VEO_3_1_FAST]: GoogleSchemas.GoogleVeo3T2VideoSchema,
+  [VideoModels.VEO_3_1_IMAGE]: GoogleSchemas.GoogleVeo3I2VideoSchema,
   [VideoModels.VEO_2_IMAGE]: GoogleSchemas.GoogleVeo3I2VideoSchema,
+  [VideoModels.VEO_2_IMAGE_LEGACY]: GoogleSchemas.GoogleVeo2I2VideoSchema,
 
   [VideoModels.LTXV_2]: LtxvSchemas.Ltxv2VideoSchema,
   [VideoModels.LTXV_2_FAST]: LtxvSchemas.Ltxv2FastVideoSchema,
   [VideoModels.RUNWAY_ACT_TWO]: RunwaySchemas.RunwayActTwoImageToVideoSchema,
+  [VideoModels.WAN_2_5_IMAGE_PREVIEW]:
+    AlibabaSchemas.AlibabaWan25I2VPreviewSchema,
 
   // ByteDance / Seedance
   [VideoModels.SEEDANCE_1_0_PRO]: SeedanceSchemas.SeedanceProT2VSchema,

@@ -42,7 +42,7 @@ export const GoogleVeo3T2VideoSchema = z.object({
 });
 
 export const GoogleVeo3I2VideoSchema = z.object({
-  model: z.literal('google/veo-3.0-i2v'),
+  model: z.enum(['google/veo-3.0-i2v', 'google/veo-3.1-i2v']),
   prompt: z.string(),
   image_url: ImageURLSchema.optional(),
   negative_prompt: z.string().optional(),
@@ -54,6 +54,20 @@ export const GoogleVeo3I2VideoSchema = z.object({
   generate_audio: GenerateAudioSchema,
 });
 
+export const GoogleVeo2I2VideoSchema = z.object({
+  model: z.literal('veo2/image-to-video'),
+  prompt: z.string(),
+  image_url: ImageURLSchema,
+  tail_image_url: ImageURLSchema.optional(),
+  negative_prompt: z.string().optional(),
+  duration: z.union([z.literal(5), z.literal(6), z.literal(7), z.literal(8)]),
+  aspect_ratio: z.enum(['16:9', '9:16']).default('16:9'),
+  seed: z.number().int().optional(),
+  enhance_prompt: EnhancePromptSchema,
+});
+
 export type GoogleVeo3T2VideoRequest = z.infer<typeof GoogleVeo3T2VideoSchema>;
 
 export type GoogleVeo3I2VideoRequest = z.infer<typeof GoogleVeo3I2VideoSchema>;
+
+export type GoogleVeo2I2VideoRequest = z.infer<typeof GoogleVeo2I2VideoSchema>;

@@ -118,7 +118,14 @@ export const KlingStandardTextToVideoSchema = z.object({
 });
 
 export const KlingStandardImageToVideoSchema = z.object({
-  model: z.enum(['kling-video/v1/standard/image-to-video']),
+  model: z.enum([
+    'kling-video/v1/standard/image-to-video',
+    'kling-video/v1/pro/image-to-video',
+    'kling-video/v2.1/standard/image-to-video',
+    'klingai/v2.5-turbo/pro/image-to-video',
+    'klingai/video-v2-6-pro-image-to-video',
+    'klingai/video-o1-image-to-video',
+  ]),
   image_url: z.string().url(),
   prompt: z.string(),
   tail_image_url: z.string().url().optional(),
@@ -195,6 +202,15 @@ export const KlingVideoV3ImageToVideoSchema = z
     }
   });
 
+export const KlingV16MultiImageToVideoSchema = z.object({
+  model: z.literal('kling-video/v1.6/standard/multi-image-to-video'),
+  image_list: z.array(UriSchema).min(2).max(4),
+  prompt: z.string().optional(),
+  aspect_ratio: z.enum(['16:9', '9:16', '1:1']).default('16:9'),
+  duration: DurationSchema,
+  negative_prompt: z.string().optional(),
+});
+
 export type KlingVideoV3ImageToVideoRequest = z.infer<
   typeof KlingVideoV3ImageToVideoSchema
 >;
@@ -217,4 +233,8 @@ export type KlingStandardImageToVideoInput = z.infer<
 
 export type KlingStandardTextToVideoInput = z.infer<
   typeof KlingStandardTextToVideoSchema
+>;
+
+export type KlingV16MultiImageToVideoInput = z.infer<
+  typeof KlingV16MultiImageToVideoSchema
 >;

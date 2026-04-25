@@ -66,8 +66,20 @@ const normalizeDuration = (
     return [5, 10].includes(normalized) ? normalized : 5;
   }
 
+  if (model.includes('veo2/image-to-video')) {
+    if (normalized < 5) return 5;
+    if (normalized > 8) return 8;
+    return normalized;
+  }
+
   if (
     model.includes('kling-video/v1/standard') ||
+    model.includes('kling-video/v1/pro') ||
+    model.includes('kling-video/v2.1/standard') ||
+    model.includes('klingai/v2.5-turbo/pro/image-to-video') ||
+    model.includes('klingai/video-v2-6-pro-image-to-video') ||
+    model.includes('klingai/video-o1-image-to-video') ||
+    model.includes('kling-video/v1.6/standard/multi-image-to-video') ||
     model.includes('v2.1-master')
   ) {
     return [5, 10].includes(normalized) ? normalized : 5;
@@ -83,6 +95,10 @@ const normalizeDuration = (
 
   if (model.includes('veo')) {
     return [4, 6, 8].includes(normalized) ? normalized : 8;
+  }
+
+  if (model.includes('alibaba/wan2.5-i2v-preview')) {
+    return [5, 10].includes(normalized) ? normalized : 10;
   }
 
   return normalized;
@@ -185,6 +201,14 @@ export const transformVariationToModelPayload = (
       klingPayload.image_url = variation.prompt_image.document.url;
     }
 
+    if (model.includes('kling-video/v1.6/standard/multi-image-to-video')) {
+      const imageUrl = variation.prompt_image?.document?.url;
+      if (imageUrl) {
+        klingPayload.image_list = [imageUrl, imageUrl];
+      }
+      delete klingPayload.image_url;
+    }
+
     if (isV3) {
       klingPayload.shot_type = 'customize';
 
@@ -225,7 +249,10 @@ export const transformVariationToModelPayload = (
       generate_audio: resolveGenerateAudio(),
     };
 
-    if (model.includes('i2v') && variation.prompt_image?.document?.url) {
+    if (
+      (model.includes('i2v') || model.includes('image-to-video')) &&
+      variation.prompt_image?.document?.url
+    ) {
       googlePayload.image_url = variation.prompt_image.document.url;
     }
 
