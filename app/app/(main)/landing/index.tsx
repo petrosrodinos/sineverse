@@ -1,13 +1,13 @@
 import NextLink from "next/link";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter } from "@heroui/card";
-import { ArrowRight, Check, Clapperboard, Home, Video } from "lucide-react";
+import { ArrowRight, Clapperboard, Home, Video } from "lucide-react";
 
 import { LandingHashScroll } from "./components/LandingHashScroll";
+import { LandingPricingSection } from "./components/LandingPricingSection";
 
 import { Routes } from "@/config/routes";
 import { environments } from "@/config/environments";
-import { sineversePlans } from "@/config/marketing/sineverse-plans";
 
 const products = [
   {
@@ -139,80 +139,7 @@ export function LandingPage() {
               })}
             </div>
 
-            <section
-              className="scroll-mt-24 mt-8 border-t border-divider/40 pt-10 md:mt-10 md:pt-12"
-              id="pricing"
-            >
-              <div className="mx-auto max-w-7xl">
-                <div className="mx-auto max-w-2xl text-center">
-                  <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-                    Pricing
-                  </h2>
-                </div>
-                <div className="mt-5 grid gap-4 md:mt-8 md:gap-5 lg:grid-cols-3">
-                  {sineversePlans.map((plan) => (
-                    <Card
-                      key={plan.name}
-                      className={`border shadow-none backdrop-blur-sm ${plan.highlighted ? "border-primary/50 bg-primary/5 ring-1 ring-primary/20 dark:bg-primary/10" : "border-divider/50 bg-content1/30 dark:bg-content1/20"}`}
-                    >
-                      <CardBody className="gap-4 p-6">
-                        <div>
-                          <h3 className="text-xl font-semibold text-foreground">
-                            {plan.name}
-                          </h3>
-                          <p className="mt-2 text-sm text-default-500">
-                            {plan.description}
-                          </p>
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                          {plan.price !== "Custom" && (
-                            <span className="text-sm font-medium text-default-500">
-                              $
-                            </span>
-                          )}
-                          <span className="text-4xl font-semibold tracking-tight text-foreground">
-                            {plan.price}
-                          </span>
-                          {plan.period ? (
-                            <span className="text-sm text-default-500">
-                              {plan.period}
-                            </span>
-                          ) : null}
-                        </div>
-                        <ul className="flex flex-col gap-3">
-                          {plan.features.map((line) => (
-                            <li
-                              key={line}
-                              className="flex gap-3 text-sm text-default-600"
-                            >
-                              <Check
-                                className="size-4 shrink-0 text-primary"
-                                strokeWidth={2.5}
-                              />
-                              {line}
-                            </li>
-                          ))}
-                        </ul>
-                      </CardBody>
-                      <CardFooter className="px-6 pb-6 pt-0">
-                        <Button
-                          as={NextLink}
-                          className="w-full font-medium"
-                          color={plan.highlighted ? "primary" : "default"}
-                          href={Routes.auth.sign_up}
-                          radius="full"
-                          variant={plan.highlighted ? "shadow" : "bordered"}
-                        >
-                          {plan.price === "Custom"
-                            ? "Contact sales"
-                            : "Get started"}
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <LandingPricingSection />
           </div>
         </section>
 

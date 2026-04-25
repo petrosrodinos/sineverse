@@ -632,7 +632,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
         </Card>
       )}
 
-      {!isRendering && !isVisitor && (
+      {!isRendering && (!isVisitor || !isCompleted) && (
         <Button
           className="h-12 bg-gradient-to-r from-secondary-500 to-secondary-400 font-semibold text-white shadow-lg shadow-secondary-500/30 transition-transform duration-200 hover:scale-[1.01]"
           color="secondary"
