@@ -40,6 +40,10 @@ export interface AdminUserRow {
   role: RoleType;
   credits_balance: number;
   token_usage: number;
+  image_generations?: number;
+  video_generations?: number;
+  projects_count?: number;
+  final_projects_count?: number;
   created_at: string;
 }
 

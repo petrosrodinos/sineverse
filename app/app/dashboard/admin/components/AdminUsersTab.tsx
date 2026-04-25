@@ -47,6 +47,8 @@ const userColumns = [
   { key: "identity", label: "NAME / EMAIL" },
   { key: "role", label: "ROLE" },
   { key: "tokens", label: "TOKEN BALANCE / USAGE" },
+  { key: "generations", label: "GENERATIONS (IMAGE / VIDEO)" },
+  { key: "projects", label: "PROJECTS / FINAL PROJECTS" },
   { key: "created_at", label: "CREATED AT" },
   { key: "actions", label: "ACTIONS" },
 ];
@@ -260,6 +262,32 @@ export function AdminUsersTab({ isActive }: AdminUsersTabProps) {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+            );
+          }
+
+          if (columnKey === "generations") {
+            return (
+              <div className="flex flex-col">
+                <span className="font-medium">
+                  {(row.image_generations ?? 0).toLocaleString()} images
+                </span>
+                <span className="text-xs text-default-500">
+                  {(row.video_generations ?? 0).toLocaleString()} videos
+                </span>
+              </div>
+            );
+          }
+
+          if (columnKey === "projects") {
+            return (
+              <div className="flex flex-col">
+                <span className="font-medium">
+                  {(row.projects_count ?? 0).toLocaleString()} projects
+                </span>
+                <span className="text-xs text-default-500">
+                  {(row.final_projects_count ?? 0).toLocaleString()} final
+                </span>
+              </div>
             );
           }
 

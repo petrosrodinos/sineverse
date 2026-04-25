@@ -6,7 +6,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
-import { AuthRole, CreditLedgerType, Prisma } from '@/generated/prisma';
+import {
+  AssetRole,
+  AuthRole,
+  CreditLedgerType,
+  Prisma,
+} from '@/generated/prisma';
 import * as bcrypt from 'bcrypt';
 import { DocumentsService } from '../documents/documents.service';
 import { AdminUsersQueryDto } from './dto/admin-users-query.dto';
@@ -137,22 +142,69 @@ export class UsersService {
       }),
     ]);
 
-    const usageByUser = users.length
-      ? await this.prisma.creditLedgerEntry.groupBy({
-          by: ['user_uuid'],
-          where: {
-            type: CreditLedgerType.USAGE,
-            user_uuid: { in: users.map((user) => user.uuid) },
-          },
-          _sum: { delta_credits: true },
-        })
-      : [];
+    const userUuids = users.map((user) => user.uuid);
+
+    const [usageByUser, imageGenerationsByUser, videoGenerationsByUser, projectsByUser, finalProjectsByUser] =
+      users.length
+        ? await Promise.all([
+            this.prisma.creditLedgerEntry.groupBy({
+              by: ['user_uuid'],
+              where: {
+                type: CreditLedgerType.USAGE,
+                user_uuid: { in: userUuids },
+              },
+              _sum: { delta_credits: true },
+            }),
+            this.prisma.projectAsset.groupBy({
+              by: ['user_uuid'],
+              where: {
+                user_uuid: { in: userUuids },
+                role: AssetRole.GENERATED_IMAGE,
+              },
+              _count: { _all: true },
+            }),
+            this.prisma.projectAsset.groupBy({
+              by: ['user_uuid'],
+              where: {
+                user_uuid: { in: userUuids },
+                role: AssetRole.GENERATED_VIDEO,
+              },
+              _count: { _all: true },
+            }),
+            this.prisma.project.groupBy({
+              by: ['user_uuid'],
+              where: { user_uuid: { in: userUuids } },
+              _count: { _all: true },
+            }),
+            this.prisma.finalProject.groupBy({
+              by: ['user_uuid'],
+              where: { user_uuid: { in: userUuids } },
+              _count: { _all: true },
+            }),
+          ])
+        : [[], [], [], [], []];
 
     const usageMap = new Map<string, number>(
       usageByUser.map((row) => [
         row.user_uuid,
         Math.abs(row._sum.delta_credits ?? 0),
       ]),
+    );
+
+    const imageGenerationsMap = new Map<string, number>(
+      imageGenerationsByUser.map((row) => [row.user_uuid, row._count._all]),
+    );
+
+    const videoGenerationsMap = new Map<string, number>(
+      videoGenerationsByUser.map((row) => [row.user_uuid, row._count._all]),
+    );
+
+    const projectsMap = new Map<string, number>(
+      projectsByUser.map((row) => [row.user_uuid, row._count._all]),
+    );
+
+    const finalProjectsMap = new Map<string, number>(
+      finalProjectsByUser.map((row) => [row.user_uuid, row._count._all]),
     );
 
     return {
@@ -162,6 +214,10 @@ export class UsersService {
       items: users.map((user) => ({
         ...user,
         token_usage: usageMap.get(user.uuid) ?? 0,
+        image_generations: imageGenerationsMap.get(user.uuid) ?? 0,
+        video_generations: videoGenerationsMap.get(user.uuid) ?? 0,
+        projects_count: projectsMap.get(user.uuid) ?? 0,
+        final_projects_count: finalProjectsMap.get(user.uuid) ?? 0,
       })),
     };
   }
