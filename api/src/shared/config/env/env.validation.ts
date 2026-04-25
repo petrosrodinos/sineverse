@@ -25,6 +25,7 @@ const EnvSchema = z.object({
   OPENAI_API_KEY: z.string().optional(),
   GOOGLE_API_KEY: z.string().optional(),
   AIMLAPI_KEY: z.string().optional(),
+  APIFY_TOKEN: z.string().optional(),
   BULL_BOARD_USER: z.string().optional(),
   BULL_BOARD_PASSWORD: z.string().optional(),
 });
