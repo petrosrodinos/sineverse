@@ -186,6 +186,7 @@ exports.Prisma.ProjectAssetScalarFieldEnum = {
   role: 'role',
   error_message: 'error_message',
   metadata: 'metadata',
+  raw_response: 'raw_response',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };

@@ -188,6 +188,7 @@ model ProjectAsset {
   role                 AssetRole    @default(GENERATED_VIDEO)
   error_message        String?      @db.Text
   metadata             Json?
+  raw_response         Json?
   created_at           DateTime     @default(now())
   updated_at           DateTime     @updatedAt
 

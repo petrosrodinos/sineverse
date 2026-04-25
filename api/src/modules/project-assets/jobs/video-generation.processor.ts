@@ -335,7 +335,8 @@ export class VideoGenerationProcessor extends WorkerHost {
             data: {
               status: AssetStatus.COMPLETED,
               document_uuid: videoUuid,
-            },
+              raw_response: (statusResponse.raw ?? statusResponse) as any,
+            } as any,
           });
 
           const metadata = (currentAsset.metadata ?? {}) as Record<

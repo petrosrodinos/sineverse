@@ -62,6 +62,7 @@ export class CreateVideoAdapter {
           ? { name: response.error.name, message: response.error.message }
           : null,
         meta: response.meta ?? null,
+        raw: response,
       };
     } catch (error) {
       this.handleProviderError(error, 'status retrieval');

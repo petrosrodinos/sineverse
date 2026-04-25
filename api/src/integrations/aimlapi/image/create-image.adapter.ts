@@ -28,7 +28,10 @@ export class CreateImageAdapter {
         throw new Error('Invalid response: Missing generation ID');
       }
 
-      return response;
+      return {
+        ...response,
+        raw: response,
+      };
     } catch (error) {
       this.handleError(error, `generation with model ${request.model}`);
     }

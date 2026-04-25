@@ -7823,6 +7823,7 @@ export namespace Prisma {
     role: number
     error_message: number
     metadata: number
+    raw_response: number
     created_at: number
     updated_at: number
     _all: number
@@ -7888,6 +7889,7 @@ export namespace Prisma {
     role?: true
     error_message?: true
     metadata?: true
+    raw_response?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -7994,6 +7996,7 @@ export namespace Prisma {
     role: $Enums.AssetRole
     error_message: string | null
     metadata: JsonValue | null
+    raw_response: JsonValue | null
     created_at: Date
     updated_at: Date
     _count: ProjectAssetCountAggregateOutputType | null
@@ -8032,6 +8035,7 @@ export namespace Prisma {
     role?: boolean
     error_message?: boolean
     metadata?: boolean
+    raw_response?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8060,6 +8064,7 @@ export namespace Prisma {
     role?: boolean
     error_message?: boolean
     metadata?: boolean
+    raw_response?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8084,6 +8089,7 @@ export namespace Prisma {
     role?: boolean
     error_message?: boolean
     metadata?: boolean
+    raw_response?: boolean
     created_at?: boolean
     updated_at?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8108,11 +8114,12 @@ export namespace Prisma {
     role?: boolean
     error_message?: boolean
     metadata?: boolean
+    raw_response?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type ProjectAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "scene_uuid" | "scene_variation_uuid" | "provider_job_id" | "document_uuid" | "selected" | "status" | "type" | "role" | "error_message" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["projectAsset"]>
+  export type ProjectAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "scene_uuid" | "scene_variation_uuid" | "provider_job_id" | "document_uuid" | "selected" | "status" | "type" | "role" | "error_message" | "metadata" | "raw_response" | "created_at" | "updated_at", ExtArgs["result"]["projectAsset"]>
   export type ProjectAssetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -8166,6 +8173,7 @@ export namespace Prisma {
       role: $Enums.AssetRole
       error_message: string | null
       metadata: Prisma.JsonValue | null
+      raw_response: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["projectAsset"]>
@@ -8613,6 +8621,7 @@ export namespace Prisma {
     readonly role: FieldRef<"ProjectAsset", 'AssetRole'>
     readonly error_message: FieldRef<"ProjectAsset", 'String'>
     readonly metadata: FieldRef<"ProjectAsset", 'Json'>
+    readonly raw_response: FieldRef<"ProjectAsset", 'Json'>
     readonly created_at: FieldRef<"ProjectAsset", 'DateTime'>
     readonly updated_at: FieldRef<"ProjectAsset", 'DateTime'>
   }
@@ -21598,6 +21607,7 @@ export namespace Prisma {
     role: 'role',
     error_message: 'error_message',
     metadata: 'metadata',
+    raw_response: 'raw_response',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -22429,6 +22439,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFilter<"ProjectAsset"> | $Enums.AssetRole
     error_message?: StringNullableFilter<"ProjectAsset"> | string | null
     metadata?: JsonNullableFilter<"ProjectAsset">
+    raw_response?: JsonNullableFilter<"ProjectAsset">
     created_at?: DateTimeFilter<"ProjectAsset"> | Date | string
     updated_at?: DateTimeFilter<"ProjectAsset"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -22456,6 +22467,7 @@ export namespace Prisma {
     role?: SortOrder
     error_message?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
+    raw_response?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -22486,6 +22498,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFilter<"ProjectAsset"> | $Enums.AssetRole
     error_message?: StringNullableFilter<"ProjectAsset"> | string | null
     metadata?: JsonNullableFilter<"ProjectAsset">
+    raw_response?: JsonNullableFilter<"ProjectAsset">
     created_at?: DateTimeFilter<"ProjectAsset"> | Date | string
     updated_at?: DateTimeFilter<"ProjectAsset"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -22513,6 +22526,7 @@ export namespace Prisma {
     role?: SortOrder
     error_message?: SortOrderInput | SortOrder
     metadata?: SortOrderInput | SortOrder
+    raw_response?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: ProjectAssetCountOrderByAggregateInput
@@ -22540,6 +22554,7 @@ export namespace Prisma {
     role?: EnumAssetRoleWithAggregatesFilter<"ProjectAsset"> | $Enums.AssetRole
     error_message?: StringNullableWithAggregatesFilter<"ProjectAsset"> | string | null
     metadata?: JsonNullableWithAggregatesFilter<"ProjectAsset">
+    raw_response?: JsonNullableWithAggregatesFilter<"ProjectAsset">
     created_at?: DateTimeWithAggregatesFilter<"ProjectAsset"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"ProjectAsset"> | Date | string
   }
@@ -23939,6 +23954,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -23966,6 +23982,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -23982,6 +23999,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -24009,6 +24027,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -24031,6 +24050,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -24044,6 +24064,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24063,6 +24084,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25702,6 +25724,7 @@ export namespace Prisma {
     role?: SortOrder
     error_message?: SortOrder
     metadata?: SortOrder
+    raw_response?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -28846,6 +28869,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     project: ProjectCreateNestedOneWithoutProject_assetsInput
@@ -28871,6 +28895,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -29168,6 +29193,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFilter<"ProjectAsset"> | $Enums.AssetRole
     error_message?: StringNullableFilter<"ProjectAsset"> | string | null
     metadata?: JsonNullableFilter<"ProjectAsset">
+    raw_response?: JsonNullableFilter<"ProjectAsset">
     created_at?: DateTimeFilter<"ProjectAsset"> | Date | string
     updated_at?: DateTimeFilter<"ProjectAsset"> | Date | string
   }
@@ -29378,6 +29404,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -29403,6 +29430,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -29759,6 +29787,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -29784,6 +29813,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -30006,6 +30036,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -30031,6 +30062,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -30331,6 +30363,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -30357,6 +30390,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -30377,6 +30411,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -30403,6 +30438,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     video_assets?: ProjectAssetUncheckedCreateNestedManyWithoutPrompt_imagesInput
@@ -31243,6 +31279,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -31269,6 +31306,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -31465,6 +31503,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -31491,6 +31530,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -32036,6 +32076,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     user: UserCreateNestedOneWithoutProject_assetsInput
@@ -32061,6 +32102,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     prompt_images?: ProjectAssetUncheckedCreateNestedManyWithoutVideo_assetsInput
@@ -32543,6 +32585,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -32732,6 +32775,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     project?: ProjectUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -32757,6 +32801,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -32778,6 +32823,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32988,6 +33034,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33067,6 +33114,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -33092,6 +33140,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -33113,6 +33162,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33236,6 +33286,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33283,6 +33334,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -33308,6 +33360,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -33329,6 +33382,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33347,6 +33401,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -33360,6 +33415,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -33385,6 +33441,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -33406,6 +33463,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33436,6 +33494,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -33462,6 +33521,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -33483,6 +33543,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33496,6 +33557,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -33522,6 +33584,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     video_assets?: ProjectAssetUncheckedUpdateManyWithoutPrompt_imagesNestedInput
@@ -33543,6 +33606,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33936,6 +34000,7 @@ export namespace Prisma {
     role?: $Enums.AssetRole
     error_message?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -34044,6 +34109,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProject_assetsNestedInput
@@ -34069,6 +34135,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     prompt_images?: ProjectAssetUncheckedUpdateManyWithoutVideo_assetsNestedInput
@@ -34090,6 +34157,7 @@ export namespace Prisma {
     role?: EnumAssetRoleFieldUpdateOperationsInput | $Enums.AssetRole
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    raw_response?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

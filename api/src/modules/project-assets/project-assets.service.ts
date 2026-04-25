@@ -796,6 +796,7 @@ export class ProjectAssetsService {
           document_uuid: documentUuid,
           status: AssetStatus.COMPLETED,
           metadata: generateImageDto as any,
+          raw_response: (response.raw ?? response) as any,
         },
       });
 

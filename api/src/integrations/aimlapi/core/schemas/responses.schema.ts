@@ -32,6 +32,7 @@ export const VideoStatusResponseSchema = z.object({
     .nullable()
     .optional(),
   meta: MetaSchema.nullable(),
+  raw: z.unknown().optional(),
 });
 
 export const ImageDataSchema = z.object({
@@ -42,6 +43,7 @@ export const ImageDataSchema = z.object({
 export const ImageGenerationResponseSchema = z.object({
   data: z.array(ImageDataSchema).nullable(),
   meta: MetaSchema.nullable(),
+  raw: z.unknown().optional(),
 });
 
 export type ImageGenerationResponse = z.infer<
