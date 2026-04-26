@@ -218,11 +218,19 @@ export class RenderProcessor extends WorkerHost {
 
     if (musicEntry?.audio?.filename) {
       music = {
-        audio_filename: musicEntry.audio.filename,
+        audio_filename: this.normalizeAudioFilename(musicEntry.audio.filename),
         volume: musicEntry.volume ?? 1.0,
       };
     }
 
     return { clips, music };
+  }
+
+  private normalizeAudioFilename(filename: string): string {
+    const cleaned = filename.split('?')[0].split('#')[0].replace(/\\/g, '/');
+    const segments = cleaned.split('/').filter(Boolean);
+    const lastSegment = segments[segments.length - 1];
+
+    return lastSegment ?? filename;
   }
 }
