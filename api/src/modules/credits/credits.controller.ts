@@ -13,18 +13,19 @@ import { CreditsService } from './credits.service';
 
 @ApiTags('Credits')
 @Controller('credits')
-@UseGuards(JwtGuard)
 @ApiBearerAuth()
 export class CreditsController {
   constructor(private readonly creditsService: CreditsService) {}
 
   @Get('summary')
+  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get current user credits summary' })
   getSummary(@CurrentUser('uuid') user_uuid: string) {
     return this.creditsService.getSummary(user_uuid);
   }
 
   @Get('usage-stats')
+  @UseGuards(JwtGuard)
   @ApiOperation({
     summary: 'Get total credits used with project-type breakdown',
   })
@@ -39,6 +40,7 @@ export class CreditsController {
   }
 
   @Get('usage')
+  @UseGuards(JwtGuard)
   @ApiOperation({ summary: 'Get credits usage history' })
   getUsage(
     @CurrentUser('uuid') user_uuid: string,
@@ -48,7 +50,7 @@ export class CreditsController {
   }
 
   @Get('usage/admin')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles(AuthRole.ADMIN, AuthRole.SUPER_ADMIN)
   @ApiOperation({ summary: 'Get credit usage for admin dashboard' })
   getUsageForAdmin(@Query() query: AdminUsageQueryDto) {
@@ -56,6 +58,7 @@ export class CreditsController {
   }
 
   @Get('purchases')
+  @UseGuards(JwtGuard)
   @ApiOperation({
     summary: 'Credit purchases: own history, or all purchases when admin',
   })
@@ -71,7 +74,7 @@ export class CreditsController {
   }
 
   @Post('checkout')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtGuard, RolesGuard)
   @Roles(AuthRole.USER, AuthRole.ADMIN, AuthRole.SUPER_ADMIN, AuthRole.SUPPORT)
   @ApiOperation({ summary: 'Create Stripe checkout session for credit pack' })
   createCheckout(
