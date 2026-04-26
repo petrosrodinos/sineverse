@@ -3,10 +3,26 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+import { DomainRoutingConfig } from "@/config/routing/domain-routing.config";
 import { Routes } from "@/config/routes";
 
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  const host = request.headers.get("host")?.split(":")[0]?.toLowerCase();
+
+  if (
+    host === DomainRoutingConfig.estateliftHost &&
+    pathname === DomainRoutingConfig.rootPath
+  ) {
+    const rewriteUrl = request.nextUrl.clone();
+
+    rewriteUrl.pathname = DomainRoutingConfig.estateliftLandingPath;
+
+    rewriteUrl.search = search;
+
+    return NextResponse.rewrite(rewriteUrl);
+  }
 
   const isAuthPath = pathname === "/auth" || pathname.startsWith("/auth/");
 
@@ -45,5 +61,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth", "/auth/:path*", "/dashboard/:path*"],
+  matcher: ["/", "/auth", "/auth/:path*", "/dashboard/:path*"],
 };

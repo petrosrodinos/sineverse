@@ -12,16 +12,16 @@ import {
   ESTATE_VIDEO_MODEL_OPTIONS,
   estateWalkthroughVideoConfig,
 } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
-import {
-  useTimelineMusic,
-  useUpsertTimelineMusic,
-} from "@/features/timeline-music/hooks/use-timeline-music";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 
 import { FinalRenderStep } from "./steps/FinalRenderStep";
 import { GenerateVideosStep } from "./steps/GenerateVideosStep";
 import { UploadPhotosStep } from "./steps/UploadPhotosStep";
 
+import {
+  useTimelineMusic,
+  useUpsertTimelineMusic,
+} from "@/features/timeline-music/hooks/use-timeline-music";
 import { useFinalProjectByProject } from "@/features/final-projects/hooks/use-final-projects";
 import {
   useScenes,
@@ -96,10 +96,8 @@ export function EstateStepper() {
 
   const finalProjectUuid = finalProject?.uuid ?? null;
 
-  const {
-    data: timelineMusicForSeed,
-    isFetched: timelineMusicForSeedFetched,
-  } = useTimelineMusic(finalProjectUuid ?? "");
+  const { data: timelineMusicForSeed, isFetched: timelineMusicForSeedFetched } =
+    useTimelineMusic(finalProjectUuid ?? "");
 
   const { mutate: upsertDefaultTimelineMusic } = useUpsertTimelineMusic();
 

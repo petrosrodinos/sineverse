@@ -3,6 +3,7 @@
 import type { Key } from "react";
 import type { VideoCardReorderProps } from "../video/VideoCard";
 import type { VideoReorderListRenderContext } from "../video/VideoReorderList";
+import type { MutableRefObject } from "react";
 
 import { Card, CardBody } from "@heroui/card";
 import { Select, SelectItem } from "@heroui/select";
@@ -14,7 +15,6 @@ import { isAxiosError } from "axios";
 import { Clapperboard, Coins } from "lucide-react";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
-import type { MutableRefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {

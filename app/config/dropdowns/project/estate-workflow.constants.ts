@@ -1,4 +1,3 @@
-
 export const ESTATE_VISITOR_MAX_PROMPT_IMAGES = 5;
 
 export type WorkflowStep = 1 | 2 | 3;
@@ -136,7 +135,8 @@ export const estateWalkthroughVideoConfig = {
   speedStep: 0.1,
   transitionId: ESTATE_TRANSITION_OPTIONS[0].id,
   audioTrackId: "minimal_piano",
-  videoModelId: "kling-video/v2.1/standard/image-to-video" as EstateVideoModelId,
+  videoModelId:
+    "kling-video/v2.1/standard/image-to-video" as EstateVideoModelId,
   volume: 1,
   speed: 1,
   captionStartSec: 0,

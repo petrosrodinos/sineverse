@@ -4,7 +4,13 @@ import type { Key } from "react";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
 import { Button } from "@heroui/button";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { ImagePlus, Plus, Trash2, Upload } from "lucide-react";
@@ -61,8 +67,7 @@ export function UploadPhotosStep({
   const visitorAuth = useMemo(() => getStoredVisitorAuth(), [status]);
 
   const isVisitor =
-    status === "unauthenticated" &&
-    visitorAuth?.role === RoleTypes.VISITOR;
+    status === "unauthenticated" && visitorAuth?.role === RoleTypes.VISITOR;
 
   const { data: scenes, isLoading } = useScenes(
     projectUuid ? { project_uuid: projectUuid } : undefined,
@@ -176,12 +181,7 @@ export function UploadPhotosStep({
         })),
       ]);
     },
-    [
-      setPendingFiles,
-      isVisitor,
-      promptImageAssets.length,
-      pendingFiles.length,
-    ],
+    [setPendingFiles, isVisitor, promptImageAssets.length, pendingFiles.length],
   );
 
   const handleFileChange = useCallback(

@@ -10,7 +10,11 @@ import { useCreditPacks } from "@/features/credits/hooks/use-credits";
 import { formatCreditCurrency } from "@/features/credits/utils/credits-format.utils";
 import { Routes } from "@/config/routes";
 
-const PACK_SKELETON_KEYS = ["landing-pack-skel-a", "landing-pack-skel-b", "landing-pack-skel-c"] as const;
+const PACK_SKELETON_KEYS = [
+  "landing-pack-skel-a",
+  "landing-pack-skel-b",
+  "landing-pack-skel-c",
+] as const;
 
 type PackFeatureLine = {
   key: string;
@@ -21,7 +25,10 @@ function buildPackFeatures(creditsAmount: number): PackFeatureLine[] {
   return [
     { key: "generation", label: "Use credits across Sineverse and EstateLift" },
     { key: "expiry", label: "No monthly subscription required" },
-    { key: "amount", label: `${creditsAmount.toLocaleString()} credits included` },
+    {
+      key: "amount",
+      label: `${creditsAmount.toLocaleString()} credits included`,
+    },
   ];
 }
 
@@ -29,7 +36,10 @@ export function LandingPricingSection() {
   const { data: packs, isLoading } = useCreditPacks();
 
   return (
-    <section className="scroll-mt-24 mt-8 border-t border-divider/40 pt-10 md:mt-10 md:pt-12" id="pricing">
+    <section
+      className="scroll-mt-24 mt-8 border-t border-divider/40 pt-10 md:mt-10 md:pt-12"
+      id="pricing"
+    >
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
@@ -68,7 +78,9 @@ export function LandingPricingSection() {
                 >
                   <CardBody className="gap-4 p-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground">{pack.name}</h3>
+                      <h3 className="text-xl font-semibold text-foreground">
+                        {pack.name}
+                      </h3>
                       <p className="mt-2 text-sm text-default-500">
                         Flexible credits for AI video generation.
                       </p>
@@ -80,8 +92,14 @@ export function LandingPricingSection() {
                     </div>
                     <ul className="flex flex-col gap-3">
                       {packFeatures.map((line) => (
-                        <li key={line.key} className="flex gap-3 text-sm text-default-600">
-                          <Check className="size-4 shrink-0 text-primary" strokeWidth={2.5} />
+                        <li
+                          key={line.key}
+                          className="flex gap-3 text-sm text-default-600"
+                        >
+                          <Check
+                            className="size-4 shrink-0 text-primary"
+                            strokeWidth={2.5}
+                          />
                           {line.label}
                         </li>
                       ))}
