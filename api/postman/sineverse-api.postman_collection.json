@@ -47,7 +47,10 @@
             "method": "POST",
             "auth": { "type": "noauth" },
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\",\n  \"phone\": \"+1234567890\"\n}"
+            },
             "url": "{{baseUrl}}/auth/email/register"
           }
         },
@@ -57,7 +60,10 @@
             "method": "POST",
             "auth": { "type": "noauth" },
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
             "url": "{{baseUrl}}/auth/email/login"
           }
         },
@@ -67,7 +73,10 @@
             "method": "POST",
             "auth": { "type": "noauth" },
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Guest User\"\n}"
+            },
             "url": "{{baseUrl}}/auth/email/visitor"
           }
         },
@@ -77,7 +86,10 @@
             "method": "POST",
             "auth": { "type": "noauth" },
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+            },
             "url": "{{baseUrl}}/auth/email/complete-visitor"
           }
         }
@@ -86,34 +98,34 @@
     {
       "name": "Projects",
       "item": [
-        { "name": "POST /projects", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/projects" } },
+        { "name": "POST /projects", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Modern Villa Promo\",\n  \"type\": \"ESTATE\",\n  \"original_concept\": \"Luxury listing walkthrough\",\n  \"enriched_concept\": \"Cinematic luxury villa walkthrough\",\n  \"genres\": [\"commercial\"],\n  \"tones\": [\"premium\"]\n}" }, "url": "{{baseUrl}}/projects" } },
         { "name": "GET /projects", "request": { "method": "GET", "url": "{{baseUrl}}/projects" } },
         { "name": "GET /projects/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/projects/:uuid" } },
-        { "name": "PATCH /projects/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/projects/:uuid" } },
+        { "name": "PATCH /projects/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Project Title\",\n  \"genres\": [\"commercial\", \"lifestyle\"],\n  \"tones\": [\"premium\", \"warm\"]\n}" }, "url": "{{baseUrl}}/projects/:uuid" } },
         { "name": "DELETE /projects/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/projects/:uuid" } },
-        { "name": "POST /projects/:uuid/enrich-concept", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/projects/:uuid/enrich-concept" } }
+        { "name": "POST /projects/:uuid/enrich-concept", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"directions\": \"Make it more cinematic and sales-focused\"\n}" }, "url": "{{baseUrl}}/projects/:uuid/enrich-concept" } }
       ]
     },
     {
       "name": "Scenes",
       "item": [
-        { "name": "POST /scenes", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scenes" } },
+        { "name": "POST /scenes", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"title\": \"Living Room Intro\",\n  \"description\": \"Wide reveal of living room\",\n  \"order\": 1\n}" }, "url": "{{baseUrl}}/scenes" } },
         { "name": "GET /scenes", "request": { "method": "GET", "url": "{{baseUrl}}/scenes" } },
         { "name": "GET /scenes/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/scenes/:uuid" } },
-        { "name": "PATCH /scenes/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scenes/:uuid" } },
+        { "name": "PATCH /scenes/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Scene Title\",\n  \"description\": \"Updated scene description\",\n  \"order\": 2\n}" }, "url": "{{baseUrl}}/scenes/:uuid" } },
         { "name": "DELETE /scenes/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/scenes/:uuid" } },
-        { "name": "POST /scenes/generate-ai-scenes", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scenes/generate-ai-scenes" } },
-        { "name": "POST /scenes/reorder", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scenes/reorder" } },
-        { "name": "POST /scenes/estate/from-images", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scenes/estate/from-images" } }
+        { "name": "POST /scenes/generate-ai-scenes", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"directions\": \"Generate luxury interior sequence\",\n  \"continue_scenes\": true,\n  \"enrich_concept\": true,\n  \"number_of_scenes\": 5,\n  \"scene_variations\": [1, 2]\n}" }, "url": "{{baseUrl}}/scenes/generate-ai-scenes" } },
+        { "name": "POST /scenes/reorder", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"scenes\": [\n    {\n      \"uuid\": \"22222222-2222-2222-2222-222222222222\",\n      \"order\": 1\n    },\n    {\n      \"uuid\": \"33333333-3333-3333-3333-333333333333\",\n      \"order\": 2\n    }\n  ]\n}" }, "url": "{{baseUrl}}/scenes/reorder" } },
+        { "name": "POST /scenes/estate/from-images", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"ai_model\": \"runway-act-two\"\n}" }, "url": "{{baseUrl}}/scenes/estate/from-images" } }
       ]
     },
     {
       "name": "Scene Variations",
       "item": [
-        { "name": "POST /scene-variations", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scene-variations" } },
+        { "name": "POST /scene-variations", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"scene_uuid\": \"22222222-2222-2222-2222-222222222222\",\n  \"title\": \"Variation A\",\n  \"selected\": true\n}" }, "url": "{{baseUrl}}/scene-variations" } },
         { "name": "GET /scene-variations", "request": { "method": "GET", "url": "{{baseUrl}}/scene-variations" } },
         { "name": "GET /scene-variations/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/scene-variations/:uuid" } },
-        { "name": "PATCH /scene-variations/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/scene-variations/:uuid" } },
+        { "name": "PATCH /scene-variations/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Variation\",\n  \"selected\": false\n}" }, "url": "{{baseUrl}}/scene-variations/:uuid" } },
         { "name": "DELETE /scene-variations/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/scene-variations/:uuid" } },
         { "name": "POST /scene-variations/:uuid/duplicate", "request": { "method": "POST", "url": "{{baseUrl}}/scene-variations/:uuid/duplicate" } }
       ]
@@ -121,27 +133,27 @@
     {
       "name": "Project Assets",
       "item": [
-        { "name": "POST /project-assets", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/project-assets" } },
+        { "name": "POST /project-assets", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"scene_uuid\": \"22222222-2222-2222-2222-222222222222\",\n  \"scene_variation_uuid\": \"33333333-3333-3333-3333-333333333333\"\n}" }, "url": "{{baseUrl}}/project-assets" } },
         { "name": "GET /project-assets", "request": { "method": "GET", "url": "{{baseUrl}}/project-assets" } },
         { "name": "GET /project-assets/aiml/balance", "request": { "method": "GET", "url": "{{baseUrl}}/project-assets/aiml/balance" } },
-        { "name": "POST /project-assets/estate/walkthrough-videos", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/project-assets/estate/walkthrough-videos" } },
+        { "name": "POST /project-assets/estate/walkthrough-videos", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"ai_model\": \"runway-act-two\"\n}" }, "url": "{{baseUrl}}/project-assets/estate/walkthrough-videos" } },
         { "name": "GET /project-assets/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/project-assets/:uuid" } },
         { "name": "DELETE /project-assets/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/project-assets/:uuid" } },
         { "name": "PATCH /project-assets/:uuid/select", "request": { "method": "PATCH", "url": "{{baseUrl}}/project-assets/:uuid/select" } },
-        { "name": "POST /project-assets/scene-variations/:uuid/create-video", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/create-video" } },
+        { "name": "POST /project-assets/scene-variations/:uuid/create-video", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"scene_uuid\": \"22222222-2222-2222-2222-222222222222\",\n  \"scene_variation_uuid\": \"33333333-3333-3333-3333-333333333333\",\n  \"prompt_text\": \"Cinematic interior walkthrough\",\n  \"duration_sec\": 4,\n  \"ai_model\": \"runway-act-two\",\n  \"include_sound\": false\n}" }, "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/create-video" } },
         { "name": "POST /project-assets/scene-variations/:uuid/prompt-image", "request": { "method": "POST", "body": { "mode": "formdata", "formdata": [{ "key": "file", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/prompt-image" } },
         { "name": "DELETE /project-assets/scene-variations/:uuid/prompt-image", "request": { "method": "DELETE", "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/prompt-image" } },
-        { "name": "POST /project-assets/scene-variations/:uuid/create-image", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/create-image" } },
-        { "name": "POST /project-assets/:uuid/enrich-video", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/project-assets/:uuid/enrich-video" } }
+        { "name": "POST /project-assets/scene-variations/:uuid/create-image", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"ai_model\": \"openai/gpt-image-1-5\",\n  \"prompt_text\": \"Modern bright interior, wide angle\",\n  \"image_urls\": [\"https://example.com/reference.jpg\"],\n  \"enrich_prompt\": true\n}" }, "url": "{{baseUrl}}/project-assets/scene-variations/:uuid/create-image" } },
+        { "name": "POST /project-assets/:uuid/enrich-video", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"directions\": \"Improve realism and motion continuity\",\n  \"include_prompt\": true,\n  \"include_negative_prompt\": true,\n  \"include_video_generation_options\": true\n}" }, "url": "{{baseUrl}}/project-assets/:uuid/enrich-video" } }
       ]
     },
     {
       "name": "Final Projects",
       "item": [
-        { "name": "POST /final-projects", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/final-projects" } },
+        { "name": "POST /final-projects", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"user_uuid\": \"44444444-4444-4444-4444-444444444444\",\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"title\": \"Final Estate Cut\",\n  \"duration_sec\": 30\n}" }, "url": "{{baseUrl}}/final-projects" } },
         { "name": "GET /final-projects", "request": { "method": "GET", "url": "{{baseUrl}}/final-projects" } },
         { "name": "GET /final-projects/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/final-projects/:uuid" } },
-        { "name": "PATCH /final-projects/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/final-projects/:uuid" } },
+        { "name": "PATCH /final-projects/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated Final Cut\",\n  \"duration_sec\": 35\n}" }, "url": "{{baseUrl}}/final-projects/:uuid" } },
         { "name": "DELETE /final-projects/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/final-projects/:uuid" } },
         { "name": "POST /final-projects/:uuid/render", "request": { "method": "POST", "url": "{{baseUrl}}/final-projects/:uuid/render" } },
         { "name": "GET /final-projects/:uuid/download", "request": { "method": "GET", "url": "{{baseUrl}}/final-projects/:uuid/download" } },
@@ -153,29 +165,29 @@
     {
       "name": "Timeline Clips",
       "item": [
-        { "name": "POST /timeline-clips", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-clips" } },
+        { "name": "POST /timeline-clips", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"project_uuid\": \"11111111-1111-1111-1111-111111111111\",\n  \"final_project_uuid\": \"55555555-5555-5555-5555-555555555555\",\n  \"project_asset_uuid\": \"66666666-6666-6666-6666-666666666666\",\n  \"start_sec\": 0,\n  \"end_sec\": 4,\n  \"trim_start\": 0,\n  \"trim_end\": 4,\n  \"volume\": 1,\n  \"speed\": 1\n}" }, "url": "{{baseUrl}}/timeline-clips" } },
         { "name": "GET /timeline-clips", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-clips" } },
         { "name": "GET /timeline-clips/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-clips/:uuid" } },
-        { "name": "PATCH /timeline-clips/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-clips/:uuid" } },
+        { "name": "PATCH /timeline-clips/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"start_sec\": 1,\n  \"end_sec\": 5,\n  \"volume\": 0.8,\n  \"speed\": 1,\n  \"transition_out_type\": \"FADE\",\n  \"transition_out_duration\": 0.5\n}" }, "url": "{{baseUrl}}/timeline-clips/:uuid" } },
         { "name": "DELETE /timeline-clips/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/timeline-clips/:uuid" } }
       ]
     },
     {
       "name": "Timeline Captions",
       "item": [
-        { "name": "POST /timeline-captions", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-captions" } },
+        { "name": "POST /timeline-captions", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clip_uuid\": \"77777777-7777-7777-7777-777777777777\",\n  \"text\": \"Welcome to your dream home\",\n  \"start_sec\": 0,\n  \"end_sec\": 3,\n  \"position\": \"bottom\",\n  \"style\": \"clean\"\n}" }, "url": "{{baseUrl}}/timeline-captions" } },
         { "name": "GET /timeline-captions", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-captions" } },
         { "name": "GET /timeline-captions/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-captions/:uuid" } },
-        { "name": "PATCH /timeline-captions/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-captions/:uuid" } },
+        { "name": "PATCH /timeline-captions/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"text\": \"Updated caption text\",\n  \"start_sec\": 1,\n  \"end_sec\": 4,\n  \"position\": \"center\",\n  \"style\": \"bold\"\n}" }, "url": "{{baseUrl}}/timeline-captions/:uuid" } },
         { "name": "DELETE /timeline-captions/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/timeline-captions/:uuid" } }
       ]
     },
     {
       "name": "Timeline Transitions",
       "item": [
-        { "name": "POST /timeline-transitions", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-transitions" } },
+        { "name": "POST /timeline-transitions", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"type\": \"FADE\",\n  \"duration\": 0.5\n}" }, "url": "{{baseUrl}}/timeline-transitions" } },
         { "name": "GET /timeline-transitions/:uuid", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-transitions/:uuid" } },
-        { "name": "PATCH /timeline-transitions/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-transitions/:uuid" } },
+        { "name": "PATCH /timeline-transitions/:uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"type\": \"CUT\",\n  \"duration\": 0.3\n}" }, "url": "{{baseUrl}}/timeline-transitions/:uuid" } },
         { "name": "DELETE /timeline-transitions/:uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/timeline-transitions/:uuid" } }
       ]
     },
@@ -183,7 +195,7 @@
       "name": "Timeline Music",
       "item": [
         { "name": "GET /timeline-music", "request": { "method": "GET", "url": "{{baseUrl}}/timeline-music" } },
-        { "name": "PUT /timeline-music/final-projects/:final_project_uuid", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/timeline-music/final-projects/:final_project_uuid" } }
+        { "name": "PUT /timeline-music/final-projects/:final_project_uuid", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"track_id\": \"none\",\n  \"start_sec\": 0,\n  \"end_sec\": 4,\n  \"volume\": 0.8\n}" }, "url": "{{baseUrl}}/timeline-music/final-projects/:final_project_uuid" } }
       ]
     },
     {
@@ -195,18 +207,18 @@
         { "name": "GET /credits/usage", "request": { "method": "GET", "url": "{{baseUrl}}/credits/usage" } },
         { "name": "GET /credits/usage/admin", "request": { "method": "GET", "url": "{{baseUrl}}/credits/usage/admin" } },
         { "name": "GET /credits/purchases", "request": { "method": "GET", "url": "{{baseUrl}}/credits/purchases" } },
-        { "name": "POST /credits/checkout", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/credits/checkout" } },
-        { "name": "POST /credits/webhooks/stripe", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/credits/webhooks/stripe" } }
+        { "name": "POST /credits/checkout", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"pack_key\": \"starter\"\n}" }, "url": "{{baseUrl}}/credits/checkout" } },
+        { "name": "POST /credits/webhooks/stripe", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "stripe-signature", "value": "t=123,v1=signature" }], "body": { "mode": "raw", "raw": "{\n  \"id\": \"evt_test_webhook\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {\n      \"id\": \"cs_test_123\"\n    }\n  }\n}" }, "url": "{{baseUrl}}/credits/webhooks/stripe" } }
       ]
     },
     {
       "name": "Users",
       "item": [
         { "name": "GET /users/me", "request": { "method": "GET", "url": "{{baseUrl}}/users/me" } },
-        { "name": "PATCH /users/me", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/users/me" } },
-        { "name": "PATCH /users/me/password", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/users/me/password" } },
+        { "name": "PATCH /users/me", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"full_name\": \"John Doe\"\n}" }, "url": "{{baseUrl}}/users/me" } },
+        { "name": "PATCH /users/me/password", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"current_password\": \"password123\",\n  \"new_password\": \"newpassword123\"\n}" }, "url": "{{baseUrl}}/users/me/password" } },
         { "name": "GET /users", "request": { "method": "GET", "url": "{{baseUrl}}/users" } },
-        { "name": "PATCH /users/:user_uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/users/:user_uuid" } },
+        { "name": "PATCH /users/:user_uuid", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"email\": \"user@example.com\",\n  \"full_name\": \"Updated User\",\n  \"phone\": \"+1234567890\",\n  \"role\": \"USER\",\n  \"credits_balance\": 120\n}" }, "url": "{{baseUrl}}/users/:user_uuid" } },
         { "name": "DELETE /users/:user_uuid", "request": { "method": "DELETE", "url": "{{baseUrl}}/users/:user_uuid" } }
       ]
     },
@@ -214,20 +226,20 @@
       "name": "Admin",
       "item": [
         { "name": "GET /admin/dashboard/overview", "request": { "method": "GET", "url": "{{baseUrl}}/admin/dashboard/overview" } },
-        { "name": "POST /admin/dashboard/credit-ledger/test-usage", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/admin/dashboard/credit-ledger/test-usage" } }
+        { "name": "POST /admin/dashboard/credit-ledger/test-usage", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"user_uuid\": \"44444444-4444-4444-4444-444444444444\",\n  \"project_type\": \"ESTATE\",\n  \"provider_charge_usd\": 1.25,\n  \"source_ref_uuid\": \"88888888-8888-8888-8888-888888888888\",\n  \"fixed_credits_deduction\": 10,\n  \"metadata\": {\n    \"source\": \"postman\"\n  }\n}" }, "url": "{{baseUrl}}/admin/dashboard/credit-ledger/test-usage" } }
       ]
     },
     {
       "name": "Internal",
       "item": [
-        { "name": "POST /mail/send-email", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/mail/send-email" } },
-        { "name": "POST /sms", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/sms" } },
+        { "name": "POST /mail/send-email", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"to\": \"user@example.com\",\n  \"subject\": \"Test email\",\n  \"text\": \"Hello from Postman\",\n  \"from\": \"noreply@example.com\",\n  \"cc\": [\"cc@example.com\"],\n  \"bcc\": [\"bcc@example.com\"],\n  \"replyTo\": \"support@example.com\"\n}" }, "url": "{{baseUrl}}/mail/send-email" } },
+        { "name": "POST /sms", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"to\": \"+1234567890\",\n  \"body\": \"Test SMS message\"\n}" }, "url": "{{baseUrl}}/sms" } },
         { "name": "GET /sms", "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/sms" } },
         { "name": "GET /sms/:id", "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/sms/:id" } },
-        { "name": "PATCH /sms/:id", "request": { "method": "PATCH", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/sms/:id" } },
+        { "name": "PATCH /sms/:id", "request": { "method": "PATCH", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"to\": \"+1234567890\",\n  \"body\": \"Updated SMS message\"\n}" }, "url": "{{baseUrl}}/sms/:id" } },
         { "name": "DELETE /sms/:id", "request": { "method": "DELETE", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/sms/:id" } },
-        { "name": "POST /ai", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/ai" } },
-        { "name": "POST /redis-cache", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{}" }, "url": "{{baseUrl}}/redis-cache" } },
+        { "name": "POST /ai", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"prompt\": \"Write a short property listing caption\",\n  \"provider\": \"openai\",\n  \"model\": \"gpt-4o-mini\",\n  \"system\": \"You are a helpful assistant\",\n  \"temperature\": 0.7,\n  \"maxOutputTokens\": 300,\n  \"topP\": 1,\n  \"frequencyPenalty\": 0,\n  \"presencePenalty\": 0\n}" }, "url": "{{baseUrl}}/ai" } },
+        { "name": "POST /redis-cache", "request": { "method": "POST", "auth": { "type": "noauth" }, "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"key\": \"sample-key\",\n  \"value\": \"sample-value\"\n}" }, "url": "{{baseUrl}}/redis-cache" } },
         { "name": "GET /redis-cache/:key", "request": { "method": "GET", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/redis-cache/:key" } },
         { "name": "DELETE /redis-cache/:key", "request": { "method": "DELETE", "auth": { "type": "noauth" }, "url": "{{baseUrl}}/redis-cache/:key" } }
       ]
