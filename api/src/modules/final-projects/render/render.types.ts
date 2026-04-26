@@ -32,7 +32,7 @@ export interface ClipData {
 }
 
 export interface MusicData {
-  audio_url: string;
+  audio_filename: string;
   volume: number;
 }
 

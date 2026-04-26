@@ -4,7 +4,6 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { TimelineMusicQueryDto } from './dto/query-timeline-music.dto';
 import { UpsertTimelineMusicDto } from './dto/upsert-timeline-music.dto';
@@ -15,10 +14,7 @@ import {
 
 @Injectable()
 export class TimelineMusicService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private async assertFinalProjectOwnership(
     user_uuid: string,
@@ -42,8 +38,7 @@ export class TimelineMusicService {
       throw new BadRequestException('Invalid estate audio track');
     }
 
-    const path = getEstateAudioTrackUrl(track);
-    const url = this.resolveAudioUrl(path);
+    const url = getEstateAudioTrackUrl(track);
 
     const existing = await this.prisma.document.findFirst({
       where: { url, mimetype: track.mimetype },
@@ -62,23 +57,6 @@ export class TimelineMusicService {
         path: url,
       },
     });
-  }
-
-  private resolveAudioUrl(path: string): string {
-    if (/^https?:\/\//i.test(path)) {
-      return path;
-    }
-
-    const baseUrl = this.configService.get<string>('APP_URL');
-
-    if (!baseUrl) {
-      return path;
-    }
-
-    const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-
-    return `${normalizedBaseUrl}${normalizedPath}`;
   }
 
   async findAll(user_uuid: string, query: TimelineMusicQueryDto) {

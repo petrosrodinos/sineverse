@@ -1,6 +1,5 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Job } from 'bullmq';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
@@ -28,7 +27,6 @@ export class RenderProcessor extends WorkerHost {
     private readonly prisma: PrismaService,
     private readonly renderService: RenderService,
     private readonly documentsService: DocumentsService,
-    private readonly configService: ConfigService,
   ) {
     super();
   }
@@ -218,30 +216,13 @@ export class RenderProcessor extends WorkerHost {
 
     const musicEntry = finalProject.timeline_music?.[0];
 
-    if (musicEntry?.audio?.url) {
+    if (musicEntry?.audio?.filename) {
       music = {
-        audio_url: this.resolveAudioUrl(musicEntry.audio.url),
+        audio_filename: musicEntry.audio.filename,
         volume: musicEntry.volume ?? 1.0,
       };
     }
 
     return { clips, music };
-  }
-
-  private resolveAudioUrl(url: string): string {
-    if (/^https?:\/\//i.test(url)) {
-      return url;
-    }
-
-    const baseUrl = this.configService.get<string>('APP_URL');
-
-    if (!baseUrl) {
-      return url;
-    }
-
-    const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
-    const normalizedPath = url.startsWith('/') ? url : `/${url}`;
-
-    return `${normalizedBaseUrl}${normalizedPath}`;
   }
 }
