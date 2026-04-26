@@ -27,6 +27,8 @@ import { Tooltip } from "@heroui/tooltip";
 import { Drawer, DrawerContent, DrawerBody } from "@heroui/drawer";
 import { signOut, useSession } from "next-auth/react";
 
+import Image from "next/image";
+
 import { siteConfig } from "@/config/navigation/site";
 import { Routes } from "@/config/routes";
 import { useLayoutStore } from "@/stores/layout.store";
@@ -94,10 +96,19 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
       >
         {!collapsed && (
           <NextLink
-            className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate hover:text-primary transition-colors min-w-0"
+            className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
             href="/"
           >
-            {siteConfig.name}
+            <Image
+              alt={siteConfig.name}
+              className="shrink-0 rounded-sm"
+              height={24}
+              src="/logo.png"
+              width={24}
+            />
+            <span className="text-lg font-semibold tracking-tight text-foreground/90 dark:text-foreground truncate">
+              {siteConfig.name}
+            </span>
           </NextLink>
         )}
         <div className="hidden md:block">
