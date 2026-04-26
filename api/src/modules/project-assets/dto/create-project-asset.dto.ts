@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsIn,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -8,6 +9,10 @@ import {
   IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ImageModels,
+  VideoModels,
+} from '@/integrations/aimlapi/core/constants';
 
 export class CreateProjectAssetDto {
   @ApiProperty({ description: 'The UUID of the project this asset belongs to' })
@@ -123,8 +128,12 @@ export class CreateProjectAssetVideoDto extends CreateProjectAssetDto {
   @IsOptional()
   duration_sec?: number;
 
-  @ApiPropertyOptional({ description: 'AI Model used for generation' })
-  @IsString()
+  @ApiPropertyOptional({
+    description: 'AI model used for video generation',
+    enum: Object.values(VideoModels),
+    example: VideoModels.RUNWAY_ACT_TWO,
+  })
+  @IsIn(Object.values(VideoModels))
   @IsOptional()
   ai_model?: string;
 
@@ -171,8 +180,12 @@ export class CreateProjectAssetVideoDto extends CreateProjectAssetDto {
 }
 
 export class GenerateProjectAssetImageDto {
-  @ApiProperty({ description: 'The AI model to use for image generation' })
-  @IsString()
+  @ApiProperty({
+    description: 'The AI model to use for image generation',
+    enum: Object.values(ImageModels),
+    example: ImageModels.GPT_IMAGE_1_5,
+  })
+  @IsIn(Object.values(ImageModels))
   ai_model: string;
 
   @ApiProperty({ description: 'The prompt text to use for image generation' })
@@ -197,8 +210,10 @@ export class CreateEstateWalkthroughVideosDto {
 
   @ApiPropertyOptional({
     description: 'Optional AI video model override for walkthrough generation',
+    enum: Object.values(VideoModels),
+    example: VideoModels.RUNWAY_ACT_TWO,
   })
-  @IsString()
+  @IsIn(Object.values(VideoModels))
   @IsOptional()
   ai_model?: string;
 }

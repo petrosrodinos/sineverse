@@ -11,7 +11,13 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ProjectAssetsService } from './project-assets.service';
 import {
   CreateProjectAssetDto,
@@ -70,7 +76,13 @@ export class ProjectAssetsController {
   @ApiOperation({
     summary: 'Create AI walkthrough videos from estate listing photos',
   })
+  @ApiBody({ type: CreateEstateWalkthroughVideosDto })
   @ApiResponse({ status: 201, description: 'Walkthrough video jobs created.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request payload for walkthrough generation.',
+  })
+  @ApiResponse({ status: 404, description: 'Project not found.' })
   createEstateWalkthroughVideos(
     @CurrentUser('uuid') user_uuid: string,
     @Body() dto: CreateEstateWalkthroughVideosDto,
