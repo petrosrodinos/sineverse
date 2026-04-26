@@ -29,5 +29,5 @@ export function getEstateAudioTrackById(
 }
 
 export function getEstateAudioTrackUrl(track: EstateAudioTrack): string {
-  return `/assets/estate-audios/${track.filename}`;
+  return `/estate-audios/${track.filename}`;
 }

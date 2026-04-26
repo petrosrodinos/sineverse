@@ -4,7 +4,6 @@ const {
   Audio,
   OffthreadVideo,
   Sequence,
-  staticFile,
   useCurrentFrame,
   interpolate,
 } = require('remotion');
@@ -222,7 +221,7 @@ const FinalProjectComposition = ({ clips, music }) => {
     ),
     music
       ? React.createElement(Audio, {
-          src: staticFile(music.audio_filename),
+          src: music.audio_url,
           volume: music.volume,
         })
       : null,

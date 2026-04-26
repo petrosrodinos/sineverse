@@ -1,5 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Job } from 'bullmq';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
@@ -27,12 +28,14 @@ export class RenderProcessor extends WorkerHost {
     private readonly prisma: PrismaService,
     private readonly renderService: RenderService,
     private readonly documentsService: DocumentsService,
+    private readonly configService: ConfigService,
   ) {
     super();
   }
 
   async process(job: Job<FinalRenderJobData>): Promise<void> {
     const { finalProjectUuid } = job.data;
+    const renderAttemptId = Date.now();
 
     try {
       await this.prisma.finalProject.update({
@@ -85,18 +88,51 @@ export class RenderProcessor extends WorkerHost {
         data: {
           video_uuid: videoUuid,
           render_status: FinalProjectRenderStatus.COMPLETED,
+          metadata: {
+            final_project_uuid: finalProjectUuid,
+            status: FinalProjectRenderStatus.COMPLETED,
+            attempt_id: renderAttemptId,
+            created_at: new Date().toISOString(),
+            video_uuid: videoUuid,
+          },
         },
       });
     } catch (error: any) {
+      const errorMessage =
+        error && typeof error === 'object' && 'message' in error
+          ? String((error as { message?: unknown }).message ?? 'Render failed')
+          : 'Render failed';
+      const errorStack =
+        error && typeof error === 'object' && 'stack' in error
+          ? String((error as { stack?: unknown }).stack ?? '')
+          : undefined;
+      const errorName =
+        error && typeof error === 'object' && 'name' in error
+          ? String((error as { name?: unknown }).name ?? '')
+          : undefined;
+
       this.logger.error(
-        `Render failed for ${finalProjectUuid}: ${error.message}`,
-        error.stack,
+        `Render failed for ${finalProjectUuid}: ${errorMessage}`,
+        errorStack,
       );
 
       await this.prisma.finalProject
         .update({
           where: { uuid: finalProjectUuid },
-          data: { render_status: FinalProjectRenderStatus.FAILED },
+          data: {
+            render_status: FinalProjectRenderStatus.FAILED,
+            metadata: {
+              final_project_uuid: finalProjectUuid,
+              status: FinalProjectRenderStatus.FAILED,
+              attempt_id: renderAttemptId,
+              created_at: new Date().toISOString(),
+              error: {
+                message: errorMessage,
+                name: errorName,
+                stack: errorStack,
+              },
+            },
+          },
         })
         .catch(() => {});
 
@@ -182,13 +218,30 @@ export class RenderProcessor extends WorkerHost {
 
     const musicEntry = finalProject.timeline_music?.[0];
 
-    if (musicEntry?.audio?.filename) {
+    if (musicEntry?.audio?.url) {
       music = {
-        audio_filename: musicEntry.audio.filename,
+        audio_url: this.resolveAudioUrl(musicEntry.audio.url),
         volume: musicEntry.volume ?? 1.0,
       };
     }
 
     return { clips, music };
+  }
+
+  private resolveAudioUrl(url: string): string {
+    if (/^https?:\/\//i.test(url)) {
+      return url;
+    }
+
+    const baseUrl = this.configService.get<string>('APP_URL');
+
+    if (!baseUrl) {
+      return url;
+    }
+
+    const normalizedBaseUrl = baseUrl.replace(/\/+$/, '');
+    const normalizedPath = url.startsWith('/') ? url : `/${url}`;
+
+    return `${normalizedBaseUrl}${normalizedPath}`;
   }
 }

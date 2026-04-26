@@ -9238,6 +9238,7 @@ export namespace Prisma {
     duration_sec: number
     video_uuid: number
     thumbnail_uuid: number
+    metadata: number
     render_status: number
     created_at: number
     updated_at: number
@@ -9292,6 +9293,7 @@ export namespace Prisma {
     duration_sec?: true
     video_uuid?: true
     thumbnail_uuid?: true
+    metadata?: true
     render_status?: true
     created_at?: true
     updated_at?: true
@@ -9393,6 +9395,7 @@ export namespace Prisma {
     duration_sec: number | null
     video_uuid: string | null
     thumbnail_uuid: string | null
+    metadata: JsonValue | null
     render_status: string
     created_at: Date
     updated_at: Date
@@ -9426,6 +9429,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    metadata?: boolean
     render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9447,6 +9451,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    metadata?: boolean
     render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9465,6 +9470,7 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    metadata?: boolean
     render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9483,12 +9489,13 @@ export namespace Prisma {
     duration_sec?: boolean
     video_uuid?: boolean
     thumbnail_uuid?: boolean
+    metadata?: boolean
     render_status?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type FinalProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "duration_sec" | "video_uuid" | "thumbnail_uuid" | "render_status" | "created_at" | "updated_at", ExtArgs["result"]["finalProject"]>
+  export type FinalProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "project_uuid" | "title" | "duration_sec" | "video_uuid" | "thumbnail_uuid" | "metadata" | "render_status" | "created_at" | "updated_at", ExtArgs["result"]["finalProject"]>
   export type FinalProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -9530,6 +9537,7 @@ export namespace Prisma {
       duration_sec: number | null
       video_uuid: string | null
       thumbnail_uuid: string | null
+      metadata: Prisma.JsonValue | null
       render_status: string
       created_at: Date
       updated_at: Date
@@ -9970,6 +9978,7 @@ export namespace Prisma {
     readonly duration_sec: FieldRef<"FinalProject", 'Int'>
     readonly video_uuid: FieldRef<"FinalProject", 'String'>
     readonly thumbnail_uuid: FieldRef<"FinalProject", 'String'>
+    readonly metadata: FieldRef<"FinalProject", 'Json'>
     readonly render_status: FieldRef<"FinalProject", 'String'>
     readonly created_at: FieldRef<"FinalProject", 'DateTime'>
     readonly updated_at: FieldRef<"FinalProject", 'DateTime'>
@@ -21649,6 +21658,7 @@ export namespace Prisma {
     duration_sec: 'duration_sec',
     video_uuid: 'video_uuid',
     thumbnail_uuid: 'thumbnail_uuid',
+    metadata: 'metadata',
     render_status: 'render_status',
     created_at: 'created_at',
     updated_at: 'updated_at'
@@ -22611,6 +22621,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    metadata?: JsonNullableFilter<"FinalProject">
     render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
@@ -22631,6 +22642,7 @@ export namespace Prisma {
     duration_sec?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
     thumbnail_uuid?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
     render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22654,6 +22666,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    metadata?: JsonNullableFilter<"FinalProject">
     render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
@@ -22674,6 +22687,7 @@ export namespace Prisma {
     duration_sec?: SortOrderInput | SortOrder
     video_uuid?: SortOrderInput | SortOrder
     thumbnail_uuid?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
     render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -22696,6 +22710,7 @@ export namespace Prisma {
     duration_sec?: IntNullableWithAggregatesFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableWithAggregatesFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableWithAggregatesFilter<"FinalProject"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"FinalProject">
     render_status?: StringWithAggregatesFilter<"FinalProject"> | string
     created_at?: DateTimeWithAggregatesFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"FinalProject"> | Date | string
@@ -24138,6 +24153,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -24158,6 +24174,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -24169,6 +24186,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24189,6 +24207,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24205,6 +24224,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -24214,6 +24234,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24228,6 +24249,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25885,6 +25907,7 @@ export namespace Prisma {
     duration_sec?: SortOrder
     video_uuid?: SortOrder
     thumbnail_uuid?: SortOrder
+    metadata?: SortOrder
     render_status?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -29010,6 +29033,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -29028,6 +29052,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -29321,6 +29346,7 @@ export namespace Prisma {
     duration_sec?: IntNullableFilter<"FinalProject"> | number | null
     video_uuid?: StringNullableFilter<"FinalProject"> | string | null
     thumbnail_uuid?: StringNullableFilter<"FinalProject"> | string | null
+    metadata?: JsonNullableFilter<"FinalProject">
     render_status?: StringFilter<"FinalProject"> | string
     created_at?: DateTimeFilter<"FinalProject"> | Date | string
     updated_at?: DateTimeFilter<"FinalProject"> | Date | string
@@ -29548,6 +29574,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -29566,6 +29593,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -31336,6 +31364,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -31355,6 +31384,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -31554,6 +31584,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31573,6 +31604,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31937,6 +31969,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -31956,6 +31989,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32018,6 +32052,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32037,6 +32072,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32089,6 +32125,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32107,6 +32144,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32128,6 +32166,7 @@ export namespace Prisma {
     uuid?: string
     title?: string | null
     duration_sec?: number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32146,6 +32185,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     video_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32696,6 +32736,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -32931,6 +32972,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32949,6 +32991,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32964,6 +33007,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33149,6 +33193,7 @@ export namespace Prisma {
     duration_sec?: number | null
     video_uuid?: string | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -33273,6 +33318,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33291,6 +33337,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33306,6 +33353,7 @@ export namespace Prisma {
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34070,6 +34118,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     thumbnail_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -34083,6 +34132,7 @@ export namespace Prisma {
     title?: string | null
     duration_sec?: number | null
     video_uuid?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: string
     created_at?: Date | string
     updated_at?: Date | string
@@ -34122,6 +34172,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34140,6 +34191,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34155,6 +34207,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     thumbnail_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34164,6 +34217,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34182,6 +34236,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34197,6 +34252,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
     video_uuid?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     render_status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string

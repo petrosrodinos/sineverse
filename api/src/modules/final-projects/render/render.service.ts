@@ -16,11 +16,25 @@ import type { FinalProjectCompositionProps } from './render.types';
 export class RenderService {
   private bundleCache: string | null = null;
   private readonly logger = new Logger(RenderService.name);
+  private lastLoggedDownloadBucket = -1;
 
   private readonly browserDownloadProgress: DownloadBrowserProgressFn = (progress) => {
     const downloadedMb = (progress.downloadedBytes / (1024 * 1024)).toFixed(1);
     const totalMb = (progress.totalSizeInBytes / (1024 * 1024)).toFixed(1);
     const percent = progress.percent.toFixed(1);
+    const percentValue = Number(percent);
+    const currentBucket = Math.floor(percentValue / 10);
+    const shouldLog =
+      progress.alreadyAvailable ||
+      currentBucket > this.lastLoggedDownloadBucket ||
+      percentValue >= 99.9;
+
+    if (!shouldLog) {
+      return;
+    }
+
+    this.lastLoggedDownloadBucket = currentBucket;
+
     this.logger.log(
       `[Remotion Browser Download] ${percent}% | ${downloadedMb}/${totalMb} MB | alreadyAvailable=${progress.alreadyAvailable}`,
     );

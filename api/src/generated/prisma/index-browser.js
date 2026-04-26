@@ -200,6 +200,7 @@ exports.Prisma.FinalProjectScalarFieldEnum = {
   duration_sec: 'duration_sec',
   video_uuid: 'video_uuid',
   thumbnail_uuid: 'thumbnail_uuid',
+  metadata: 'metadata',
   render_status: 'render_status',
   created_at: 'created_at',
   updated_at: 'updated_at'
