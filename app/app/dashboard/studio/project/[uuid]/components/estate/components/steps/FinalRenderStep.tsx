@@ -634,8 +634,8 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
       {!isRendering && (!isVisitor || !isCompleted) && (
         <Button
-          className="h-12 bg-gradient-to-r from-secondary-500 to-secondary-400 font-semibold text-white shadow-lg shadow-secondary-500/30 transition-transform duration-200 hover:scale-[1.01]"
-          color="secondary"
+          className="h-12 bg-gradient-to-r from-primary-500 to-primary-400 font-semibold text-white shadow-lg shadow-primary-500/30 transition-transform duration-200 hover:scale-[1.01]"
+          color="primary"
           isDisabled={!finalProjectUuid}
           size="lg"
           startContent={<Wand2 className="h-4 w-4" />}

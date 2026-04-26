@@ -55,13 +55,7 @@ export class RenderService {
 
     const entryPoint = path.resolve(process.cwd(), 'remotion', 'index.js');
 
-    const publicDir = path.resolve(
-      process.cwd(),
-      '..',
-      'app',
-      'assets',
-      'estate-audios',
-    );
+    const publicDir = path.resolve(process.cwd(), 'assets', 'estate-audios');
 
     this.bundleCache = await bundle({ entryPoint, publicDir });
 

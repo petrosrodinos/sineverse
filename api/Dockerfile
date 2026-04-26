@@ -44,6 +44,7 @@ COPY nest-cli.json ./
 COPY prisma ./prisma
 COPY remotion ./remotion
 COPY src ./src
+COPY assets ./assets
 
 RUN npm ci
 RUN npx prisma generate
