@@ -9,6 +9,20 @@ const nextConfig = {
             },
         ]
     },
+    async rewrites() {
+        return [
+            {
+                source: '/',
+                has: [
+                    {
+                        type: 'host',
+                        value: 'estatelift.logiqdev.com',
+                    },
+                ],
+                destination: '/estatelift',
+            },
+        ];
+    },
 }
 
 module.exports = nextConfig;
