@@ -58,6 +58,17 @@ const getCaptionStyle = (style) => {
   };
 };
 
+const normalizeAudioFilename = (filename) => {
+  if (!filename) {
+    return filename;
+  }
+
+  const cleaned = String(filename).split('?')[0].split('#')[0].replace(/\\/g, '/');
+  const segments = cleaned.split('/').filter(Boolean);
+
+  return segments[segments.length - 1] || filename;
+};
+
 const getVideoTransform = (
   transitionType,
   frame,
@@ -222,7 +233,7 @@ const FinalProjectComposition = ({ clips, music }) => {
     ),
     music
       ? React.createElement(Audio, {
-          src: staticFile(music.audio_filename),
+          src: staticFile(normalizeAudioFilename(music.audio_filename)),
           volume: music.volume,
         })
       : null,
