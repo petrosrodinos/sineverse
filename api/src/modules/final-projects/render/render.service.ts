@@ -1,5 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { renderMedia, selectComposition } from '@remotion/renderer';
+import { Injectable, Logger } from '@nestjs/common';
+import {
+  renderMedia,
+  selectComposition,
+  type DownloadBrowserProgressFn,
+  type OnBrowserDownload,
+} from '@remotion/renderer';
 import { bundle } from '@remotion/bundler';
 import * as path from 'path';
 import * as os from 'os';
@@ -10,6 +15,24 @@ import type { FinalProjectCompositionProps } from './render.types';
 @Injectable()
 export class RenderService {
   private bundleCache: string | null = null;
+  private readonly logger = new Logger(RenderService.name);
+
+  private readonly browserDownloadProgress: DownloadBrowserProgressFn = (progress) => {
+    const downloadedMb = (progress.downloadedBytes / (1024 * 1024)).toFixed(1);
+    const totalMb = (progress.totalSizeInBytes / (1024 * 1024)).toFixed(1);
+    const percent = progress.percent.toFixed(1);
+    this.logger.log(
+      `[Remotion Browser Download] ${percent}% | ${downloadedMb}/${totalMb} MB | alreadyAvailable=${progress.alreadyAvailable}`,
+    );
+  };
+
+  private readonly onBrowserDownload: OnBrowserDownload = ({ chromeMode }) => {
+    this.logger.log(`[Remotion Browser Download] Requested browser for mode=${chromeMode}`);
+    return {
+      onProgress: this.browserDownloadProgress,
+      version: null,
+    };
+  };
 
   private async getBundle(): Promise<string> {
     if (this.bundleCache) {
@@ -40,6 +63,7 @@ export class RenderService {
       serveUrl,
       id: COMPOSITION_ID,
       inputProps: serializedProps,
+      onBrowserDownload: this.onBrowserDownload,
     });
 
     const outputPath = path.join(os.tmpdir(), `final-render-${Date.now()}.mp4`);
@@ -50,6 +74,7 @@ export class RenderService {
       codec: 'h264',
       outputLocation: outputPath,
       inputProps: serializedProps,
+      onBrowserDownload: this.onBrowserDownload,
     });
 
     const buffer = await fs.readFile(outputPath);

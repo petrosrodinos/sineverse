@@ -14,7 +14,9 @@ import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
 import {
   CreditUsageLedgerMetadata,
+  CreditsConfig,
   DEFAULT_VIDEO_DURATION_SECONDS,
+  DOLLARS_PER_TOKEN,
   MODEL_PROVIDER_COST_DOLLARS,
 } from '@/shared/config/credits/credits.constants';
 import { estateWalkthroughVideoConfig } from '@/shared/services/ai-helper/utils/estate-walkthrough-video.utils';
@@ -383,11 +385,41 @@ export class VideoGenerationProcessor extends WorkerHost {
           const providerCostUsdPerSecond =
             MODEL_PROVIDER_COST_DOLLARS[generationModel] ?? 0;
 
-          const providerCostUsd =
+          const providerCostUsdFromModel =
             providerCostUsdPerSecond * DEFAULT_VIDEO_DURATION_SECONDS;
 
+          const usage = finalStatusResponse.meta?.usage ?? null;
+          const usageUsdSpentRaw = usage?.usd_spent;
+          const usageCreditsRaw = usage?.credits_used;
+
+          const usageUsdSpent =
+            typeof usageUsdSpentRaw === 'number' && Number.isFinite(usageUsdSpentRaw)
+              ? usageUsdSpentRaw
+              : null;
+
+          const usageCredits =
+            typeof usageCreditsRaw === 'number' && Number.isFinite(usageCreditsRaw)
+              ? usageCreditsRaw
+              : null;
+
+          const providerCostUsdFromUsageCredits =
+            usageCredits !== null && usageCredits > 0
+              ? usageCredits * DOLLARS_PER_TOKEN
+              : null;
+
+          const estateMultiplier =
+            CreditsConfig.projectTypeMultipliers.ESTATE ?? 1;
+
+          const providerCostUsdFallback =
+            providerCostUsdFromModel * estateMultiplier;
+
+          const providerCostUsd =
+            usageUsdSpent !== null && usageUsdSpent > 0
+              ? usageUsdSpent
+              : (providerCostUsdFromUsageCredits ?? providerCostUsdFallback);
+
           this.logger.log(
-            `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd=${providerCostUsd}`,
+            `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd_model=${providerCostUsdFromModel} provider_cost_usd_fallback=${providerCostUsdFallback} provider_cost_usd=${providerCostUsd}`,
           );
 
           const fixedCreditsDeduction = isEstateWalkthrough

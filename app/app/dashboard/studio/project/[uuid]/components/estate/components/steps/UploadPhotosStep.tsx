@@ -227,6 +227,7 @@ export function UploadPhotosStep({
       ? "border-secondary-500 ring-4 ring-secondary-500/20"
       : "border-default-300/90 dark:border-default-100/25",
     "hover:border-secondary-400/70 dark:hover:border-secondary-500/40",
+    !hasPhotos ? "cursor-pointer" : "",
   ].join(" ");
 
   const isConfirmModalOpen =
@@ -277,7 +278,7 @@ export function UploadPhotosStep({
             </div>
           ) : !hasPhotos ? (
             <button
-              className="flex min-h-[200px] w-full flex-col items-center justify-center gap-4 rounded-xl px-4 py-10 text-center transition-colors duration-200 hover:bg-secondary-500/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="flex min-h-[200px] w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-xl px-4 py-10 text-center transition-colors duration-200 hover:bg-secondary-500/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               type="button"
               onClick={openPicker}
             >
@@ -369,7 +370,7 @@ export function UploadPhotosStep({
                 ))}
 
                 <button
-                  className="group/add flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2"
+                  className="group/add flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2"
                   type="button"
                   onClick={openPicker}
                 >
