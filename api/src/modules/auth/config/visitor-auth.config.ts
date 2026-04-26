@@ -1,5 +1,4 @@
 export const visitorAuthConfig = {
-  initialCredits: 60,
   defaultFullName: 'Visitor',
   provisionRateLimit: {
     maxRequests: 3,

@@ -78,6 +78,7 @@ export interface AdminCreditUsageRow {
 
 export interface CreditPurchaseItem {
   uuid: string;
+  kind: "STRIPE_PURCHASE" | "APP_GIFT";
   status: "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED";
   credits_amount: number;
   amount_cents: number;

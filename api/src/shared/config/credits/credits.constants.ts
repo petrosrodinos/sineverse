@@ -3,6 +3,10 @@ import { VideoModels } from '@/integrations/aimlapi/core/constants';
 
 export const ESTATE_WALKTHROUGH_CREDITS_PER_VIDEO = 10;
 
+export const REGISTRATION_GIFT_CREDITS = 50;
+
+export const REGISTRATION_GIFT_CREDIT_PACK_KEY = 'APP_REGISTRATION_GIFT' as const;
+
 export const DOLLARS_PER_TOKEN = 0.00983;
 export const DEFAULT_VIDEO_DURATION_SECONDS = 4;
 
@@ -57,6 +61,16 @@ export type CreditPackSeed = {
   credits_amount: number;
   amount_cents: number;
   currency: string;
+  active?: boolean;
+};
+
+export const RegistrationGiftCreditPackSeed: CreditPackSeed = {
+  key: REGISTRATION_GIFT_CREDIT_PACK_KEY,
+  name: 'Registration gift',
+  credits_amount: REGISTRATION_GIFT_CREDITS,
+  amount_cents: 0,
+  currency: 'eur',
+  active: false,
 };
 
 export const DefaultCreditPacks: CreditPackSeed[] = [

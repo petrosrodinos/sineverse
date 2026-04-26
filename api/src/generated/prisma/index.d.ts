@@ -170,6 +170,14 @@ export const CreditPurchaseStatus: {
 export type CreditPurchaseStatus = (typeof CreditPurchaseStatus)[keyof typeof CreditPurchaseStatus]
 
 
+export const CreditPurchaseKind: {
+  STRIPE_PURCHASE: 'STRIPE_PURCHASE',
+  APP_GIFT: 'APP_GIFT'
+};
+
+export type CreditPurchaseKind = (typeof CreditPurchaseKind)[keyof typeof CreditPurchaseKind]
+
+
 export const TimelineTrackType: {
   VIDEO: 'VIDEO',
   AUDIO: 'AUDIO',
@@ -221,6 +229,10 @@ export const CreditLedgerType: typeof $Enums.CreditLedgerType
 export type CreditPurchaseStatus = $Enums.CreditPurchaseStatus
 
 export const CreditPurchaseStatus: typeof $Enums.CreditPurchaseStatus
+
+export type CreditPurchaseKind = $Enums.CreditPurchaseKind
+
+export const CreditPurchaseKind: typeof $Enums.CreditPurchaseKind
 
 export type TimelineTrackType = $Enums.TimelineTrackType
 
@@ -17786,6 +17798,7 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     credit_pack_uuid: string | null
+    kind: $Enums.CreditPurchaseKind | null
     status: $Enums.CreditPurchaseStatus | null
     credits_amount: number | null
     amount_cents: number | null
@@ -17807,6 +17820,7 @@ export namespace Prisma {
     uuid: string | null
     user_uuid: string | null
     credit_pack_uuid: string | null
+    kind: $Enums.CreditPurchaseKind | null
     status: $Enums.CreditPurchaseStatus | null
     credits_amount: number | null
     amount_cents: number | null
@@ -17828,6 +17842,7 @@ export namespace Prisma {
     uuid: number
     user_uuid: number
     credit_pack_uuid: number
+    kind: number
     status: number
     credits_amount: number
     amount_cents: number
@@ -17872,6 +17887,7 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     credit_pack_uuid?: true
+    kind?: true
     status?: true
     credits_amount?: true
     amount_cents?: true
@@ -17893,6 +17909,7 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     credit_pack_uuid?: true
+    kind?: true
     status?: true
     credits_amount?: true
     amount_cents?: true
@@ -17914,6 +17931,7 @@ export namespace Prisma {
     uuid?: true
     user_uuid?: true
     credit_pack_uuid?: true
+    kind?: true
     status?: true
     credits_amount?: true
     amount_cents?: true
@@ -18023,6 +18041,7 @@ export namespace Prisma {
     uuid: string
     user_uuid: string
     credit_pack_uuid: string
+    kind: $Enums.CreditPurchaseKind
     status: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -18064,6 +18083,7 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     credit_pack_uuid?: boolean
+    kind?: boolean
     status?: boolean
     credits_amount?: boolean
     amount_cents?: boolean
@@ -18088,6 +18108,7 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     credit_pack_uuid?: boolean
+    kind?: boolean
     status?: boolean
     credits_amount?: boolean
     amount_cents?: boolean
@@ -18112,6 +18133,7 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     credit_pack_uuid?: boolean
+    kind?: boolean
     status?: boolean
     credits_amount?: boolean
     amount_cents?: boolean
@@ -18136,6 +18158,7 @@ export namespace Prisma {
     uuid?: boolean
     user_uuid?: boolean
     credit_pack_uuid?: boolean
+    kind?: boolean
     status?: boolean
     credits_amount?: boolean
     amount_cents?: boolean
@@ -18153,7 +18176,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type CreditPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "credit_pack_uuid" | "status" | "credits_amount" | "amount_cents" | "gross_amount_cents" | "stripe_fee_cents" | "stripe_commission_percent" | "net_amount_cents" | "currency" | "stripe_session_id" | "stripe_payment_intent_id" | "stripe_charge_id" | "stripe_receipt_url" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditPurchase"]>
+  export type CreditPurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "credit_pack_uuid" | "kind" | "status" | "credits_amount" | "amount_cents" | "gross_amount_cents" | "stripe_fee_cents" | "stripe_commission_percent" | "net_amount_cents" | "currency" | "stripe_session_id" | "stripe_payment_intent_id" | "stripe_charge_id" | "stripe_receipt_url" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditPurchase"]>
   export type CreditPurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     credit_pack?: boolean | CreditPackDefaultArgs<ExtArgs>
@@ -18178,6 +18201,7 @@ export namespace Prisma {
       uuid: string
       user_uuid: string
       credit_pack_uuid: string
+      kind: $Enums.CreditPurchaseKind
       status: $Enums.CreditPurchaseStatus
       credits_amount: number
       amount_cents: number
@@ -18622,6 +18646,7 @@ export namespace Prisma {
     readonly uuid: FieldRef<"CreditPurchase", 'String'>
     readonly user_uuid: FieldRef<"CreditPurchase", 'String'>
     readonly credit_pack_uuid: FieldRef<"CreditPurchase", 'String'>
+    readonly kind: FieldRef<"CreditPurchase", 'CreditPurchaseKind'>
     readonly status: FieldRef<"CreditPurchase", 'CreditPurchaseStatus'>
     readonly credits_amount: FieldRef<"CreditPurchase", 'Int'>
     readonly amount_cents: FieldRef<"CreditPurchase", 'Int'>
@@ -21735,6 +21760,7 @@ export namespace Prisma {
     uuid: 'uuid',
     user_uuid: 'user_uuid',
     credit_pack_uuid: 'credit_pack_uuid',
+    kind: 'kind',
     status: 'status',
     credits_amount: 'credits_amount',
     amount_cents: 'amount_cents',
@@ -22004,6 +22030,20 @@ export namespace Prisma {
    * Reference to a field of type 'TimelineTransitionType[]'
    */
   export type ListEnumTimelineTransitionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TimelineTransitionType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CreditPurchaseKind'
+   */
+  export type EnumCreditPurchaseKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditPurchaseKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'CreditPurchaseKind[]'
+   */
+  export type ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CreditPurchaseKind[]'>
     
 
 
@@ -23201,6 +23241,7 @@ export namespace Prisma {
     uuid?: StringFilter<"CreditPurchase"> | string
     user_uuid?: StringFilter<"CreditPurchase"> | string
     credit_pack_uuid?: StringFilter<"CreditPurchase"> | string
+    kind?: EnumCreditPurchaseKindFilter<"CreditPurchase"> | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFilter<"CreditPurchase"> | $Enums.CreditPurchaseStatus
     credits_amount?: IntFilter<"CreditPurchase"> | number
     amount_cents?: IntFilter<"CreditPurchase"> | number
@@ -23225,6 +23266,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     credit_pack_uuid?: SortOrder
+    kind?: SortOrder
     status?: SortOrder
     credits_amount?: SortOrder
     amount_cents?: SortOrder
@@ -23255,6 +23297,7 @@ export namespace Prisma {
     NOT?: CreditPurchaseWhereInput | CreditPurchaseWhereInput[]
     user_uuid?: StringFilter<"CreditPurchase"> | string
     credit_pack_uuid?: StringFilter<"CreditPurchase"> | string
+    kind?: EnumCreditPurchaseKindFilter<"CreditPurchase"> | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFilter<"CreditPurchase"> | $Enums.CreditPurchaseStatus
     credits_amount?: IntFilter<"CreditPurchase"> | number
     amount_cents?: IntFilter<"CreditPurchase"> | number
@@ -23276,6 +23319,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     credit_pack_uuid?: SortOrder
+    kind?: SortOrder
     status?: SortOrder
     credits_amount?: SortOrder
     amount_cents?: SortOrder
@@ -23306,6 +23350,7 @@ export namespace Prisma {
     uuid?: StringWithAggregatesFilter<"CreditPurchase"> | string
     user_uuid?: StringWithAggregatesFilter<"CreditPurchase"> | string
     credit_pack_uuid?: StringWithAggregatesFilter<"CreditPurchase"> | string
+    kind?: EnumCreditPurchaseKindWithAggregatesFilter<"CreditPurchase"> | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusWithAggregatesFilter<"CreditPurchase"> | $Enums.CreditPurchaseStatus
     credits_amount?: IntWithAggregatesFilter<"CreditPurchase"> | number
     amount_cents?: IntWithAggregatesFilter<"CreditPurchase"> | number
@@ -24756,6 +24801,7 @@ export namespace Prisma {
 
   export type CreditPurchaseCreateInput = {
     uuid?: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -24780,6 +24826,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     credit_pack_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -24799,6 +24846,7 @@ export namespace Prisma {
 
   export type CreditPurchaseUpdateInput = {
     uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -24823,6 +24871,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     credit_pack_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -24845,6 +24894,7 @@ export namespace Prisma {
     uuid?: string
     user_uuid: string
     credit_pack_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -24864,6 +24914,7 @@ export namespace Prisma {
 
   export type CreditPurchaseUpdateManyMutationInput = {
     uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -24886,6 +24937,7 @@ export namespace Prisma {
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
     credit_pack_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -26318,6 +26370,13 @@ export namespace Prisma {
     amount_cents?: SortOrder
   }
 
+  export type EnumCreditPurchaseKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.CreditPurchaseKind | EnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    in?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumCreditPurchaseKindFilter<$PrismaModel> | $Enums.CreditPurchaseKind
+  }
+
   export type EnumCreditPurchaseStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CreditPurchaseStatus | EnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CreditPurchaseStatus[] | ListEnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
@@ -26346,6 +26405,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     credit_pack_uuid?: SortOrder
+    kind?: SortOrder
     status?: SortOrder
     credits_amount?: SortOrder
     amount_cents?: SortOrder
@@ -26378,6 +26438,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     credit_pack_uuid?: SortOrder
+    kind?: SortOrder
     status?: SortOrder
     credits_amount?: SortOrder
     amount_cents?: SortOrder
@@ -26399,6 +26460,7 @@ export namespace Prisma {
     uuid?: SortOrder
     user_uuid?: SortOrder
     credit_pack_uuid?: SortOrder
+    kind?: SortOrder
     status?: SortOrder
     credits_amount?: SortOrder
     amount_cents?: SortOrder
@@ -26423,6 +26485,16 @@ export namespace Prisma {
     stripe_fee_cents?: SortOrder
     stripe_commission_percent?: SortOrder
     net_amount_cents?: SortOrder
+  }
+
+  export type EnumCreditPurchaseKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CreditPurchaseKind | EnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    in?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumCreditPurchaseKindWithAggregatesFilter<$PrismaModel> | $Enums.CreditPurchaseKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCreditPurchaseKindFilter<$PrismaModel>
+    _max?: NestedEnumCreditPurchaseKindFilter<$PrismaModel>
   }
 
   export type EnumCreditPurchaseStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -28224,6 +28296,10 @@ export namespace Prisma {
     connect?: CreditPackWhereUniqueInput
   }
 
+  export type EnumCreditPurchaseKindFieldUpdateOperationsInput = {
+    set?: $Enums.CreditPurchaseKind
+  }
+
   export type EnumCreditPurchaseStatusFieldUpdateOperationsInput = {
     set?: $Enums.CreditPurchaseStatus
   }
@@ -28619,6 +28695,13 @@ export namespace Prisma {
     _max?: NestedEnumTimelineTransitionTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumCreditPurchaseKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.CreditPurchaseKind | EnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    in?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumCreditPurchaseKindFilter<$PrismaModel> | $Enums.CreditPurchaseKind
+  }
+
   export type NestedEnumCreditPurchaseStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CreditPurchaseStatus | EnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CreditPurchaseStatus[] | ListEnumCreditPurchaseStatusFieldRefInput<$PrismaModel>
@@ -28635,6 +28718,16 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type NestedEnumCreditPurchaseKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CreditPurchaseKind | EnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    in?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CreditPurchaseKind[] | ListEnumCreditPurchaseKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumCreditPurchaseKindWithAggregatesFilter<$PrismaModel> | $Enums.CreditPurchaseKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCreditPurchaseKindFilter<$PrismaModel>
+    _max?: NestedEnumCreditPurchaseKindFilter<$PrismaModel>
   }
 
   export type NestedEnumCreditPurchaseStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -28954,6 +29047,7 @@ export namespace Prisma {
 
   export type CreditPurchaseCreateWithoutUserInput = {
     uuid?: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -28976,6 +29070,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     credit_pack_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -29255,6 +29350,7 @@ export namespace Prisma {
     uuid?: StringFilter<"CreditPurchase"> | string
     user_uuid?: StringFilter<"CreditPurchase"> | string
     credit_pack_uuid?: StringFilter<"CreditPurchase"> | string
+    kind?: EnumCreditPurchaseKindFilter<"CreditPurchase"> | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFilter<"CreditPurchase"> | $Enums.CreditPurchaseStatus
     credits_amount?: IntFilter<"CreditPurchase"> | number
     amount_cents?: IntFilter<"CreditPurchase"> | number
@@ -32217,6 +32313,7 @@ export namespace Prisma {
 
   export type CreditPurchaseCreateWithoutCredit_packInput = {
     uuid?: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -32239,6 +32336,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -32607,6 +32705,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     credit_pack_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -32872,6 +32971,7 @@ export namespace Prisma {
 
   export type CreditPurchaseUpdateWithoutUserInput = {
     uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -32894,6 +32994,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     credit_pack_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -32915,6 +33016,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     credit_pack_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -34198,6 +34300,7 @@ export namespace Prisma {
     id?: number
     uuid?: string
     user_uuid: string
+    kind?: $Enums.CreditPurchaseKind
     status?: $Enums.CreditPurchaseStatus
     credits_amount: number
     amount_cents: number
@@ -34217,6 +34320,7 @@ export namespace Prisma {
 
   export type CreditPurchaseUpdateWithoutCredit_packInput = {
     uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -34239,6 +34343,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number
@@ -34260,6 +34365,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     uuid?: StringFieldUpdateOperationsInput | string
     user_uuid?: StringFieldUpdateOperationsInput | string
+    kind?: EnumCreditPurchaseKindFieldUpdateOperationsInput | $Enums.CreditPurchaseKind
     status?: EnumCreditPurchaseStatusFieldUpdateOperationsInput | $Enums.CreditPurchaseStatus
     credits_amount?: IntFieldUpdateOperationsInput | number
     amount_cents?: IntFieldUpdateOperationsInput | number

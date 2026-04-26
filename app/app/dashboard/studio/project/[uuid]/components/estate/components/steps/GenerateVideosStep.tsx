@@ -14,6 +14,7 @@ import { isAxiosError } from "axios";
 import { Clapperboard, Coins } from "lucide-react";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
+import type { MutableRefObject } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -47,6 +48,7 @@ type GenerateVideosStepProps = {
   finalProjectUuid: string | null;
   hasPromptImages: boolean;
   walkthroughAiModel: string;
+  backgroundAudioUserChoseNoneRef: MutableRefObject<boolean>;
 };
 
 const ESTATE_AUDIO_TRACK_ID_BY_FILENAME: Record<string, string> = {
@@ -63,6 +65,7 @@ export function GenerateVideosStep({
   finalProjectUuid,
   hasPromptImages,
   walkthroughAiModel,
+  backgroundAudioUserChoseNoneRef,
 }: GenerateVideosStepProps) {
   const params = useParams<{ uuid: string }>();
 
@@ -389,6 +392,12 @@ export function GenerateVideosStep({
 
         if (!finalProjectUuid) return;
 
+        if (first === "none") {
+          backgroundAudioUserChoseNoneRef.current = true;
+        } else {
+          backgroundAudioUserChoseNoneRef.current = false;
+        }
+
         upsertTimelineMusic({
           finalProjectUuid,
           dto: {
@@ -400,7 +409,13 @@ export function GenerateVideosStep({
         });
       }
     },
-    [finalProjectUuid, upsertTimelineMusic, volume, currentMusic],
+    [
+      finalProjectUuid,
+      upsertTimelineMusic,
+      volume,
+      currentMusic,
+      backgroundAudioUserChoseNoneRef,
+    ],
   );
 
   const handleAudioMetadata = useCallback(() => {

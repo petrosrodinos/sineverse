@@ -26,6 +26,10 @@ import {
 import { formatCreditCurrency } from "@/features/credits/utils/credits-format.utils";
 import { CreditPacks } from "@/components/ui/CreditPacks";
 import { CreditUsageLedgerMetadata } from "@/config/credits/credits-usage-metadata.constants";
+import {
+  CREDIT_PURCHASE_KIND,
+  getCreditPurchaseKindLabel,
+} from "@/config/credits/credit-purchase-kind.constants";
 
 function formatAmount(
   amount: number | string | null | undefined,
@@ -90,6 +94,14 @@ function getStatusChipColor(
   if (status === "FAILED") return "danger";
 
   if (status === "EXPIRED") return "default";
+
+  return "default";
+}
+
+function getPurchaseKindChipColor(
+  kind?: string | null,
+): "primary" | "secondary" | "success" | "warning" | "danger" | "default" {
+  if (kind === CREDIT_PURCHASE_KIND.APP_GIFT) return "primary";
 
   return "default";
 }
@@ -299,6 +311,7 @@ export default function CreditsPage() {
               <Table removeWrapper aria-label="Credits purchases table">
                 <TableHeader>
                   <TableColumn>PACK</TableColumn>
+                  <TableColumn>SOURCE</TableColumn>
                   <TableColumn>DATE</TableColumn>
                   <TableColumn>STATUS</TableColumn>
                   <TableColumn>AMOUNT</TableColumn>
@@ -309,6 +322,15 @@ export default function CreditsPage() {
                     <TableRow key={item.uuid}>
                       <TableCell>
                         {item.credit_pack?.name ?? "Credit Pack"}
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          color={getPurchaseKindChipColor(item.kind)}
+                          size="sm"
+                          variant="flat"
+                        >
+                          {getCreditPurchaseKindLabel(item.kind)}
+                        </Chip>
                       </TableCell>
                       <TableCell>
                         {new Date(item.created_at).toLocaleString()}

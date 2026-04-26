@@ -17,10 +17,23 @@ import {
   AdminPurchaseRow,
   AdminPurchasesQuery,
 } from "@/features/admin/interfaces/admin.interfaces";
+import {
+  CREDIT_PURCHASE_KIND,
+  getCreditPurchaseKindLabel,
+  REGISTRATION_GIFT_CREDIT_PACK_KEY,
+} from "@/config/credits/credit-purchase-kind.constants";
 
 type AdminPurchasesTabProps = {
   isActive: boolean;
 };
+
+function purchaseKindChipColor(
+  kind: AdminPurchaseRow["kind"],
+): "primary" | "default" {
+  if (kind === CREDIT_PURCHASE_KIND.APP_GIFT) return "primary";
+
+  return "default";
+}
 
 function purchaseStatusChipColor(
   status: AdminPurchaseRow["status"],
@@ -40,6 +53,7 @@ const purchaseColumns = [
   { key: "uuid", label: "PURCHASE ID" },
   { key: "user", label: "USER (ID / EMAIL)" },
   { key: "pack", label: "TYPE" },
+  { key: "source", label: "SOURCE" },
   { key: "amounts", label: "AMOUNT (GROSS / NET)" },
   { key: "tokens", label: "TOKENS PURCHASED" },
   { key: "stripe_fees", label: "STRIPE FEES" },
@@ -65,6 +79,10 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
   const packTypeFilterItems = useMemo(
     () => [
       { key: "all", label: "All types" },
+      {
+        key: REGISTRATION_GIFT_CREDIT_PACK_KEY,
+        label: "Registration gift",
+      },
       ...(creditPacks ?? []).map((pack) => ({
         key: pack.key,
         label: pack.name,
@@ -207,6 +225,18 @@ export function AdminPurchasesTab({ isActive }: AdminPurchasesTabProps) {
                   {row.credit_pack.key}
                 </span>
               </div>
+            );
+          }
+
+          if (columnKey === "source") {
+            return (
+              <Chip
+                color={purchaseKindChipColor(row.kind)}
+                size="sm"
+                variant="flat"
+              >
+                {getCreditPurchaseKindLabel(row.kind)}
+              </Chip>
             );
           }
 

@@ -5,13 +5,17 @@ import type { WorkflowStep } from "../../../../../../../../config/dropdowns/proj
 import { Button } from "@heroui/button";
 import { Progress } from "@heroui/progress";
 import { Check } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 
 import {
   ESTATE_VIDEO_MODEL_OPTIONS,
   estateWalkthroughVideoConfig,
 } from "../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import {
+  useTimelineMusic,
+  useUpsertTimelineMusic,
+} from "@/features/timeline-music/hooks/use-timeline-music";
 import { useEstateStepper } from "../hooks/useEstateStepper";
 
 import { FinalRenderStep } from "./steps/FinalRenderStep";
@@ -89,6 +93,70 @@ export function EstateStepper() {
   }, [scenes]);
 
   const { finalProject } = useFinalProjectByProject(projectUuid);
+
+  const finalProjectUuid = finalProject?.uuid ?? null;
+
+  const {
+    data: timelineMusicForSeed,
+    isFetched: timelineMusicForSeedFetched,
+  } = useTimelineMusic(finalProjectUuid ?? "");
+
+  const { mutate: upsertDefaultTimelineMusic } = useUpsertTimelineMusic();
+
+  const backgroundAudioUserChoseNoneRef = useRef(false);
+
+  const lastSeededFinalProjectUuidRef = useRef<string | null>(null);
+
+  const defaultTimelineMusicSeedAttemptedRef = useRef(false);
+
+  useEffect(() => {
+    if (!finalProjectUuid) {
+      lastSeededFinalProjectUuidRef.current = null;
+
+      backgroundAudioUserChoseNoneRef.current = false;
+
+      defaultTimelineMusicSeedAttemptedRef.current = false;
+
+      return;
+    }
+
+    if (finalProjectUuid !== lastSeededFinalProjectUuidRef.current) {
+      lastSeededFinalProjectUuidRef.current = finalProjectUuid;
+
+      backgroundAudioUserChoseNoneRef.current = false;
+
+      defaultTimelineMusicSeedAttemptedRef.current = false;
+    }
+  }, [finalProjectUuid]);
+
+  useEffect(() => {
+    if (!finalProjectUuid || !timelineMusicForSeedFetched) return;
+
+    const rows = timelineMusicForSeed ?? [];
+
+    if (rows.length > 0) return;
+
+    if (backgroundAudioUserChoseNoneRef.current) return;
+
+    if (defaultTimelineMusicSeedAttemptedRef.current) return;
+
+    defaultTimelineMusicSeedAttemptedRef.current = true;
+
+    upsertDefaultTimelineMusic({
+      finalProjectUuid,
+      dto: {
+        track_id: estateWalkthroughVideoConfig.audioTrackId,
+        volume: estateWalkthroughVideoConfig.volume,
+        start_sec: 0,
+        end_sec: 4,
+      },
+    });
+  }, [
+    finalProjectUuid,
+    timelineMusicForSeed,
+    timelineMusicForSeedFetched,
+    upsertDefaultTimelineMusic,
+  ]);
 
   const {
     mutateAsync: createEstateScenesFromImages,
@@ -236,13 +304,14 @@ export function EstateStepper() {
           )}
           {activeStep === 2 && (
             <GenerateVideosStep
-              finalProjectUuid={finalProject?.uuid ?? null}
+              backgroundAudioUserChoseNoneRef={backgroundAudioUserChoseNoneRef}
+              finalProjectUuid={finalProjectUuid}
               hasPromptImages={promptImageAssets.length > 0}
               walkthroughAiModel={selectedVideoModel.id}
             />
           )}
           {activeStep === 3 && (
-            <FinalRenderStep finalProjectUuid={finalProject?.uuid ?? null} />
+            <FinalRenderStep finalProjectUuid={finalProjectUuid} />
           )}
         </div>
       </div>

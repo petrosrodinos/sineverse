@@ -290,6 +290,7 @@ exports.Prisma.CreditPurchaseScalarFieldEnum = {
   uuid: 'uuid',
   user_uuid: 'user_uuid',
   credit_pack_uuid: 'credit_pack_uuid',
+  kind: 'kind',
   status: 'status',
   credits_amount: 'credits_amount',
   amount_cents: 'amount_cents',
@@ -420,6 +421,11 @@ exports.TimelineTransitionType = exports.$Enums.TimelineTransitionType = {
   SLIDE_LEFT: 'SLIDE_LEFT',
   SLIDE_RIGHT: 'SLIDE_RIGHT',
   ZOOM: 'ZOOM'
+};
+
+exports.CreditPurchaseKind = exports.$Enums.CreditPurchaseKind = {
+  STRIPE_PURCHASE: 'STRIPE_PURCHASE',
+  APP_GIFT: 'APP_GIFT'
 };
 
 exports.CreditPurchaseStatus = exports.$Enums.CreditPurchaseStatus = {

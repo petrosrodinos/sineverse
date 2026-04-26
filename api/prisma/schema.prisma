@@ -65,6 +65,11 @@ enum CreditPurchaseStatus {
   EXPIRED
 }
 
+enum CreditPurchaseKind {
+  STRIPE_PURCHASE
+  APP_GIFT
+}
+
 enum TimelineTrackType {
   VIDEO
   AUDIO
@@ -368,6 +373,7 @@ model CreditPurchase {
   uuid              String               @unique @default(uuid())
   user_uuid         String
   credit_pack_uuid  String
+  kind              CreditPurchaseKind   @default(STRIPE_PURCHASE)
   status            CreditPurchaseStatus @default(PENDING)
   credits_amount    Int
   amount_cents      Int

@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import {
   CreditLedgerType,
+  CreditPurchaseKind,
   CreditPurchaseStatus,
   ProjectType,
   Prisma,
@@ -19,6 +20,8 @@ import { StripeConfig } from '@/integrations/stripe/stripe.config';
 import {
   CreditsConfig,
   DefaultCreditPacks,
+  REGISTRATION_GIFT_CREDITS,
+  RegistrationGiftCreditPackSeed,
 } from '@/shared/config/credits/credits.constants';
 import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
@@ -94,6 +97,96 @@ export class CreditsService {
         },
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  async grantRegistrationBonus(user_uuid: string): Promise<void> {
+    const idempotencyKey = `registration_gift:${user_uuid}`;
+
+    const existingLedger = await this.prisma.creditLedgerEntry.findUnique({
+      where: { idempotency_key: idempotencyKey },
+    });
+
+    if (existingLedger) {
+      return;
+    }
+
+    await this.ensureDefaultCreditPacks();
+
+    const pack = await this.prisma.creditPack.findUnique({
+      where: { key: RegistrationGiftCreditPackSeed.key },
+    });
+
+    if (!pack) {
+      this.logger.error(
+        `grantRegistrationBonus: pack ${RegistrationGiftCreditPackSeed.key} missing user=${user_uuid}`,
+      );
+
+      return;
+    }
+
+    try {
+      await this.prisma.$transaction(
+        async (tx) => {
+          const dup = await tx.creditLedgerEntry.findUnique({
+            where: { idempotency_key: idempotencyKey },
+          });
+
+          if (dup) {
+            return;
+          }
+
+          const purchase = await tx.creditPurchase.create({
+            data: {
+              user_uuid,
+              credit_pack_uuid: pack.uuid,
+              kind: CreditPurchaseKind.APP_GIFT,
+              status: CreditPurchaseStatus.SUCCEEDED,
+              credits_amount: REGISTRATION_GIFT_CREDITS,
+              amount_cents: 0,
+              gross_amount_cents: 0,
+              net_amount_cents: 0,
+              currency: pack.currency,
+              metadata: { origin: 'registration' },
+            },
+          });
+
+          const updatedUser = await tx.user.update({
+            where: { uuid: user_uuid },
+            data: { credits_balance: { increment: REGISTRATION_GIFT_CREDITS } },
+            select: { credits_balance: true },
+          });
+
+          await tx.creditLedgerEntry.create({
+            data: {
+              user_uuid,
+              type: CreditLedgerType.PURCHASE,
+              delta_credits: REGISTRATION_GIFT_CREDITS,
+              balance_after: updatedUser.credits_balance,
+              source: 'registration_gift',
+              source_ref_uuid: purchase.uuid,
+              idempotency_key: idempotencyKey,
+              metadata: {
+                credit_purchase_uuid: purchase.uuid,
+                pack_key: pack.key,
+              },
+            },
+          });
+        },
+        {
+          maxWait: 5000,
+          timeout: 15000,
+          isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        },
+      );
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+
+      this.logger.error(
+        `grantRegistrationBonus failed user=${user_uuid}: ${detail}`,
+      );
+
+      throw error;
     }
   }
 
@@ -395,6 +488,7 @@ export class CreditsService {
       data: {
         user_uuid,
         credit_pack_uuid: pack.uuid,
+        kind: CreditPurchaseKind.STRIPE_PURCHASE,
         status: CreditPurchaseStatus.PENDING,
         credits_amount: pack.credits_amount,
         amount_cents: pack.amount_cents,
@@ -928,16 +1022,42 @@ export class CreditsService {
     for (const pack of DefaultCreditPacks) {
       await this.prisma.creditPack.upsert({
         where: { key: pack.key },
-        create: pack,
+        create: {
+          key: pack.key,
+          name: pack.name,
+          credits_amount: pack.credits_amount,
+          amount_cents: pack.amount_cents,
+          currency: pack.currency,
+          active: pack.active ?? true,
+        },
         update: {
           name: pack.name,
           credits_amount: pack.credits_amount,
           amount_cents: pack.amount_cents,
           currency: pack.currency,
-          active: true,
+          active: pack.active ?? true,
         },
       });
     }
+
+    await this.prisma.creditPack.upsert({
+      where: { key: RegistrationGiftCreditPackSeed.key },
+      create: {
+        key: RegistrationGiftCreditPackSeed.key,
+        name: RegistrationGiftCreditPackSeed.name,
+        credits_amount: RegistrationGiftCreditPackSeed.credits_amount,
+        amount_cents: RegistrationGiftCreditPackSeed.amount_cents,
+        currency: RegistrationGiftCreditPackSeed.currency,
+        active: RegistrationGiftCreditPackSeed.active ?? false,
+      },
+      update: {
+        name: RegistrationGiftCreditPackSeed.name,
+        credits_amount: RegistrationGiftCreditPackSeed.credits_amount,
+        amount_cents: RegistrationGiftCreditPackSeed.amount_cents,
+        currency: RegistrationGiftCreditPackSeed.currency,
+        active: RegistrationGiftCreditPackSeed.active ?? false,
+      },
+    });
 
     const packs = await this.prisma.creditPack.findMany({
       where: { key: { in: DefaultCreditPacks.map((p) => p.key) } },
@@ -1079,6 +1199,7 @@ export class CreditsService {
         return {
           uuid: purchase.uuid,
           user_uuid: purchase.user_uuid,
+          kind: purchase.kind,
           status: purchase.status,
           currency: purchase.currency,
           credits_amount: purchase.credits_amount,

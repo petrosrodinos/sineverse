@@ -74,6 +74,7 @@ export interface AdminPurchasesQuery {
 export interface AdminPurchaseRow {
   uuid: string;
   user_uuid: string;
+  kind: "STRIPE_PURCHASE" | "APP_GIFT";
   status: "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED";
   currency: string;
   credits_amount: number;

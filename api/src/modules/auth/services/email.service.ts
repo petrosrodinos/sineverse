@@ -14,12 +14,14 @@ import { CreateJwtService } from '@/shared/utils/jwt/jwt.service';
 import { AuthRoles } from '../interfaces/auth.interface';
 import { visitorAuthConfig } from '../config/visitor-auth.config';
 import { assertVisitorProvisionRateLimit } from '../utils/visitor-rate-limit.utils';
+import { CreditsService } from '@/modules/credits/credits.service';
 
 @Injectable()
 export class EmailAuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: CreateJwtService,
+    private readonly creditsService: CreditsService,
   ) {}
 
   async registerWithEmail(dto: RegisterEmailDto) {
@@ -45,6 +47,8 @@ export class EmailAuthService {
           phone: dto.phone,
         },
       });
+
+      await this.creditsService.grantRegistrationBonus(user.uuid);
 
       const token = await this.jwtService.signToken({
         uuid: user.uuid,
@@ -73,9 +77,10 @@ export class EmailAuthService {
         data: {
           role: AuthRoles.VISITOR,
           full_name: dto.full_name ?? visitorAuthConfig.defaultFullName,
-          credits_balance: visitorAuthConfig.initialCredits,
         },
       });
+
+      await this.creditsService.grantRegistrationBonus(user.uuid);
 
       const token = await this.jwtService.signToken({
         uuid: user.uuid,
