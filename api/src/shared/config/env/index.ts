@@ -2,6 +2,7 @@ export default () => ({
   NODE_ENV: process.env.NODE_ENV,
   PORT: Number(process.env.PORT),
   APP_URL: process.env.APP_URL,
+  CORS_ORIGINS: process.env.CORS_ORIGINS,
   LANDING_URL: process.env.LANDING_URL,
   API_URL: process.env.API_URL,
   DATABASE_URL: process.env.DATABASE_URL,

@@ -6,6 +6,7 @@ import { BULL_BOARD_ADAPTER } from './core/queues/queues.constants';
 import { bullBoardAuthMiddleware } from './core/queues/bull-board.middleware';
 import { ExpressAdapter } from '@bull-board/express';
 import { DecimalTransformInterceptor } from './core/interceptors/decimal-transform.interceptor';
+import { parseCommaSeparatedOrigins } from './shared/utils/cors/cors-origins.utils';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,10 +32,17 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  const enabledCors =
-    process.env.NODE_ENV !== 'local'
-      ? [process.env.APP_URL]
-      : ['http://localhost:3000'];
+  const nodeEnv = configService.get<string>('NODE_ENV');
+  const appUrl = configService.get<string>('APP_URL');
+  const corsOriginsEnv = configService.get<string>('CORS_ORIGINS');
+  const extraOrigins = parseCommaSeparatedOrigins(corsOriginsEnv);
+
+  const baseOrigins =
+    nodeEnv === 'local'
+      ? ['http://localhost:3000']
+      : [...(appUrl ? [appUrl] : [])];
+
+  const enabledCors = [...new Set([...baseOrigins, ...extraOrigins])];
 
   app.enableCors({
     origin: enabledCors,
