@@ -46,7 +46,9 @@ COPY remotion ./remotion
 COPY src ./src
 
 RUN npm ci
+RUN npx prisma generate
 RUN npm run build
+RUN mkdir -p dist/generated && cp -R src/generated/. dist/generated/
 
 ENV NODE_ENV=production
 
