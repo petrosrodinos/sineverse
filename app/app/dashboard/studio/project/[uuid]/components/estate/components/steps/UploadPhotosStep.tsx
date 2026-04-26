@@ -3,17 +3,25 @@
 import type { Key } from "react";
 import type { ProjectAsset } from "@/features/project-assets/interfaces/project-assets.interfaces";
 
+import { Button } from "@heroui/button";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/modal";
 import { Select, SelectItem } from "@heroui/select";
 import { Skeleton } from "@heroui/skeleton";
 import { ImagePlus, Plus, Trash2, Upload } from "lucide-react";
+import NextLink from "next/link";
 import { useParams } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { addToast } from "@heroui/toast";
 
-import { ESTATE_VIDEO_MODEL_OPTIONS } from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
+import {
+  ESTATE_VIDEO_MODEL_OPTIONS,
+  ESTATE_VISITOR_MAX_PROMPT_IMAGES,
+} from "../../../../../../../../../config/dropdowns/project/estate-workflow.constants";
 
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { Routes } from "@/config/routes";
+import { getStoredVisitorAuth } from "@/features/auth/utils/visitor-auth.utils";
 import { ProjectAssetStatuses } from "@/features/project-assets/interfaces/project-assets.interfaces";
 import { RoleTypes } from "@/features/user/interfaces/user.interfaces";
 import { useDeleteScene, useScenes } from "@/features/scenes/hooks/use-scenes";
@@ -50,6 +58,12 @@ export function UploadPhotosStep({
     (session?.role === RoleTypes.ADMIN ||
       session?.role === RoleTypes.SUPER_ADMIN);
 
+  const visitorAuth = useMemo(() => getStoredVisitorAuth(), [status]);
+
+  const isVisitor =
+    status === "unauthenticated" &&
+    visitorAuth?.role === RoleTypes.VISITOR;
+
   const { data: scenes, isLoading } = useScenes(
     projectUuid ? { project_uuid: projectUuid } : undefined,
     { enabled: !!projectUuid },
@@ -73,13 +87,34 @@ export function UploadPhotosStep({
 
   const [isDragOver, setIsDragOver] = useState(false);
 
+  const [visitorPhotoLimitModal, setVisitorPhotoLimitModal] = useState<{
+    open: boolean;
+    title: string;
+    body: string;
+  }>({ open: false, title: "", body: "" });
+
   const dragDepth = useRef(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const totalPhotoCount = promptImageAssets.length + pendingFiles.length;
+
+  const visitorPhotoCapReached =
+    isVisitor && totalPhotoCount >= ESTATE_VISITOR_MAX_PROMPT_IMAGES;
+
   const openPicker = useCallback(() => {
+    if (visitorPhotoCapReached) {
+      setVisitorPhotoLimitModal({
+        open: true,
+        title: "Photo limit reached",
+        body: `Preview visits can include up to ${ESTATE_VISITOR_MAX_PROMPT_IMAGES} listing photos. Remove a photo to add a different one, or create a free account to upload more.`,
+      });
+
+      return;
+    }
+
     inputRef.current?.click();
-  }, []);
+  }, [visitorPhotoCapReached]);
 
   const addFiles = useCallback(
     (files: FileList | File[]) => {
@@ -91,6 +126,47 @@ export function UploadPhotosStep({
 
       if (images.length === 0) return;
 
+      const currentTotal = promptImageAssets.length + pendingFiles.length;
+
+      if (isVisitor) {
+        const cap = ESTATE_VISITOR_MAX_PROMPT_IMAGES;
+
+        const remaining = Math.max(0, cap - currentTotal);
+
+        if (remaining === 0) {
+          setVisitorPhotoLimitModal({
+            open: true,
+            title: "Photo limit reached",
+            body: `Preview visits can include up to ${cap} listing photos. Remove a photo to replace it, or create a free account to work with larger projects.`,
+          });
+
+          return;
+        }
+
+        if (images.length > remaining) {
+          const toAdd = images.slice(0, remaining);
+
+          const skipped = images.length - toAdd.length;
+
+          setPendingFiles((prev) => [
+            ...prev,
+            ...toAdd.map((file) => ({
+              id: `${Date.now()}-${Math.random()}`,
+              file,
+              previewUrl: URL.createObjectURL(file),
+            })),
+          ]);
+
+          setVisitorPhotoLimitModal({
+            open: true,
+            title: "Some photos were not added",
+            body: `Preview visits can include up to ${cap} listing photos. We added the first ${toAdd.length} from your selection (${skipped} not added). Create a free account to upload more per project.`,
+          });
+
+          return;
+        }
+      }
+
       setPendingFiles((prev) => [
         ...prev,
         ...images.map((file) => ({
@@ -100,7 +176,12 @@ export function UploadPhotosStep({
         })),
       ]);
     },
-    [setPendingFiles],
+    [
+      setPendingFiles,
+      isVisitor,
+      promptImageAssets.length,
+      pendingFiles.length,
+    ],
   );
 
   const handleFileChange = useCallback(
@@ -290,7 +371,9 @@ export function UploadPhotosStep({
                   Add listing photos
                 </p>
                 <p className="text-small leading-relaxed text-default-500">
-                  Drop images here or click to browse. You can add more anytime.
+                  {isVisitor
+                    ? `Drop images here or click to browse. You can add up to ${ESTATE_VISITOR_MAX_PROMPT_IMAGES} photos on a preview visit.`
+                    : "Drop images here or click to browse. You can add more anytime."}
                 </p>
               </div>
               <span className="inline-flex items-center gap-2 rounded-full bg-secondary-500/10 px-4 py-2 text-small font-medium text-secondary-700 dark:text-secondary-300">
@@ -310,8 +393,12 @@ export function UploadPhotosStep({
                       Your photos
                     </p>
                     <p className="text-tiny text-default-500">
-                      {promptImageAssets.length + pendingFiles.length} selected
-                      · drop to add more
+                      {totalPhotoCount} selected
+                      {isVisitor
+                        ? visitorPhotoCapReached
+                          ? ` · ${ESTATE_VISITOR_MAX_PROMPT_IMAGES} of ${ESTATE_VISITOR_MAX_PROMPT_IMAGES} (preview limit)`
+                          : ` · up to ${ESTATE_VISITOR_MAX_PROMPT_IMAGES} on preview · drop to add more`
+                        : " · drop to add more"}
                     </p>
                   </div>
                 </div>
@@ -369,21 +456,23 @@ export function UploadPhotosStep({
                   </div>
                 ))}
 
-                <button
-                  className="group/add flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2"
-                  type="button"
-                  onClick={openPicker}
-                >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary-500/15 ring-1 ring-secondary-500/25 transition group-hover/add:scale-105 group-hover/add:bg-secondary-500/25 sm:h-12 sm:w-12">
-                    <Plus
-                      className="h-5 w-5 sm:h-6 sm:w-6"
-                      strokeWidth={2.25}
-                    />
-                  </span>
-                  <span className="text-[11px] font-semibold tracking-wide sm:text-tiny">
-                    Add more
-                  </span>
-                </button>
+                {!visitorPhotoCapReached && (
+                  <button
+                    className="group/add flex aspect-[4/3] cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-secondary-400/45 bg-gradient-to-br from-secondary-500/[0.08] to-transparent text-secondary-600 transition duration-200 hover:border-secondary-500 hover:bg-secondary-500/12 hover:shadow-md dark:border-secondary-500/35 dark:text-secondary-400 dark:hover:border-secondary-400 sm:gap-2"
+                    type="button"
+                    onClick={openPicker}
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary-500/15 ring-1 ring-secondary-500/25 transition group-hover/add:scale-105 group-hover/add:bg-secondary-500/25 sm:h-12 sm:w-12">
+                      <Plus
+                        className="h-5 w-5 sm:h-6 sm:w-6"
+                        strokeWidth={2.25}
+                      />
+                    </span>
+                    <span className="text-[11px] font-semibold tracking-wide sm:text-tiny">
+                      Add more
+                    </span>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -415,6 +504,43 @@ export function UploadPhotosStep({
         onClose={handleCloseRemoveModal}
         onConfirm={handleConfirmRemove}
       />
+
+      <Modal
+        isOpen={visitorPhotoLimitModal.open}
+        placement="center"
+        onOpenChange={(open) =>
+          setVisitorPhotoLimitModal((prev) => ({ ...prev, open }))
+        }
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">
+            {visitorPhotoLimitModal.title}
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-sm leading-relaxed text-default-600">
+              {visitorPhotoLimitModal.body}
+            </p>
+          </ModalBody>
+          <ModalFooter className="flex flex-wrap gap-2">
+            <Button
+              variant="flat"
+              onPress={() =>
+                setVisitorPhotoLimitModal((prev) => ({ ...prev, open: false }))
+              }
+            >
+              Got it
+            </Button>
+            <Button
+              as={NextLink}
+              className="font-semibold"
+              color="primary"
+              href={Routes.auth.sign_up}
+            >
+              Create free account
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

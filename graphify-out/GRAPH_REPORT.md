@@ -1,7 +1,7 @@
 # Graph Report - C:\Users\30697\Desktop\sineverse  (2026-04-26)
 
 ## Corpus Check
-- 481 files · ~421,191 words
+- 481 files · ~421,936 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -2478,11 +2478,11 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Error()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 11`, `Community 15`?**
-  _High betweenness centrality (0.125) - this node is a cross-community bridge._
+  _High betweenness centrality (0.139) - this node is a cross-community bridge._
+- **Why does `from()` connect `Community 0` to `Community 1`, `Community 2`, `Community 3`, `Community 5`, `Community 6`, `Community 7`, `Community 15`?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `GET()` connect `Community 6` to `Community 2`, `Community 3`, `Community 4`, `Community 8`, `Community 9`, `Community 11`, `Community 12`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Why does `Iu()` connect `Community 2` to `Community 1`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Are the 118 inferred relationships involving `Error()` (e.g. with `q()` and `q()`) actually correct?**
   _`Error()` has 118 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 20 inferred relationships involving `from()` (e.g. with `ao()` and `is()`) actually correct?**
