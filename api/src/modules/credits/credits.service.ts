@@ -546,6 +546,7 @@ export class CreditsService {
     project_type: ProjectType;
     provider_charge_usd: number;
     source_ref_uuid: string;
+    cost_calculation_method?: string;
     fixed_credits_deduction?: number;
     metadata?: Prisma.JsonObject;
   }) {
@@ -554,6 +555,7 @@ export class CreditsService {
       project_type,
       provider_charge_usd,
       source_ref_uuid,
+      cost_calculation_method,
       fixed_credits_deduction,
       metadata,
     } = params;
@@ -666,6 +668,7 @@ export class CreditsService {
           app_fee_rate: new Prisma.Decimal(appFeeMultiplier),
           app_fee_amount: new Prisma.Decimal(billing.appFeeAmountEur),
           gross_charge_amount: new Prisma.Decimal(billing.grossChargeAmountEur),
+          cost_calculation_method,
           fx_rate_usd_to_eur: new Prisma.Decimal(fxSnapshot.rate),
           fx_source: fxSnapshot.source,
           fx_timestamp: fxSnapshot.timestamp,

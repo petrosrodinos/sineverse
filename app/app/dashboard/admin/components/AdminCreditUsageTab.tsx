@@ -29,6 +29,7 @@ const creditUsageColumns = [
   { key: "app_fee_rate", label: "APP FEE RATE" },
   { key: "app_fee_amount", label: "APP FEE AMOUNT" },
   { key: "gross_charge_amount", label: "GROSS CHARGE" },
+  { key: "cost_calculation_method", label: "COST METHOD" },
   { key: "generation_model", label: "GENERATION MODEL" },
   { key: "created_at", label: "CREATED AT" },
   { key: "type", label: "TYPE" },
@@ -252,6 +253,10 @@ export function AdminCreditUsageTab({ isActive }: AdminCreditUsageTabProps) {
 
           if (columnKey === "gross_charge_amount") {
             return formatEurStringValue(row.gross_charge_amount);
+          }
+
+          if (columnKey === "cost_calculation_method") {
+            return row.cost_calculation_method ?? "—";
           }
 
           if (columnKey === "generation_model") {

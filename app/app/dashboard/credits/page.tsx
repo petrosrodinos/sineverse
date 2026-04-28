@@ -149,6 +149,17 @@ export default function CreditsPage() {
 
   const usageSegments = usageStats ? usageBreakdownSegments(usageStats) : [];
 
+  const balanceNow = Math.max(0, summary?.balance ?? 0);
+
+  const usedTotal = usageStats?.total_credits_used ?? 0;
+
+  const lifetimeCapacity = usedTotal + balanceNow;
+
+  const lifetimeUsageFillPercent =
+    lifetimeCapacity > 0
+      ? Math.min(100, (usedTotal / lifetimeCapacity) * 100)
+      : 0;
+
   return (
     <div className="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:pb-20 sm:pt-12">
       <header className="max-w-2xl">
@@ -210,7 +221,7 @@ export default function CreditsPage() {
                 <>
                   <div className="mt-4 flex flex-wrap items-end gap-2">
                     <span className="text-4xl font-bold tabular-nums tracking-tight text-foreground sm:text-5xl">
-                      {(usageStats?.total_credits_used ?? 0).toLocaleString()}
+                      {usedTotal.toLocaleString()}
                     </span>
                     <span className="pb-1.5 text-sm font-medium uppercase tracking-widest text-default-500">
                       credits
@@ -219,24 +230,48 @@ export default function CreditsPage() {
                   <p className="mt-2 text-sm text-default-500">
                     Total credits consumed across all work in this account.
                   </p>
-                  {(usageStats?.total_credits_used ?? 0) > 0 &&
-                    usageSegments.length > 0 && (
-                      <div className="mt-6">
-                        <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-default-200/80">
-                          {usageSegments.map((s) => (
-                            <div
-                              key={s.key}
-                              className={`h-full min-w-0 ${s.barClass}`}
-                              style={{ width: `${s.widthPct}%` }}
-                            />
-                          ))}
+                  {summaryLoading ? (
+                    <Skeleton className="mt-6 h-2.5 w-full rounded-full" />
+                  ) : (
+                    <>
+                      {lifetimeCapacity > 0 && (
+                        <div
+                          aria-valuemax={lifetimeCapacity}
+                          aria-valuemin={0}
+                          aria-valuenow={usedTotal}
+                          className="mt-6"
+                          role="progressbar"
+                        >
+                          <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-default-200/80">
+                            {usedTotal > 0 && (
+                              <div
+                                className="flex h-full min-w-0 overflow-hidden"
+                                style={{
+                                  width: `${lifetimeUsageFillPercent}%`,
+                                }}
+                              >
+                                {usageSegments.length > 0 ? (
+                                  usageSegments.map((s) => (
+                                    <div
+                                      key={s.key}
+                                      className={`h-full min-w-0 ${s.barClass}`}
+                                      style={{ width: `${s.widthPct}%` }}
+                                    />
+                                  ))
+                                ) : (
+                                  <div className="h-full min-w-0 flex-1 bg-primary-500" />
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  {(usageStats?.total_credits_used ?? 0) === 0 && (
-                    <p className="mt-4 text-sm text-default-500">
-                      No usage yet. Generations will show up here.
-                    </p>
+                      )}
+                      {usedTotal === 0 && (
+                        <p className="mt-4 text-sm text-default-500">
+                          No usage yet. Generations will show up here.
+                        </p>
+                      )}
+                    </>
                   )}
                 </>
               )}
@@ -277,6 +312,7 @@ export default function CreditsPage() {
                 <TableHeader>
                   <TableColumn>DATE</TableColumn>
                   <TableColumn>MODEL</TableColumn>
+                  <TableColumn>COST METHOD</TableColumn>
                   <TableColumn>AMOUNT</TableColumn>
                   <TableColumn>CREDITS</TableColumn>
                 </TableHeader>
@@ -293,6 +329,9 @@ export default function CreditsPage() {
                         >
                           {usageGenerationDisplay(item)}
                         </span>
+                      </TableCell>
+                      <TableCell>
+                        {item.cost_calculation_method ?? "-"}
                       </TableCell>
                       <TableCell>
                         {formatAmount(item.gross_charge_amount, "EUR") ?? "-"}

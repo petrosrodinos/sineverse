@@ -19146,6 +19146,7 @@ export namespace Prisma {
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
     gross_charge_amount: Decimal | null
+    cost_calculation_method: string | null
     fx_rate_usd_to_eur: Decimal | null
     fx_source: string | null
     fx_timestamp: Date | null
@@ -19172,6 +19173,7 @@ export namespace Prisma {
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
     gross_charge_amount: Decimal | null
+    cost_calculation_method: string | null
     fx_rate_usd_to_eur: Decimal | null
     fx_source: string | null
     fx_timestamp: Date | null
@@ -19198,6 +19200,7 @@ export namespace Prisma {
     app_fee_rate: number
     app_fee_amount: number
     gross_charge_amount: number
+    cost_calculation_method: number
     fx_rate_usd_to_eur: number
     fx_source: number
     fx_timestamp: number
@@ -19257,6 +19260,7 @@ export namespace Prisma {
     app_fee_rate?: true
     app_fee_amount?: true
     gross_charge_amount?: true
+    cost_calculation_method?: true
     fx_rate_usd_to_eur?: true
     fx_source?: true
     fx_timestamp?: true
@@ -19283,6 +19287,7 @@ export namespace Prisma {
     app_fee_rate?: true
     app_fee_amount?: true
     gross_charge_amount?: true
+    cost_calculation_method?: true
     fx_rate_usd_to_eur?: true
     fx_source?: true
     fx_timestamp?: true
@@ -19309,6 +19314,7 @@ export namespace Prisma {
     app_fee_rate?: true
     app_fee_amount?: true
     gross_charge_amount?: true
+    cost_calculation_method?: true
     fx_rate_usd_to_eur?: true
     fx_source?: true
     fx_timestamp?: true
@@ -19423,6 +19429,7 @@ export namespace Prisma {
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
     gross_charge_amount: Decimal | null
+    cost_calculation_method: string | null
     fx_rate_usd_to_eur: Decimal | null
     fx_source: string | null
     fx_timestamp: Date | null
@@ -19469,6 +19476,7 @@ export namespace Prisma {
     app_fee_rate?: boolean
     app_fee_amount?: boolean
     gross_charge_amount?: boolean
+    cost_calculation_method?: boolean
     fx_rate_usd_to_eur?: boolean
     fx_source?: boolean
     fx_timestamp?: boolean
@@ -19497,6 +19505,7 @@ export namespace Prisma {
     app_fee_rate?: boolean
     app_fee_amount?: boolean
     gross_charge_amount?: boolean
+    cost_calculation_method?: boolean
     fx_rate_usd_to_eur?: boolean
     fx_source?: boolean
     fx_timestamp?: boolean
@@ -19525,6 +19534,7 @@ export namespace Prisma {
     app_fee_rate?: boolean
     app_fee_amount?: boolean
     gross_charge_amount?: boolean
+    cost_calculation_method?: boolean
     fx_rate_usd_to_eur?: boolean
     fx_source?: boolean
     fx_timestamp?: boolean
@@ -19553,6 +19563,7 @@ export namespace Prisma {
     app_fee_rate?: boolean
     app_fee_amount?: boolean
     gross_charge_amount?: boolean
+    cost_calculation_method?: boolean
     fx_rate_usd_to_eur?: boolean
     fx_source?: boolean
     fx_timestamp?: boolean
@@ -19561,7 +19572,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "provider_credits_used" | "fee_tokens" | "gross_tokens" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "gross_charge_amount" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
+  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "provider_credits_used" | "fee_tokens" | "gross_tokens" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "gross_charge_amount" | "cost_calculation_method" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
   export type CreditLedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -19596,6 +19607,7 @@ export namespace Prisma {
       app_fee_rate: Prisma.Decimal | null
       app_fee_amount: Prisma.Decimal | null
       gross_charge_amount: Prisma.Decimal | null
+      cost_calculation_method: string | null
       fx_rate_usd_to_eur: Prisma.Decimal | null
       fx_source: string | null
       fx_timestamp: Date | null
@@ -20044,6 +20056,7 @@ export namespace Prisma {
     readonly app_fee_rate: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly app_fee_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly gross_charge_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
+    readonly cost_calculation_method: FieldRef<"CreditLedgerEntry", 'String'>
     readonly fx_rate_usd_to_eur: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly fx_source: FieldRef<"CreditLedgerEntry", 'String'>
     readonly fx_timestamp: FieldRef<"CreditLedgerEntry", 'DateTime'>
@@ -21810,6 +21823,7 @@ export namespace Prisma {
     app_fee_rate: 'app_fee_rate',
     app_fee_amount: 'app_fee_amount',
     gross_charge_amount: 'gross_charge_amount',
+    cost_calculation_method: 'cost_calculation_method',
     fx_rate_usd_to_eur: 'fx_rate_usd_to_eur',
     fx_source: 'fx_source',
     fx_timestamp: 'fx_timestamp',
@@ -23405,6 +23419,7 @@ export namespace Prisma {
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_rate_usd_to_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     fx_source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_timestamp?: DateTimeNullableFilter<"CreditLedgerEntry"> | Date | string | null
@@ -23433,6 +23448,7 @@ export namespace Prisma {
     app_fee_rate?: SortOrderInput | SortOrder
     app_fee_amount?: SortOrderInput | SortOrder
     gross_charge_amount?: SortOrderInput | SortOrder
+    cost_calculation_method?: SortOrderInput | SortOrder
     fx_rate_usd_to_eur?: SortOrderInput | SortOrder
     fx_source?: SortOrderInput | SortOrder
     fx_timestamp?: SortOrderInput | SortOrder
@@ -23464,6 +23480,7 @@ export namespace Prisma {
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_rate_usd_to_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     fx_source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_timestamp?: DateTimeNullableFilter<"CreditLedgerEntry"> | Date | string | null
@@ -23492,6 +23509,7 @@ export namespace Prisma {
     app_fee_rate?: SortOrderInput | SortOrder
     app_fee_amount?: SortOrderInput | SortOrder
     gross_charge_amount?: SortOrderInput | SortOrder
+    cost_calculation_method?: SortOrderInput | SortOrder
     fx_rate_usd_to_eur?: SortOrderInput | SortOrder
     fx_source?: SortOrderInput | SortOrder
     fx_timestamp?: SortOrderInput | SortOrder
@@ -23527,6 +23545,7 @@ export namespace Prisma {
     app_fee_rate?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     fx_rate_usd_to_eur?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     fx_source?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     fx_timestamp?: DateTimeNullableWithAggregatesFilter<"CreditLedgerEntry"> | Date | string | null
@@ -24994,6 +25013,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -25022,6 +25042,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -25047,6 +25068,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25075,6 +25097,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25102,6 +25125,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -25127,6 +25151,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -25154,6 +25179,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26590,6 +26616,7 @@ export namespace Prisma {
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
     gross_charge_amount?: SortOrder
+    cost_calculation_method?: SortOrder
     fx_rate_usd_to_eur?: SortOrder
     fx_source?: SortOrder
     fx_timestamp?: SortOrder
@@ -26632,6 +26659,7 @@ export namespace Prisma {
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
     gross_charge_amount?: SortOrder
+    cost_calculation_method?: SortOrder
     fx_rate_usd_to_eur?: SortOrder
     fx_source?: SortOrder
     fx_timestamp?: SortOrder
@@ -26658,6 +26686,7 @@ export namespace Prisma {
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
     gross_charge_amount?: SortOrder
+    cost_calculation_method?: SortOrder
     fx_rate_usd_to_eur?: SortOrder
     fx_source?: SortOrder
     fx_timestamp?: SortOrder
@@ -29140,6 +29169,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -29166,6 +29196,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -29432,6 +29463,7 @@ export namespace Prisma {
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_rate_usd_to_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     fx_source?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     fx_timestamp?: DateTimeNullableFilter<"CreditLedgerEntry"> | Date | string | null
@@ -32782,6 +32814,7 @@ export namespace Prisma {
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: string | null
     fx_rate_usd_to_eur?: Decimal | DecimalJsLike | number | string | null
     fx_source?: string | null
     fx_timestamp?: Date | string | null
@@ -33095,6 +33128,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33121,6 +33155,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33147,6 +33182,7 @@ export namespace Prisma {
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     fx_rate_usd_to_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     fx_source?: NullableStringFieldUpdateOperationsInput | string | null
     fx_timestamp?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

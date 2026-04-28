@@ -415,6 +415,7 @@ model CreditLedgerEntry {
   app_fee_rate               Decimal?         @db.Decimal(10, 4)
   app_fee_amount             Decimal?         @db.Decimal(12, 4)
   gross_charge_amount        Decimal?         @db.Decimal(12, 4)
+  cost_calculation_method    String?
   fx_rate_usd_to_eur         Decimal?         @db.Decimal(12, 6)
   fx_source                  String?
   fx_timestamp               DateTime?

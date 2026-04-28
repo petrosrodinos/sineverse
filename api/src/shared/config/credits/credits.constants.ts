@@ -8,7 +8,7 @@ export const REGISTRATION_GIFT_CREDITS = 50;
 export const REGISTRATION_GIFT_CREDIT_PACK_KEY = 'APP_REGISTRATION_GIFT' as const;
 
 export const DOLLARS_PER_TOKEN = 0.00983;
-export const DEFAULT_VIDEO_DURATION_SECONDS = 4;
+export const DEFAULT_VIDEO_DURATION_SECONDS = 5;
 
 export const MODEL_PROVIDER_COST_DOLLARS: Record<string, number> = {
   [VideoModels.KLING_VIDEO_V3_STANDARD_IMAGE]: 0.218,
@@ -45,6 +45,12 @@ export const MODEL_PROVIDER_COST_DOLLARS: Record<string, number> = {
 export const CreditUsageLedgerMetadata = {
   GENERATION_MODEL: 'generation_model',
   GENERATION_ASSET_TYPE: 'generation_asset_type',
+} as const;
+
+export const CreditUsageCostCalculationMethod = {
+  USAGE_USD_SPENT: 'usage_usd_spent',
+  USAGE_CREDITS: 'usage_credits',
+  MODEL_FALLBACK: 'model_fallback',
 } as const;
 
 export const CreditsConfig = {

@@ -14,6 +14,7 @@ import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
 import {
   CreditUsageLedgerMetadata,
+  CreditUsageCostCalculationMethod,
   CreditsConfig,
   DEFAULT_VIDEO_DURATION_SECONDS,
   DOLLARS_PER_TOKEN,
@@ -418,6 +419,13 @@ export class VideoGenerationProcessor extends WorkerHost {
               ? usageUsdSpent
               : (providerCostUsdFromUsageCredits ?? providerCostUsdFallback);
 
+          const costCalculationMethod =
+            usageUsdSpent !== null && usageUsdSpent > 0
+              ? CreditUsageCostCalculationMethod.USAGE_USD_SPENT
+              : providerCostUsdFromUsageCredits !== null
+                ? CreditUsageCostCalculationMethod.USAGE_CREDITS
+                : CreditUsageCostCalculationMethod.MODEL_FALLBACK;
+
           this.logger.log(
             `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd_model=${providerCostUsdFromModel} provider_cost_usd_fallback=${providerCostUsdFallback} provider_cost_usd=${providerCostUsd}`,
           );
@@ -433,6 +441,7 @@ export class VideoGenerationProcessor extends WorkerHost {
                 ? (currentAsset.project?.type ?? ProjectType.FILM)
                 : ProjectType.FILM,
               provider_charge_usd: providerCostUsd,
+              cost_calculation_method: costCalculationMethod,
               fixed_credits_deduction: fixedCreditsDeduction,
               source_ref_uuid: projectAssetUuid,
               metadata: {

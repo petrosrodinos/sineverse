@@ -37,6 +37,7 @@ export interface CreditsUsageItem {
   app_fee_rate?: number | string | null;
   app_fee_amount?: number | string | null;
   gross_charge_amount?: number | string | null;
+  cost_calculation_method?: string | null;
   metadata?: Record<string, unknown> | null;
   created_at: string;
 }
@@ -68,6 +69,7 @@ export interface AdminCreditUsageRow {
   app_fee_rate: string | null;
   app_fee_amount: string | null;
   gross_charge_amount: string | null;
+  cost_calculation_method: string | null;
   metadata: Record<string, unknown> | null;
   created_at: string;
   user: {
