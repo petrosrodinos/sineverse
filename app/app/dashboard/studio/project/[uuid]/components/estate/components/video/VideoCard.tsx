@@ -322,7 +322,8 @@ export function VideoCard({
 
         scheduleClipUpdate({
           transition_out_type: type,
-          transition_out_duration: 0.5,
+          transition_out_duration:
+            estateWalkthroughVideoConfig.transitionDurationSec,
         });
       }
     },

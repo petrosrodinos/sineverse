@@ -168,7 +168,9 @@ export class RenderProcessor extends WorkerHost {
       const transitionType = clip.transition_out?.type ?? 'FADE';
 
       const transitionDurationFrames = Math.max(
-        Math.round((clip.transition_out?.duration ?? 0.5) * COMPOSITION_FPS),
+        Math.round(
+          (clip.transition_out?.duration ?? 0.35) * COMPOSITION_FPS,
+        ),
         1,
       );
 
