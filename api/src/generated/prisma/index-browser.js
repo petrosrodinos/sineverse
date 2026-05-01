@@ -329,6 +329,8 @@ exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   app_fee_amount: 'app_fee_amount',
   gross_charge_amount: 'gross_charge_amount',
   cost_calculation_method: 'cost_calculation_method',
+  requested_duration_sec: 'requested_duration_sec',
+  provider_cost_usd_per_second: 'provider_cost_usd_per_second',
   fx_rate_usd_to_eur: 'fx_rate_usd_to_eur',
   fx_source: 'fx_source',
   fx_timestamp: 'fx_timestamp',

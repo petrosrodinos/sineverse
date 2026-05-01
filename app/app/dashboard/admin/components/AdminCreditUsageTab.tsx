@@ -30,6 +30,8 @@ const creditUsageColumns = [
   { key: "app_fee_amount", label: "APP FEE AMOUNT" },
   { key: "gross_charge_amount", label: "GROSS CHARGE" },
   { key: "cost_calculation_method", label: "COST METHOD" },
+  { key: "requested_duration_sec", label: "REQ DURATION (SEC)" },
+  { key: "provider_cost_usd_per_second", label: "PROVIDER USD/SEC" },
   { key: "generation_model", label: "GENERATION MODEL" },
   { key: "created_at", label: "CREATED AT" },
   { key: "type", label: "TYPE" },
@@ -257,6 +259,14 @@ export function AdminCreditUsageTab({ isActive }: AdminCreditUsageTabProps) {
 
           if (columnKey === "cost_calculation_method") {
             return row.cost_calculation_method ?? "—";
+          }
+
+          if (columnKey === "requested_duration_sec") {
+            return row.requested_duration_sec ?? "—";
+          }
+
+          if (columnKey === "provider_cost_usd_per_second") {
+            return row.provider_cost_usd_per_second ?? "—";
           }
 
           if (columnKey === "generation_model") {

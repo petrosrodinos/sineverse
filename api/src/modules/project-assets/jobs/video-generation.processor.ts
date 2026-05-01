@@ -9,13 +9,15 @@ import { AimlApiService } from '@/integrations/aimlapi/aimlapi.service';
 import { DocumentsService } from '@/modules/documents/documents.service';
 import { PrismaService } from '@/core/databases/prisma/prisma.service';
 import { VideoModels } from '@/integrations/aimlapi/core/constants';
-import { transformVariationToModelPayload } from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
+import {
+  normalizeVideoDurationByModel,
+  transformVariationToModelPayload,
+} from '@/integrations/aimlapi/core/config/mappers/video-mapping.config';
 import { AssetRole, AssetStatus, ProjectType } from '@/generated/prisma';
 import { CreditsService } from '@/modules/credits/credits.service';
 import {
   CreditUsageLedgerMetadata,
   CreditUsageCostCalculationMethod,
-  CreditsConfig,
   DEFAULT_VIDEO_DURATION_SECONDS,
   DOLLARS_PER_TOKEN,
   MODEL_PROVIDER_COST_DOLLARS,
@@ -386,8 +388,19 @@ export class VideoGenerationProcessor extends WorkerHost {
           const providerCostUsdPerSecond =
             MODEL_PROVIDER_COST_DOLLARS[generationModel] ?? 0;
 
+          const requestedDurationSecRaw = metadata.duration_sec;
+          const requestedDurationSeed =
+            typeof requestedDurationSecRaw === 'number' &&
+              Number.isFinite(requestedDurationSecRaw) &&
+              requestedDurationSecRaw > 0
+              ? requestedDurationSecRaw
+              : DEFAULT_VIDEO_DURATION_SECONDS;
+          const requestedDurationSec =
+            normalizeVideoDurationByModel(generationModel, requestedDurationSeed) ??
+            requestedDurationSeed;
+
           const providerCostUsdFromModel =
-            providerCostUsdPerSecond * DEFAULT_VIDEO_DURATION_SECONDS;
+            providerCostUsdPerSecond * requestedDurationSec;
 
           const usage = finalStatusResponse.meta?.usage ?? null;
           const usageUsdSpentRaw = usage?.usd_spent;
@@ -408,11 +421,7 @@ export class VideoGenerationProcessor extends WorkerHost {
               ? usageCredits * DOLLARS_PER_TOKEN
               : null;
 
-          const estateMultiplier =
-            CreditsConfig.projectTypeMultipliers.ESTATE ?? 1;
-
-          const providerCostUsdFallback =
-            providerCostUsdFromModel * estateMultiplier;
+          const providerCostUsdFallback = providerCostUsdFromModel;
 
           const providerCostUsd =
             usageUsdSpent !== null && usageUsdSpent > 0
@@ -427,7 +436,7 @@ export class VideoGenerationProcessor extends WorkerHost {
                 : CreditUsageCostCalculationMethod.MODEL_FALLBACK;
 
           this.logger.log(
-            `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${DEFAULT_VIDEO_DURATION_SECONDS} provider_cost_usd_model=${providerCostUsdFromModel} provider_cost_usd_fallback=${providerCostUsdFallback} provider_cost_usd=${providerCostUsd}`,
+            `[video-poll:${taskId}] completed — meta=${JSON.stringify(finalStatusResponse.meta)} model=${generationModel} provider_cost_usd_per_second=${providerCostUsdPerSecond} duration_seconds=${requestedDurationSec} provider_cost_usd_model=${providerCostUsdFromModel} provider_cost_usd_fallback=${providerCostUsdFallback} provider_cost_usd=${providerCostUsd}`,
           );
 
           const fixedCreditsDeduction = isEstateWalkthrough
@@ -442,6 +451,8 @@ export class VideoGenerationProcessor extends WorkerHost {
                 : ProjectType.FILM,
               provider_charge_usd: providerCostUsd,
               cost_calculation_method: costCalculationMethod,
+              requested_duration_sec: requestedDurationSec,
+              provider_cost_usd_per_second: providerCostUsdPerSecond,
               fixed_credits_deduction: fixedCreditsDeduction,
               source_ref_uuid: projectAssetUuid,
               metadata: {

@@ -36,7 +36,7 @@ const normalizeAspectRatio = (
   return allowed[0];
 };
 
-const normalizeDuration = (
+export const normalizeVideoDurationByModel = (
   model: string,
   duration?: number,
 ): number | undefined => {
@@ -182,7 +182,7 @@ export const transformVariationToModelPayload = (
     prompt: buildPrompt(),
     seed: variation.seed ? parseInt(variation.seed) : undefined,
     aspect_ratio: normalizeAspectRatio(model, variation.aspect_ratio),
-    duration: normalizeDuration(model, variation.duration_sec),
+    duration: normalizeVideoDurationByModel(model, variation.duration_sec),
   };
 
   // Kling Mappings
@@ -223,7 +223,7 @@ export const transformVariationToModelPayload = (
       model,
       prompt: basePayload.prompt,
       seed: basePayload.seed,
-      duration: normalizeDuration(model, variation.duration_sec),
+      duration: normalizeVideoDurationByModel(model, variation.duration_sec),
       resolution: variation.resolution || '1080p',
     };
 

@@ -547,6 +547,8 @@ export class CreditsService {
     provider_charge_usd: number;
     source_ref_uuid: string;
     cost_calculation_method?: string;
+    requested_duration_sec?: number;
+    provider_cost_usd_per_second?: number;
     fixed_credits_deduction?: number;
     metadata?: Prisma.JsonObject;
   }) {
@@ -556,6 +558,8 @@ export class CreditsService {
       provider_charge_usd,
       source_ref_uuid,
       cost_calculation_method,
+      requested_duration_sec,
+      provider_cost_usd_per_second,
       fixed_credits_deduction,
       metadata,
     } = params;
@@ -669,6 +673,16 @@ export class CreditsService {
           app_fee_amount: new Prisma.Decimal(billing.appFeeAmountEur),
           gross_charge_amount: new Prisma.Decimal(billing.grossChargeAmountEur),
           cost_calculation_method,
+          requested_duration_sec:
+            typeof requested_duration_sec === 'number' &&
+            Number.isFinite(requested_duration_sec)
+              ? Math.max(Math.floor(requested_duration_sec), 0)
+              : null,
+          provider_cost_usd_per_second:
+            typeof provider_cost_usd_per_second === 'number' &&
+            Number.isFinite(provider_cost_usd_per_second)
+              ? new Prisma.Decimal(provider_cost_usd_per_second)
+              : null,
           fx_rate_usd_to_eur: new Prisma.Decimal(fxSnapshot.rate),
           fx_source: fxSnapshot.source,
           fx_timestamp: fxSnapshot.timestamp,

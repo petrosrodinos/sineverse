@@ -38,6 +38,8 @@ export interface CreditsUsageItem {
   app_fee_amount?: number | string | null;
   gross_charge_amount?: number | string | null;
   cost_calculation_method?: string | null;
+  requested_duration_sec?: number | null;
+  provider_cost_usd_per_second?: number | string | null;
   metadata?: Record<string, unknown> | null;
   created_at: string;
 }
@@ -70,6 +72,8 @@ export interface AdminCreditUsageRow {
   app_fee_amount: string | null;
   gross_charge_amount: string | null;
   cost_calculation_method: string | null;
+  requested_duration_sec: number | null;
+  provider_cost_usd_per_second: number | null;
   metadata: Record<string, unknown> | null;
   created_at: string;
   user: {

@@ -313,6 +313,8 @@ export default function CreditsPage() {
                   <TableColumn>DATE</TableColumn>
                   <TableColumn>MODEL</TableColumn>
                   <TableColumn>COST METHOD</TableColumn>
+                  <TableColumn>REQ DURATION</TableColumn>
+                  <TableColumn>USD/SEC</TableColumn>
                   <TableColumn>AMOUNT</TableColumn>
                   <TableColumn>CREDITS</TableColumn>
                 </TableHeader>
@@ -332,6 +334,10 @@ export default function CreditsPage() {
                       </TableCell>
                       <TableCell>
                         {item.cost_calculation_method ?? "-"}
+                      </TableCell>
+                      <TableCell>{item.requested_duration_sec ?? "-"}</TableCell>
+                      <TableCell>
+                        {item.provider_cost_usd_per_second ?? "-"}
                       </TableCell>
                       <TableCell>
                         {formatAmount(item.gross_charge_amount, "EUR") ?? "-"}
