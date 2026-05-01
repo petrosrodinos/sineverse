@@ -60,6 +60,7 @@ type VideoCardProps = {
   asset: ProjectAsset;
   compact?: boolean;
   finalProjectUuid: string;
+  displayOrder?: number;
   reorder?: VideoCardReorderProps;
   timelineClipFromParent?: TimelineClip | null;
   timelineClipsReady?: boolean;
@@ -69,6 +70,7 @@ export function VideoCard({
   asset,
   compact = false,
   finalProjectUuid,
+  displayOrder,
   reorder,
   timelineClipFromParent,
   timelineClipsReady,
@@ -400,7 +402,7 @@ export function VideoCard({
       const parsed = Number(value);
 
       if (Number.isFinite(parsed)) {
-        const nextEndSec = Math.min(parsed, videoDurationSec);
+        const nextEndSec = Math.min(Math.round(parsed), Math.round(trimEnd));
 
         setCaptionEndSec(nextEndSec);
 
@@ -419,9 +421,35 @@ export function VideoCard({
       captionStartSec,
       captionPosition,
       captionStyle,
-      videoDurationSec,
+      trimEnd,
     ],
   );
+
+  useEffect(() => {
+    if (captionEndSec <= trimEnd) {
+      return;
+    }
+
+    const nextEndSec = Math.round(trimEnd);
+
+    setCaptionEndSec(nextEndSec);
+
+    scheduleCaptionUpsert({
+      text: captionText,
+      start_sec: captionStartSec,
+      end_sec: nextEndSec,
+      position: captionPosition,
+      style: captionStyle,
+    });
+  }, [
+    trimEnd,
+    captionEndSec,
+    captionText,
+    captionStartSec,
+    captionPosition,
+    captionStyle,
+    scheduleCaptionUpsert,
+  ]);
 
   const handleCaptionPositionChange = useCallback(
     (keys: "all" | Iterable<Key>) => {
@@ -482,14 +510,16 @@ export function VideoCard({
       const durationSec = event.currentTarget.duration;
 
       if (Number.isFinite(durationSec) && durationSec > 0) {
-        setVideoDurationSec(durationSec);
+        const roundedDurationSec = Math.round(durationSec);
+
+        setVideoDurationSec(roundedDurationSec);
 
         if (!clipLoadedRef.current) {
-          setTrimEnd(durationSec);
+          setTrimEnd(roundedDurationSec);
         }
 
         if (!captionLoadedRef.current) {
-          setCaptionEndSec(durationSec);
+          setCaptionEndSec(roundedDurationSec);
         }
       }
     },
@@ -572,7 +602,7 @@ export function VideoCard({
               : "text-small font-semibold text-foreground"
           }
         >
-          Scene {sceneOrder ?? "—"}
+          Scene {displayOrder ?? sceneOrder ?? "—"}
         </span>
         <div className="flex items-center gap-2">
           {display.status === ProjectAssetStatuses.FAILED ? (
@@ -690,7 +720,7 @@ export function VideoCard({
                     />
                     <Input
                       label="Caption End (sec)"
-                      max={videoDurationSec}
+                      max={trimEnd}
                       min={0}
                       size="sm"
                       type="number"

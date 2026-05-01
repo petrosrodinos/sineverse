@@ -29,6 +29,16 @@ const getCaptionPositionStyle = (position) => {
 };
 
 const getCaptionStyle = (style) => {
+  if (style === 'CLEAN_WHITE') {
+    return {
+      color: '#ffffff',
+      fontSize: 46,
+      fontWeight: 600,
+      fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
+      letterSpacing: 0.2,
+      textShadow: '0 3px 24px rgba(0,0,0,0.7)',
+    };
+  }
   if (style === 'MINIMAL_THIN') {
     return {
       color: '#ffffff',
@@ -67,6 +77,14 @@ const normalizeAudioFilename = (filename) => {
   const segments = cleaned.split('/').filter(Boolean);
 
   return segments[segments.length - 1] || filename;
+};
+
+const normalizeCaptionText = (text) => {
+  if (text === null || text === undefined) {
+    return '';
+  }
+
+  return String(text).replace(/\s*\r?\n\s*/g, ' ').trim();
 };
 
 const getVideoTransform = (
@@ -166,6 +184,19 @@ const ClipLayer = ({ clip }) => {
     transitionDurationFrames,
     clip.duration_frames,
   );
+  const dedupedCaptions = Array.isArray(clip.captions)
+    ? Array.from(
+        (clip.captions || []).reduce((map, caption) => {
+          const key = [
+            normalizeCaptionText(caption.text).toLowerCase(),
+            caption.position || '',
+            caption.style || '',
+          ].join('|');
+          map.set(key, caption);
+          return map;
+        }, new Map()).values(),
+      )
+    : [];
 
   return React.createElement(
     AbsoluteFill,
@@ -184,7 +215,7 @@ const ClipLayer = ({ clip }) => {
         ...videoStyle,
       },
     }),
-    ...(clip.captions || []).map((caption, captionIndex) =>
+    ...dedupedCaptions.map((caption, captionIndex) =>
       React.createElement(
         Sequence,
         {
@@ -207,12 +238,14 @@ const ClipLayer = ({ clip }) => {
                 position: 'absolute',
                 maxWidth: '84%',
                 whiteSpace: 'pre-wrap',
+                wordBreak: 'keep-all',
+                overflowWrap: 'normal',
                 lineHeight: 1.2,
                 ...getCaptionPositionStyle(caption.position),
                 ...getCaptionStyle(caption.style),
               },
             },
-            caption.text,
+            normalizeCaptionText(caption.text),
           ),
         ),
       ),

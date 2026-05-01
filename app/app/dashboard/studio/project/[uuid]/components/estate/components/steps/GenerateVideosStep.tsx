@@ -462,6 +462,7 @@ export function GenerateVideosStep({
         <VideoCard
           compact
           asset={assetItem}
+          displayOrder={index + 1}
           finalProjectUuid={finalProjectUuid}
           reorder={reorder}
           timelineClipFromParent={clipByAssetUuid[clipId] ?? null}

@@ -172,8 +172,24 @@ export class RenderProcessor extends WorkerHost {
         1,
       );
 
-      const captions = (clip.captions ?? [])
-        .map((caption: any) => {
+      const dedupedCaptionRows: Map<string, any> = new Map();
+
+      for (const caption of clip.captions ?? []) {
+        const text = (caption.text ?? '').trim();
+
+        if (!text) continue;
+
+        const key = [
+          text.toLowerCase(),
+          caption.position ?? 'BOTTOM_CENTER',
+          caption.style ?? 'CINEMATIC_SOFT',
+        ].join('|');
+
+        dedupedCaptionRows.set(key, caption);
+      }
+
+      const captions = Array.from(dedupedCaptionRows.values()).map(
+        (caption: any) => {
           const startFrame = Math.max(
             Math.round((caption.start_sec ?? 0) * COMPOSITION_FPS),
             0,
@@ -191,8 +207,8 @@ export class RenderProcessor extends WorkerHost {
             position: caption.position ?? 'BOTTOM_CENTER',
             style: caption.style ?? 'CINEMATIC_SOFT',
           };
-        })
-        .filter((caption: { text: string }) => caption.text.trim().length > 0);
+        },
+      );
 
       clips.push({
         video_url: videoUrl,

@@ -80,6 +80,11 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
   } = useDeleteFinalProjectVideoByDocument();
 
   const [isRenderStarting, setIsRenderStarting] = useState(false);
+  const [hasRenderRequest, setHasRenderRequest] = useState(false);
+  const [isFeaturedVideoReady, setIsFeaturedVideoReady] = useState(false);
+  const [readyGalleryVideos, setReadyGalleryVideos] = useState<
+    Record<string, boolean>
+  >({});
 
   const [pendingDelete, setPendingDelete] = useState<PendingDelete>(null);
 
@@ -97,18 +102,9 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const playbackUrlsRef = useRef<Record<string, string>>({});
 
-  const hasAutoRenderAttemptedRef = useRef(false);
-
   const renderStatus = finalProjectData?.render_status ?? "IDLE";
 
   const renderedVideoUrl = finalProjectData?.video?.url ?? null;
-
-  const isRendering =
-    renderStatus === "RENDERING" || isRenderPending || isRenderStarting;
-
-  const isCompleted = renderStatus === "COMPLETED" && !!renderedVideoUrl;
-
-  const isFailed = renderStatus === "FAILED";
 
   const renderHistory = useMemo(
     () =>
@@ -124,6 +120,15 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const featuredDocumentUuid =
     finalProjectData?.video_uuid ?? renderHistory[0]?.uuid ?? null;
+
+  const isRendering =
+    renderStatus === "RENDERING" || isRenderPending || isRenderStarting;
+
+  const showRenderingOverlay = isRendering && (hasRenderRequest || !featuredVideoUrl);
+
+  const isCompleted = renderStatus === "COMPLETED" && !!renderedVideoUrl;
+
+  const isFailed = renderStatus === "FAILED";
 
   const galleryRenders = renderHistory.filter(
     (item) => item.uuid !== featuredDocumentUuid,
@@ -144,6 +149,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
   const handleRender = useCallback(() => {
     if (!finalProjectUuid) return;
 
+    setHasRenderRequest(true);
     setIsRenderStarting(true);
 
     startRender(finalProjectUuid, {
@@ -354,33 +360,37 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
   }, []);
 
   useEffect(() => {
-    if (
-      renderStatus === "RENDERING" ||
-      renderStatus === "COMPLETED" ||
-      renderStatus === "FAILED"
-    ) {
+    setIsFeaturedVideoReady(false);
+  }, [featuredVideoUrl]);
+
+  useEffect(() => {
+    setReadyGalleryVideos((prev) => {
+      const next: Record<string, boolean> = {};
+
+      for (const item of galleryRenders) {
+        if (prev[item.uuid]) {
+          next[item.uuid] = true;
+        }
+      }
+
+      return next;
+    });
+  }, [galleryRenders]);
+
+  useEffect(() => {
+    if (renderStatus === "RENDERING") {
       setIsRenderStarting(false);
+    }
+
+    if (renderStatus === "COMPLETED" || renderStatus === "FAILED") {
+      setIsRenderStarting(false);
+      setHasRenderRequest(false);
     }
   }, [renderStatus]);
 
-  useEffect(() => {
-    if (
-      !showEmptyState ||
-      !finalProjectUuid ||
-      isVisitor ||
-      hasAutoRenderAttemptedRef.current
-    ) {
-      return;
-    }
-
-    hasAutoRenderAttemptedRef.current = true;
-
-    handleRender();
-  }, [finalProjectUuid, handleRender, isVisitor, showEmptyState]);
-
   return (
     <div className="flex flex-col items-stretch gap-6">
-      {isRendering && (
+      {showRenderingOverlay && (
         <Card className="border border-default-200 bg-gradient-to-br from-default-100/70 via-default-100/40 to-secondary-500/10 dark:border-default-100/20 dark:from-default-100/10 dark:via-default-100/5 dark:to-secondary-500/15">
           <CardBody className="gap-4 p-4">
             <div className="flex items-center gap-2">
@@ -441,11 +451,22 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               </p>
             </div>
             <div className="relative">
+              {!isFeaturedVideoReady && previewImageUrl && (
+                <img
+                  alt="Final video preview"
+                  className={`absolute inset-0 z-0 w-full rounded-xl border border-default-200 object-cover dark:border-default-100/20 ${isVisitor ? "blur-sm" : ""}`}
+                  src={previewImageUrl}
+                  style={{ maxHeight: 380 }}
+                />
+              )}
               <video
-                className={`w-full rounded-xl border border-default-200 dark:border-default-100/20 ${isVisitor ? "blur-sm" : ""}`}
+                className={`relative z-10 w-full rounded-xl border border-default-200 transition-opacity duration-200 dark:border-default-100/20 ${isVisitor ? "blur-sm" : ""} ${!isFeaturedVideoReady && previewImageUrl ? "opacity-0" : "opacity-100"}`}
                 controls={!isVisitor}
+                poster={previewImageUrl ?? undefined}
+                preload="auto"
                 src={featuredVideoUrl}
                 style={{ maxHeight: 380 }}
+                onLoadedData={() => setIsFeaturedVideoReady(true)}
               >
                 <track kind="captions" label="English captions" srcLang="en" />
               </video>
@@ -461,24 +482,28 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                 </div>
               )}
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="flex flex-wrap gap-2">
               <Button
-                color="secondary"
+                className="flex-1 min-w-[110px]"
                 isDisabled={isVisitor}
+                size="sm"
                 startContent={<Download className="h-4 w-4" />}
-                variant="solid"
+                variant="flat"
                 onPress={() => {
                   if (!featuredDocumentUuid) return;
 
                   void handleDownloadVideo(featuredDocumentUuid);
                 }}
               >
-                Download Video
+                <span className="sm:hidden">Download</span>
+                <span className="hidden sm:inline">Download Video</span>
               </Button>
               <Button
+                className="flex-1 min-w-[110px]"
                 isDisabled={isVisitor}
-                startContent={<ExternalLink className="h-5 w-5" />}
-                variant="bordered"
+                size="sm"
+                startContent={<ExternalLink className="h-4 w-4" />}
+                variant="light"
                 onPress={() => {
                   if (isVisitor) {
                     setIsSignupOpen(true);
@@ -493,7 +518,8 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                   );
                 }}
               >
-                Open in New Tab
+                <span className="sm:hidden">Open</span>
+                <span className="hidden sm:inline">Open in New Tab</span>
               </Button>
             </div>
             {isAdmin && featuredDocumentUuid && (
@@ -522,42 +548,62 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
       )}
 
       {galleryRenders.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {galleryRenders.map((renderItem) => (
             <Card
               key={renderItem.uuid}
               className="border border-default-200 bg-default-100/40 dark:border-default-100/20 dark:bg-default-100/5"
             >
               <CardBody className="gap-2 p-2">
-                <video
-                  controls
-                  className="aspect-video w-full rounded-lg border border-default-200 dark:border-default-100/20"
-                  src={playbackUrls[renderItem.uuid] ?? renderItem.url ?? ""}
-                  onError={() => {
-                    void ensurePlaybackUrl(renderItem.uuid);
-                  }}
-                >
-                  <track
-                    kind="captions"
-                    label="English captions"
-                    srcLang="en"
-                  />
-                </video>
-                <div className="flex gap-2">
+                <div className="relative aspect-video w-full overflow-hidden rounded-lg border border-default-200 dark:border-default-100/20">
+                  {!readyGalleryVideos[renderItem.uuid] && previewImageUrl && (
+                    <img
+                      alt="Rendered video preview"
+                      className="absolute inset-0 z-0 h-full w-full object-cover"
+                      src={previewImageUrl}
+                    />
+                  )}
+                  <video
+                    controls
+                    className={`relative z-10 h-full w-full ${!readyGalleryVideos[renderItem.uuid] && previewImageUrl ? "opacity-0" : "opacity-100"}`}
+                    poster={previewImageUrl ?? undefined}
+                    preload="auto"
+                    src={playbackUrls[renderItem.uuid] ?? renderItem.url ?? ""}
+                    onError={() => {
+                      void ensurePlaybackUrl(renderItem.uuid);
+                    }}
+                    onLoadedData={() => {
+                      setReadyGalleryVideos((prev) => ({
+                        ...prev,
+                        [renderItem.uuid]: true,
+                      }));
+                    }}
+                  >
+                    <track
+                      kind="captions"
+                      label="English captions"
+                      srcLang="en"
+                    />
+                  </video>
+                </div>
+                <div className="flex flex-wrap gap-2">
                   <Button
+                    className="flex-1 min-w-[110px]"
                     size="sm"
-                    startContent={<Download className="h-3.5 w-3.5" />}
+                    startContent={<Download className="h-4 w-4" />}
                     variant="flat"
                     onPress={() => {
                       void handleDownloadVideo(renderItem.uuid);
                     }}
                   >
-                    Download
+                    <span className="sm:hidden">Download</span>
+                    <span className="hidden sm:inline">Download Video</span>
                   </Button>
                   <Button
+                    className="flex-1 min-w-[110px]"
                     isDisabled={isVisitor}
                     size="sm"
-                    startContent={<ExternalLink className="h-5 w-5" />}
+                    startContent={<ExternalLink className="h-4 w-4" />}
                     variant="light"
                     onPress={() => {
                       if (isVisitor) {
@@ -573,10 +619,12 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                       );
                     }}
                   >
-                    Open
+                    <span className="sm:hidden">Open</span>
+                    <span className="hidden sm:inline">Open in New Tab</span>
                   </Button>
                   {isAdmin && (
                     <Button
+                      className="flex-1 min-w-[110px]"
                       color="danger"
                       isLoading={isDeletingRenderedVideo}
                       size="sm"
