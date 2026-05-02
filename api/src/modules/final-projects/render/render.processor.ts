@@ -74,6 +74,21 @@ export class RenderProcessor extends WorkerHost {
 
       const videoBuffer = await this.renderService.render(inputProps);
 
+      const latestBeforeSave = await this.prisma.finalProject.findUnique({
+        where: { uuid: finalProjectUuid },
+        select: { render_status: true },
+      });
+
+      if (
+        latestBeforeSave?.render_status !== FinalProjectRenderStatus.RENDERING
+      ) {
+        this.logger.warn(
+          `Discarding finished render for ${finalProjectUuid}: final project status is ${latestBeforeSave?.render_status ?? 'unknown'}`,
+        );
+
+        return;
+      }
+
       const filename = `final-render-${finalProjectUuid}-${Date.now()}.mp4`;
 
       const videoUuid = await this.documentsService.saveVideoFromBuffer(

@@ -419,15 +419,22 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                 {isAdmin && (
                   <Button
                     color="danger"
-                    isDisabled={!featuredDocumentUuid}
                     isLoading={isDeletingRenderedVideo}
                     size="sm"
                     startContent={<Trash2 className="h-3.5 w-3.5" />}
                     variant="solid"
                     onPress={() => {
-                      if (!featuredDocumentUuid) return;
+                      if (!finalProjectUuid) {
+                        return;
+                      }
 
-                      requestDeleteVideo(featuredDocumentUuid);
+                      if (featuredDocumentUuid) {
+                        requestDeleteVideo(featuredDocumentUuid);
+
+                        return;
+                      }
+
+                      requestDeleteAllVideos();
                     }}
                   >
                     Delete current video
