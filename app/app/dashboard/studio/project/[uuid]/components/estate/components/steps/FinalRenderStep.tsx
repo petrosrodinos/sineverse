@@ -100,6 +100,10 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
 
   const [isCompletingSignup, setIsCompletingSignup] = useState(false);
 
+  const [downloadingDocumentUuid, setDownloadingDocumentUuid] = useState<
+    string | null
+  >(null);
+
   const playbackUrlsRef = useRef<Record<string, string>>({});
 
   const renderStatus = finalProjectData?.render_status ?? "IDLE";
@@ -171,6 +175,8 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
         return;
       }
 
+      setDownloadingDocumentUuid(documentUuid);
+
       try {
         const blob = await downloadFinalProjectVideoByDocument(
           finalProjectUuid,
@@ -198,6 +204,10 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
           description: "Could not download the video. Please try again.",
           severity: "danger",
         });
+      } finally {
+        setDownloadingDocumentUuid((prev) =>
+          prev === documentUuid ? null : prev,
+        );
       }
     },
     [finalProjectUuid, isVisitor],
@@ -493,6 +503,10 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
               <Button
                 className="flex-1 min-w-[110px]"
                 isDisabled={isVisitor}
+                isLoading={
+                  !!featuredDocumentUuid &&
+                  downloadingDocumentUuid === featuredDocumentUuid
+                }
                 size="sm"
                 startContent={<Download className="h-4 w-4" />}
                 variant="flat"
@@ -596,6 +610,7 @@ export function FinalRenderStep({ finalProjectUuid }: FinalRenderStepProps) {
                 <div className="flex flex-wrap gap-2">
                   <Button
                     className="flex-1 min-w-[110px]"
+                    isLoading={downloadingDocumentUuid === renderItem.uuid}
                     size="sm"
                     startContent={<Download className="h-4 w-4" />}
                     variant="flat"
