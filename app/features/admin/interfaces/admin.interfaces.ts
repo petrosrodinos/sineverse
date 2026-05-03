@@ -11,6 +11,8 @@ export interface AdminOverview {
   total_net_revenue_cents: number;
   total_stripe_fees_cents: number;
   total_app_fees_collected: number;
+  total_app_fees_purchased_credits_eur: number;
+  total_app_fees_promotional_credits_eur: number;
   total_aimlapi_provider_cost: {
     usd: number;
     eur: number;

@@ -129,6 +129,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   credits_balance: 'credits_balance',
+  promotional_credits_balance: 'promotional_credits_balance',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -327,6 +328,10 @@ exports.Prisma.CreditLedgerEntryScalarFieldEnum = {
   provider_charge_amount: 'provider_charge_amount',
   app_fee_rate: 'app_fee_rate',
   app_fee_amount: 'app_fee_amount',
+  usage_promotional_credits_applied: 'usage_promotional_credits_applied',
+  usage_paid_credits_applied: 'usage_paid_credits_applied',
+  app_fee_amount_promotional_eur: 'app_fee_amount_promotional_eur',
+  app_fee_amount_paid_eur: 'app_fee_amount_paid_eur',
   gross_charge_amount: 'gross_charge_amount',
   cost_calculation_method: 'cost_calculation_method',
   requested_duration_sec: 'requested_duration_sec',

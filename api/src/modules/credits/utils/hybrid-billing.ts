@@ -1,4 +1,4 @@
-function roundMoney4(value: number): number {
+export function roundMoney4(value: number): number {
   return Math.round(value * 10000) / 10000;
 }
 

@@ -28,6 +28,8 @@ export class AdminService {
       usageAggregate,
       purchasesAggregate,
       appFeesAggregate,
+      appFeesPaidAggregate,
+      appFeesPromotionalAggregate,
       aimlApiCostAggregate,
     ] = await Promise.all([
       this.prisma.user.count(),
@@ -48,8 +50,16 @@ export class AdminService {
         },
       }),
       this.prisma.creditLedgerEntry.aggregate({
-        where: { type: CreditLedgerType.USAGE },
+        where: { type: CreditLedgerType.USAGE, source: 'aiml_usage' },
         _sum: { app_fee_amount: true },
+      }),
+      this.prisma.creditLedgerEntry.aggregate({
+        where: { type: CreditLedgerType.USAGE, source: 'aiml_usage' },
+        _sum: { app_fee_amount_paid_eur: true },
+      }),
+      this.prisma.creditLedgerEntry.aggregate({
+        where: { type: CreditLedgerType.USAGE, source: 'aiml_usage' },
+        _sum: { app_fee_amount_promotional_eur: true },
       }),
       this.prisma.creditLedgerEntry.aggregate({
         where: { type: CreditLedgerType.USAGE, source: 'aiml_usage' },
@@ -73,6 +83,12 @@ export class AdminService {
       total_stripe_fees_cents: purchasesAggregate._sum.stripe_fee_cents ?? 0,
       total_app_fees_collected: Number(
         appFeesAggregate._sum.app_fee_amount ?? 0,
+      ),
+      total_app_fees_purchased_credits_eur: Number(
+        appFeesPaidAggregate._sum.app_fee_amount_paid_eur ?? 0,
+      ),
+      total_app_fees_promotional_credits_eur: Number(
+        appFeesPromotionalAggregate._sum.app_fee_amount_promotional_eur ?? 0,
       ),
       total_aimlapi_provider_cost: {
         usd: Number(aimlApiCostAggregate._sum.provider_charge_amount_usd ?? 0),

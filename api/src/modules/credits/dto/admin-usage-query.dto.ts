@@ -10,6 +10,10 @@ export type AdminUsageSortField =
   | 'provider_charge_amount_usd'
   | 'provider_charge_amount'
   | 'app_fee_amount'
+  | 'app_fee_amount_paid_eur'
+  | 'app_fee_amount_promotional_eur'
+  | 'usage_paid_credits_applied'
+  | 'usage_promotional_credits_applied'
   | 'gross_charge_amount';
 
 export class AdminUsageQueryDto extends PaginationQueryDto {
@@ -28,6 +32,10 @@ export class AdminUsageQueryDto extends PaginationQueryDto {
     'provider_charge_amount_usd',
     'provider_charge_amount',
     'app_fee_amount',
+    'app_fee_amount_paid_eur',
+    'app_fee_amount_promotional_eur',
+    'usage_paid_credits_applied',
+    'usage_promotional_credits_applied',
     'gross_charge_amount',
   ])
   sort_by?: AdminUsageSortField = 'created_at';

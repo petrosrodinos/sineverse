@@ -55,6 +55,10 @@ export interface AdminCreditUsageQuery {
     | "provider_charge_amount_usd"
     | "provider_charge_amount"
     | "app_fee_amount"
+    | "app_fee_amount_paid_eur"
+    | "app_fee_amount_promotional_eur"
+    | "usage_paid_credits_applied"
+    | "usage_promotional_credits_applied"
     | "gross_charge_amount";
   sort_order?: "asc" | "desc";
 }
@@ -70,6 +74,10 @@ export interface AdminCreditUsageRow {
   provider_charge_amount: string | null;
   app_fee_rate: string | null;
   app_fee_amount: string | null;
+  usage_promotional_credits_applied: number | null;
+  usage_paid_credits_applied: number | null;
+  app_fee_amount_promotional_eur: string | null;
+  app_fee_amount_paid_eur: string | null;
   gross_charge_amount: string | null;
   cost_calculation_method: string | null;
   requested_duration_sec: number | null;

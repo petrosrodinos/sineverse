@@ -28,6 +28,16 @@ const creditUsageColumns = [
   { key: "provider_charge_amount", label: "PROVIDER CHARGE" },
   { key: "app_fee_rate", label: "APP FEE RATE" },
   { key: "app_fee_amount", label: "APP FEE AMOUNT" },
+  {
+    key: "usage_promotional_credits_applied",
+    label: "CREDITS (PROMO)",
+  },
+  { key: "usage_paid_credits_applied", label: "CREDITS (PAID)" },
+  {
+    key: "app_fee_amount_promotional_eur",
+    label: "APP FEE (PROMO EUR)",
+  },
+  { key: "app_fee_amount_paid_eur", label: "APP FEE (PAID EUR)" },
   { key: "gross_charge_amount", label: "GROSS CHARGE" },
   { key: "cost_calculation_method", label: "COST METHOD" },
   { key: "requested_duration_sec", label: "REQ DURATION (SEC)" },
@@ -163,6 +173,16 @@ export function AdminCreditUsageTab({ isActive }: AdminCreditUsageTabProps) {
         </SelectItem>
         <SelectItem key="provider_charge_amount">Provider Charge</SelectItem>
         <SelectItem key="app_fee_amount">App Fee Amount</SelectItem>
+        <SelectItem key="usage_promotional_credits_applied">
+          Promo Credits Applied
+        </SelectItem>
+        <SelectItem key="usage_paid_credits_applied">
+          Paid Credits Applied
+        </SelectItem>
+        <SelectItem key="app_fee_amount_promotional_eur">
+          App Fee Promotional EUR
+        </SelectItem>
+        <SelectItem key="app_fee_amount_paid_eur">App Fee Paid EUR</SelectItem>
         <SelectItem key="gross_charge_amount">Gross Charge</SelectItem>
       </Select>
       <Button
@@ -251,6 +271,28 @@ export function AdminCreditUsageTab({ isActive }: AdminCreditUsageTabProps) {
 
           if (columnKey === "app_fee_amount") {
             return formatEurStringValue(row.app_fee_amount);
+          }
+
+          if (columnKey === "usage_promotional_credits_applied") {
+            return row.usage_promotional_credits_applied === null ||
+              row.usage_promotional_credits_applied === undefined
+              ? "—"
+              : row.usage_promotional_credits_applied.toLocaleString();
+          }
+
+          if (columnKey === "usage_paid_credits_applied") {
+            return row.usage_paid_credits_applied === null ||
+              row.usage_paid_credits_applied === undefined
+              ? "—"
+              : row.usage_paid_credits_applied.toLocaleString();
+          }
+
+          if (columnKey === "app_fee_amount_promotional_eur") {
+            return formatEurStringValue(row.app_fee_amount_promotional_eur);
+          }
+
+          if (columnKey === "app_fee_amount_paid_eur") {
+            return formatEurStringValue(row.app_fee_amount_paid_eur);
           }
 
           if (columnKey === "gross_charge_amount") {

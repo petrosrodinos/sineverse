@@ -96,6 +96,7 @@ model User {
   password   String?
   role       AuthRole
   credits_balance Int @default(0)
+  promotional_credits_balance Int @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -417,6 +418,10 @@ model CreditLedgerEntry {
   provider_charge_amount Decimal?         @db.Decimal(12, 4)
   app_fee_rate           Decimal?         @db.Decimal(10, 4)
   app_fee_amount         Decimal?         @db.Decimal(12, 4)
+  usage_promotional_credits_applied Int?
+  usage_paid_credits_applied        Int?
+  app_fee_amount_promotional_eur    Decimal? @db.Decimal(12, 4)
+  app_fee_amount_paid_eur           Decimal? @db.Decimal(12, 4)
   gross_charge_amount    Decimal?         @db.Decimal(12, 4)
   cost_calculation_method String?
   requested_duration_sec Int?

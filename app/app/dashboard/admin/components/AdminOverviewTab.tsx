@@ -63,7 +63,19 @@ export function AdminOverviewTab({ isActive }: AdminOverviewTabProps) {
         value: formatCurrencyFromCents(overview?.total_stripe_fees_cents ?? 0),
       },
       {
-        label: "Total App Fees Collected",
+        label: "App fees (purchased credits)",
+        value: formatCurrency(
+          overview?.total_app_fees_purchased_credits_eur ?? 0,
+        ),
+      },
+      {
+        label: "App fees (promotional credits)",
+        value: formatCurrency(
+          overview?.total_app_fees_promotional_credits_eur ?? 0,
+        ),
+      },
+      {
+        label: "App fees (total, usage)",
         value: formatCurrency(overview?.total_app_fees_collected ?? 0),
       },
       {

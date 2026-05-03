@@ -2766,11 +2766,13 @@ export namespace Prisma {
   export type UserAvgAggregateOutputType = {
     id: number | null
     credits_balance: number | null
+    promotional_credits_balance: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
     credits_balance: number | null
+    promotional_credits_balance: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2782,6 +2784,7 @@ export namespace Prisma {
     password: string | null
     role: $Enums.AuthRole | null
     credits_balance: number | null
+    promotional_credits_balance: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2795,6 +2798,7 @@ export namespace Prisma {
     password: string | null
     role: $Enums.AuthRole | null
     credits_balance: number | null
+    promotional_credits_balance: number | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -2808,6 +2812,7 @@ export namespace Prisma {
     password: number
     role: number
     credits_balance: number
+    promotional_credits_balance: number
     created_at: number
     updated_at: number
     _all: number
@@ -2817,11 +2822,13 @@ export namespace Prisma {
   export type UserAvgAggregateInputType = {
     id?: true
     credits_balance?: true
+    promotional_credits_balance?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
     credits_balance?: true
+    promotional_credits_balance?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2833,6 +2840,7 @@ export namespace Prisma {
     password?: true
     role?: true
     credits_balance?: true
+    promotional_credits_balance?: true
     created_at?: true
     updated_at?: true
   }
@@ -2846,6 +2854,7 @@ export namespace Prisma {
     password?: true
     role?: true
     credits_balance?: true
+    promotional_credits_balance?: true
     created_at?: true
     updated_at?: true
   }
@@ -2859,6 +2868,7 @@ export namespace Prisma {
     password?: true
     role?: true
     credits_balance?: true
+    promotional_credits_balance?: true
     created_at?: true
     updated_at?: true
     _all?: true
@@ -2959,6 +2969,7 @@ export namespace Prisma {
     password: string | null
     role: $Enums.AuthRole
     credits_balance: number
+    promotional_credits_balance: number
     created_at: Date
     updated_at: Date
     _count: UserCountAggregateOutputType | null
@@ -2991,6 +3002,7 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     credits_balance?: boolean
+    promotional_credits_balance?: boolean
     created_at?: boolean
     updated_at?: boolean
     projects?: boolean | User$projectsArgs<ExtArgs>
@@ -3012,6 +3024,7 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     credits_balance?: boolean
+    promotional_credits_balance?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3025,6 +3038,7 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     credits_balance?: boolean
+    promotional_credits_balance?: boolean
     created_at?: boolean
     updated_at?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3038,11 +3052,12 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     credits_balance?: boolean
+    promotional_credits_balance?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "email" | "phone" | "full_name" | "password" | "role" | "credits_balance" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "email" | "phone" | "full_name" | "password" | "role" | "credits_balance" | "promotional_credits_balance" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | User$projectsArgs<ExtArgs>
     scenes?: boolean | User$scenesArgs<ExtArgs>
@@ -3076,6 +3091,7 @@ export namespace Prisma {
       password: string | null
       role: $Enums.AuthRole
       credits_balance: number
+      promotional_credits_balance: number
       created_at: Date
       updated_at: Date
     }, ExtArgs["result"]["user"]>
@@ -3516,6 +3532,7 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'AuthRole'>
     readonly credits_balance: FieldRef<"User", 'Int'>
+    readonly promotional_credits_balance: FieldRef<"User", 'Int'>
     readonly created_at: FieldRef<"User", 'DateTime'>
     readonly updated_at: FieldRef<"User", 'DateTime'>
   }
@@ -19108,6 +19125,10 @@ export namespace Prisma {
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
+    usage_promotional_credits_applied: number | null
+    usage_paid_credits_applied: number | null
+    app_fee_amount_promotional_eur: Decimal | null
+    app_fee_amount_paid_eur: Decimal | null
     gross_charge_amount: Decimal | null
     requested_duration_sec: number | null
     provider_cost_usd_per_second: Decimal | null
@@ -19125,6 +19146,10 @@ export namespace Prisma {
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
+    usage_promotional_credits_applied: number | null
+    usage_paid_credits_applied: number | null
+    app_fee_amount_promotional_eur: Decimal | null
+    app_fee_amount_paid_eur: Decimal | null
     gross_charge_amount: Decimal | null
     requested_duration_sec: number | null
     provider_cost_usd_per_second: Decimal | null
@@ -19149,6 +19174,10 @@ export namespace Prisma {
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
+    usage_promotional_credits_applied: number | null
+    usage_paid_credits_applied: number | null
+    app_fee_amount_promotional_eur: Decimal | null
+    app_fee_amount_paid_eur: Decimal | null
     gross_charge_amount: Decimal | null
     cost_calculation_method: string | null
     requested_duration_sec: number | null
@@ -19178,6 +19207,10 @@ export namespace Prisma {
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
+    usage_promotional_credits_applied: number | null
+    usage_paid_credits_applied: number | null
+    app_fee_amount_promotional_eur: Decimal | null
+    app_fee_amount_paid_eur: Decimal | null
     gross_charge_amount: Decimal | null
     cost_calculation_method: string | null
     requested_duration_sec: number | null
@@ -19207,6 +19240,10 @@ export namespace Prisma {
     provider_charge_amount: number
     app_fee_rate: number
     app_fee_amount: number
+    usage_promotional_credits_applied: number
+    usage_paid_credits_applied: number
+    app_fee_amount_promotional_eur: number
+    app_fee_amount_paid_eur: number
     gross_charge_amount: number
     cost_calculation_method: number
     requested_duration_sec: number
@@ -19232,6 +19269,10 @@ export namespace Prisma {
     provider_charge_amount?: true
     app_fee_rate?: true
     app_fee_amount?: true
+    usage_promotional_credits_applied?: true
+    usage_paid_credits_applied?: true
+    app_fee_amount_promotional_eur?: true
+    app_fee_amount_paid_eur?: true
     gross_charge_amount?: true
     requested_duration_sec?: true
     provider_cost_usd_per_second?: true
@@ -19249,6 +19290,10 @@ export namespace Prisma {
     provider_charge_amount?: true
     app_fee_rate?: true
     app_fee_amount?: true
+    usage_promotional_credits_applied?: true
+    usage_paid_credits_applied?: true
+    app_fee_amount_promotional_eur?: true
+    app_fee_amount_paid_eur?: true
     gross_charge_amount?: true
     requested_duration_sec?: true
     provider_cost_usd_per_second?: true
@@ -19273,6 +19318,10 @@ export namespace Prisma {
     provider_charge_amount?: true
     app_fee_rate?: true
     app_fee_amount?: true
+    usage_promotional_credits_applied?: true
+    usage_paid_credits_applied?: true
+    app_fee_amount_promotional_eur?: true
+    app_fee_amount_paid_eur?: true
     gross_charge_amount?: true
     cost_calculation_method?: true
     requested_duration_sec?: true
@@ -19302,6 +19351,10 @@ export namespace Prisma {
     provider_charge_amount?: true
     app_fee_rate?: true
     app_fee_amount?: true
+    usage_promotional_credits_applied?: true
+    usage_paid_credits_applied?: true
+    app_fee_amount_promotional_eur?: true
+    app_fee_amount_paid_eur?: true
     gross_charge_amount?: true
     cost_calculation_method?: true
     requested_duration_sec?: true
@@ -19331,6 +19384,10 @@ export namespace Prisma {
     provider_charge_amount?: true
     app_fee_rate?: true
     app_fee_amount?: true
+    usage_promotional_credits_applied?: true
+    usage_paid_credits_applied?: true
+    app_fee_amount_promotional_eur?: true
+    app_fee_amount_paid_eur?: true
     gross_charge_amount?: true
     cost_calculation_method?: true
     requested_duration_sec?: true
@@ -19448,6 +19505,10 @@ export namespace Prisma {
     provider_charge_amount: Decimal | null
     app_fee_rate: Decimal | null
     app_fee_amount: Decimal | null
+    usage_promotional_credits_applied: number | null
+    usage_paid_credits_applied: number | null
+    app_fee_amount_promotional_eur: Decimal | null
+    app_fee_amount_paid_eur: Decimal | null
     gross_charge_amount: Decimal | null
     cost_calculation_method: string | null
     requested_duration_sec: number | null
@@ -19497,6 +19558,10 @@ export namespace Prisma {
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
     app_fee_amount?: boolean
+    usage_promotional_credits_applied?: boolean
+    usage_paid_credits_applied?: boolean
+    app_fee_amount_promotional_eur?: boolean
+    app_fee_amount_paid_eur?: boolean
     gross_charge_amount?: boolean
     cost_calculation_method?: boolean
     requested_duration_sec?: boolean
@@ -19528,6 +19593,10 @@ export namespace Prisma {
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
     app_fee_amount?: boolean
+    usage_promotional_credits_applied?: boolean
+    usage_paid_credits_applied?: boolean
+    app_fee_amount_promotional_eur?: boolean
+    app_fee_amount_paid_eur?: boolean
     gross_charge_amount?: boolean
     cost_calculation_method?: boolean
     requested_duration_sec?: boolean
@@ -19559,6 +19628,10 @@ export namespace Prisma {
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
     app_fee_amount?: boolean
+    usage_promotional_credits_applied?: boolean
+    usage_paid_credits_applied?: boolean
+    app_fee_amount_promotional_eur?: boolean
+    app_fee_amount_paid_eur?: boolean
     gross_charge_amount?: boolean
     cost_calculation_method?: boolean
     requested_duration_sec?: boolean
@@ -19590,6 +19663,10 @@ export namespace Prisma {
     provider_charge_amount?: boolean
     app_fee_rate?: boolean
     app_fee_amount?: boolean
+    usage_promotional_credits_applied?: boolean
+    usage_paid_credits_applied?: boolean
+    app_fee_amount_promotional_eur?: boolean
+    app_fee_amount_paid_eur?: boolean
     gross_charge_amount?: boolean
     cost_calculation_method?: boolean
     requested_duration_sec?: boolean
@@ -19602,7 +19679,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "provider_credits_used" | "fee_tokens" | "gross_tokens" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "gross_charge_amount" | "cost_calculation_method" | "requested_duration_sec" | "provider_cost_usd_per_second" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
+  export type CreditLedgerEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "uuid" | "user_uuid" | "type" | "delta_credits" | "balance_after" | "project_type" | "source" | "source_ref_uuid" | "idempotency_key" | "provider_credits_used" | "fee_tokens" | "gross_tokens" | "provider_charge_amount_usd" | "provider_charge_amount" | "app_fee_rate" | "app_fee_amount" | "usage_promotional_credits_applied" | "usage_paid_credits_applied" | "app_fee_amount_promotional_eur" | "app_fee_amount_paid_eur" | "gross_charge_amount" | "cost_calculation_method" | "requested_duration_sec" | "provider_cost_usd_per_second" | "fx_rate_usd_to_eur" | "fx_source" | "fx_timestamp" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["creditLedgerEntry"]>
   export type CreditLedgerEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -19636,6 +19713,10 @@ export namespace Prisma {
       provider_charge_amount: Prisma.Decimal | null
       app_fee_rate: Prisma.Decimal | null
       app_fee_amount: Prisma.Decimal | null
+      usage_promotional_credits_applied: number | null
+      usage_paid_credits_applied: number | null
+      app_fee_amount_promotional_eur: Prisma.Decimal | null
+      app_fee_amount_paid_eur: Prisma.Decimal | null
       gross_charge_amount: Prisma.Decimal | null
       cost_calculation_method: string | null
       requested_duration_sec: number | null
@@ -20087,6 +20168,10 @@ export namespace Prisma {
     readonly provider_charge_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly app_fee_rate: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly app_fee_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
+    readonly usage_promotional_credits_applied: FieldRef<"CreditLedgerEntry", 'Int'>
+    readonly usage_paid_credits_applied: FieldRef<"CreditLedgerEntry", 'Int'>
+    readonly app_fee_amount_promotional_eur: FieldRef<"CreditLedgerEntry", 'Decimal'>
+    readonly app_fee_amount_paid_eur: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly gross_charge_amount: FieldRef<"CreditLedgerEntry", 'Decimal'>
     readonly cost_calculation_method: FieldRef<"CreditLedgerEntry", 'String'>
     readonly requested_duration_sec: FieldRef<"CreditLedgerEntry", 'Int'>
@@ -21619,6 +21704,7 @@ export namespace Prisma {
     password: 'password',
     role: 'role',
     credits_balance: 'credits_balance',
+    promotional_credits_balance: 'promotional_credits_balance',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
@@ -21856,6 +21942,10 @@ export namespace Prisma {
     provider_charge_amount: 'provider_charge_amount',
     app_fee_rate: 'app_fee_rate',
     app_fee_amount: 'app_fee_amount',
+    usage_promotional_credits_applied: 'usage_promotional_credits_applied',
+    usage_paid_credits_applied: 'usage_paid_credits_applied',
+    app_fee_amount_promotional_eur: 'app_fee_amount_promotional_eur',
+    app_fee_amount_paid_eur: 'app_fee_amount_paid_eur',
     gross_charge_amount: 'gross_charge_amount',
     cost_calculation_method: 'cost_calculation_method',
     requested_duration_sec: 'requested_duration_sec',
@@ -22164,6 +22254,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     role?: EnumAuthRoleFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntFilter<"User"> | number
+    promotional_credits_balance?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     projects?: ProjectListRelationFilter
@@ -22184,6 +22275,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     projects?: ProjectOrderByRelationAggregateInput
@@ -22207,6 +22299,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     role?: EnumAuthRoleFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntFilter<"User"> | number
+    promotional_credits_balance?: IntFilter<"User"> | number
     created_at?: DateTimeFilter<"User"> | Date | string
     updated_at?: DateTimeFilter<"User"> | Date | string
     projects?: ProjectListRelationFilter
@@ -22227,6 +22320,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -22248,6 +22342,7 @@ export namespace Prisma {
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumAuthRoleWithAggregatesFilter<"User"> | $Enums.AuthRole
     credits_balance?: IntWithAggregatesFilter<"User"> | number
+    promotional_credits_balance?: IntWithAggregatesFilter<"User"> | number
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -23454,6 +23549,10 @@ export namespace Prisma {
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    usage_paid_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    app_fee_amount_promotional_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     requested_duration_sec?: IntNullableFilter<"CreditLedgerEntry"> | number | null
@@ -23485,6 +23584,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrderInput | SortOrder
     app_fee_rate?: SortOrderInput | SortOrder
     app_fee_amount?: SortOrderInput | SortOrder
+    usage_promotional_credits_applied?: SortOrderInput | SortOrder
+    usage_paid_credits_applied?: SortOrderInput | SortOrder
+    app_fee_amount_promotional_eur?: SortOrderInput | SortOrder
+    app_fee_amount_paid_eur?: SortOrderInput | SortOrder
     gross_charge_amount?: SortOrderInput | SortOrder
     cost_calculation_method?: SortOrderInput | SortOrder
     requested_duration_sec?: SortOrderInput | SortOrder
@@ -23519,6 +23622,10 @@ export namespace Prisma {
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    usage_paid_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    app_fee_amount_promotional_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     requested_duration_sec?: IntNullableFilter<"CreditLedgerEntry"> | number | null
@@ -23550,6 +23657,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrderInput | SortOrder
     app_fee_rate?: SortOrderInput | SortOrder
     app_fee_amount?: SortOrderInput | SortOrder
+    usage_promotional_credits_applied?: SortOrderInput | SortOrder
+    usage_paid_credits_applied?: SortOrderInput | SortOrder
+    app_fee_amount_promotional_eur?: SortOrderInput | SortOrder
+    app_fee_amount_paid_eur?: SortOrderInput | SortOrder
     gross_charge_amount?: SortOrderInput | SortOrder
     cost_calculation_method?: SortOrderInput | SortOrder
     requested_duration_sec?: SortOrderInput | SortOrder
@@ -23588,6 +23699,10 @@ export namespace Prisma {
     provider_charge_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: IntNullableWithAggregatesFilter<"CreditLedgerEntry"> | number | null
+    usage_paid_credits_applied?: IntNullableWithAggregatesFilter<"CreditLedgerEntry"> | number | null
+    app_fee_amount_promotional_eur?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableWithAggregatesFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: StringNullableWithAggregatesFilter<"CreditLedgerEntry"> | string | null
     requested_duration_sec?: IntNullableWithAggregatesFilter<"CreditLedgerEntry"> | number | null
@@ -23682,6 +23797,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -23702,6 +23818,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -23721,6 +23838,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -23741,6 +23859,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -23761,6 +23880,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -23773,6 +23893,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23786,6 +23907,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -25058,6 +25180,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -25089,6 +25215,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -25117,6 +25247,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -25148,6 +25282,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -25178,6 +25316,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -25206,6 +25348,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -25236,6 +25382,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -25472,6 +25622,7 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -25479,6 +25630,7 @@ export namespace Prisma {
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -25490,6 +25642,7 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -25503,6 +25656,7 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -25510,6 +25664,7 @@ export namespace Prisma {
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
     credits_balance?: SortOrder
+    promotional_credits_balance?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -26675,6 +26830,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
+    usage_promotional_credits_applied?: SortOrder
+    usage_paid_credits_applied?: SortOrder
+    app_fee_amount_promotional_eur?: SortOrder
+    app_fee_amount_paid_eur?: SortOrder
     gross_charge_amount?: SortOrder
     cost_calculation_method?: SortOrder
     requested_duration_sec?: SortOrder
@@ -26698,6 +26857,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
+    usage_promotional_credits_applied?: SortOrder
+    usage_paid_credits_applied?: SortOrder
+    app_fee_amount_promotional_eur?: SortOrder
+    app_fee_amount_paid_eur?: SortOrder
     gross_charge_amount?: SortOrder
     requested_duration_sec?: SortOrder
     provider_cost_usd_per_second?: SortOrder
@@ -26722,6 +26885,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
+    usage_promotional_credits_applied?: SortOrder
+    usage_paid_credits_applied?: SortOrder
+    app_fee_amount_promotional_eur?: SortOrder
+    app_fee_amount_paid_eur?: SortOrder
     gross_charge_amount?: SortOrder
     cost_calculation_method?: SortOrder
     requested_duration_sec?: SortOrder
@@ -26751,6 +26918,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
+    usage_promotional_credits_applied?: SortOrder
+    usage_paid_credits_applied?: SortOrder
+    app_fee_amount_promotional_eur?: SortOrder
+    app_fee_amount_paid_eur?: SortOrder
     gross_charge_amount?: SortOrder
     cost_calculation_method?: SortOrder
     requested_duration_sec?: SortOrder
@@ -26773,6 +26944,10 @@ export namespace Prisma {
     provider_charge_amount?: SortOrder
     app_fee_rate?: SortOrder
     app_fee_amount?: SortOrder
+    usage_promotional_credits_applied?: SortOrder
+    usage_paid_credits_applied?: SortOrder
+    app_fee_amount_promotional_eur?: SortOrder
+    app_fee_amount_paid_eur?: SortOrder
     gross_charge_amount?: SortOrder
     requested_duration_sec?: SortOrder
     provider_cost_usd_per_second?: SortOrder
@@ -29238,6 +29413,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -29267,6 +29446,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -29536,6 +29719,10 @@ export namespace Prisma {
     provider_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    usage_paid_credits_applied?: IntNullableFilter<"CreditLedgerEntry"> | number | null
+    app_fee_amount_promotional_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: DecimalNullableFilter<"CreditLedgerEntry"> | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: StringNullableFilter<"CreditLedgerEntry"> | string | null
     requested_duration_sec?: IntNullableFilter<"CreditLedgerEntry"> | number | null
@@ -29556,6 +29743,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     scenes?: SceneCreateNestedManyWithoutUserInput
@@ -29575,6 +29763,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     scenes?: SceneUncheckedCreateNestedManyWithoutUserInput
@@ -29783,6 +29972,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scenes?: SceneUpdateManyWithoutUserNestedInput
@@ -29802,6 +29992,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     scenes?: SceneUncheckedUpdateManyWithoutUserNestedInput
@@ -29905,6 +30096,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -29924,6 +30116,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -30082,6 +30275,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -30101,6 +30295,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -30195,6 +30390,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -30214,6 +30410,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -30331,6 +30528,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -30350,6 +30548,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -30420,6 +30619,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -30439,6 +30639,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -30746,6 +30947,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -30765,6 +30967,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -30987,6 +31190,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -31006,6 +31210,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -31226,6 +31431,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -31245,6 +31451,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -32536,6 +32743,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -32555,6 +32763,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -32623,6 +32832,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -32642,6 +32852,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -32700,6 +32911,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectCreateNestedManyWithoutUserInput
@@ -32719,6 +32931,7 @@ export namespace Prisma {
     password?: string | null
     role: $Enums.AuthRole
     credits_balance?: number
+    promotional_credits_balance?: number
     created_at?: Date | string
     updated_at?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -32753,6 +32966,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutUserNestedInput
@@ -32772,6 +32986,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumAuthRoleFieldUpdateOperationsInput | $Enums.AuthRole
     credits_balance?: IntFieldUpdateOperationsInput | number
+    promotional_credits_balance?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -32889,6 +33104,10 @@ export namespace Prisma {
     provider_charge_amount?: Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: number | null
+    usage_paid_credits_applied?: number | null
+    app_fee_amount_promotional_eur?: Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: string | null
     requested_duration_sec?: number | null
@@ -33205,6 +33424,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33234,6 +33457,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33263,6 +33490,10 @@ export namespace Prisma {
     provider_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     app_fee_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    usage_promotional_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    usage_paid_credits_applied?: NullableIntFieldUpdateOperationsInput | number | null
+    app_fee_amount_promotional_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    app_fee_amount_paid_eur?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gross_charge_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cost_calculation_method?: NullableStringFieldUpdateOperationsInput | string | null
     requested_duration_sec?: NullableIntFieldUpdateOperationsInput | number | null

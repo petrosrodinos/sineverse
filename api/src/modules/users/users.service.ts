@@ -225,7 +225,7 @@ export class UsersService {
   async updateUserByAdmin(userUuid: string, dto: UpdateAdminUserDto) {
     const user = await this.prisma.user.findUnique({
       where: { uuid: userUuid },
-      select: { uuid: true },
+      select: { uuid: true, promotional_credits_balance: true },
     });
 
     if (!user) {
@@ -278,6 +278,11 @@ export class UsersService {
       }
 
       data.credits_balance = balance;
+
+      data.promotional_credits_balance = Math.min(
+        user.promotional_credits_balance,
+        balance,
+      );
     }
 
     try {
@@ -291,6 +296,7 @@ export class UsersService {
           phone: true,
           role: true,
           credits_balance: true,
+          promotional_credits_balance: true,
           created_at: true,
           updated_at: true,
         },

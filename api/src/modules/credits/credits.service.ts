@@ -25,7 +25,7 @@ import {
 } from '@/shared/config/credits/credits.constants';
 import { calculateUsageCreditsValue } from './utils/credits-calculator';
 import { CurrencyService } from '@/integrations/currency/currency.service';
-import { calculateTokenBilling } from './utils/hybrid-billing';
+import { calculateTokenBilling, roundMoney4 } from './utils/hybrid-billing';
 import {
   DOLLARS_PER_TOKEN,
 } from '@/shared/config/credits/credits.constants';
@@ -153,7 +153,12 @@ export class CreditsService {
 
           const updatedUser = await tx.user.update({
             where: { uuid: user_uuid },
-            data: { credits_balance: { increment: REGISTRATION_GIFT_CREDITS } },
+            data: {
+              credits_balance: { increment: REGISTRATION_GIFT_CREDITS },
+              promotional_credits_balance: {
+                increment: REGISTRATION_GIFT_CREDITS,
+              },
+            },
             select: { credits_balance: true },
           });
 
@@ -637,7 +642,7 @@ export class CreditsService {
 
       const user = await tx.user.findUnique({
         where: { uuid: user_uuid },
-        select: { credits_balance: true },
+        select: { credits_balance: true, promotional_credits_balance: true },
       });
 
       if (!user) {
@@ -648,9 +653,35 @@ export class CreditsService {
         throw new BadRequestException('Insufficient credits');
       }
 
+      const promotionalApplied = Math.min(
+        deduct,
+        user.promotional_credits_balance,
+      );
+
+      const paidApplied = deduct - promotionalApplied;
+
+      let appFeePromotionalEur: Prisma.Decimal | null = null;
+
+      let appFeePaidEur: Prisma.Decimal | null = null;
+
+      if (deduct > 0) {
+        const promoFeeNum = roundMoney4(
+          (billing.appFeeAmountEur * promotionalApplied) / deduct,
+        );
+
+        const paidFeeNum = roundMoney4(billing.appFeeAmountEur - promoFeeNum);
+
+        appFeePromotionalEur = new Prisma.Decimal(promoFeeNum);
+
+        appFeePaidEur = new Prisma.Decimal(paidFeeNum);
+      }
+
       const updatedUser = await tx.user.update({
         where: { uuid: user_uuid },
-        data: { credits_balance: { decrement: deduct } },
+        data: {
+          credits_balance: { decrement: deduct },
+          promotional_credits_balance: { decrement: promotionalApplied },
+        },
         select: { credits_balance: true },
       });
 
@@ -671,6 +702,10 @@ export class CreditsService {
           provider_charge_amount: new Prisma.Decimal(billing.providerChargeEur),
           app_fee_rate: new Prisma.Decimal(appFeeMultiplier),
           app_fee_amount: new Prisma.Decimal(billing.appFeeAmountEur),
+          usage_promotional_credits_applied: promotionalApplied,
+          usage_paid_credits_applied: paidApplied,
+          app_fee_amount_promotional_eur: appFeePromotionalEur,
+          app_fee_amount_paid_eur: appFeePaidEur,
           gross_charge_amount: new Prisma.Decimal(billing.grossChargeAmountEur),
           cost_calculation_method,
           requested_duration_sec:
