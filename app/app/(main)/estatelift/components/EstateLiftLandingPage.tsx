@@ -22,6 +22,7 @@ import {
   EstateLiftSocialProofCarousel,
   type SocialProofCarouselItem,
 } from "@/app/(main)/estatelift/components/EstateLiftSocialProofCarousel";
+import { EstateLiftVideoShowcase } from "@/app/(main)/estatelift/components/EstateLiftVideoShowcase";
 
 const openingAngles = [
   {
@@ -255,6 +256,8 @@ export function EstateLiftLandingPage() {
             </div>
           </div>
         </section>
+
+        <EstateLiftVideoShowcase />
 
         <section className="border-b border-divider/40 py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-6">
