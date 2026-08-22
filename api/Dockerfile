@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim
+FROM node:22-bookworm-slim
 
 WORKDIR /app
 
@@ -53,6 +53,6 @@ RUN mkdir -p dist/generated && cp -R src/generated/. dist/generated/
 
 ENV NODE_ENV=production
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["node", "dist/main"]

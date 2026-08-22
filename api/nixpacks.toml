@@ -1,0 +1,6 @@
+[variables]
+NIXPACKS_NODE_VERSION = "22"
+NODE_OPTIONS = "--max-old-space-size=3072"
+
+[start]
+cmd = "node dist/main"

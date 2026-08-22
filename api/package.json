@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "migrate:local": "dotenv -e .env.local -- npx prisma migrate dev --name new-migration && npx prisma generate",
     "migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev --name init && npx prisma generate",
@@ -18,7 +18,7 @@
     "studio:staging": "npx dotenv -e .env.staging -- npx prisma studio",
     "reset:dev": "npx dotenv -e .env.development -- npx prisma migrate reset",
     "reset:staging": "dotenv -e .env.staging -- npx prisma migrate reset",
-    "start": "nest start",
+    "start": "node dist/main",
     "start:local": "npx dotenv -e .env.local -- nest start  --watch",
     "start:dev": "npx dotenv -e .env.development -- nest start --watch",
     "start:staging": "npx dotenv -e .env.staging -- nest start --watch",
