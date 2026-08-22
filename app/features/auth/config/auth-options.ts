@@ -60,7 +60,9 @@ export const authOptions: NextAuthOptions = {
             full_name: result.full_name || "",
             isLoggedIn: result.isLoggedIn || true,
           };
-        } catch {
+        } catch (error) {
+          console.error("[auth][authorize]", error);
+
           return null;
         }
       },

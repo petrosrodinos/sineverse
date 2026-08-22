@@ -18,7 +18,7 @@
     "studio:staging": "npx dotenv -e .env.staging -- npx prisma studio",
     "reset:dev": "npx dotenv -e .env.development -- npx prisma migrate reset",
     "reset:staging": "dotenv -e .env.staging -- npx prisma migrate reset",
-    "start": "node dist/main",
+    "start": "prisma migrate deploy && node dist/main",
     "start:local": "npx dotenv -e .env.local -- nest start  --watch",
     "start:dev": "npx dotenv -e .env.development -- nest start --watch",
     "start:staging": "npx dotenv -e .env.staging -- nest start --watch",

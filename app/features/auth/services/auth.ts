@@ -7,6 +7,7 @@ import type {
 import axios from "axios";
 
 import { formatAuthUser } from "../utils/auth.utils";
+import { getAuthApiErrorMessage } from "../utils/auth-error.utils";
 
 import { ApiRoutes } from "@/config/api/routes";
 import axiosInstance from "@/config/api/axios";
@@ -28,8 +29,10 @@ export const signIn = async ({
     const auth_response = response.data;
 
     return formatAuthUser(auth_response);
-  } catch {
-    throw new Error("Failed to sign in. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getAuthApiErrorMessage(error, "Failed to sign in. Please try again."),
+    );
   }
 };
 
@@ -51,8 +54,10 @@ export const signUp = async ({
     const auth_response = response.data;
 
     return formatAuthUser(auth_response);
-  } catch {
-    throw new Error("Failed to sign up. Please try again.");
+  } catch (error) {
+    throw new Error(
+      getAuthApiErrorMessage(error, "Failed to sign up. Please try again."),
+    );
   }
 };
 

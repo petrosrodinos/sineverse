@@ -48,7 +48,9 @@ export class EmailAuthService {
         },
       });
 
-      await this.creditsService.grantRegistrationBonus(user.uuid);
+      try {
+        await this.creditsService.grantRegistrationBonus(user.uuid);
+      } catch {}
 
       const token = await this.jwtService.signToken({
         uuid: user.uuid,
@@ -80,7 +82,9 @@ export class EmailAuthService {
         },
       });
 
-      await this.creditsService.grantRegistrationBonus(user.uuid);
+      try {
+        await this.creditsService.grantRegistrationBonus(user.uuid);
+      } catch {}
 
       const token = await this.jwtService.signToken({
         uuid: user.uuid,
