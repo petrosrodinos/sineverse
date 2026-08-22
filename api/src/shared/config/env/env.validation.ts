@@ -1,13 +1,19 @@
 import { z } from 'zod';
 
+const optionalUrl = z
+  .union([z.string().url(), z.literal('')])
+  .optional()
+  .nullable()
+  .transform((value) => (value === '' ? undefined : value));
+
 const EnvSchema = z.object({
   NODE_ENV: z.enum(['local', 'development', 'test', 'staging', 'production']),
   PORT: z.coerce.number().default(3000),
-  APP_URL: z.string().url().optional(),
+  APP_URL: optionalUrl,
   CORS_ORIGINS: z.string().optional(),
-  LANDING_URL: z.string().url().optional().nullable(),
-  API_URL: z.string().url().optional().nullable(),
-  DATABASE_URL: z.string().url(),
+  LANDING_URL: optionalUrl,
+  API_URL: optionalUrl,
+  DATABASE_URL: z.string().min(1),
   REDIS_URL: z.string().optional(),
   CACHE_TTL_SECONDS: z.coerce.number().optional(),
   JWT_SECRET: z.string(),

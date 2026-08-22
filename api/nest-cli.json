@@ -7,11 +7,11 @@
     "assets": [
       {
         "include": "integrations/notifications/sendgrid/templates/**/*",
-        "outDir": "dist/src"
+        "outDir": "dist"
       },
       {
         "include": "generated/**/*",
-        "outDir": "dist/src"
+        "outDir": "dist"
       }
     ]
   }
